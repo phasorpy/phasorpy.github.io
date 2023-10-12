@@ -428,8 +428,17 @@ document.write(`
 <span></span><span class="sd">&quot;&quot;&quot;Manage sample data files for testing and tutorials.</span>
 
 <span class="sd">The ``phasorpy.datasets`` module provides a :py:func:`fetch` function to</span>
-<span class="sd">download data files from remote repositories.</span>
-<span class="sd">The downloaded files are cached in a local directory.</span>
+<span class="sd">download data files from remote repositories and cache them in a local</span>
+<span class="sd">directory. The cache location can be changed by setting the</span>
+<span class="sd">``PHASORPY_DATA_DIR`` environment variable.</span>
+
+<span class="sd">Datasets from the following repositories are available:</span>
+
+<span class="sd">- `PhasorPy tests &lt;https://zenodo.org/record/8417894&gt;`_</span>
+<span class="sd">- `LFD Workshop &lt;https://zenodo.org/record/8411056&gt;`_</span>
+<span class="sd">- `FLUTE &lt;https://zenodo.org/record/8046636&gt;`_</span>
+<span class="sd">- `napari-flim-phasor-plotter</span>
+<span class="sd">  &lt;https://github.com/zoccoler/napari-flim-phasor-plotter/tree/0.0.6/src/napari_flim_phasor_plotter/data&gt;`_</span>
 
 <span class="sd">The implementation is based on the `Pooch &lt;https://www.fatiando.org/pooch&gt;`_</span>
 <span class="sd">library.</span>
@@ -438,16 +447,22 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fetch&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="s1">&#39;REPOSITORIES&#39;</span><span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="kn">import</span> <span class="nn">pooch</span>
+
+<span class="n">ENV</span> <span class="o">=</span> <span class="s1">&#39;PHASORPY_DATA_DIR&#39;</span>
 
 <span class="n">TESTS</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
     <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s1">&#39;phasorpy&#39;</span><span class="p">),</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;doi:10.5281/zenodo.8417894&#39;</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="n">ENV</span><span class="p">,</span>
     <span class="n">registry</span><span class="o">=</span><span class="p">{</span>
         <span class="s1">&#39;flimage.int.bin&#39;</span><span class="p">:</span> <span class="p">(</span>
             <span class="s1">&#39;sha256:&#39;</span>
@@ -555,6 +570,7 @@ document.write(`
 <span class="n">LFD_WORKSHOP</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
     <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s1">&#39;phasorpy&#39;</span><span class="p">),</span>
     <span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;doi:10.5281/zenodo.8411056&#39;</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="n">ENV</span><span class="p">,</span>
     <span class="n">registry</span><span class="o">=</span><span class="p">{</span>
         <span class="s1">&#39;4-22-03-2-A5-CHO-CELL3B.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
             <span class="s1">&#39;sha256:&#39;</span>
@@ -591,63 +607,188 @@ document.write(`
     <span class="p">},</span>
 <span class="p">)</span>
 
-<span class="n">REPOSITORIES</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pooch</span><span class="o">.</span><span class="n">Pooch</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">TESTS</span><span class="p">,</span> <span class="n">LFD_WORKSHOP</span><span class="p">)</span>
+<span class="n">FLUTE</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s1">&#39;phasorpy&#39;</span><span class="p">),</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;doi:10.5281/zenodo.8046636&#39;</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="n">ENV</span><span class="p">,</span>
+    <span class="n">registry</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;Embryo.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;d1107de8d0f3da476e90bcb80ddf40231df343ed9f28340c873cf858ca869e20&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;53cb66439a6e921aef1aa7f57ef542260c51cdb8fe56a643f80ea88fe2230bc8&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;Fluorescein_hMSC.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;a3f22076e8dc89b639f690146e46ff8a068388cbf381c2f3a9225cdcbbcec605&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;hMSC control.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;725570373ee51ee226560ec5ebb57708e2fac53effc94774c03b71c67a42c9f8&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;hMSC-ZOOM.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;6ff4be17e9d98a94b44ef13ec57af3c520f8deaeef72a7210ea371b84617ce92&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;hMSC_rotenone.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;cd0d2bd3baddc0f82c84c9624692e51bbbc56a80ac20b5936be0898d619c2bf2&#39;</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">NAPARI_FLIM_PHASOR_PLOTTER</span> <span class="o">=</span> <span class="n">pooch</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">os_cache</span><span class="p">(</span><span class="s1">&#39;phasorpy&#39;</span><span class="p">),</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s1">&#39;https://github.com/zoccoler/napari-flim-phasor-plotter/&#39;</span>
+    <span class="s1">&#39;raw/0.0.6/src/napari_flim_phasor_plotter/data&#39;</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">=</span><span class="n">ENV</span><span class="p">,</span>
+    <span class="n">registry</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;hazelnut_FLIM_single_image.ptu&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;262f60ebc0054ba985fdda3032b58419aac07720e5f157800616c864d15fc2d3&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;hazelnut_FLIM_z_stack.zip&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;8d26ebc7c758a70ee256d95c06f7921baa3cecbcdde82c7bb54b66bcb8db156e&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;lifetime_cat.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;5f2a2d20284a6f32fa3d1d13cb0c535cea5c2ec99c23148d9ee2d1e22d121a34&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;lifetime_cat_labels.tif&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;102d74c202171f0ce2821dfbf1c92ead578bafebf99830e0cfa766e7407aadf9&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;lifetime_cat_metadata.yml&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;20c447c1251598f255309fa866e58fc0e4abc2b73e824d18727833a05467d8bc&#39;</span>
+        <span class="p">),</span>
+        <span class="s1">&#39;seminal_receptacle_FLIM_single_image.sdt&#39;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s1">&#39;sha256:&#39;</span>
+            <span class="s1">&#39;2ba169495e533235cffcad953e76c7969286aad9181b946f5167390b8ff1a44a&#39;</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+
+<span class="n">REPOSITORIES</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Pooch</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;tests&#39;</span><span class="p">:</span> <span class="n">TESTS</span><span class="p">,</span>
+    <span class="s1">&#39;lfd-workshop&#39;</span><span class="p">:</span> <span class="n">LFD_WORKSHOP</span><span class="p">,</span>
+    <span class="s1">&#39;flute&#39;</span><span class="p">:</span> <span class="n">FLUTE</span><span class="p">,</span>
+    <span class="s1">&#39;napari-flim-phasor-plotter&#39;</span><span class="p">:</span> <span class="n">NAPARI_FLIM_PHASOR_PLOTTER</span><span class="p">,</span>
+<span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Pooch repositories.&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="fetch">
 <a class="viewcode-back" href="../../api/datasets.html#phasorpy.datasets.fetch">[docs]</a>
 <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Pooch</span><span class="p">]</span> <span class="o">|</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Pooch</span><span class="p">,</span>
     <span class="n">extract_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">return_scalar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return absolute path to sample file in local storage.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>  <span class="c1"># str | tuple[str, ...]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return absolute path(s) to sample file(s) in local storage.</span>
 
-<span class="sd">    The file is downloaded from a remote repository if the file does not</span>
-<span class="sd">    already exist in the local storage.</span>
+<span class="sd">    The files are downloaded from a remote repository if they do not already</span>
+<span class="sd">    exist in the local storage.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    filename : str</span>
-<span class="sd">        Name of file to fetch from local storage.</span>
+<span class="sd">    *args: str or iterable of str, optional</span>
+<span class="sd">        Name(s) of file(s) or repositories to fetch from local storage.</span>
+<span class="sd">        If omitted, return files in all repositories.</span>
 <span class="sd">    extract_dir : str or None, optional</span>
 <span class="sd">        Path, relative to cache location, where ZIP files will be unpacked.</span>
+<span class="sd">    return_scalar : bool, optional</span>
+<span class="sd">        If true (default), return single path as string, else tuple of string.</span>
 <span class="sd">    **kwargs : optional</span>
-<span class="sd">        Additional parameters passed to ``pooch.fetch()``.</span>
+<span class="sd">        Additional arguments passed to ``pooch.fetch()``.</span>
+<span class="sd">        For example, ``progressbar=True``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    str</span>
-<span class="sd">        Absolute path of file in local storage.</span>
+<span class="sd">    str or tuple of str</span>
+<span class="sd">        Absolute path(s) of file(s) in local storage.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; fetch(&#39;simfcs.r64&#39;)</span>
 <span class="sd">    &#39;...simfcs.r64&#39;</span>
+<span class="sd">    &gt;&gt;&gt; fetch(&#39;simfcs.r64&#39;, &#39;simfcs.ref&#39;)</span>
+<span class="sd">    (&#39;...simfcs.r64&#39;, &#39;...simfcs.ref&#39;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">REPOSITORIES</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
-            <span class="c1"># download and extract ZIP, return file name</span>
-            <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
-                <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
-                <span class="n">processor</span><span class="o">=</span><span class="n">_Unzip</span><span class="p">([</span><span class="n">filename</span><span class="p">],</span> <span class="n">extract_dir</span><span class="p">),</span>
-                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
-                <span class="c1"># download and extract ZIP, return all file names in ZIP</span>
-                <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="p">,</span>
-                    <span class="n">processor</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">Unzip</span><span class="p">(</span><span class="n">extract_dir</span><span class="o">=</span><span class="n">extract_dir</span><span class="p">),</span>
+    <span class="n">filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">REPOSITORIES</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">REPOSITORIES</span><span class="p">:</span>
+                <span class="c1"># fetch all files in repository</span>
+                <span class="n">filenames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                    <span class="n">fetch</span><span class="p">(</span>
+                        <span class="o">*</span><span class="n">REPOSITORIES</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+                        <span class="n">extract_dir</span><span class="o">=</span><span class="n">extract_dir</span><span class="p">,</span>
+                        <span class="n">return_scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">REPOSITORIES</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">arg</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
+                    <span class="c1"># fetch single file in ZIP</span>
+                    <span class="n">filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+                            <span class="n">arg</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span><span class="p">,</span>
+                            <span class="n">processor</span><span class="o">=</span><span class="n">_Unzip</span><span class="p">([</span><span class="n">arg</span><span class="p">],</span> <span class="n">extract_dir</span><span class="p">),</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">registry</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+                        <span class="c1"># fetch and extract all files in ZIP</span>
+                        <span class="n">filenames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                            <span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+                                <span class="n">arg</span><span class="p">,</span>
+                                <span class="n">processor</span><span class="o">=</span><span class="n">pooch</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">Unzip</span><span class="p">(</span>
+                                    <span class="n">extract_dir</span><span class="o">=</span><span class="n">extract_dir</span>
+                                <span class="p">),</span>
+                                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># fetch single file</span>
+                        <span class="n">filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;file </span><span class="si">{</span><span class="n">arg</span><span class="si">!r}</span><span class="s1"> not found&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">pooch</span><span class="o">.</span><span class="n">Pooch</span><span class="p">):</span>
+            <span class="c1"># fetch all files in repository</span>
+            <span class="n">filenames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">fetch</span><span class="p">(</span>
+                    <span class="o">*</span><span class="n">arg</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+                    <span class="n">extract_dir</span><span class="o">=</span><span class="n">extract_dir</span><span class="p">,</span>
+                    <span class="n">return_scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="c1"># download file, return file name</span>
-            <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;file not found&#39;</span><span class="p">)</span></div>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># fetch all files in iterable</span>
+            <span class="n">filenames</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">fetch</span><span class="p">(</span>
+                    <span class="o">*</span><span class="n">arg</span><span class="p">,</span>
+                    <span class="n">extract_dir</span><span class="o">=</span><span class="n">extract_dir</span><span class="p">,</span>
+                    <span class="n">return_scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_scalar</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">filenames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span></div>
 
 
 
