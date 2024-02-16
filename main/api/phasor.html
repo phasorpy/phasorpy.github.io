@@ -45,6 +45,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/phasor';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -485,7 +486,8 @@ document.write(`
 <ul class="simple">
 <li><p>calculate phasor coordinates from time-resolved and spectral signals:</p>
 <ul>
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code> (not implemented yet)</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal_f1" title="phasorpy.phasor.phasor_from_signal_f1"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal_f1()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>calculate phasor coordinates from single- or multi-component fluorescence
@@ -498,7 +500,7 @@ lifetimes:</p>
 </li>
 <li><p>convert between phasor and polar (phase and modulation) coordinates:</p>
 <ul>
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code> (not implemented yet)</p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_polar" title="phasorpy.phasor.phasor_from_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_polar()</span></code></a></p></li>
 </ul>
 </li>
@@ -527,23 +529,24 @@ in the electronics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>phase0</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Angular component of polar coordinates for calibration. Defaults
-to 0.0.</p></li>
-<li><p><strong>modulation0</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Radial component of polar coordinates for calibration. Defaults to 1.0.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to calibrate.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to calibrate.</p></li>
+<li><p><strong>phase0</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Angular component of polar coordinates for calibration in radians.
+Defaults to 0.0.</p></li>
+<li><p><strong>modulation0</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Radial component of polar coordinates for calibration.
+Defaults to 1.0.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>phase0</cite> and <cite>modulation0</cite>
-    do not match.</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>real</strong> (<em>ndarray</em>) – Calibrated real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>ndarray</em>) – Calibrated imaginary component of phasor coordinates.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>phase0</cite> and <cite>modulation0</cite>
+    do not match.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -554,7 +557,7 @@ to 0.0.</p></li>
 </div>
 <p>Use separate reference coordinates for each phasor coordinate:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_calibrate</span><span class="p">(</span>
-<span class="gp">... </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">(array([-1.56, 1.934, 0.3279]), array([5.985, 10.6, 1.986]))</span>
 </pre></div>
@@ -568,17 +571,15 @@ to 0.0.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>real</strong> (<em>array_like</em>) – Real component of the phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of the phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
 <li><p><strong>skip_axes</strong> (<em>tuple</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to be excluded during center calculation. If None, all
 axes are considered.</p></li>
-<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <dl class="simple">
-<dt>Method used for center calculation:</dt><dd><ul>
-<li><p>’mean’: Arithmetic mean of the coordinates.</p></li>
-<li><p>’median’: Spatial median of the coordinates.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for center calculation:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mean'</span></code>: Arithmetic mean of phasor coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
 </ul>
-</dd>
-</dl>
 </p></li>
 </ul>
 </dd>
@@ -609,35 +610,75 @@ axes are considered.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_lifetime">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_preexp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_lifetime" title="Link to this definition">#</a></dt>
-<dd><p>Return phasor coordinates from multi-exponential lifetime components.</p>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_lifetime" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates from lifetime components.</p>
+<p>Calculate phasor coordinates as a function of frequency, single or
+multiple lifetime components, and the pre-exponential amplitudes
+or fractional intensities of the components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>frequency</strong> (<em>float</em>) – Laser pulse or modulation frequency in MHz.</p></li>
-<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime components in ns. May be a scalar for single-exponential
-or a sequence for multi-exponential components.</p></li>
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency in MHz.
+A scalar or one-dimensional sequence.</p></li>
+<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime components in ns. See notes below for allowed dimensions.</p></li>
 <li><p><strong>fraction</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Fractional intensities or pre-exponential amplitudes of the lifetime
-components. Must be of same shape as <cite>lifetime</cite>.
-If None (default), fractions are 1 for all lifetime components.
-Fractions are normalized internally.</p></li>
-<li><p><strong>is_preexp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, <cite>fraction</cite> values are pre-exponential amplitudes,
+components. Fractions are normalized to sum to 1.
+See notes below for allowed dimensions.</p></li>
+<li><p><strong>preexponential</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, <cite>fraction</cite> values are pre-exponential amplitudes,
 else fractional intensities (default).</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+<li><p><strong>squeeze</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true (default), length-one dimensions are removed from phasor
+coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
+<dd class="field-even"><p><ul>
 <li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary components of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates.</p>
+<p>See notes below for dimensions of the returned arrays.</p>
+</li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – Input arrays do not match or are more than one dimensional.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – Input arrays exceed their allowed dimensionality or do not match.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> (<cite>real</cite>) and <span class="math notranslate nohighlight">\(S\)</span> (<cite>imag</cite>) for
+many lifetime components <span class="math notranslate nohighlight">\(j\)</span> with lifetimes <span class="math notranslate nohighlight">\(𝜏\)</span> and
+pre-exponential amplitudes <span class="math notranslate nohighlight">\(α\)</span> at radial frequency <span class="math notranslate nohighlight">\(ω\)</span> are:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_{j} &amp;= a_{j} / (1 + (ω𝜏_{j})^2)\\G &amp;= \sum_{j} g_{j}\\S &amp;= \sum_{j} ω𝜏_{j}g_{j}\end{aligned}\end{align} \]</div>
+<p>The relation between pre-exponential amplitudes <span class="math notranslate nohighlight">\(α\)</span> and
+fractional intensities <span class="math notranslate nohighlight">\(a\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}F_{DC} &amp;= \sum_{j} a_{j}𝜏_{j}\\α_{j} &amp;= a_{j}𝜏_{j} / F_{DC}\end{aligned}\end{align} \]</div>
+<p>The following combinations of <cite>lifetime</cite> and <cite>fraction</cite> parameters are
+supported:</p>
+<ul class="simple">
+<li><p><cite>lifetime</cite> is scalar or one-dimensional, holding single component
+lifetimes. <cite>fraction</cite> is None.
+Return arrays of shape <cite>(frequency.size, lifetime.size)</cite>.</p></li>
+<li><p><cite>lifetime</cite> is two-dimensional, <cite>fraction</cite> is one-dimensional.
+The last dimensions match in size, holding lifetime components and
+their fractions.
+Return arrays of shape <cite>(frequency.size, lifetime.shape[1])</cite>.</p></li>
+<li><p><cite>lifetime</cite> is one-dimensional, <cite>fraction</cite> is two-dimensional.
+The last dimensions must match in size, holding lifetime components and
+their fractions.
+Return arrays of shape <cite>(frequency.size, fraction.shape[1])</cite>.</p></li>
+<li><p><cite>lifetime</cite> and <cite>fraction</cite> are up to two-dimensional of same shape.
+The last dimensions holding lifetime components and their fractions.
+Return arrays of shape <cite>(frequency.size, lifetime.shape[0])</cite>.</p></li>
+</ul>
+<p>Length-one dimensions are removed from returned arrays if <cite>squeeze</cite> is
+true.</p>
 <p class="rubric">Examples</p>
-<p>Phasor coordinates of a single lifetime component at 80 MHz:</p>
+<p>Phasor coordinates of a single lifetime component (in ns) at a
+frequency of 80 MHz:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">1.9894368</span><span class="p">)</span>  
 <span class="go">(0.5, 0.5)</span>
 </pre></div>
@@ -650,12 +691,170 @@ intensities:</p>
 <span class="go">(0.5, 0.4)</span>
 </pre></div>
 </div>
-<p>Phasor coordinates of a double-exponential decay with equal
-pre-exponential amplitudes:</p>
+<p>Phasor coordinates of two lifetime components with equal pre-exponential
+amplitudes:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="mf">80.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">is_preexp</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span>    <span class="mf">80.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">preexponential</span><span class="o">=</span><span class="kc">True</span>
 <span class="gp">... </span><span class="p">)</span>  
 <span class="go">(0.32, 0.4)</span>
+</pre></div>
+</div>
+<p>Phasor coordinates of many single-component lifetimes (fractions omitted):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="mf">80.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">1.9894368</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([0.2, 0.5, 0.8]), array([0.4, 0.5, 0.4]))</span>
+</pre></div>
+</div>
+<p>Phasor coordinates of two lifetime components with varying fractions:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="mf">80.0</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([0.2, 0.5, 0.8]), array([0.4, 0.4, 0.4]))</span>
+</pre></div>
+</div>
+<p>Phasor coordinates of multiple two-component lifetimes with constant
+fractions, keeping dimensions:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="mf">80.0</span><span class="p">,</span> <span class="p">[[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.9894368</span><span class="p">,</span> <span class="mf">1.9894368</span><span class="p">]],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([0.5, 0.5]), array([0.4, 0.5]))</span>
+</pre></div>
+</div>
+<p>Phasor coordinates of multiple two-component lifetimes with specific
+fractions at multiple frequencies. Frequencies are in Hz, lifetimes in ns:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">40e6</span><span class="p">,</span> <span class="mf">80e6</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">0.9947183e-9</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.9788735e-9</span><span class="p">,</span> <span class="mf">0.9947183e-9</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="gp">... </span>   <span class="n">unit_conversion</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([[0.941, 0.721], [0.8, 0.5]]), array([[0.235, 0.368], [0.4, 0.4]]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_polar">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_polar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_polar" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates from polar coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase</strong> (<em>array_like</em>) – Angular component of polar coordinates in radians.</p></li>
+<li><p><strong>modulation</strong> (<em>array_like</em>) – Radial component of polar coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The shapes of <cite>phase</cite> and <cite>modulation</cite> do not match.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Calculate phasor coordinates from three polar coordinates:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_polar</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([1, 0.5, 0.0]), array([0, 0.5, 1]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_signal_f1">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal_f1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DTypeLike</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_signal_f1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal_f1" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates of fundamental frequency from signal.</p>
+<p>Compared to the <code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code> reference implementation,
+this function does not use FFT, considers only the fundamental frequency
+(first harmonic), uses less memory, might be faster, and supports
+out-of-order samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>array_like</em>) – Frequency-domain, time-domain, or hyperspectral data.
+A minimum of three samples are required along <cite>axis</cite>.
+The samples must be uniformly spaced, but not necessarily in order.
+Must be of type uint8, uint16, uint32, uint64, int32, float32, or
+float64.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis over which to compute phasor coordinates.
+The default is the last axis (-1).</p></li>
+<li><p><strong>sample_phase</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Phase values (in radians) of <cite>signal</cite> samples along <cite>axis</cite>.
+If None (default), samples are assumed to be uniformly spaced along
+one period.
+The array size must equal the number of samples along <cite>axis</cite>.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64 (default).</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
+By default, multi-threading is disabled.
+If zero, up to half of logical CPUs are used.
+OpenMP may not be available on all platforms.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Average of signal along axis.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates along axis.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates along axis.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – The <cite>signal</cite> has less than three samples along <cite>axis</cite> or the
+    <cite>sample_phase</cite> size does not equal the number of samples along <cite>axis</cite>.</p></li>
+<li><p><strong>TypeError</strong> – The <cite>signal</cite> or <cite>dtype</cite> types are not supported.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Calculate phasor coordinates of a phase-shifted sinusoidal waveform:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sample_phase</span> <span class="o">-</span> <span class="mf">0.78539816</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span>  <span class="mf">0.70710678</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_signal_f1</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">signal</span><span class="p">,</span> <span class="n">sample_phase</span><span class="o">=</span><span class="n">sample_phase</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(1.1, 0.5, 0.5)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_semicircle">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_semicircle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">33</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_semicircle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_semicircle" title="Link to this definition">#</a></dt>
+<dd><p>Return equally spaced phasor coordinates on universal semicircle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of coordinates to return. The default is 33.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The number of <cite>samples</cite> is smaller than 1.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>If more than one sample, the first and last phasor coordinates returned
+are <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0)</span></code>.
+The center coordinate, if any, is <code class="docutils literal notranslate"><span class="pre">(0.5,</span> <span class="pre">0.5)</span></code>.</p>
+<p>The universal semicircle is composed of the phasor coordinates of
+single lifetime components, where the relation of polar coordinates
+(phase <span class="math notranslate nohighlight">\(φ\)</span> and modulation <span class="math notranslate nohighlight">\(M\)</span>) is <span class="math notranslate nohighlight">\(M=cos(φ)\)</span>.</p>
+<p class="rubric">Examples</p>
+<p>Calculate three phasor coordinates on universal semicircle:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_semicircle</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  
+<span class="go">(array([0, 0.5, 1]), array([0.0, 0.5, 0]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -667,26 +866,25 @@ pre-exponential amplitudes:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>real</strong> (<em>array_like</em>) – Real component of the phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of the phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>phase</strong> (<em>ndarray</em>) – Phase values calculated from the phasor coordinates.</p></li>
-<li><p><strong>modulation</strong> (<em>ndarray</em>) – Modulation values calculated from the phasor coordinates.</p></li>
+<li><p><strong>phase</strong> (<em>ndarray</em>) – Angular component of polar coordinates in radians.</p></li>
+<li><p><strong>modulation</strong> (<em>ndarray</em>) – Radial component of polar coordinates.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the shapes of the ‘real’ and ‘imag’ do not match.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – The shapes of the <cite>real</cite> and <cite>imag</cite> do not match.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_polar</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="go">(array([1.326, 1.19, 1.107]), array([4.123, 5.385, 6.708]))</span>
+<p>Calculate polar coordinates from three phasor coordinates:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_polar</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>  
+<span class="go">(array([0, 0.7854, 1.571]), array([1, 0.7071, 1]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -694,19 +892,22 @@ pre-exponential amplitudes:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.polar_from_reference">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">polar_from_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measured_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measured_modulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_phase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_modulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#polar_from_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.polar_from_reference" title="Link to this definition">#</a></dt>
-<dd><p>Return components for calibration from reference polar coordinates.</p>
+<dd><p>Return polar coordinates for calibration from reference coordinates.</p>
+<p>Return rotation angle and scale factor for calibrating phasor coordinates
+from measured and known polar coordinates of a reference, for example,
+a sample of known lifetime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>measured_phase</strong> (<em>array_like</em>) – Angular component of measured polar coordinates (in radians).</p></li>
-<li><p><strong>measured_modulation</strong> (<em>array_like</em>) – Radial component of the measured polar coordinates.</p></li>
-<li><p><strong>known_phase</strong> (<em>array_like</em>) – Angular component of the reference polar coordinates (in radians).</p></li>
-<li><p><strong>known_modulation</strong> (<em>array_like</em>) – Radial component of the reference polar coordinates.</p></li>
+<li><p><strong>measured_phase</strong> (<em>array_like</em>) – Angular component of measured polar coordinates in radians.</p></li>
+<li><p><strong>measured_modulation</strong> (<em>array_like</em>) – Radial component of measured polar coordinates.</p></li>
+<li><p><strong>known_phase</strong> (<em>array_like</em>) – Angular component of reference polar coordinates in radians.</p></li>
+<li><p><strong>known_modulation</strong> (<em>array_like</em>) – Radial component of reference polar coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>phase0</strong> (<em>ndarray</em>) – Angular component of polar coordinates for calibration.</p></li>
+<li><p><strong>phase0</strong> (<em>ndarray</em>) – Angular component of polar coordinates for calibration in radians.</p></li>
 <li><p><strong>modulation0</strong> (<em>ndarray</em>) – Radial component of polar coordinates for calibration.</p></li>
 </ul>
 </p>
@@ -727,18 +928,21 @@ pre-exponential amplitudes:</p>
 <dt class="sig sig-object py" id="phasorpy.phasor.polar_from_reference_phasor">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">polar_from_reference_phasor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">measured_real</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measured_imag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_real</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_imag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ArrayLike</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NDArray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phasorpy/phasor.html#polar_from_reference_phasor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.polar_from_reference_phasor" title="Link to this definition">#</a></dt>
 <dd><p>Return polar coordinates for calibration from reference phasor.</p>
+<p>Return rotation angle and scale factor for calibrating phasor coordinates
+from measured and known phasor coordinates of a reference, for example,
+a sample of known lifetime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>measured_real</strong> (<em>array_like</em>) – Real component of measured phasor coordinates.</p></li>
-<li><p><strong>measured_imag</strong> (<em>array_like</em>) – Imaginary component of the measured phasor coordinates.</p></li>
-<li><p><strong>known_real</strong> (<em>array_like</em>) – Real component of the reference phasor coordinates.</p></li>
-<li><p><strong>known_imag</strong> (<em>array_like</em>) – Imaginary component of the reference phasor coordinates.</p></li>
+<li><p><strong>measured_imag</strong> (<em>array_like</em>) – Imaginary component of measured phasor coordinates.</p></li>
+<li><p><strong>known_real</strong> (<em>array_like</em>) – Real component of reference phasor coordinates.</p></li>
+<li><p><strong>known_imag</strong> (<em>array_like</em>) – Imaginary component of reference phasor coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>phase0</strong> (<em>ndarray</em>) – Angular component of polar coordinates for calibration.</p></li>
+<li><p><strong>phase0</strong> (<em>ndarray</em>) – Angular component of polar coordinates for calibration in radians.</p></li>
 <li><p><strong>modulation0</strong> (<em>ndarray</em>) – Radial component of polar coordinates for calibration.</p></li>
 </ul>
 </p>
@@ -806,6 +1010,9 @@ pre-exponential amplitudes:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_polar"><code class="docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_signal_f1"><code class="docutils literal notranslate"><span class="pre">phasor_from_signal_f1()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_semicircle"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_polar"><code class="docutils literal notranslate"><span class="pre">phasor_to_polar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.polar_from_reference"><code class="docutils literal notranslate"><span class="pre">polar_from_reference()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.polar_from_reference_phasor"><code class="docutils literal notranslate"><span class="pre">polar_from_reference_phasor()</span></code></a></li>

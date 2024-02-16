@@ -463,7 +463,8 @@ document.write(`
 
 <span class="sd">- calculate phasor coordinates from time-resolved and spectral signals:</span>
 
-<span class="sd">  - :py:func:`phasor_from_signal` (not implemented yet)</span>
+<span class="sd">  - :py:func:`phasor_from_signal`</span>
+<span class="sd">  - :py:func:`phasor_from_signal_f1`</span>
 
 <span class="sd">- calculate phasor coordinates from single- or multi-component fluorescence</span>
 <span class="sd">  lifetimes:</span>
@@ -474,7 +475,7 @@ document.write(`
 
 <span class="sd">- convert between phasor and polar (phase and modulation) coordinates:</span>
 
-<span class="sd">  - :py:func:`phasor_from_polar` (not implemented yet)</span>
+<span class="sd">  - :py:func:`phasor_from_polar`</span>
 <span class="sd">  - :py:func:`phasor_to_polar`</span>
 
 <span class="sd">- calibrate phasor coordinates with reference of known fluorescence</span>
@@ -493,22 +494,220 @@ document.write(`
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;phasor_calibrate&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;polar_from_reference_phasor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;polar_from_reference&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;phasor_to_polar&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;phasor_from_lifetime&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;phasor_center&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_calibrate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;phasor_from_apparent_lifetime&#39;,</span>
+    <span class="s1">&#39;phasor_from_lifetime&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_from_polar&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_from_signal_f1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
+    <span class="c1"># &#39;phasor_to_apparent_lifetime&#39;,</span>
+    <span class="s1">&#39;phasor_to_polar&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;polar_from_reference&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;polar_from_reference_phasor&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Literal</span>
-
-<span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">DTypeLike</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">._phasor</span> <span class="kn">import</span> <span class="n">_phasor_from_lifetime</span><span class="p">,</span> <span class="n">_phasor_from_signal</span>
+
+
+<div class="viewcode-block" id="phasor_from_signal_f1">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_f1">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_from_signal_f1</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">sample_phase</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">DTypeLike</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates of fundamental frequency from signal.</span>
+
+<span class="sd">    Compared to the :py:func:`phasor_from_signal` reference implementation,</span>
+<span class="sd">    this function does not use FFT, considers only the fundamental frequency</span>
+<span class="sd">    (first harmonic), uses less memory, might be faster, and supports</span>
+<span class="sd">    out-of-order samples.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    signal : array_like</span>
+<span class="sd">        Frequency-domain, time-domain, or hyperspectral data.</span>
+<span class="sd">        A minimum of three samples are required along `axis`.</span>
+<span class="sd">        The samples must be uniformly spaced, but not necessarily in order.</span>
+<span class="sd">        Must be of type uint8, uint16, uint32, uint64, int32, float32, or</span>
+<span class="sd">        float64.</span>
+<span class="sd">    axis : int, optional</span>
+<span class="sd">        Axis over which to compute phasor coordinates.</span>
+<span class="sd">        The default is the last axis (-1).</span>
+<span class="sd">    sample_phase : array_like, optional</span>
+<span class="sd">        Phase values (in radians) of `signal` samples along `axis`.</span>
+<span class="sd">        If None (default), samples are assumed to be uniformly spaced along</span>
+<span class="sd">        one period.</span>
+<span class="sd">        The array size must equal the number of samples along `axis`.</span>
+<span class="sd">    dtype : dtype_like, optional</span>
+<span class="sd">        Data type of output arrays. Either float32 or float64 (default).</span>
+<span class="sd">    num_threads : int, optional</span>
+<span class="sd">        Number of OpenMP threads to use for parallelization.</span>
+<span class="sd">        By default, multi-threading is disabled.</span>
+<span class="sd">        If zero, up to half of logical CPUs are used.</span>
+<span class="sd">        OpenMP may not be available on all platforms.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mean : ndarray</span>
+<span class="sd">        Average of signal along axis.</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of phasor coordinates along axis.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of phasor coordinates along axis.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        The `signal` has less than three samples along `axis` or the</span>
+<span class="sd">        `sample_phase` size does not equal the number of samples along `axis`.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        The `signal` or `dtype` types are not supported.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Calculate phasor coordinates of a phase-shifted sinusoidal waveform:</span>
+
+<span class="sd">    &gt;&gt;&gt; sample_phase = numpy.linspace(0, 2 * math.pi, 5, endpoint=False)[::-1]</span>
+<span class="sd">    &gt;&gt;&gt; signal = 1.1 * (</span>
+<span class="sd">    ...     numpy.cos(sample_phase - 0.78539816) * 2 *  0.70710678 + 1</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; phasor_from_signal_f1(</span>
+<span class="sd">    ...    signal, sample_phase=sample_phase</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (1.1, 0.5, 0.5)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>  <span class="c1"># this also verifies axis</span>
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;not enough </span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> along </span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sample_phase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">sample_phase</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">sample_phase</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">sample_phase</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">samples</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sample_phase</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != (</span><span class="si">{</span><span class="n">samples</span><span class="si">}</span><span class="s1">,)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_threads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">num_threads</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">num_threads</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c1"># sched_getaffinity not available on Windows</span>
+            <span class="n">num_threads</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">num_threads</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">num_threads</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_threads</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_threads</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num_threads</span><span class="si">=}</span><span class="s1"> &lt; 0&#39;</span><span class="p">)</span>
+
+    <span class="c1"># pure numpy implementation for reference:</span>
+    <span class="c1"># shape = [1] * signal.ndim</span>
+    <span class="c1"># shape[axis] = sample_phase.size</span>
+    <span class="c1"># sample_phase = sample_phase.reshape(shape)  # make broadcastable</span>
+    <span class="c1"># mean = numpy.mean(signal, axis=axis)</span>
+    <span class="c1"># real = numpy.mean(signal * numpy.cos(sample_phase), axis=axis)</span>
+    <span class="c1"># real /= mean</span>
+    <span class="c1"># imag = numpy.mean(signal * numpy.sin(sample_phase), axis=axis)</span>
+    <span class="c1"># imag /= mean</span>
+    <span class="c1"># return mean, real, imag</span>
+
+    <span class="n">sincos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">sincos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sample_phase</span><span class="p">)</span>
+    <span class="n">sincos</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sample_phase</span><span class="p">)</span>
+    <span class="c1"># reshape to 3D with axis in middle</span>
+    <span class="n">axis</span> <span class="o">=</span> <span class="n">axis</span> <span class="o">%</span> <span class="n">signal</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">shape0</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="n">axis</span><span class="p">]</span>
+    <span class="n">shape1</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+    <span class="n">size0</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape0</span><span class="p">)</span>
+    <span class="n">size1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape1</span><span class="p">)</span>
+    <span class="n">phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">size0</span><span class="p">,</span> <span class="n">size1</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">size0</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">size1</span><span class="p">))</span>
+
+    <span class="n">_phasor_from_signal</span><span class="p">(</span><span class="n">phasor</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">sincos</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
+
+    <span class="c1"># restore original shape</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">shape0</span> <span class="o">+</span> <span class="n">shape1</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shape</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">real</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">imag</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_semicircle">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_semicircle">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_semicircle</span><span class="p">(</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span> <span class="o">/</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return equally spaced phasor coordinates on universal semicircle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    samples : int, optional</span>
+<span class="sd">        Number of coordinates to return. The default is 33.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        The number of `samples` is smaller than 1.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If more than one sample, the first and last phasor coordinates returned</span>
+<span class="sd">    are ``(0, 0)`` and ``(1, 0)``.</span>
+<span class="sd">    The center coordinate, if any, is ``(0.5, 0.5)``.</span>
+
+<span class="sd">    The universal semicircle is composed of the phasor coordinates of</span>
+<span class="sd">    single lifetime components, where the relation of polar coordinates</span>
+<span class="sd">    (phase :math:`φ` and modulation :math:`M`) is :math:`M=cos(φ)`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Calculate three phasor coordinates on universal semicircle:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_semicircle(3)  # doctest: +NUMBER</span>
+<span class="sd">    (array([0, 0.5, 1]), array([0.0, 0.5, 0]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 1&#39;</span><span class="p">)</span>
+    <span class="n">arange</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">arange</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">+=</span> <span class="mf">1.0</span>
+    <span class="n">real</span> <span class="o">*=</span> <span class="mf">0.5</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">arange</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">*=</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
 
 
 <div class="viewcode-block" id="phasor_calibrate">
@@ -531,27 +730,28 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : array_like</span>
-<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">        Real component of phasor coordinates to calibrate.</span>
 <span class="sd">    imag : array_like</span>
-<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">        Imaginary component of phasor coordinates to calibrate.</span>
 <span class="sd">    phase0 : array_like, optional</span>
-<span class="sd">        Angular component of polar coordinates for calibration. Defaults</span>
-<span class="sd">        to 0.0.</span>
+<span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
+<span class="sd">        Defaults to 0.0.</span>
 <span class="sd">    modulation0 : array_like, optional</span>
-<span class="sd">        Radial component of polar coordinates for calibration. Defaults to 1.0.</span>
+<span class="sd">        Radial component of polar coordinates for calibration.</span>
+<span class="sd">        Defaults to 1.0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Calibrated real component of phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Calibrated imaginary component of phasor coordinates.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        The array shapes of `real` and `imag`, or `phase0` and `modulation0`</span>
 <span class="sd">        do not match.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real: ndarray</span>
-<span class="sd">        Calibrated real component of phasor coordinates.</span>
-<span class="sd">    imag: ndarray</span>
-<span class="sd">        Calibrated imaginary component of phasor coordinates.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -563,7 +763,7 @@ document.write(`
 <span class="sd">    Use separate reference coordinates for each phasor coordinate:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
-<span class="sd">    ... [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [0.5, 0.2, 0.3], [1.5, 2.0, 0.3]</span>
+<span class="sd">    ...     [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [0.5, 0.2, 0.3], [1.5, 2.0, 0.3]</span>
 <span class="sd">    ... )</span>
 <span class="sd">    (array([-1.56, 1.934, 0.3279]), array([5.985, 10.6, 1.986]))</span>
 
@@ -601,22 +801,26 @@ document.write(`
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return polar coordinates for calibration from reference phasor.</span>
 
+<span class="sd">    Return rotation angle and scale factor for calibrating phasor coordinates</span>
+<span class="sd">    from measured and known phasor coordinates of a reference, for example,</span>
+<span class="sd">    a sample of known lifetime.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    measured_real: array_like</span>
+<span class="sd">    measured_real : array_like</span>
 <span class="sd">        Real component of measured phasor coordinates.</span>
-<span class="sd">    measured_imag: array_like</span>
-<span class="sd">        Imaginary component of the measured phasor coordinates.</span>
-<span class="sd">    known_real: array_like</span>
-<span class="sd">        Real component of the reference phasor coordinates.</span>
-<span class="sd">    known_imag: array_like</span>
-<span class="sd">        Imaginary component of the reference phasor coordinates.</span>
+<span class="sd">    measured_imag : array_like</span>
+<span class="sd">        Imaginary component of measured phasor coordinates.</span>
+<span class="sd">    known_real : array_like</span>
+<span class="sd">        Real component of reference phasor coordinates.</span>
+<span class="sd">    known_imag : array_like</span>
+<span class="sd">        Imaginary component of reference phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase0: ndarray</span>
-<span class="sd">        Angular component of polar coordinates for calibration.</span>
-<span class="sd">    modulation0: ndarray</span>
+<span class="sd">    phase0 : ndarray</span>
+<span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
+<span class="sd">    modulation0 : ndarray</span>
 <span class="sd">        Radial component of polar coordinates for calibration.</span>
 
 <span class="sd">    Raises</span>
@@ -657,25 +861,28 @@ document.write(`
     <span class="n">known_modulation</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return components for calibration from reference polar coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return polar coordinates for calibration from reference coordinates.</span>
+
+<span class="sd">    Return rotation angle and scale factor for calibrating phasor coordinates</span>
+<span class="sd">    from measured and known polar coordinates of a reference, for example,</span>
+<span class="sd">    a sample of known lifetime.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    measured_phase: array_like</span>
-<span class="sd">        Angular component of measured polar coordinates (in radians).</span>
-<span class="sd">    measured_modulation: array_like</span>
-<span class="sd">        Radial component of the measured polar coordinates.</span>
-<span class="sd">    known_phase: array_like</span>
-<span class="sd">        Angular component of the reference polar coordinates (in radians).</span>
-<span class="sd">    known_modulation: array_like</span>
-<span class="sd">        Radial component of the reference polar coordinates.</span>
+<span class="sd">    measured_phase : array_like</span>
+<span class="sd">        Angular component of measured polar coordinates in radians.</span>
+<span class="sd">    measured_modulation : array_like</span>
+<span class="sd">        Radial component of measured polar coordinates.</span>
+<span class="sd">    known_phase : array_like</span>
+<span class="sd">        Angular component of reference polar coordinates in radians.</span>
+<span class="sd">    known_modulation : array_like</span>
+<span class="sd">        Radial component of reference polar coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase0: ndarray</span>
-<span class="sd">        Angular component of polar coordinates for calibration.</span>
-
-<span class="sd">    modulation0: ndarray</span>
+<span class="sd">    phase0 : ndarray</span>
+<span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
+<span class="sd">    modulation0 : ndarray</span>
 <span class="sd">        Radial component of polar coordinates for calibration.</span>
 
 <span class="sd">    Raises</span>
@@ -683,7 +890,6 @@ document.write(`
 <span class="sd">    ValueError</span>
 <span class="sd">        The array shapes of `measured_phase` and `measured_modulation`, or</span>
 <span class="sd">        `known_phase` and `known_modulation` do not match.</span>
-
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -719,28 +925,28 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : array_like</span>
-<span class="sd">        Real component of the phasor coordinates.</span>
+<span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
-<span class="sd">        Imaginary component of the phasor coordinates.</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase: ndarray</span>
-<span class="sd">        Phase values calculated from the phasor coordinates.</span>
-<span class="sd">    modulation: ndarray</span>
-<span class="sd">        Modulation values calculated from the phasor coordinates.</span>
+<span class="sd">    phase : ndarray</span>
+<span class="sd">        Angular component of polar coordinates in radians.</span>
+<span class="sd">    modulation : ndarray</span>
+<span class="sd">        Radial component of polar coordinates.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the shapes of the &#39;real&#39; and &#39;imag&#39; do not match.</span>
+<span class="sd">        The shapes of the `real` and `imag` do not match.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; phasor_to_polar(</span>
-<span class="sd">    ...     [1.0, 2.0, 3.0], [4.0, 5.0, 6.0]</span>
-<span class="sd">    ... )</span>
-<span class="sd">    (array([1.326, 1.19, 1.107]), array([4.123, 5.385, 6.708]))</span>
+<span class="sd">    Calculate polar coordinates from three phasor coordinates:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_to_polar([1.0, 0.5, 0.0], [0.0, 0.5, 1.0])  # doctest: +NUMBER</span>
+<span class="sd">    (array([0, 0.7854, 1.571]), array([1, 0.7071, 1]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
@@ -753,49 +959,158 @@ document.write(`
 
 
 
-<div class="viewcode-block" id="phasor_from_lifetime">
-<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_lifetime">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_from_lifetime</span><span class="p">(</span>
-    <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+<div class="viewcode-block" id="phasor_from_polar">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_polar">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_from_polar</span><span class="p">(</span>
+    <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">modulation</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
-    <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">is_preexp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates from multi-exponential lifetime components.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates from polar coordinates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    frequency: float</span>
-<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
-<span class="sd">    lifetime: array_like</span>
-<span class="sd">        Lifetime components in ns. May be a scalar for single-exponential</span>
-<span class="sd">        or a sequence for multi-exponential components.</span>
-<span class="sd">    fraction: array_like, optional</span>
-<span class="sd">        Fractional intensities or pre-exponential amplitudes of the lifetime</span>
-<span class="sd">        components. Must be of same shape as `lifetime`.</span>
-<span class="sd">        If None (default), fractions are 1 for all lifetime components.</span>
-<span class="sd">        Fractions are normalized internally.</span>
-<span class="sd">    is_preexp: bool, optional</span>
-<span class="sd">        If true, `fraction` values are pre-exponential amplitudes,</span>
-<span class="sd">        else fractional intensities (default).</span>
+<span class="sd">    phase : array_like</span>
+<span class="sd">        Angular component of polar coordinates in radians.</span>
+<span class="sd">    modulation : array_like</span>
+<span class="sd">        Radial component of polar coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real: ndarray</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Real component of phasor coordinates.</span>
-<span class="sd">    imag: ndarray</span>
-<span class="sd">        Imaginary components of phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Input arrays do not match or are more than one dimensional.</span>
+<span class="sd">        The shapes of `phase` and `modulation` do not match.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Phasor coordinates of a single lifetime component at 80 MHz:</span>
+<span class="sd">    Calculate phasor coordinates from three polar coordinates:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_polar(</span>
+<span class="sd">    ...     [0.0, math.pi / 4, math.pi / 2], [1.0, math.sqrt(0.5), 1.0]</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([1, 0.5, 0.0]), array([0, 0.5, 1]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="n">modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">phase</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">modulation</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">modulation</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">*=</span> <span class="n">modulation</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">*=</span> <span class="n">modulation</span>
+    <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_from_lifetime">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_lifetime">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_from_lifetime</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">squeeze</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return phasor coordinates from lifetime components.</span>
+
+<span class="sd">    Calculate phasor coordinates as a function of frequency, single or</span>
+<span class="sd">    multiple lifetime components, and the pre-exponential amplitudes</span>
+<span class="sd">    or fractional intensities of the components.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
+<span class="sd">        A scalar or one-dimensional sequence.</span>
+<span class="sd">    lifetime : array_like</span>
+<span class="sd">        Lifetime components in ns. See notes below for allowed dimensions.</span>
+<span class="sd">    fraction : array_like, optional</span>
+<span class="sd">        Fractional intensities or pre-exponential amplitudes of the lifetime</span>
+<span class="sd">        components. Fractions are normalized to sum to 1.</span>
+<span class="sd">        See notes below for allowed dimensions.</span>
+<span class="sd">    preexponential : bool, optional</span>
+<span class="sd">        If true, `fraction` values are pre-exponential amplitudes,</span>
+<span class="sd">        else fractional intensities (default).</span>
+<span class="sd">    unit_conversion : float</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    squeeze : bool, optional</span>
+<span class="sd">        If true (default), length-one dimensions are removed from phasor</span>
+<span class="sd">        coordinates.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+
+<span class="sd">        See notes below for dimensions of the returned arrays.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Input arrays exceed their allowed dimensionality or do not match.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The phasor coordinates :math:`G` (`real`) and :math:`S` (`imag`) for</span>
+<span class="sd">    many lifetime components :math:`j` with lifetimes :math:`𝜏` and</span>
+<span class="sd">    pre-exponential amplitudes :math:`α` at radial frequency :math:`ω` are:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        g_{j} &amp;= a_{j} / (1 + (ω𝜏_{j})^2)</span>
+
+<span class="sd">        G &amp;= \sum_{j} g_{j}</span>
+
+<span class="sd">        S &amp;= \sum_{j} ω𝜏_{j}g_{j}</span>
+
+<span class="sd">    The relation between pre-exponential amplitudes :math:`α` and</span>
+<span class="sd">    fractional intensities :math:`a` is:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        F_{DC} &amp;= \sum_{j} a_{j}𝜏_{j}</span>
+
+<span class="sd">        α_{j} &amp;= a_{j}𝜏_{j} / F_{DC}</span>
+
+<span class="sd">    The following combinations of `lifetime` and `fraction` parameters are</span>
+<span class="sd">    supported:</span>
+
+<span class="sd">    - `lifetime` is scalar or one-dimensional, holding single component</span>
+<span class="sd">      lifetimes. `fraction` is None.</span>
+<span class="sd">      Return arrays of shape `(frequency.size, lifetime.size)`.</span>
+
+<span class="sd">    - `lifetime` is two-dimensional, `fraction` is one-dimensional.</span>
+<span class="sd">      The last dimensions match in size, holding lifetime components and</span>
+<span class="sd">      their fractions.</span>
+<span class="sd">      Return arrays of shape `(frequency.size, lifetime.shape[1])`.</span>
+
+<span class="sd">    - `lifetime` is one-dimensional, `fraction` is two-dimensional.</span>
+<span class="sd">      The last dimensions must match in size, holding lifetime components and</span>
+<span class="sd">      their fractions.</span>
+<span class="sd">      Return arrays of shape `(frequency.size, fraction.shape[1])`.</span>
+
+<span class="sd">    - `lifetime` and `fraction` are up to two-dimensional of same shape.</span>
+<span class="sd">      The last dimensions holding lifetime components and their fractions.</span>
+<span class="sd">      Return arrays of shape `(frequency.size, lifetime.shape[0])`.</span>
+
+<span class="sd">    Length-one dimensions are removed from returned arrays if `squeeze` is</span>
+<span class="sd">    true.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Phasor coordinates of a single lifetime component (in ns) at a</span>
+<span class="sd">    frequency of 80 MHz:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(80.0, 1.9894368)  # doctest: +NUMBER</span>
 <span class="sd">    (0.5, 0.5)</span>
@@ -808,37 +1123,105 @@ document.write(`
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (0.5, 0.4)</span>
 
-<span class="sd">    Phasor coordinates of a double-exponential decay with equal</span>
-<span class="sd">    pre-exponential amplitudes:</span>
+<span class="sd">    Phasor coordinates of two lifetime components with equal pre-exponential</span>
+<span class="sd">    amplitudes:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
-<span class="sd">    ...     80.0, [3.9788735, 0.9947183], [0.5, 0.5], is_preexp=True</span>
+<span class="sd">    ...     80.0, [3.9788735, 0.9947183], [0.5, 0.5], preexponential=True</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (0.32, 0.4)</span>
 
+<span class="sd">    Phasor coordinates of many single-component lifetimes (fractions omitted):</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
+<span class="sd">    ...     80.0, [3.9788735, 1.9894368, 0.9947183],</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.2, 0.5, 0.8]), array([0.4, 0.5, 0.4]))</span>
+
+<span class="sd">    Phasor coordinates of two lifetime components with varying fractions:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
+<span class="sd">    ...     80.0, [3.9788735, 0.9947183], [[1, 0], [0.5, 0.5], [0, 1]]</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.2, 0.5, 0.8]), array([0.4, 0.4, 0.4]))</span>
+
+<span class="sd">    Phasor coordinates of multiple two-component lifetimes with constant</span>
+<span class="sd">    fractions, keeping dimensions:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
+<span class="sd">    ...     80.0, [[3.9788735, 0.9947183], [1.9894368, 1.9894368]], [0.5, 0.5]</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.5, 0.5]), array([0.4, 0.5]))</span>
+
+<span class="sd">    Phasor coordinates of multiple two-component lifetimes with specific</span>
+<span class="sd">    fractions at multiple frequencies. Frequencies are in Hz, lifetimes in ns:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
+<span class="sd">    ...     [40e6, 80e6],</span>
+<span class="sd">    ...     [[1e-9, 0.9947183e-9], [3.9788735e-9, 0.9947183e-9]],</span>
+<span class="sd">    ...     [[0, 1], [0.5, 0.5]],</span>
+<span class="sd">    ...    unit_conversion=1.0</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([[0.941, 0.721], [0.8, 0.5]]), array([[0.235, 0.368], [0.4, 0.4]]))</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tau</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">tau</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;lifetime must be scalar or one-dimensional array&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unit_conversion</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">unit_conversion</span><span class="si">=}</span><span class="s1"> &lt; 1e-16&#39;</span><span class="p">)</span>
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frequency</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;frequency is not one-dimensional array&#39;</span><span class="p">)</span>
+    <span class="n">lifetime</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;lifetime must be one- or two-dimensional array&#39;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">fraction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">frac</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+        <span class="c1"># single-component lifetimes</span>
+        <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;lifetime must be one-dimensional array if fraction is None&#39;</span>
+            <span class="p">)</span>
+        <span class="n">lifetime</span> <span class="o">=</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># move components to last axis</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">lifetime</span><span class="p">)</span>  <span class="c1"># not really used</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">frac</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fraction</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tau</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">frac</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;shape mismatch </span><span class="si">{</span><span class="n">tau</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != </span><span class="si">{</span><span class="n">frac</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">is_preexp</span><span class="p">:</span>
-        <span class="c1"># preexponential amplitudes to fractional intensities</span>
-        <span class="n">frac</span> <span class="o">*=</span> <span class="n">tau</span>
-    <span class="n">frac</span> <span class="o">/=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">frac</span><span class="p">)</span>  <span class="c1"># TODO: check for zero</span>
-    <span class="n">tau</span> <span class="o">*=</span> <span class="n">frequency</span> <span class="o">*</span> <span class="mf">2e-3</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># omega_tau</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
-    <span class="n">tmp</span> <span class="o">+=</span> <span class="mf">1.0</span>
-    <span class="n">tmp</span> <span class="o">**=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">tmp</span> <span class="o">*=</span> <span class="n">frac</span>
-    <span class="n">re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-    <span class="n">tmp</span> <span class="o">*=</span> <span class="n">tau</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">re</span><span class="p">,</span> <span class="n">im</span></div>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fraction</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fraction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;fraction must be one- or two-dimensional array&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">fraction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># one multi-component lifetime</span>
+        <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> does not match </span><span class="si">{</span><span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+        <span class="n">lifetime</span> <span class="o">=</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">fraction</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">nvar</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">fraction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># multiple, multi-component lifetimes</span>
+        <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">nvar</span> <span class="o">=</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">fraction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># variable components, same fractions</span>
+        <span class="n">fraction</span> <span class="o">=</span> <span class="n">fraction</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">nvar</span> <span class="o">=</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">fraction</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># same components, varying fractions</span>
+        <span class="n">lifetime</span> <span class="o">=</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">nvar</span> <span class="o">=</span> <span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># unreachable code</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lifetime</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">fraction</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">nvar</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="n">_phasor_from_lifetime</span><span class="p">(</span>
+        <span class="n">phasor</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">unit_conversion</span><span class="p">,</span> <span class="n">preexponential</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">squeeze</span><span class="p">:</span>
+        <span class="n">phasor</span> <span class="o">=</span> <span class="n">phasor</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 
 
 
@@ -857,22 +1240,23 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : array_like</span>
-<span class="sd">        Real component of the phasor coordinates.</span>
+<span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
-<span class="sd">        Imaginary component of the phasor coordinates.</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
 <span class="sd">    skip_axes : tuple of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 <span class="sd">    method : str, optional</span>
 <span class="sd">        Method used for center calculation:</span>
-<span class="sd">            - &#39;mean&#39;: Arithmetic mean of the coordinates.</span>
-<span class="sd">            - &#39;median&#39;: Spatial median of the coordinates.</span>
+
+<span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
+<span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real_center: ndarray</span>
+<span class="sd">    real_center : ndarray</span>
 <span class="sd">        Real center coordinates calculated based on the specified method.</span>
-<span class="sd">    imag_center: ndarray</span>
+<span class="sd">    imag_center : ndarray</span>
 <span class="sd">        Imaginary center coordinates calculated based on the specified method.</span>
 
 <span class="sd">    Raises</span>
@@ -924,18 +1308,18 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : numpy.ndarray</span>
-<span class="sd">        Real components of the phasor coordinates.</span>
+<span class="sd">        Real components of phasor coordinates.</span>
 <span class="sd">    imag : numpy.ndarray</span>
-<span class="sd">        Imaginary components of the phasor coordinates.</span>
+<span class="sd">        Imaginary components of phasor coordinates.</span>
 <span class="sd">    skip_axes : tuple of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real_center: ndarray</span>
+<span class="sd">    real_center : ndarray</span>
 <span class="sd">        Mean real center coordinates.</span>
-<span class="sd">    imag_center: ndarray</span>
+<span class="sd">    imag_center : ndarray</span>
 <span class="sd">        Mean imaginary center coordinates.</span>
 
 <span class="sd">    Examples</span>
@@ -973,9 +1357,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real_center: ndarray</span>
+<span class="sd">    real_center : ndarray</span>
 <span class="sd">        Spatial median center for real coordinates.</span>
-<span class="sd">    imag_center: ndarray</span>
+<span class="sd">    imag_center : ndarray</span>
 <span class="sd">        Spatial median center for imaginary coordinates.</span>
 
 <span class="sd">    Examples</span>
