@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Benchmark phasor_from_signal &#8212; PhasorPy 0.1.dev documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=781dc9bd"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/benchmarks/phasorpy_phasor_from_signal';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Miscellaneous" href="../misc/index.html" />
+    <link rel="prev" title="Benchmarks" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PhasorPy"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="PhasorPy"/>`);</script>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../phasor_approach.html">
+                        Phasor approach
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api/index.html">
+                        API reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../contributing.html">
+                        Contributing
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../release.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../acknowledgments.html">
+                        Acknowledgments
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../code_of_conduct.html">
+                        Code of conduct
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../license.html">
+                        MIT License
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../phasor_approach.html">
+                        Phasor approach
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        Tutorials
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api/index.html">
+                        API reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../contributing.html">
+                        Contributing
+                      </a>
+                    </li>
+                
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
+                    More
+                </button>
+                <ul id="pst-nav-more-links-2" class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../release.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../acknowledgments.html">
+                        Acknowledgments
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../code_of_conduct.html">
+                        Code of conduct
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link dropdown-item nav-internal" href="../../license.html">
+                        MIT License
+                      </a>
+                    </li>
+                
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Benchmarks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Benchmark phasor_from_signal</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../misc/index.html">Miscellaneous</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../misc/phasorpy_logo.html">PhasorPy logo</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Tutorials</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Benchmarks</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Benchmark...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="sphx-glr-example-title" id="benchmark-phasor-from-signal">
+<span id="sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"></span><h1>Benchmark phasor_from_signal<a class="headerlink" href="#benchmark-phasor-from-signal" title="Link to this heading">#</a></h1>
+<p>Benchmark the <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> function.</p>
+<p>The <a class="reference internal" href="../../api/phasor.html"><span class="doc">phasorpy.phasor</span></a> module provides two functions to calculate phasor
+coordinates from time-resolved or spectral signals:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal()</span></code></a>,
+implemented mostly in Cython for efficiency.</p></li>
+<li><p><a class="reference internal" href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal_fft()</span></code></a>,
+a pure Python reference implementation based on <code class="docutils literal notranslate"><span class="pre">numpy.fft.fft</span></code>.</p></li>
+</ul>
+<p>This tutorial compares the performance of the two implementations.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">timeit</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_from_signal</span><span class="p">,</span> <span class="n">phasor_from_signal_fft</span>
+<span class="kn">from</span> <span class="nn">phasorpy.utils</span> <span class="kn">import</span> <span class="n">number_threads</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">scipy_fft</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">mkl_fft._numpy_fft</span> <span class="kn">import</span> <span class="n">fft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<section id="run-benchmark">
+<h2>Run benchmark<a class="headerlink" href="#run-benchmark" title="Link to this heading">#</a></h2>
+<p>Create a random signal with a size and dtype similar to real world data:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">))</span>
+<span class="n">signal</span> <span class="o">+=</span> <span class="mf">1.1</span>
+<span class="n">signal</span> <span class="o">*=</span> <span class="mi">3723</span>  <span class="c1"># ~12 bit</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>  <span class="c1"># 108 MB</span>
+</pre></div>
+</div>
+<p>Print execution times depending on function, axis, number of harmonics,
+and number of threads:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">statement</span> <span class="o">=</span> <span class="s1">&#39;func(signal, axis=axis, harmonic=harmonic, **kwargs)&#39;</span>
+<span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># how many times to execute statement</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># reference duration</span>
+
+
+<span class="k">def</span> <span class="nf">print_</span><span class="p">(</span><span class="n">descr</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">descr</span><span class="si">:</span><span class="s1">24s</span><span class="si">}{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">number</span><span class="si">:</span><span class="s1">&gt;6.3f</span><span class="si">}</span><span class="s1">s </span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ref</span><span class="si">:</span><span class="s1">&gt;6.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">harmonic</span> <span class="ow">in</span> <span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;harmonics </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">phasor_from_signal</span>  <span class="c1"># type: ignore</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ref</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">print_</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">num_threads</span><span class="o">=</span><span class="n">num_threads</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  threads </span><span class="si">{</span><span class="n">num_threads</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="n">func</span> <span class="o">=</span> <span class="n">phasor_from_signal_fft</span>  <span class="c1"># type: ignore</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+        <span class="n">print_</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">fft_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;scipy_fft&#39;</span><span class="p">,</span> <span class="s1">&#39;mkl_fft&#39;</span><span class="p">):</span>
+            <span class="n">fft_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">fft_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">fft_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fft_func</span><span class="o">=</span><span class="n">fft_func</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">fft_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
+  axis -1
+    phasor_from_signal       0.057s   1.00
+      threads 2              0.038s   0.68
+    phasor_from_signal_fft   0.390s   6.86
+  axis 0
+    phasor_from_signal       0.164s   2.89
+      threads 2              0.081s   1.42
+    phasor_from_signal_fft   2.505s  44.12
+  axis 2
+    phasor_from_signal       0.056s   0.98
+      threads 2              0.036s   0.64
+    phasor_from_signal_fft   0.390s   6.87
+harmonics 8
+  axis -1
+    phasor_from_signal       0.447s   7.87
+      threads 2              0.236s   4.16
+    phasor_from_signal_fft   0.407s   7.18
+  axis 0
+    phasor_from_signal       1.312s  23.11
+      threads 2              0.656s  11.56
+    phasor_from_signal_fft   2.585s  45.54
+  axis 2
+    phasor_from_signal       0.444s   7.82
+      threads 2              0.235s   4.14
+    phasor_from_signal_fft   0.401s   7.07
+</pre></div>
+</div>
+<p>For reference, the results on a Core i7-14700K CPU:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">harmonics</span> <span class="mi">1</span>
+  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.347</span><span class="n">s</span>  <span class="mf">10.22</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.160</span><span class="n">s</span>   <span class="mf">4.71</span>
+  <span class="n">axis</span> <span class="mi">0</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.77</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.10</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">2.236</span><span class="n">s</span>  <span class="mf">65.80</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.922</span><span class="n">s</span>  <span class="mf">27.14</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.195</span><span class="n">s</span>   <span class="mf">5.73</span>
+  <span class="n">axis</span> <span class="mi">2</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.09</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.22</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.360</span><span class="n">s</span>  <span class="mf">10.60</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.169</span><span class="n">s</span>   <span class="mf">4.98</span>
+<span class="n">harmonics</span> <span class="mi">8</span>
+  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">0.281</span><span class="n">s</span>   <span class="mf">8.26</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.35</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.367</span><span class="n">s</span>  <span class="mf">10.79</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.410</span><span class="n">s</span>  <span class="mf">12.06</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.180</span><span class="n">s</span>   <span class="mf">5.31</span>
+  <span class="n">axis</span> <span class="mi">0</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">1.211</span><span class="n">s</span>  <span class="mf">35.63</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.345</span><span class="n">s</span>  <span class="mf">10.16</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">2.263</span><span class="n">s</span>  <span class="mf">66.58</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.936</span><span class="n">s</span>  <span class="mf">27.54</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.200</span><span class="n">s</span>   <span class="mf">5.89</span>
+  <span class="n">axis</span> <span class="mi">2</span>
+    <span class="n">phasor_from_signal</span>       <span class="mf">0.284</span><span class="n">s</span>   <span class="mf">8.37</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.34</span>
+    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.377</span><span class="n">s</span>  <span class="mf">11.10</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.431</span><span class="n">s</span>  <span class="mf">12.69</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.185</span><span class="n">s</span>   <span class="mf">5.44</span>
+</pre></div>
+</div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is an order of magnitude faster
+than the <code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code> based reference implementation for single harmonics.</p></li>
+<li><p>The FFT functions from <code class="docutils literal notranslate"><span class="pre">scipy</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> usually outperform
+numpy.fft.</p></li>
+<li><p>Using FFT becomes more competitive when calculating larger number of
+harmonics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> is very performant for first and last axes.</p></li>
+<li><p>Computing over the last axis is significantly faster compared to the first
+axis. That is because the samples in the last dimension are contiguous,
+closer together in memory.</p></li>
+<li><p>Using multiple threads can significantly speed up the calculation.</p></li>
+</ul>
+<p>Note that these results were obtained on a single dataset of random numbers.</p>
+</section>
+<section id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is a reasonable default.
+The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal_fft</span></code> function may be a better choice, for example,
+when computing large number of harmonics with an optimized FFT function.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.778 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-benchmarks-phasorpy-phasor-from-signal-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9d07845b628b555914639d30910d46da/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5c0d53074afbcf45bf6c1d58197188f1/phasorpy_phasor_from_signal.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_phasor_from_signal.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Benchmarks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../misc/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Miscellaneous</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-benchmark">Run benchmark</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusions">Conclusions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
