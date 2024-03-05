@@ -29,6 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -43,6 +44,7 @@
     <script src="../../_static/documentation_options.js?v=781dc9bd"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=30646c52"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/benchmarks/phasorpy_phasor_from_signal';</script>
@@ -415,8 +417,9 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../phasorpy_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy_introduction.html">Introduction to PhasorPy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy_phasorplot.html">Phasor plot</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Benchmarks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -503,8 +506,8 @@ a pure Python reference implementation based on <code class="docutils literal no
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_from_signal</span><span class="p">,</span> <span class="n">phasor_from_signal_fft</span>
-<span class="kn">from</span> <span class="nn">phasorpy.utils</span> <span class="kn">import</span> <span class="n">number_threads</span>
+<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">,</span> <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>
+<span class="kn">from</span> <span class="nn">phasorpy.utils</span> <span class="kn">import</span> <a href="../../api/utils.html#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
@@ -541,20 +544,20 @@ and number of threads:</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;harmonics </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">func</span> <span class="o">=</span> <span class="n">phasor_from_signal</span>  <span class="c1"># type: ignore</span>
+        <span class="n">func</span> <span class="o">=</span> <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>  <span class="c1"># type: ignore</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ref</span> <span class="o">=</span> <span class="n">t</span>
         <span class="n">print_</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
-        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <a href="../../api/utils.html#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">num_threads</span><span class="o">=</span><span class="n">num_threads</span><span class="p">)</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
             <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  threads </span><span class="si">{</span><span class="n">num_threads</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
-        <span class="n">func</span> <span class="o">=</span> <span class="n">phasor_from_signal_fft</span>  <span class="c1"># type: ignore</span>
+        <span class="n">func</span> <span class="o">=</span> <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>  <span class="c1"># type: ignore</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
         <span class="n">print_</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
@@ -570,69 +573,75 @@ and number of threads:</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
   axis -1
-    phasor_from_signal       0.057s   1.00
+    phasor_from_signal       0.056s   1.00
       threads 2              0.030s   0.53
-    phasor_from_signal_fft   0.389s   6.86
+    phasor_from_signal_fft   0.391s   7.00
+      scipy_fft              0.390s   6.97
   axis 0
-    phasor_from_signal       0.164s   2.89
-      threads 2              0.081s   1.42
-    phasor_from_signal_fft   2.478s  43.68
+    phasor_from_signal       0.163s   2.92
+      threads 2              0.080s   1.44
+    phasor_from_signal_fft   2.434s  43.55
+      scipy_fft              0.476s   8.52
   axis 2
-    phasor_from_signal       0.056s   0.98
-      threads 2              0.038s   0.67
-    phasor_from_signal_fft   0.389s   6.85
+    phasor_from_signal       0.056s   1.00
+      threads 2              0.030s   0.54
+    phasor_from_signal_fft   0.389s   6.96
+      scipy_fft              0.394s   7.05
 harmonics 8
   axis -1
-    phasor_from_signal       0.443s   7.80
-      threads 2              0.236s   4.16
-    phasor_from_signal_fft   0.403s   7.11
+    phasor_from_signal       0.445s   7.97
+      threads 2              0.236s   4.23
+    phasor_from_signal_fft   0.404s   7.22
+      scipy_fft              0.403s   7.21
   axis 0
-    phasor_from_signal       1.311s  23.10
-      threads 2              0.658s  11.59
-    phasor_from_signal_fft   2.501s  44.08
+    phasor_from_signal       1.308s  23.41
+      threads 2              0.657s  11.76
+    phasor_from_signal_fft   2.459s  44.00
+      scipy_fft              0.484s   8.66
   axis 2
-    phasor_from_signal       0.441s   7.77
-      threads 2              0.234s   4.13
-    phasor_from_signal_fft   0.400s   7.05
+    phasor_from_signal       0.445s   7.95
+      threads 2              0.236s   4.22
+    phasor_from_signal_fft   0.402s   7.20
+      scipy_fft              0.404s   7.22
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">harmonics</span> <span class="mi">1</span>
   <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.347</span><span class="n">s</span>  <span class="mf">10.22</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.347</span><span class="n">s</span>  <span class="mf">10.22</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.160</span><span class="n">s</span>   <span class="mf">4.71</span>
   <span class="n">axis</span> <span class="mi">0</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.77</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.77</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.10</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">2.236</span><span class="n">s</span>  <span class="mf">65.80</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">2.236</span><span class="n">s</span>  <span class="mf">65.80</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.922</span><span class="n">s</span>  <span class="mf">27.14</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.195</span><span class="n">s</span>   <span class="mf">5.73</span>
   <span class="n">axis</span> <span class="mi">2</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.09</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.09</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.22</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.360</span><span class="n">s</span>  <span class="mf">10.60</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.360</span><span class="n">s</span>  <span class="mf">10.60</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.169</span><span class="n">s</span>   <span class="mf">4.98</span>
 <span class="n">harmonics</span> <span class="mi">8</span>
   <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">0.281</span><span class="n">s</span>   <span class="mf">8.26</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.281</span><span class="n">s</span>   <span class="mf">8.26</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.35</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.367</span><span class="n">s</span>  <span class="mf">10.79</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.367</span><span class="n">s</span>  <span class="mf">10.79</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.410</span><span class="n">s</span>  <span class="mf">12.06</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.180</span><span class="n">s</span>   <span class="mf">5.31</span>
   <span class="n">axis</span> <span class="mi">0</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">1.211</span><span class="n">s</span>  <span class="mf">35.63</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">1.211</span><span class="n">s</span>  <span class="mf">35.63</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.345</span><span class="n">s</span>  <span class="mf">10.16</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">2.263</span><span class="n">s</span>  <span class="mf">66.58</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">2.263</span><span class="n">s</span>  <span class="mf">66.58</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.936</span><span class="n">s</span>  <span class="mf">27.54</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.200</span><span class="n">s</span>   <span class="mf">5.89</span>
   <span class="n">axis</span> <span class="mi">2</span>
-    <span class="n">phasor_from_signal</span>       <span class="mf">0.284</span><span class="n">s</span>   <span class="mf">8.37</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.284</span><span class="n">s</span>   <span class="mf">8.37</span>
       <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.34</span>
-    <span class="n">phasor_from_signal_fft</span>   <span class="mf">0.377</span><span class="n">s</span>  <span class="mf">11.10</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.377</span><span class="n">s</span>  <span class="mf">11.10</span>
       <span class="n">scipy_fft</span>              <span class="mf">0.431</span><span class="n">s</span>  <span class="mf">12.69</span>
       <span class="n">mkl_fft</span>                <span class="mf">0.185</span><span class="n">s</span>   <span class="mf">5.44</span>
 </pre></div>
@@ -660,7 +669,7 @@ closer together in memory.</p></li>
 <p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is a reasonable default.
 The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal_fft</span></code> function may be a better choice, for example,
 when computing large number of harmonics with an optimized FFT function.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.629 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 13.098 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-benchmarks-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9d07845b628b555914639d30910d46da/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>

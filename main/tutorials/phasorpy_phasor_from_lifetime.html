@@ -29,6 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
@@ -43,13 +44,14 @@
     <script src="../_static/documentation_options.js?v=781dc9bd"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/tabs.js?v=3ee01567"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=30646c52"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/phasorpy_phasor_from_lifetime';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Benchmarks" href="benchmarks/index.html" />
-    <link rel="prev" title="Introduction" href="phasorpy_introduction.html" />
+    <link rel="next" title="Phasor plot" href="phasorpy_phasorplot.html" />
+    <link rel="prev" title="Introduction to PhasorPy" href="phasorpy_introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -415,8 +417,9 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phasorpy_introduction.html">Introduction to PhasorPy</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phasorpy_phasorplot.html">Phasor plot</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="benchmarks/index.html">Benchmarks</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -486,143 +489,16 @@ document.write(`
                   
   <section class="sphx-glr-example-title" id="phasor-coordinates-from-lifetimes">
 <span id="sphx-glr-tutorials-phasorpy-phasor-from-lifetime-py"></span><h1>Phasor coordinates from lifetimes<a class="headerlink" href="#phasor-coordinates-from-lifetimes" title="Link to this heading">#</a></h1>
+<p>An introduction to the <cite>phasor_from_lifetime</cite> function.</p>
 <p>The <a class="reference internal" href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_lifetime()</span></code></a> function is used
 to calculate phasor coordinates as a function of frequency,
 single or multiple lifetime components, and the pre-exponential amplitudes
 or fractional intensities of the components.</p>
-<p>Import required modules and functions, and define helper functions for
-plotting phasor or polar coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<p>Import required modules and functions:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-
-<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">phasor_from_lifetime</span><span class="p">,</span>
-    <span class="n">phasor_semicircle</span><span class="p">,</span>
-    <span class="n">phasor_to_polar</span><span class="p">,</span>
-<span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">phasor_plot</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span>
-    <span class="n">imag</span><span class="p">,</span>
-    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;lifetime&#39;</span><span class="p">,</span>
-    <span class="n">style</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">show</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">return_ax</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phasor coordinates using matplotlib.&quot;&quot;&quot;</span>
-    <span class="c1"># TODO: move this function to phasorpy.plot</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.lines</span> <span class="kn">import</span> <span class="n">Line2D</span>
-
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;lifetime&#39;</span><span class="p">:</span>
-        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">]</span>
-        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">]</span>
-        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.625</span><span class="p">]]</span>
-        <span class="n">bins</span> <span class="o">=</span> <span class="mi">256</span> <span class="k">if</span> <span class="n">bins</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">bins</span>
-        <span class="n">bins_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">bins</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">bins</span> <span class="o">*</span> <span class="mf">0.625</span><span class="p">)]</span>
-    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;spectral&#39;</span><span class="p">:</span>
-        <span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">]</span>
-        <span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">]</span>
-        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
-        <span class="n">bins</span> <span class="o">=</span> <span class="mi">256</span> <span class="k">if</span> <span class="n">bins</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">bins</span>
-        <span class="n">bins_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">bins</span><span class="p">,</span> <span class="n">bins</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown </span><span class="si">{</span><span class="n">mode</span><span class="si">=!r}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">style</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">style</span> <span class="o">=</span> <span class="s1">&#39;scatter&#39;</span> <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">1024</span> <span class="k">else</span> <span class="s1">&#39;histogram&#39;</span>
-    <span class="k">if</span> <span class="n">real</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">imag</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;histogram&#39;</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span>
-            <span class="n">real</span><span class="p">,</span>
-            <span class="n">imag</span><span class="p">,</span>
-            <span class="nb">range</span><span class="o">=</span><span class="n">ranges</span><span class="p">,</span>
-            <span class="n">bins</span><span class="o">=</span><span class="n">bins_list</span><span class="p">,</span>
-            <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span> <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cmap</span><span class="p">,</span>
-            <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;scatter&#39;</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;lifetime&#39;</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_semicircle</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">])</span>
-    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;spectral&#39;</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
-            <span class="n">pyplot</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
-            <span class="n">pyplot</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
-            <span class="n">pyplot</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
-                <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">))</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span>
-                <span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span>
-                <span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-
-    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Phasor plot&#39;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">title</span><span class="p">,</span>
-        <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;G, real&#39;</span> <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">xlabel</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;S, imag&#39;</span> <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ylabel</span><span class="p">,</span>
-        <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span>
-        <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
-        <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
-        <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">return_ax</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ax</span>
-
-
-<span class="k">def</span> <span class="nf">multi_frequency_plot</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation vs frequency.&quot;&quot;&quot;</span>
-    <span class="c1"># TODO: move this function to phasorpy.plot</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
-
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Multi-frequency plot&#39;</span> <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">title</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;frequency (MHz)&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;phase (°)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;modulation (%)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">modulation</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">mod</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">)</span>
-    <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a>
+<span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">,</span> <a href="../api/plot.html#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">,</span> <a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a>
 </pre></div>
 </div>
 <section id="single-component-lifetimes">
@@ -632,10 +508,10 @@ on the universal circle.
 For example, 3.9788735 ns and 0.9947183 ns at a frequency of 80 MHz:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lifetime</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">])</span>
 
-<span class="n">phasor_plot</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">))</span>
+<a href="../api/plot.html#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span><span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">),</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_001.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_001.png" alt="Phasor plot" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_001.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_001.png" alt="Phasor plot (80 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="multi-component-lifetimes">
 <h2>Multi-component lifetimes<a class="headerlink" href="#multi-component-lifetimes" title="Link to this heading">#</a></h2>
 <p>The phasor coordinates of two lifetime components with varying
@@ -645,29 +521,34 @@ of the pure components:</p>
     <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
 <span class="p">)</span>
 
-<span class="n">phasor_plot</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_002.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_002.png" alt="Phasor plot" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_002.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_002.png" alt="Phasor plot (80 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="pre-exponential-amplitudes">
 <h2>Pre-exponential amplitudes<a class="headerlink" href="#pre-exponential-amplitudes" title="Link to this heading">#</a></h2>
 <p>The phasor coordinates of two lifetime components with varying
 pre-exponential amplitudes are also located on a line:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasor_plot</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">preexponential</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">,</span> <span class="n">preexponential</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_003.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_003.png" alt="Phasor plot" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_003.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_003.png" alt="Phasor plot (80 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="lifetime-distributions-at-multiple-frequencies">
 <h2>Lifetime distributions at multiple frequencies<a class="headerlink" href="#lifetime-distributions-at-multiple-frequencies" title="Link to this heading">#</a></h2>
 <p>Phasor coordinates can be calculated at once for many frequencies,
-lifetime components, and their fractions.
-As an example, lifetimes are passed in units of s and frequencies in Hz,
-requiring to specify a unit_conversion factor:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+lifetime components, and their fractions. As an example, random distrinutions
+of lifetimes and their fractions are plotted at three frequencies.
+Lifetimes are passed in units of s and frequencies in Hz, requiring to
+specify a <cite>unit_conversion</cite> factor:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">lifetime_distribution</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
         <span class="p">(</span>
@@ -682,14 +563,15 @@ requiring to specify a unit_conversion factor:</p>
     <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
 <span class="p">)</span>
 
-<span class="n">phasor_plot</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<a href="../api/plot.html#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
         <span class="n">frequency</span><span class="o">=</span><span class="p">[</span><span class="mf">40e6</span><span class="p">,</span> <span class="mf">80e6</span><span class="p">,</span> <span class="mf">160e6</span><span class="p">],</span>
         <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime_distribution</span><span class="p">,</span>
         <span class="n">fraction</span><span class="o">=</span><span class="n">fraction_distribution</span><span class="p">,</span>
         <span class="n">unit_conversion</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="p">),</span>
     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;40 MHz&#39;</span><span class="p">,</span> <span class="s1">&#39;80 MHz&#39;</span><span class="p">,</span> <span class="s1">&#39;160 MHz&#39;</span><span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -697,23 +579,23 @@ requiring to specify a unit_conversion factor:</p>
 <section id="fret-efficiency">
 <h2>FRET efficiency<a class="headerlink" href="#fret-efficiency" title="Link to this heading">#</a></h2>
 <p>The phasor coordinates of a fluorescence energy transfer donor
-with a lifetime of 4.2 ns as a function of FRET efficiency
+with a single lifetime component of 4.2 ns as a function of FRET efficiency
 at a frequency of 80 MHz, with some background signal and about 90 %
-of the donors participating in energy transfer, are on a curved trajectory:</p>
+of the donors participating in energy transfer, are on a curved trajectory.
+For comparison, when 100% donors participate in FRET and there is no
+background signal, the phasor coordinates lie on the universal semicircle:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="mi">25</span>
 <span class="n">efficiency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
 
-<span class="c1"># for reference, just donor with FRET</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">phasor_plot</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">4.2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">efficiency</span><span class="p">)),</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="mf">80.0</span><span class="p">,</span> <span class="mf">4.2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">efficiency</span><span class="p">)),</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;100% Donor in FRET&#39;</span><span class="p">,</span>
     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;k.&#39;</span><span class="p">,</span>
-    <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">return_ax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="n">phasor_plot</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
-        <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
+        <span class="mf">80.0</span><span class="p">,</span>
         <span class="n">lifetime</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span>  <span class="c1"># donor-only lifetime</span>
@@ -724,12 +606,13 @@ of the donors participating in energy transfer, are on a curved trajectory:</p>
         <span class="n">fraction</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">/</span> <span class="mf">1e9</span><span class="p">],</span>
         <span class="n">preexponential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">),</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;90% Donor in FRET&#39;</span><span class="p">,</span>
     <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o-&#39;</span><span class="p">,</span>
-    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
 <span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_005.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_005.png" alt="Phasor plot" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_005.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_005.png" alt="Phasor plot (80 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="multi-frequency-plot">
 <h2>Multi-frequency plot<a class="headerlink" href="#multi-frequency-plot" title="Link to this heading">#</a></h2>
 <p>Phase shift and demodulation of multi-component lifetimes can be calculated
@@ -737,15 +620,16 @@ as a function of the excitation light frequency and fractional intensities:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="n">fraction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 
-<span class="n">multi_frequency_plot</span><span class="p">(</span>
+<a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span>
-    <span class="o">*</span><span class="n">phasor_to_polar</span><span class="p">(</span>
-        <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="n">fraction</span><span class="p">)</span>
+    <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a><span class="p">(</span>
+        <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.9788735</span><span class="p">,</span> <span class="mf">0.9947183</span><span class="p">],</span> <span class="n">fraction</span><span class="p">)</span>
     <span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_006.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_006.png" alt="Multi-frequency plot" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.426 seconds)</p>
+<img src="../_images/sphx_glr_phasorpy_phasor_from_lifetime_006.png" srcset="../_images/sphx_glr_phasorpy_phasor_from_lifetime_006.png" alt="Multi-frequency plot" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = -2</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.537 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-phasor-from-lifetime-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/5276fc0d396f20bf66ae8c3fb01d2b33/phasorpy_phasor_from_lifetime.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_lifetime.ipynb</span></code></a></p>
@@ -774,15 +658,15 @@ as a function of the excitation light frequency and fractional intensities:</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Introduction</p>
+        <p class="prev-next-title">Introduction to PhasorPy</p>
       </div>
     </a>
     <a class="right-next"
-       href="benchmarks/index.html"
+       href="phasorpy_phasorplot.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Benchmarks</p>
+        <p class="prev-next-title">Phasor plot</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
