@@ -210,19 +210,18 @@ Plot the calculated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-118
+.. GENERATED FROM PYTHON SOURCE LINES 109-117
 
 Calibrate phasor coordinates
 ----------------------------
 
 Phasor coordinates from time-resolved measurements must be calibrated
-with the polar coordinates (phase and modulation) obtained from a
-reference standard of known lifetime, acquired with the same instrument
-settings.
+with coordinates obtained from a reference standard of known lifetime,
+acquired with the same instrument settings.
 
 Read the signal of the reference measurement from a file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-121
+.. GENERATED FROM PYTHON SOURCE LINES 117-120
 
 .. code-block:: Python
 
@@ -236,79 +235,17 @@ Read the signal of the reference measurement from a file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-123
+.. GENERATED FROM PYTHON SOURCE LINES 121-122
 
 Calculate phasor coordinates from the measured reference signal:
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-126
+.. GENERATED FROM PYTHON SOURCE LINES 122-127
 
 .. code-block:: Python
 
 
-    _, measured_real, measured_imag = phasor_from_signal(reference_signal, axis=0)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 127-128
-
-Average the phasor coordinates, assuming there are no spatial aberations:
-
-.. GENERATED FROM PYTHON SOURCE LINES 128-133
-
-.. code-block:: Python
-
-
-    from phasorpy.phasor import phasor_center
-
-    measured_real, measured_imag = phasor_center(measured_real, measured_imag)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 134-136
-
-Calculate absolute phasor coordinates from the known lifetime of the
-reference (Fluorescein, 4.2 ns):
-
-.. GENERATED FROM PYTHON SOURCE LINES 136-141
-
-.. code-block:: Python
-
-
-    from phasorpy.phasor import phasor_from_lifetime
-
-    known_real, known_imag = phasor_from_lifetime(frequency, 4.2)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 142-144
-
-Calculate polar coordinates (phase shift and relative modulation) to
-correct phasor coordinates:
-
-.. GENERATED FROM PYTHON SOURCE LINES 144-151
-
-.. code-block:: Python
-
-
-    from phasorpy.phasor import polar_from_reference_phasor
-
-    phase0, modulation0 = polar_from_reference_phasor(
-        measured_real, measured_imag, known_real, known_imag
+    _, reference_real, reference_imag = phasor_from_signal(
+        reference_signal, axis=0
     )
 
 
@@ -318,18 +255,26 @@ correct phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-153
+.. GENERATED FROM PYTHON SOURCE LINES 128-130
 
-Finally, calibrate the raw phasor coordinates obtained from the signal:
+Calibrate the raw phasor coordinates with the reference coordinates of known
+lifetime (Fluorescein, 4.2 ns):
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-158
+.. GENERATED FROM PYTHON SOURCE LINES 130-142
 
 .. code-block:: Python
 
 
     from phasorpy.phasor import phasor_calibrate
 
-    real, imag = phasor_calibrate(real, imag, phase0, modulation0)
+    real, imag = phasor_calibrate(
+        real,
+        imag,
+        reference_real,
+        reference_imag,
+        frequency=frequency,
+        lifetime=4.2,
+    )
 
 
 
@@ -338,7 +283,7 @@ Finally, calibrate the raw phasor coordinates obtained from the signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 143-148
 
 Filter phasor coordinates
 -------------------------
@@ -346,7 +291,7 @@ Filter phasor coordinates
 Applying median filter to the calibrated phasor coordinates,
 often multiple times, improves contrast:
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-172
+.. GENERATED FROM PYTHON SOURCE LINES 148-156
 
 .. code-block:: Python
 
@@ -365,12 +310,12 @@ often multiple times, improves contrast:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-175
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 Pixels with low intensities are commonly excluded from analysis and
 visualization of phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-181
+.. GENERATED FROM PYTHON SOURCE LINES 159-165
 
 .. code-block:: Python
 
@@ -387,7 +332,7 @@ visualization of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-190
+.. GENERATED FROM PYTHON SOURCE LINES 166-174
 
 Plot phasor coordinates
 -----------------------
@@ -398,7 +343,7 @@ plotting phasor and polar coordinates.
 Large number of phasor coordinates, such as obtained from imaging,
 are commonly visualized as 2D histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-199
+.. GENERATED FROM PYTHON SOURCE LINES 174-183
 
 .. code-block:: Python
 
@@ -423,11 +368,11 @@ are commonly visualized as 2D histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-201
+.. GENERATED FROM PYTHON SOURCE LINES 184-185
 
 For comparison, the uncalibrated, unfiltered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-207
+.. GENERATED FROM PYTHON SOURCE LINES 185-191
 
 .. code-block:: Python
 
@@ -449,20 +394,20 @@ For comparison, the uncalibrated, unfiltered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-211
+.. GENERATED FROM PYTHON SOURCE LINES 192-195
 
 To be continued
 ---------------
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-214
+.. GENERATED FROM PYTHON SOURCE LINES 197-198
 
 sphinx_gallery_thumbnail_number = 3
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.968 seconds)
+   **Total running time of the script:** (0 minutes 14.157 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:

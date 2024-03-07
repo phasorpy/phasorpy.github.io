@@ -484,6 +484,7 @@ document.write(`
 <span class="sd">  lifetime:</span>
 
 <span class="sd">  - :py:func:`phasor_calibrate`</span>
+<span class="sd">  - :py:func:`phasor_transform`</span>
 <span class="sd">  - :py:func:`polar_from_reference`</span>
 <span class="sd">  - :py:func:`polar_from_reference_phasor`</span>
 
@@ -506,12 +507,12 @@ document.write(`
     <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
     <span class="c1"># &#39;phasor_to_apparent_lifetime&#39;,</span>
     <span class="s1">&#39;phasor_to_polar&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_transform&#39;</span><span class="p">,</span>
     <span class="s1">&#39;polar_from_reference&#39;</span><span class="p">,</span>
     <span class="s1">&#39;polar_from_reference_phasor&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
@@ -863,30 +864,61 @@ document.write(`
 <span class="k">def</span> <span class="nf">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">phase0</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">modulation0</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return calibrated/referenced phasor coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return calibrated/referenced phasor coordinates.</span>
 
-<span class="sd">    Calibration of phasor coordinates in fluorescence lifetime analysis is</span>
+<span class="sd">    Calibration of phasor coordinates from time-resolved measurements is</span>
 <span class="sd">    necessary to account for the instrument response function (IRF) and delays</span>
 <span class="sd">    in the electronics.</span>
-
-<span class="sd">    This function can also be used to transform/rotate any phasor coordinate.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : array_like</span>
-<span class="sd">        Real component of phasor coordinates to calibrate.</span>
+<span class="sd">        Real component of phasor coordinates to be calibrated.</span>
 <span class="sd">    imag : array_like</span>
-<span class="sd">        Imaginary component of phasor coordinates to calibrate.</span>
-<span class="sd">    phase0 : array_like, optional</span>
-<span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
-<span class="sd">        Defaults to 0.0.</span>
-<span class="sd">    modulation0 : array_like, optional</span>
-<span class="sd">        Radial component of polar coordinates for calibration.</span>
-<span class="sd">        Defaults to 1.0.</span>
+<span class="sd">        Imaginary component of phasor coordinates to be calibrated.</span>
+<span class="sd">    reference_real : array_like</span>
+<span class="sd">        Real component of phasor coordinates from reference of known lifetime.</span>
+<span class="sd">        Must be measured with the same instrument setting as the phasor</span>
+<span class="sd">        coordinates to be calibrated.</span>
+<span class="sd">    reference_imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates from reference of known</span>
+<span class="sd">        lifetime.</span>
+<span class="sd">        Must be measured with the same instrument setting as the phasor</span>
+<span class="sd">        coordinates to be calibrated.</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
+<span class="sd">        A scalar or one-dimensional sequence.</span>
+<span class="sd">    lifetime : array_like</span>
+<span class="sd">        Lifetime components in ns. Must be scalar or one dimensional.</span>
+<span class="sd">    fraction : array_like, optional</span>
+<span class="sd">        Fractional intensities or pre-exponential amplitudes of the lifetime</span>
+<span class="sd">        components. Fractions are normalized to sum to 1.</span>
+<span class="sd">        Must be same size as `lifetime`.</span>
+<span class="sd">    preexponential : bool, optional</span>
+<span class="sd">        If true, `fraction` values are pre-exponential amplitudes,</span>
+<span class="sd">        else fractional intensities (default).</span>
+<span class="sd">    unit_conversion : float</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    method : str, optional</span>
+<span class="sd">        Method used for calculating center of `reference_real` and</span>
+<span class="sd">        `reference_imag`:</span>
+
+<span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
+<span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -898,43 +930,165 @@ document.write(`
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        The array shapes of `real` and `imag`, or `phase0` and `modulation0`</span>
-<span class="sd">        do not match.</span>
+<span class="sd">        The array shapes of `real` and `imag`, or `reference_real` and</span>
+<span class="sd">        `reference_imag` do not match.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function is a convenience wrapper for the following operations:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        phasor_transform(</span>
+<span class="sd">            real,</span>
+<span class="sd">            imag,</span>
+<span class="sd">            *polar_from_reference_phasor(</span>
+<span class="sd">                *phasor_center(</span>
+<span class="sd">                    reference_real,</span>
+<span class="sd">                    reference_imag,</span>
+<span class="sd">                    skip_axes,</span>
+<span class="sd">                    method,</span>
+<span class="sd">                ),</span>
+<span class="sd">                *phasor_from_lifetime(</span>
+<span class="sd">                    frequency,</span>
+<span class="sd">                    lifetime,</span>
+<span class="sd">                    fraction,</span>
+<span class="sd">                    preexponential,</span>
+<span class="sd">                    unit_conversion,</span>
+<span class="sd">                ),</span>
+<span class="sd">            ),</span>
+<span class="sd">        )</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Use scalar reference coordinates to calibrate phasor coordinates:</span>
+<span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
+<span class="sd">    ...    [0.1, 0.2, 0.3], [0.4, 0.5, 0.6],</span>
+<span class="sd">    ...    [0.2, 0.3, 0.4], [0.5, 0.6, 0.7],</span>
+<span class="sd">    ...    frequency=80, lifetime=4</span>
+<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    (array([0.0658, 0.132, 0.198]), array([0.2657, 0.332, 0.399]))</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_calibrate([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], 0.5, 0.2)</span>
-<span class="sd">    (array([-0.208, -0.1284, -0.04876]), array([0.798, 1.069, 1.341]))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;real.shape=</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != imag.shape=</span><span class="si">{</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ref_re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_real</span><span class="p">)</span>
+    <span class="n">ref_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ref_re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;reference_real.shape=</span><span class="si">{</span><span class="n">ref_re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;!= reference_imag.shape</span><span class="si">{</span><span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
+        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
+    <span class="p">)</span>
+    <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+        <span class="n">frequency</span><span class="p">,</span>
+        <span class="n">lifetime</span><span class="p">,</span>
+        <span class="n">fraction</span><span class="p">,</span>
+        <span class="n">preexponential</span><span class="o">=</span><span class="n">preexponential</span><span class="p">,</span>
+        <span class="n">unit_conversion</span><span class="o">=</span><span class="n">unit_conversion</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">polar_from_reference_phasor</span><span class="p">(</span>
+        <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span><span class="p">,</span> <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">phasor_transform</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_transform">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_transform">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_transform</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">phase_zero</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">modulation_zero</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return rotated and scaled phasor coordinates.</span>
+
+<span class="sd">    This function rotates and uniformly scales phasor coordinates around the</span>
+<span class="sd">    origin.</span>
+<span class="sd">    It can be used, for example, to calibrate phasor coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates to transform.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates to transform.</span>
+<span class="sd">    phase_zero : array_like, optional</span>
+<span class="sd">        Rotation angle in radians.</span>
+<span class="sd">        Defaults to 0.0.</span>
+<span class="sd">    modulation_zero : array_like, optional</span>
+<span class="sd">        Uniform scale factor.</span>
+<span class="sd">        Defaults to 1.0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of rotated and scaled phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of rotated and scaled phasor coordinates.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        The array shapes of `real` and `imag`, or `phase_zero` and</span>
+<span class="sd">        `modulation_zero` do not match.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Rotation and scaling are performed in the polar system by adding</span>
+<span class="sd">    `phase_zero` (:math:`\phi_{0}`) to, and multiplying `modulation_zero`</span>
+<span class="sd">    (:math:`M_{0}`) with the phase (:math:`\phi`) and modulation (:math:`M`)</span>
+<span class="sd">    respectively, calculated from `real` and `imag`:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \phi&#39; &amp;= \phi + \phi_{0}</span>
+
+<span class="sd">        M&#39; &amp;= M \cdot M_{0}</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Use scalar reference coordinates to rotate and scale phasor coordinates:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_transform(</span>
+<span class="sd">    ...     [0.1, 0.2, 0.3],</span>
+<span class="sd">    ...     [0.4, 0.5, 0.6],</span>
+<span class="sd">    ...     0.1,</span>
+<span class="sd">    ...     0.5</span>
+<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    (array([0.0298, 0.0745, 0.119]), array([0.204, 0.259, 0.3135]))</span>
 
 <span class="sd">    Use separate reference coordinates for each phasor coordinate:</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
-<span class="sd">    ...     [1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [0.5, 0.2, 0.3], [1.5, 2.0, 0.3]</span>
-<span class="sd">    ... )</span>
-<span class="sd">    (array([-1.56, 1.934, 0.3279]), array([5.985, 10.6, 1.986]))</span>
+<span class="sd">    &gt;&gt;&gt; phasor_transform(</span>
+<span class="sd">    ...     [0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.2, 0.2, 0.3], [0.5, 0.2, 0.3]</span>
+<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    (array([0.00927, 0.0193, 0.0328]), array([0.206, 0.106, 0.1986]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">phi0</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase0</span><span class="p">)</span>
-    <span class="n">mod0</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation0</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">phi0</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">mod0</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phi0</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">mod0</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">phi_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase_zero</span><span class="p">)</span>
+    <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation_zero</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">phi_zero</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">mod_zero</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phi_zero</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">mod_zero</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">cos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi0</span><span class="p">)</span>
-    <span class="n">cos</span> <span class="o">*=</span> <span class="n">mod0</span>
-    <span class="n">sin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi0</span><span class="p">)</span>
-    <span class="n">sin</span> <span class="o">*=</span> <span class="n">mod0</span>
+    <span class="n">cos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">)</span>
+    <span class="n">cos</span> <span class="o">*=</span> <span class="n">mod_zero</span>
+    <span class="n">sin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">)</span>
+    <span class="n">sin</span> <span class="o">*=</span> <span class="n">mod_zero</span>
     <span class="n">re_calibrated</span> <span class="o">=</span> <span class="n">re</span> <span class="o">*</span> <span class="n">cos</span>
     <span class="n">re_calibrated</span> <span class="o">-=</span> <span class="n">im</span> <span class="o">*</span> <span class="n">sin</span>
     <span class="n">im_calibrated</span> <span class="o">=</span> <span class="n">re</span>
     <span class="n">im_calibrated</span> <span class="o">*=</span> <span class="n">sin</span>
     <span class="n">im</span> <span class="o">*=</span> <span class="n">cos</span>
     <span class="n">im_calibrated</span> <span class="o">+=</span> <span class="n">im</span>
-    <span class="k">return</span> <span class="n">re_calibrated</span><span class="p">,</span> <span class="n">im_calibrated</span></div>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">re_calibrated</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">im_calibrated</span><span class="p">)</span></div>
 
 
 
@@ -966,9 +1120,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase0 : ndarray</span>
+<span class="sd">    phase_zero : ndarray</span>
 <span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
-<span class="sd">    modulation0 : ndarray</span>
+<span class="sd">    modulation_zero : ndarray</span>
 <span class="sd">        Radial component of polar coordinates for calibration.</span>
 
 <span class="sd">    Raises</span>
@@ -993,10 +1147,12 @@ document.write(`
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">known_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">known_imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">measured_phi</span><span class="p">,</span> <span class="n">measured_mod</span> <span class="o">=</span> <span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span><span class="p">)</span>
     <span class="n">known_phi</span><span class="p">,</span> <span class="n">known_mod</span> <span class="o">=</span> <span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">known_real</span><span class="p">,</span> <span class="n">known_imag</span><span class="p">)</span>
-    <span class="n">phase0</span> <span class="o">=</span> <span class="n">known_phi</span> <span class="o">-</span> <span class="n">measured_phi</span>
-    <span class="n">modulation0</span> <span class="o">=</span> <span class="n">known_mod</span> <span class="o">/</span> <span class="n">measured_mod</span>
-    <span class="n">phase0</span> <span class="o">=</span> <span class="n">phase0</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">modulation0</span><span class="p">)</span> <span class="k">else</span> <span class="n">phase0</span>
-    <span class="k">return</span> <span class="n">phase0</span><span class="p">,</span> <span class="n">modulation0</span></div>
+    <span class="n">phase_zero</span> <span class="o">=</span> <span class="n">known_phi</span> <span class="o">-</span> <span class="n">measured_phi</span>
+    <span class="n">modulation_zero</span> <span class="o">=</span> <span class="n">known_mod</span> <span class="o">/</span> <span class="n">measured_mod</span>
+    <span class="n">phase_zero</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">phase_zero</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">modulation_zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">phase_zero</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">phase_zero</span><span class="p">,</span> <span class="n">modulation_zero</span></div>
 
 
 
@@ -1028,9 +1184,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase0 : ndarray</span>
+<span class="sd">    phase_zero : ndarray</span>
 <span class="sd">        Angular component of polar coordinates for calibration in radians.</span>
-<span class="sd">    modulation0 : ndarray</span>
+<span class="sd">    modulation_zero : ndarray</span>
 <span class="sd">        Radial component of polar coordinates for calibration.</span>
 
 <span class="sd">    Raises</span>
@@ -1055,9 +1211,9 @@ document.write(`
     <span class="n">known_modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">known_modulation</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">known_phase</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">known_modulation</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">known_phase</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">known_modulation</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">phase0</span> <span class="o">=</span> <span class="n">measured_phase</span> <span class="o">-</span> <span class="n">known_phase</span>
-    <span class="n">modulation0</span> <span class="o">=</span> <span class="n">measured_modulation</span> <span class="o">/</span> <span class="n">known_modulation</span>
-    <span class="k">return</span> <span class="n">phase0</span><span class="p">,</span> <span class="n">modulation0</span></div>
+    <span class="n">phase_zero</span> <span class="o">=</span> <span class="n">measured_phase</span> <span class="o">-</span> <span class="n">known_phase</span>
+    <span class="n">modulation_zero</span> <span class="o">=</span> <span class="n">measured_modulation</span> <span class="o">/</span> <span class="n">known_modulation</span>
+    <span class="k">return</span> <span class="n">phase_zero</span><span class="p">,</span> <span class="n">modulation_zero</span></div>
 
 
 

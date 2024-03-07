@@ -588,43 +588,30 @@ this case. The histogram samples are in the first dimension (<cite>axis=0</cite>
 <section id="calibrate-phasor-coordinates">
 <h2>Calibrate phasor coordinates<a class="headerlink" href="#calibrate-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Phasor coordinates from time-resolved measurements must be calibrated
-with the polar coordinates (phase and modulation) obtained from a
-reference standard of known lifetime, acquired with the same instrument
-settings.</p>
+with coordinates obtained from a reference standard of known lifetime,
+acquired with the same instrument settings.</p>
 <p>Read the signal of the reference measurement from a file:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Calculate phasor coordinates from the measured reference signal:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Average the phasor coordinates, assuming there are no spatial aberations:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a>
-
-<span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a><span class="p">(</span><span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Calculate absolute phasor coordinates from the known lifetime of the
-reference (Fluorescein, 4.2 ns):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a>
-
-<span class="n">known_real</span><span class="p">,</span> <span class="n">known_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Calculate polar coordinates (phase shift and relative modulation) to
-correct phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.polar_from_reference_phasor" title="phasorpy.phasor.polar_from_reference_phasor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">polar_from_reference_phasor</span></a>
-
-<span class="n">phase0</span><span class="p">,</span> <span class="n">modulation0</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.polar_from_reference_phasor" title="phasorpy.phasor.polar_from_reference_phasor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">polar_from_reference_phasor</span></a><span class="p">(</span>
-    <span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span><span class="p">,</span> <span class="n">known_real</span><span class="p">,</span> <span class="n">known_imag</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span>
+    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Finally, calibrate the raw phasor coordinates obtained from the signal:</p>
+<p>Calibrate the raw phasor coordinates with the reference coordinates of known
+lifetime (Fluorescein, 4.2 ns):</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_calibrate" title="phasorpy.phasor.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a>
 
-<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_calibrate" title="phasorpy.phasor.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">phase0</span><span class="p">,</span> <span class="n">modulation0</span><span class="p">)</span>
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_calibrate" title="phasorpy.phasor.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -675,7 +662,7 @@ are commonly visualized as 2D histograms:</p>
 <section id="to-be-continued">
 <h2>To be continued<a class="headerlink" href="#to-be-continued" title="Link to this heading">#</a></h2>
 <p>sphinx_gallery_thumbnail_number = 3</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.968 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.157 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>
