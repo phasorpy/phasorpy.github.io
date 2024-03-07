@@ -874,6 +874,7 @@ document.write(`
     <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return calibrated/referenced phasor coordinates.</span>
@@ -919,6 +920,9 @@ document.write(`
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
+<span class="sd">    skip_axes : tuple of int, optional</span>
+<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
+<span class="sd">        axes are considered.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -981,7 +985,7 @@ document.write(`
             <span class="sa">f</span><span class="s1">&#39;!= reference_imag.shape</span><span class="si">{</span><span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
     <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
-        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
+        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">skip_axes</span><span class="o">=</span><span class="n">skip_axes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
     <span class="p">)</span>
     <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
         <span class="n">frequency</span><span class="p">,</span>
