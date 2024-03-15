@@ -822,21 +822,21 @@ document.write(`
 <a class="viewcode-back" href="../../api/plot.html#phasorpy.plot.PhasorPlot.components">[docs]</a>
     <span class="k">def</span> <span class="nf">components</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">real</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-        <span class="n">imag</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
-        <span class="n">fraction</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot linear combinations of phasor coordinates or ranges thereof.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        real : sequence of float</span>
+<span class="sd">        real : (N,) array_like</span>
 <span class="sd">            Real component of phasor coordinates.</span>
-<span class="sd">        imag : sequence of float</span>
+<span class="sd">        imag : (N,) array_like</span>
 <span class="sd">            Imaginary component of phasor coordinates.</span>
-<span class="sd">        fraction: sequence of float, optional</span>
+<span class="sd">        fraction : (N,) array_like, optional</span>
 <span class="sd">            Weight associated with each component.</span>
 <span class="sd">            If None (default), outline the polygon area of possible linear</span>
 <span class="sd">            combinations of components.</span>
@@ -848,6 +848,10 @@ document.write(`
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> or </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fraction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">update_kwargs</span><span class="p">(</span>
                 <span class="n">kwargs</span><span class="p">,</span>
@@ -1109,7 +1113,7 @@ document.write(`
 <span class="sd">            Phasor coordinates of zero lifetime.</span>
 <span class="sd">            Alternative to `polar_reference`.</span>
 <span class="sd">        lifetime : sequence of float, optional</span>
-<span class="sd">            Apparent single lifetimes at which to draw ticks and labels.</span>
+<span class="sd">            Single component lifetimes at which to draw ticks and labels.</span>
 <span class="sd">            Only applies when `frequency` is specified.</span>
 <span class="sd">        labels : sequence of str, optional</span>
 <span class="sd">            Tick labels. By default, the values of `lifetime`.</span>
@@ -1308,7 +1312,7 @@ document.write(`
 <span class="sd">    allquadrants : bool, optional</span>
 <span class="sd">        Show all quadrants of phasor space.</span>
 <span class="sd">        By default, only the first quadrant is shown.</span>
-<span class="sd">    frequency: float, optional</span>
+<span class="sd">    frequency : float, optional</span>
 <span class="sd">        Frequency of phasor plot.</span>
 <span class="sd">        If provided, the universal circle is labeled with reference lifetimes.</span>
 <span class="sd">    show : bool, optional, default: True</span>

@@ -518,6 +518,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -528,7 +529,6 @@ document.write(`
         <span class="n">DTypeLike</span><span class="p">,</span>
         <span class="n">Callable</span><span class="p">,</span>
         <span class="n">Literal</span><span class="p">,</span>
-        <span class="n">Sequence</span><span class="p">,</span>
     <span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -911,7 +911,7 @@ document.write(`
     <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return calibrated/referenced phasor coordinates.</span>
@@ -957,7 +957,7 @@ document.write(`
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
-<span class="sd">    skip_axes : tuple of int, optional</span>
+<span class="sd">    skip_axes : int or sequence of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 
@@ -1873,7 +1873,7 @@ document.write(`
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return center of phasor coordinates.</span>
@@ -1884,7 +1884,7 @@ document.write(`
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
-<span class="sd">    skip_axes : tuple of int, optional</span>
+<span class="sd">    skip_axes : int or sequence of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 <span class="sd">    method : str, optional</span>
@@ -1904,7 +1904,7 @@ document.write(`
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the specified method is not supported.</span>
-<span class="sd">        If the shapes of the &#39;real&#39; and &#39;imag&#39; do not match.</span>
+<span class="sd">        If the shapes of the `real` and `imag` do not match.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1929,20 +1929,28 @@ document.write(`
     <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">skip_axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">skip_axes</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+            <span class="n">skip_axes</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_axes</span><span class="p">,)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">skip_axes</span><span class="si">=}</span><span class="s1"> out of range </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">skip_axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">)</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="p">{</span>
         <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">_mean</span><span class="p">,</span>
         <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median</span><span class="p">,</span>
     <span class="p">}[</span>
         <span class="n">method</span>
-    <span class="p">](</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">skip_axes</span><span class="p">)</span></div>
+    <span class="p">](</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span> <span class="nf">_mean</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">/</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mean center of phasor coordinates.</span>
 
@@ -1952,9 +1960,8 @@ document.write(`
 <span class="sd">        Real components of phasor coordinates.</span>
 <span class="sd">    imag : numpy.ndarray</span>
 <span class="sd">        Imaginary components of phasor coordinates.</span>
-<span class="sd">    skip_axes : tuple of int, optional</span>
-<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
-<span class="sd">        axes are considered.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional arguments passed to :py:func:`numpy.mean`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1969,20 +1976,11 @@ document.write(`
 <span class="sd">    (2.0, 5.0)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">skip_axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">included_axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">skip_axes</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">included_axes</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-            <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">included_axes</span>
-        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_median</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">/</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the spatial median center of phasor coordinates.</span>
 
@@ -1992,9 +1990,8 @@ document.write(`
 <span class="sd">        Real components of the phasor coordinates.</span>
 <span class="sd">    imag : numpy.ndarray</span>
 <span class="sd">        Imaginary components of the phasor coordinates.</span>
-<span class="sd">    skip_axes : tuple of int, optional</span>
-<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
-<span class="sd">        axes are considered.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional arguments passed to :py:func:`numpy.median`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2009,13 +2006,7 @@ document.write(`
 <span class="sd">    (2.0, 5.0)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">skip_axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">included_axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">skip_axes</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">included_axes</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span>
-            <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">included_axes</span>
-        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
                 </article>
