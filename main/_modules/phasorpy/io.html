@@ -1027,6 +1027,7 @@ document.write(`
     <span class="n">dtype</span><span class="p">:</span> <span class="n">DTypeLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">frame</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dtime</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">keepdims</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return image histogram and metadata from PicoQuant PTU T3 mode file.</span>
@@ -1038,7 +1039,7 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of PTU file to read.</span>
-<span class="sd">    selection : sequence of index types</span>
+<span class="sd">    selection : sequence of index types, optional</span>
 <span class="sd">        Indices for all dimensions:</span>
 
 <span class="sd">        - ``None``: return all items along axis (default).</span>
@@ -1048,19 +1049,24 @@ document.write(`
 <span class="sd">          ``slice.step`` is binning factor.</span>
 <span class="sd">          If ``slice.step=-1``, integrate all items along axis.</span>
 
-<span class="sd">    trimdims : str</span>
-<span class="sd">        Axes to trim. The default is ``&#39;TCH&#39;``.</span>
-<span class="sd">    dtype : dtype-like</span>
+<span class="sd">    trimdims : str, optional, default: &#39;TCH&#39;</span>
+<span class="sd">        Axes to trim.</span>
+<span class="sd">    dtype : dtype-like, optional, default: uint16</span>
 <span class="sd">        Unsigned integer type of image histogram array.</span>
-<span class="sd">        The default is ``uint16``. Increase the bit depth to avoid</span>
-<span class="sd">        overflows when integrating.</span>
-<span class="sd">    frame : int</span>
+<span class="sd">        Increase the bit depth to avoid overflows when integrating.</span>
+<span class="sd">    frame : int, optional</span>
 <span class="sd">        If &lt; 0, integrate time axis, else return specified frame.</span>
-<span class="sd">        Overrides ``selection`` for axis ``T``.</span>
-<span class="sd">    channel : int</span>
+<span class="sd">        Overrides `selection` for axis ``T``.</span>
+<span class="sd">    channel : int, optional</span>
 <span class="sd">        If &lt; 0, integrate channel axis, else return specified channel.</span>
-<span class="sd">        Overrides ``selection`` for axis ``C``.</span>
-<span class="sd">    keepdims :</span>
+<span class="sd">        Overrides `selection` for axis ``C``.</span>
+<span class="sd">    dtime : int, optional, default: 0</span>
+<span class="sd">        Specifies number of bins in image histogram.</span>
+<span class="sd">        If 0 (default), return number of bins in one period.</span>
+<span class="sd">        If &lt; 0, integrate delay time axis.</span>
+<span class="sd">        If &gt; 0, return up to specified bin.</span>
+<span class="sd">        Overrides `selection` for axis ``H``.</span>
+<span class="sd">    keepdims : bool, optional, default: True</span>
 <span class="sd">        If true (default), reduced axes are left as size-one dimension.</span>
 
 <span class="sd">    Returns</span>
@@ -1089,7 +1095,7 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; data.dtype</span>
 <span class="sd">    dtype(&#39;uint16&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.shape</span>
-<span class="sd">    (5, 256, 256, 1, 139)</span>
+<span class="sd">    (5, 256, 256, 1, 132)</span>
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;C&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
@@ -1111,11 +1117,12 @@ document.write(`
             <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
             <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span>
             <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
+            <span class="n">dtime</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span>
             <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">,</span>
             <span class="n">asxarray</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">)</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">syncrate</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># MHz</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">frequency</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># MHz</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 
