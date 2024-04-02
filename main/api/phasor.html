@@ -524,6 +524,12 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>calculate phasor coordinates for FRET donor and acceptor channels:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_fret_donor()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></p></li>
+</ul>
+</li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_calibrate">
@@ -675,8 +681,8 @@ Use 1.0 for Hz and s.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates.</p></li>
 </ul>
 </p>
 </dd>
@@ -690,7 +696,7 @@ frequency <span class="math notranslate nohighlight">\(f\)</span> according to:<
 \[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\phi &amp; = \arctan(\omega \tau_{\phi})\\M &amp;= 1 / \sqrt{1 + (\omega \tau_{M})^2}\\G &amp;= M \cdot \cos{\phi}\\S &amp;= M \cdot \sin{\phi}\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>
 <p>If the apparent single lifetimes from phase and modulation are equal,
-the phasor coordinates lie on the universal circle, else inside:</p>
+the phasor coordinates lie on the universal semicircle, else inside:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_apparent_lifetime</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="mf">1.9894</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.9894</span><span class="p">,</span> <span class="mf">2.4113</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
 <span class="gp">... </span><span class="p">)</span>  
@@ -698,11 +704,135 @@ the phasor coordinates lie on the universal circle, else inside:</p>
 </pre></div>
 </div>
 <p>Zero and infinite apparent single lifetimes define the endpoints of the
-universal circle:</p>
+universal semicircle:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_apparent_lifetime</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e9</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span>
 <span class="gp">... </span><span class="p">)</span>  
 <span class="go">(array([1, 0.0]), array([0, 0.0]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_fret_acceptor">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_fret_acceptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor_lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fret_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_freting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_bleedthrough</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor_excitation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceptor_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_real</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_imag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_fret_acceptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_fret_acceptor" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates of FRET acceptor channel.</p>
+<p>Calculate phasor coordinates of a FRET (Förster Resonance Energy Transfer)
+acceptor channel as a function of frequency, donor and acceptor lifetimes,
+FRET efficiency, fraction of donors undergoing FRET, fraction of directly
+excited acceptors, fraction of donor fluorescence in acceptor channel,
+and background fluorescence.</p>
+<p>The phasor coordinates of the acceptor channel contain fractions of:</p>
+<ul class="simple">
+<li><p>acceptor sensitized by energy transfer</p></li>
+<li><p>directly excited acceptor</p></li>
+<li><p>donor bleedthrough</p></li>
+<li><p>background fluorescence</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency in MHz.</p></li>
+<li><p><strong>donor_lifetime</strong> (<em>array_like</em>) – Lifetime of donor without FRET in ns.</p></li>
+<li><p><strong>acceptor_lifetime</strong> (<em>array_like</em>) – Lifetime of acceptor in ns.</p></li>
+<li><p><strong>fret_efficiency</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – FRET efficiency in range [0..1].</p></li>
+<li><p><strong>donor_freting</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 1</em>) – Fraction of donors participating in FRET. Range [0..1].</p></li>
+<li><p><strong>donor_bleedthrough</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Fraction of donor fluorescence in acceptor channel. Range [0..1].</p></li>
+<li><p><strong>acceptor_excitation</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Fraction of acceptor that is directly excited. Range [0..1].</p></li>
+<li><p><strong>acceptor_background</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Fraction of background fluorescence in acceptor channel. Range [0..1].</p></li>
+<li><p><strong>background_real</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Real component of phasor coordinate of background fluorescence
+at <cite>frequency</cite>.</p></li>
+<li><p><strong>background_imag</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Imaginary component of phasor coordinate of background fluorescence
+at <cite>frequency</cite>.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of acceptor channel phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of acceptor channel phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Compute the phasor coordinates of a FRET acceptor channel at three
+FRET efficiencies:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_fret_acceptor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">donor_lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">acceptor_lifetime</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fret_efficiency</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">donor_freting</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">acceptor_excitation</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">acceptor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">background_real</span><span class="o">=</span><span class="mf">0.11</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">background_imag</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([0.1957, 0.0689, 0.2849]), array([0.319, 0.3116, 0.4261]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_fret_donor">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_fret_donor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fret_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_freting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">donor_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_real</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_imag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_fret_donor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_fret_donor" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates of FRET donor channel.</p>
+<p>Calculate phasor coordinates of a FRET (Förster Resonance Energy Transfer)
+donor channel as a function of frequency, donor lifetime, FRET efficiency,
+fraction of donors undergoing FRET, and background fluorescence.</p>
+<p>The phasor coordinates of the donor channel contain fractions of:</p>
+<ul class="simple">
+<li><p>donor not undergoing energy transfer</p></li>
+<li><p>donor quenched by energy transfer</p></li>
+<li><p>background fluorescence</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency in MHz.</p></li>
+<li><p><strong>donor_lifetime</strong> (<em>array_like</em>) – Lifetime of donor without FRET in ns.</p></li>
+<li><p><strong>fret_efficiency</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – FRET efficiency in range [0..1].</p></li>
+<li><p><strong>donor_freting</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 1</em>) – Fraction of donors participating in FRET. Range [0..1].</p></li>
+<li><p><strong>donor_background</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Fraction of background fluorescence in unquenched donor channel.
+Range [0..1].</p></li>
+<li><p><strong>background_real</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Real component of phasor coordinate of background fluorescence
+at <cite>frequency</cite>.</p></li>
+<li><p><strong>background_imag</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default 0</em>) – Imaginary component of phasor coordinate of background fluorescence
+at <cite>frequency</cite>.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of donor channel phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of donor channel phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Compute the phasor coordinates of a FRET donor channel at three
+FRET efficiencies:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_fret_donor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">donor_lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fret_efficiency</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">donor_freting</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">background_real</span><span class="o">=</span><span class="mf">0.11</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">background_imag</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(array([0.1759, 0.2716, 0.1447]), array([0.3602, 0.4095, 0.2464]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1030,7 +1160,7 @@ single lifetime components, where the relation of polar coordinates
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_apparent_lifetime">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_apparent_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_to_apparent_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_apparent_lifetime" title="Link to this definition">#</a></dt>
-<dd><p>Return single apparent lifetimes from phasor coordinates.</p>
+<dd><p>Return apparent single lifetimes from phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1062,7 +1192,7 @@ according to:</p>
 \[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\tau_{\phi} &amp;= \omega^{-1} \cdot S / G\\\tau_{M} &amp;= \omega^{-1} \cdot \sqrt{1 / (S^2 + G^2) - 1}\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>
 <p>The apparent single lifetimes from phase and modulation are equal
-only if the phasor coordinates lie on the universal circle:</p>
+only if the phasor coordinates lie on the universal semicircle:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span>
 <span class="gp">... </span>   <span class="mf">0.5</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span>
 <span class="gp">... </span><span class="p">)</span>  
@@ -1070,12 +1200,12 @@ only if the phasor coordinates lie on the universal circle:</p>
 </pre></div>
 </div>
 <p>Apparent single lifetimes of phasor coordinates outside the universal
-circle are undefined:</p>
+semicircle are undefined:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>  
 <span class="go">(-21.8, 0.0)</span>
 </pre></div>
 </div>
-<p>Apparent single lifetimes at the universal circle endpoints are
+<p>Apparent single lifetimes at the universal semicircle endpoints are
 infinite and zero:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_apparent_lifetime</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">80</span><span class="p">)</span>  
 <span class="go">(array([inf, 0]), array([inf, 0]))</span>
@@ -1192,8 +1322,8 @@ Use 1.0 for Hz and s.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>phase</strong> (<em>array_like</em>) – Angular component of polar coordinates.</p></li>
-<li><p><strong>modulation</strong> (<em>array_like</em>) – Radial component of polar coordinates.</p></li>
+<li><p><strong>phase</strong> (<em>ndarray</em>) – Angular component of polar coordinates.</p></li>
+<li><p><strong>modulation</strong> (<em>ndarray</em>) – Radial component of polar coordinates.</p></li>
 </ul>
 </p>
 </dd>
@@ -1207,7 +1337,7 @@ frequency <span class="math notranslate nohighlight">\(f\)</span> according to:<
 \[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\phi &amp; = \arctan(\omega \tau_{\phi})\\M &amp;= 1 / \sqrt{1 + (\omega \tau_{M})^2}\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>
 <p>If the apparent single lifetimes from phase and modulation are equal,
-the polar coordinates lie on the universal circle, else inside:</p>
+the polar coordinates lie on the universal semicircle, else inside:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">polar_from_apparent_lifetime</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="mf">1.9894</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.9894</span><span class="p">,</span> <span class="mf">2.4113</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
 <span class="gp">... </span><span class="p">)</span>  
@@ -1293,7 +1423,7 @@ a sample of known lifetime.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.polar_to_apparent_lifetime">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">polar_to_apparent_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#polar_to_apparent_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.polar_to_apparent_lifetime" title="Link to this definition">#</a></dt>
-<dd><p>Return single apparent lifetimes from polar coordinates.</p>
+<dd><p>Return apparent single lifetimes from polar coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1325,7 +1455,7 @@ according to:</p>
 \[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\tau_{\phi} &amp;= \omega^{-1} \cdot \tan{\phi}\\\tau_{M} &amp;= \omega^{-1} \cdot \sqrt{1 / M^2 - 1}\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>
 <p>The apparent single lifetimes from phase and modulation are equal
-only if the polar coordinates lie on the universal circle:</p>
+only if the polar coordinates lie on the universal semicircle:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">polar_to_apparent_lifetime</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hypot</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]),</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span>
 <span class="gp">... </span><span class="p">)</span>  
@@ -1385,6 +1515,8 @@ only if the polar coordinates lie on the universal circle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_acceptor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_donor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_donor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_polar"><code class="docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_signal"><code class="docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code></a></li>

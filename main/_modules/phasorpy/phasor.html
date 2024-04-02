@@ -494,6 +494,11 @@ document.write(`
 
 <span class="sd">  - :py:func:`phasor_center`</span>
 
+<span class="sd">- calculate phasor coordinates for FRET donor and acceptor channels:</span>
+
+<span class="sd">  - :py:func:`phasor_from_fret_donor`</span>
+<span class="sd">  - :py:func:`phasor_from_fret_acceptor`</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -502,6 +507,8 @@ document.write(`
     <span class="s1">&#39;phasor_calibrate&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_apparent_lifetime&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_from_fret_acceptor&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_from_fret_donor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_polar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_signal&#39;</span><span class="p">,</span>
@@ -535,6 +542,8 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">._phasor</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_phasor_from_apparent_lifetime</span><span class="p">,</span>
+    <span class="n">_phasor_from_fret_acceptor</span><span class="p">,</span>
+    <span class="n">_phasor_from_fret_donor</span><span class="p">,</span>
     <span class="n">_phasor_from_lifetime</span><span class="p">,</span>
     <span class="n">_phasor_from_polar</span><span class="p">,</span>
     <span class="n">_phasor_from_signal</span><span class="p">,</span>
@@ -701,7 +710,7 @@ document.write(`
         <span class="k">if</span> <span class="n">sample_phase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
                 <span class="mi">0</span><span class="p">,</span>
-                <span class="n">h</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="n">h</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span>
                 <span class="n">samples</span><span class="p">,</span>
                 <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
@@ -1351,7 +1360,7 @@ document.write(`
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return single apparent lifetimes from phasor coordinates.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return apparent single lifetimes from phasor coordinates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1395,7 +1404,7 @@ document.write(`
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    The apparent single lifetimes from phase and modulation are equal</span>
-<span class="sd">    only if the phasor coordinates lie on the universal circle:</span>
+<span class="sd">    only if the phasor coordinates lie on the universal semicircle:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_to_apparent_lifetime(</span>
 <span class="sd">    ...    0.5, [0.5, 0.45], frequency=80</span>
@@ -1403,12 +1412,12 @@ document.write(`
 <span class="sd">    (array([1.989, 1.79]), array([1.989, 2.188]))</span>
 
 <span class="sd">    Apparent single lifetimes of phasor coordinates outside the universal</span>
-<span class="sd">    circle are undefined:</span>
+<span class="sd">    semicircle are undefined:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_to_apparent_lifetime(-0.1, 1.1, 80)  # doctest: +NUMBER</span>
 <span class="sd">    (-21.8, 0.0)</span>
 
-<span class="sd">    Apparent single lifetimes at the universal circle endpoints are</span>
+<span class="sd">    Apparent single lifetimes at the universal semicircle endpoints are</span>
 <span class="sd">    infinite and zero:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_to_apparent_lifetime([0, 1], [0, 0], 80)  # doctest: +NUMBER</span>
@@ -1416,7 +1425,7 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">return</span> <span class="n">_phasor_to_apparent_lifetime</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -1453,9 +1462,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real : array_like</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Real component of phasor coordinates.</span>
-<span class="sd">    imag : array_like</span>
+<span class="sd">    imag : ndarray</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
 
 <span class="sd">    Notes</span>
@@ -1480,7 +1489,7 @@ document.write(`
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    If the apparent single lifetimes from phase and modulation are equal,</span>
-<span class="sd">    the phasor coordinates lie on the universal circle, else inside:</span>
+<span class="sd">    the phasor coordinates lie on the universal semicircle, else inside:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_from_apparent_lifetime(</span>
 <span class="sd">    ...     1.9894, [1.9894, 2.4113], frequency=80.0</span>
@@ -1488,7 +1497,7 @@ document.write(`
 <span class="sd">    (array([0.5, 0.45]), array([0.5, 0.45]))</span>
 
 <span class="sd">    Zero and infinite apparent single lifetimes define the endpoints of the</span>
-<span class="sd">    universal circle:</span>
+<span class="sd">    universal semicircle:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_from_apparent_lifetime(</span>
 <span class="sd">    ...     [0.0, 1e9], [0.0, 1e9], frequency=80</span>
@@ -1497,7 +1506,7 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">if</span> <span class="n">modulation_lifetime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_phasor_from_single_lifetime</span><span class="p">(</span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_phasor_from_apparent_lifetime</span><span class="p">(</span>
@@ -1735,7 +1744,7 @@ document.write(`
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return single apparent lifetimes from polar coordinates.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return apparent single lifetimes from polar coordinates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1779,7 +1788,7 @@ document.write(`
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    The apparent single lifetimes from phase and modulation are equal</span>
-<span class="sd">    only if the polar coordinates lie on the universal circle:</span>
+<span class="sd">    only if the polar coordinates lie on the universal semicircle:</span>
 
 <span class="sd">    &gt;&gt;&gt; polar_to_apparent_lifetime(</span>
 <span class="sd">    ...     math.pi / 4, numpy.hypot([0.5, 0.45], [0.5, 0.45]), frequency=80</span>
@@ -1788,7 +1797,7 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">return</span> <span class="n">_polar_to_apparent_lifetime</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -1825,9 +1834,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    phase : array_like</span>
+<span class="sd">    phase : ndarray</span>
 <span class="sd">        Angular component of polar coordinates.</span>
-<span class="sd">    modulation : array_like</span>
+<span class="sd">    modulation : ndarray</span>
 <span class="sd">        Radial component of polar coordinates.</span>
 
 <span class="sd">    Notes</span>
@@ -1848,7 +1857,7 @@ document.write(`
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    If the apparent single lifetimes from phase and modulation are equal,</span>
-<span class="sd">    the polar coordinates lie on the universal circle, else inside:</span>
+<span class="sd">    the polar coordinates lie on the universal semicircle, else inside:</span>
 
 <span class="sd">    &gt;&gt;&gt; polar_from_apparent_lifetime(</span>
 <span class="sd">    ...     1.9894, [1.9894, 2.4113], frequency=80.0</span>
@@ -1857,11 +1866,212 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">if</span> <span class="n">modulation_lifetime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_polar_from_single_lifetime</span><span class="p">(</span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_polar_from_apparent_lifetime</span><span class="p">(</span>
         <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_from_fret_donor">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_from_fret_donor</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">donor_lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">fret_efficiency</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">donor_freting</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">donor_background</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">background_real</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">background_imag</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates of FRET donor channel.</span>
+
+<span class="sd">    Calculate phasor coordinates of a FRET (Förster Resonance Energy Transfer)</span>
+<span class="sd">    donor channel as a function of frequency, donor lifetime, FRET efficiency,</span>
+<span class="sd">    fraction of donors undergoing FRET, and background fluorescence.</span>
+
+<span class="sd">    The phasor coordinates of the donor channel contain fractions of:</span>
+
+<span class="sd">    - donor not undergoing energy transfer</span>
+<span class="sd">    - donor quenched by energy transfer</span>
+<span class="sd">    - background fluorescence</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
+<span class="sd">    donor_lifetime : array_like</span>
+<span class="sd">        Lifetime of donor without FRET in ns.</span>
+<span class="sd">    fret_efficiency : array_like, optional, default 0</span>
+<span class="sd">        FRET efficiency in range [0..1].</span>
+<span class="sd">    donor_freting : array_like, optional, default 1</span>
+<span class="sd">        Fraction of donors participating in FRET. Range [0..1].</span>
+<span class="sd">    donor_background : array_like, optional, default 0</span>
+<span class="sd">        Fraction of background fluorescence in unquenched donor channel.</span>
+<span class="sd">        Range [0..1].</span>
+<span class="sd">    background_real : array_like, optional, default 0</span>
+<span class="sd">        Real component of phasor coordinate of background fluorescence</span>
+<span class="sd">        at `frequency`.</span>
+<span class="sd">    background_imag : array_like, optional, default 0</span>
+<span class="sd">        Imaginary component of phasor coordinate of background fluorescence</span>
+<span class="sd">        at `frequency`.</span>
+<span class="sd">    unit_conversion : float, optional</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of donor channel phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of donor channel phasor coordinates.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the phasor coordinates of a FRET donor channel at three</span>
+<span class="sd">    FRET efficiencies:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_fret_donor(</span>
+<span class="sd">    ...     frequency=80,</span>
+<span class="sd">    ...     donor_lifetime=4.2,</span>
+<span class="sd">    ...     fret_efficiency=[0.0, 0.3, 1.0],</span>
+<span class="sd">    ...     donor_freting=0.9,</span>
+<span class="sd">    ...     donor_background=0.1,</span>
+<span class="sd">    ...     background_real=0.11,</span>
+<span class="sd">    ...     background_imag=0.12,</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.1759, 0.2716, 0.1447]), array([0.3602, 0.4095, 0.2464]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="k">return</span> <span class="n">_phasor_from_fret_donor</span><span class="p">(</span>
+        <span class="n">omega</span><span class="p">,</span>
+        <span class="n">donor_lifetime</span><span class="p">,</span>
+        <span class="n">fret_efficiency</span><span class="p">,</span>
+        <span class="n">donor_freting</span><span class="p">,</span>
+        <span class="n">donor_background</span><span class="p">,</span>
+        <span class="n">background_real</span><span class="p">,</span>
+        <span class="n">background_imag</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_from_fret_acceptor">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_from_fret_acceptor</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">donor_lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">acceptor_lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">fret_efficiency</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">donor_freting</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">donor_bleedthrough</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">acceptor_excitation</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">acceptor_background</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">background_real</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">background_imag</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates of FRET acceptor channel.</span>
+
+<span class="sd">    Calculate phasor coordinates of a FRET (Förster Resonance Energy Transfer)</span>
+<span class="sd">    acceptor channel as a function of frequency, donor and acceptor lifetimes,</span>
+<span class="sd">    FRET efficiency, fraction of donors undergoing FRET, fraction of directly</span>
+<span class="sd">    excited acceptors, fraction of donor fluorescence in acceptor channel,</span>
+<span class="sd">    and background fluorescence.</span>
+
+<span class="sd">    The phasor coordinates of the acceptor channel contain fractions of:</span>
+
+<span class="sd">    - acceptor sensitized by energy transfer</span>
+<span class="sd">    - directly excited acceptor</span>
+<span class="sd">    - donor bleedthrough</span>
+<span class="sd">    - background fluorescence</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
+<span class="sd">    donor_lifetime : array_like</span>
+<span class="sd">        Lifetime of donor without FRET in ns.</span>
+<span class="sd">    acceptor_lifetime : array_like</span>
+<span class="sd">        Lifetime of acceptor in ns.</span>
+<span class="sd">    fret_efficiency : array_like, optional, default 0</span>
+<span class="sd">        FRET efficiency in range [0..1].</span>
+<span class="sd">    donor_freting : array_like, optional, default 1</span>
+<span class="sd">        Fraction of donors participating in FRET. Range [0..1].</span>
+<span class="sd">    donor_bleedthrough : array_like, optional, default 0</span>
+<span class="sd">        Fraction of donor fluorescence in acceptor channel. Range [0..1].</span>
+<span class="sd">    acceptor_excitation : array_like, optional, default 0</span>
+<span class="sd">        Fraction of acceptor that is directly excited. Range [0..1].</span>
+<span class="sd">    acceptor_background : array_like, optional, default 0</span>
+<span class="sd">        Fraction of background fluorescence in acceptor channel. Range [0..1].</span>
+<span class="sd">    background_real : array_like, optional, default 0</span>
+<span class="sd">        Real component of phasor coordinate of background fluorescence</span>
+<span class="sd">        at `frequency`.</span>
+<span class="sd">    background_imag : array_like, optional, default 0</span>
+<span class="sd">        Imaginary component of phasor coordinate of background fluorescence</span>
+<span class="sd">        at `frequency`.</span>
+<span class="sd">    unit_conversion : float, optional</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Real component of acceptor channel phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Imaginary component of acceptor channel phasor coordinates.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Compute the phasor coordinates of a FRET acceptor channel at three</span>
+<span class="sd">    FRET efficiencies:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_from_fret_acceptor(</span>
+<span class="sd">    ...     frequency=80,</span>
+<span class="sd">    ...     donor_lifetime=4.2,</span>
+<span class="sd">    ...     acceptor_lifetime=3.0,</span>
+<span class="sd">    ...     fret_efficiency=[0.0, 0.3, 1.0],</span>
+<span class="sd">    ...     donor_freting=0.9,</span>
+<span class="sd">    ...     donor_bleedthrough=0.1,</span>
+<span class="sd">    ...     acceptor_excitation=0.1,</span>
+<span class="sd">    ...     acceptor_background=0.1,</span>
+<span class="sd">    ...     background_real=0.11,</span>
+<span class="sd">    ...     background_imag=0.12,</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.1957, 0.0689, 0.2849]), array([0.319, 0.3116, 0.4261]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="k">return</span> <span class="n">_phasor_from_fret_acceptor</span><span class="p">(</span>
+        <span class="n">omega</span><span class="p">,</span>
+        <span class="n">donor_lifetime</span><span class="p">,</span>
+        <span class="n">acceptor_lifetime</span><span class="p">,</span>
+        <span class="n">fret_efficiency</span><span class="p">,</span>
+        <span class="n">donor_freting</span><span class="p">,</span>
+        <span class="n">donor_bleedthrough</span><span class="p">,</span>
+        <span class="n">acceptor_excitation</span><span class="p">,</span>
+        <span class="n">acceptor_background</span><span class="p">,</span>
+        <span class="n">background_real</span><span class="p">,</span>
+        <span class="n">background_imag</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
