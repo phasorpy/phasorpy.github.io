@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>FRET calculations &#8212; PhasorPy 0.1.dev documentation</title>
+    <title>Förster Resonance Energy Transfer &#8212; PhasorPy 0.1.dev documentation</title>
   
   
   
@@ -51,8 +51,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/phasorpy_fret';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Benchmarks" href="benchmarks/index.html" />
-    <link rel="prev" title="Phasor plot" href="phasorpy_phasorplot.html" />
+    <link rel="next" title="Phasor plot" href="phasorpy_phasorplot.html" />
+    <link rel="prev" title="Phasor coordinates from lifetimes" href="phasorpy_phasor_from_lifetime.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -420,8 +420,8 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_introduction.html">Introduction to PhasorPy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Förster Resonance Energy Transfer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_phasorplot.html">Phasor plot</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">FRET calculations</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="benchmarks/index.html">Benchmarks</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -472,7 +472,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Tutorials</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">FRET calculations</li>
+    <li class="breadcrumb-item active" aria-current="page">Förster...</li>
   </ul>
 </nav>
 </div>
@@ -489,12 +489,13 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="sphx-glr-example-title" id="fret-calculations">
-<span id="sphx-glr-tutorials-phasorpy-fret-py"></span><h1>FRET calculations<a class="headerlink" href="#fret-calculations" title="Link to this heading">#</a></h1>
-<p>Calculate phasor coordinates of FRET donor and acceptor channels.</p>
-<p>The <a class="reference internal" href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_fret_donor()</span></code></a>
-and <a class="reference internal" href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_fret_acceptor()</span></code></a>
-functions are used to calculate phasor coordinates of
+  <section class="sphx-glr-example-title" id="forster-resonance-energy-transfer">
+<span id="sphx-glr-tutorials-phasorpy-fret-py"></span><h1>Förster Resonance Energy Transfer<a class="headerlink" href="#forster-resonance-energy-transfer" title="Link to this heading">#</a></h1>
+<p>Calculate and plot phasor coordinates of FRET donor and acceptor channels.</p>
+<p>The <a class="reference internal" href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_fret_donor()</span></code></a>,
+<a class="reference internal" href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_fret_acceptor()</span></code></a>, and
+<a class="reference internal" href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret"><code class="xref py py-class docutils literal notranslate"><span class="pre">phasorpy.plot.PhasorPlotFret</span></code></a> functions and classes
+are used to calculate and plot phasor coordinates of
 FRET (Förster Resonance Energy Transfer) donor and acceptor channels
 as a function of:</p>
 <ul class="simple">
@@ -502,122 +503,17 @@ as a function of:</p>
 <li><p>donor and acceptor lifetimes</p></li>
 <li><p>FRET efficiency</p></li>
 <li><p>fraction of donors undergoing FRET</p></li>
-<li><p>fraction of directly excited acceptors</p></li>
-<li><p>fraction of donor fluorescence in acceptor channel</p></li>
+<li><p>fraction of directly excited acceptors (acceptor bleedthrough)</p></li>
+<li><p>fraction of donor fluorescence in acceptor channel (donor bleedthrough)</p></li>
 <li><p>fraction of background fluorescence</p></li>
 </ul>
-<p>Define a helper function to compute and plot phasor coordinates of
-FRET donor and acceptor channels over a range of FRET efficiencies:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
-
-<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="p">(</span>
-    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_acceptor</span></a><span class="p">,</span>
-    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">,</span>
-    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a>
-
-
-<span class="k">def</span> <span class="nf">plot_fret_trajectories</span><span class="p">(</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>  <span class="c1"># MHz</span>
-    <span class="n">donor_lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>  <span class="c1"># ns</span>
-    <span class="n">acceptor_lifetime</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>  <span class="c1"># ns</span>
-    <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">101</span><span class="p">),</span>  <span class="c1"># 0%..100%, 1% steps</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">donor_freting</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># all donors participating in FRET</span>
-    <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># no donor fluorescence in acceptor channel</span>
-    <span class="n">acceptor_excitation</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># no directly excited acceptor</span>
-    <span class="n">acceptor_background</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># no background in acceptor channel</span>
-    <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># no background in donor channel</span>
-    <span class="n">background_real</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">background_imag</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phasor coordinates of FRET donor and acceptor channels.&quot;&quot;&quot;</span>
-    <span class="c1"># phasor of donor channel</span>
-    <span class="n">donor_fret_real</span><span class="p">,</span> <span class="n">donor_fret_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">(</span>
-        <span class="n">frequency</span><span class="p">,</span>
-        <span class="n">donor_lifetime</span><span class="p">,</span>
-        <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">fret_efficiency</span><span class="p">,</span>
-        <span class="n">donor_freting</span><span class="o">=</span><span class="n">donor_freting</span><span class="p">,</span>
-        <span class="n">donor_background</span><span class="o">=</span><span class="n">donor_background</span><span class="p">,</span>
-        <span class="n">background_real</span><span class="o">=</span><span class="n">background_real</span><span class="p">,</span>
-        <span class="n">background_imag</span><span class="o">=</span><span class="n">background_imag</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># phasor of acceptor channel</span>
-    <span class="n">acceptor_fret_real</span><span class="p">,</span> <span class="n">acceptor_fret_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_acceptor</span></a><span class="p">(</span>
-        <span class="n">frequency</span><span class="p">,</span>
-        <span class="n">donor_lifetime</span><span class="p">,</span>
-        <span class="n">acceptor_lifetime</span><span class="p">,</span>
-        <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">fret_efficiency</span><span class="p">,</span>
-        <span class="n">donor_freting</span><span class="o">=</span><span class="n">donor_freting</span><span class="p">,</span>
-        <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="n">donor_bleedthrough</span><span class="p">,</span>
-        <span class="n">acceptor_excitation</span><span class="o">=</span><span class="n">acceptor_excitation</span><span class="p">,</span>
-        <span class="n">acceptor_background</span><span class="o">=</span><span class="n">acceptor_background</span><span class="p">,</span>
-        <span class="n">background_real</span><span class="o">=</span><span class="n">background_real</span><span class="p">,</span>
-        <span class="n">background_imag</span><span class="o">=</span><span class="n">background_imag</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># phasor of donor lifetime</span>
-    <span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">donor_lifetime</span><span class="p">)</span>
-
-    <span class="c1"># phasor of acceptor lifetime</span>
-    <span class="n">acceptor_real</span><span class="p">,</span> <span class="n">acceptor_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
-        <span class="n">frequency</span><span class="p">,</span> <span class="n">acceptor_lifetime</span>
-    <span class="p">)</span>
-
-    <span class="n">plot</span> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
-        <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-        <span class="n">xlim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">],</span>
-    <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">phasor_reference</span><span class="o">=</span><span class="p">(</span><span class="n">acceptor_real</span><span class="p">,</span> <span class="n">acceptor_imag</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">donor_background</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">background_real</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">donor_imag</span><span class="p">,</span> <span class="n">background_imag</span><span class="p">],</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">acceptor_background</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">acceptor_real</span><span class="p">,</span> <span class="n">background_real</span><span class="p">],</span>
-            <span class="p">[</span><span class="n">acceptor_imag</span><span class="p">,</span> <span class="n">background_imag</span><span class="p">],</span>
-        <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">donor_fret_real</span><span class="p">,</span>
-        <span class="n">donor_fret_imag</span><span class="p">,</span>
-        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">acceptor_fret_real</span><span class="p">,</span>
-        <span class="n">acceptor_fret_imag</span><span class="p">,</span>
-        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">donor_real</span><span class="p">,</span>
-        <span class="n">donor_imag</span><span class="p">,</span>
-        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Donor&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">acceptor_real</span><span class="p">,</span>
-        <span class="n">acceptor_imag</span><span class="p">,</span>
-        <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Acceptor&#39;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">donor_background</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">acceptor_background</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">background_real</span><span class="p">,</span>
-            <span class="n">background_imag</span><span class="p">,</span>
-            <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Background&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<p>Define FRET model settings used throughout this tutorial:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">,</span>  <span class="c1"># MHz</span>
+    <span class="s1">&#39;donor_lifetime&#39;</span><span class="p">:</span> <span class="mf">4.2</span><span class="p">,</span>  <span class="c1"># ns</span>
+    <span class="s1">&#39;acceptor_lifetime&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>  <span class="c1"># ns</span>
+    <span class="s1">&#39;fret_efficiency&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># 50%</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <section id="fret-efficiency-trajectories">
@@ -639,33 +535,40 @@ Hence, in the absence of directly excited acceptor, donor bleedthrough,
 and background fluorescence, the phasor coordinates of the acceptor channel
 at different FRET efficiencies lie outside the universal semicircle of
 the donor.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_fret_trajectories</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories&#39;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a>
+
+<a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_phasorpy_fret_001.png" srcset="../_images/sphx_glr_phasorpy_fret_001.png" alt="FRET efficiency trajectories" class = "sphx-glr-single-img"/></section>
 <section id="fractions-not-freting">
 <h2>Fractions not FRETing<a class="headerlink" href="#fractions-not-freting" title="Link to this heading">#</a></h2>
 <p>Adding fractions of donors not participating in FRET and fractions
-of directly excited acceptors pulls the FRET trajectories of the donor
-and acceptor channels towards the phasor coordinates of the donor and
-acceptor without FRET:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_fret_trajectories</span><span class="p">(</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with fractions not FRETing&#39;</span><span class="p">,</span>
+of directly excited acceptors (acceptor bleedthrough) pulls the
+FRET trajectories of the donor and acceptor channels towards the
+phasor coordinates of the donor and acceptor without FRET:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
     <span class="n">donor_freting</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>  <span class="c1"># 90%</span>
-    <span class="n">acceptor_excitation</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10%</span>
-<span class="p">)</span>
+    <span class="n">acceptor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10%</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with fractions not FRETing&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_phasorpy_fret_002.png" srcset="../_images/sphx_glr_phasorpy_fret_002.png" alt="FRET efficiency trajectories with fractions not FRETing" class = "sphx-glr-single-img"/></section>
 <section id="donor-bleedthrough">
 <h2>Donor bleedthrough<a class="headerlink" href="#donor-bleedthrough" title="Link to this heading">#</a></h2>
-<p>If the acceptor channel contains fractions of donor fluorescence,
-the FRET efficiency trajectory of the acceptor channel is pulled towards
-the phasor coordinates of the donor channel:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_fret_trajectories</span><span class="p">(</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with donor bleedthrough&#39;</span><span class="p">,</span>
+<p>If the acceptor channel contains fractions of donor fluorescence
+(donor bleedthrough), the FRET efficiency trajectory of the acceptor
+channel is pulled towards the phasor coordinates of the donor channel:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
     <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10%</span>
-<span class="p">)</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with donor bleedthrough&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_phasorpy_fret_003.png" srcset="../_images/sphx_glr_phasorpy_fret_003.png" alt="FRET efficiency trajectories with donor bleedthrough" class = "sphx-glr-single-img"/></section>
@@ -674,16 +577,18 @@ the phasor coordinates of the donor channel:</p>
 <p>In the presence of background fluorescence, the FRET efficiency trajectories
 are linear combinations with the background phasor coordinates.
 At 100% energy transfer, the donor channel only contains background
-fluorescence.
+fluorescence if all donors participate in FRET.
 At 0% energy transfer, in the absence of donor bleedthrough and directly
 excited acceptor, the acceptor channel only contains background fluorescence:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_fret_trajectories</span><span class="p">(</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with background&#39;</span><span class="p">,</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
+    <span class="n">donor_freting</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">acceptor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10%</span>
     <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10%</span>
     <span class="n">background_real</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">background_imag</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-<span class="p">)</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with background&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_phasorpy_fret_004.png" srcset="../_images/sphx_glr_phasorpy_fret_004.png" alt="FRET efficiency trajectories with background" class = "sphx-glr-single-img"/></section>
@@ -702,19 +607,37 @@ excited acceptor, the acceptor channel only contains background fluorescence:</p
 <li><p>donor bleedthrough</p></li>
 <li><p>background fluorescence</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_fret_trajectories</span><span class="p">(</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with many parameters&#39;</span><span class="p">,</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
     <span class="n">donor_freting</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
     <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">acceptor_excitation</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">acceptor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">acceptor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
     <span class="n">background_real</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">background_imag</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-<span class="p">)</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectories with many parameters&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../_images/sphx_glr_phasorpy_fret_005.png" srcset="../_images/sphx_glr_phasorpy_fret_005.png" alt="FRET efficiency trajectories with many parameters" class = "sphx-glr-single-img"/></section>
+<section id="interactive-plot">
+<h2>Interactive plot<a class="headerlink" href="#interactive-plot" title="Link to this heading">#</a></h2>
+<p>Run the FRET phasor plot interactively:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m phasorpy fret
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlotFret" title="phasorpy.plot.PhasorPlotFret" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlotFret</span></a><span class="p">(</span>
+    <span class="o">**</span><span class="n">settings</span><span class="p">,</span>
+    <span class="n">donor_freting</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Interactive FRET phasor plot&#39;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_fret_006.png" srcset="../_images/sphx_glr_phasorpy_fret_006.png" alt="Interactive FRET phasor plot" class = "sphx-glr-single-img"/></section>
 <section id="multi-frequency-plot">
 <h2>Multi-frequency plot<a class="headerlink" href="#multi-frequency-plot" title="Link to this heading">#</a></h2>
 <p>Since the components of the FRET model have different frequency responses,
@@ -722,16 +645,22 @@ the multi-frequency plots of donor and acceptor channels may show
 complex patterns.
 Background fluorescence is omitted from this example to model an
 in vitro experiment:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="p">(</span>
+    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_acceptor</span></a><span class="p">,</span>
+    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">,</span>
+    <a href="../api/phasor.html#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a>
 
-<span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1-1000 MHz</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># 1-10000 MHz</span>
 <span class="n">fret_efficiency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 5% and 95%</span>
-<span class="n">donor_lifetime</span> <span class="o">=</span> <span class="mf">4.2</span>  <span class="c1"># ns</span>
-<span class="n">acceptor_lifetime</span> <span class="o">=</span> <span class="mf">3.0</span>  <span class="c1"># ns</span>
-<span class="n">donor_freting</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># 90%</span>
-<span class="n">donor_bleedthrough</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># 10%</span>
-<span class="n">acceptor_excitation</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># 10%</span>
+<span class="n">donor_lifetime</span> <span class="o">=</span> <span class="mf">4.2</span>
+<span class="n">acceptor_lifetime</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">donor_freting</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">donor_bleedthrough</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">acceptor_bleedthrough</span> <span class="o">=</span> <span class="mf">0.1</span>
 
 <span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_fret_donor" title="phasorpy.phasor.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span>
@@ -748,7 +677,7 @@ in vitro experiment:</p>
     <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">fret_efficiency</span><span class="p">,</span>
     <span class="n">donor_freting</span><span class="o">=</span><span class="n">donor_freting</span><span class="p">,</span>
     <span class="n">donor_bleedthrough</span><span class="o">=</span><span class="n">donor_bleedthrough</span><span class="p">,</span>
-    <span class="n">acceptor_excitation</span><span class="o">=</span><span class="n">acceptor_excitation</span><span class="p">,</span>
+    <span class="n">acceptor_bleedthrough</span><span class="o">=</span><span class="n">acceptor_bleedthrough</span><span class="p">,</span>
 <span class="p">)</span>
 
 <a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a><span class="p">(</span>
@@ -759,15 +688,16 @@ in vitro experiment:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_fret_006.png" srcset="../_images/sphx_glr_phasorpy_fret_006.png" alt="Donor channel" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a><span class="p">(</span>
+<img src="../_images/sphx_glr_phasorpy_fret_007.png" srcset="../_images/sphx_glr_phasorpy_fret_007.png" alt="Donor channel" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_polar_frequency" title="phasorpy.plot.plot_polar_frequency" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_polar_frequency</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span>
     <span class="o">*</span><a href="../api/phasor.html#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a><span class="p">(</span><span class="n">acceptor_real</span><span class="p">,</span> <span class="n">acceptor_imag</span><span class="p">),</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Acceptor channel&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_fret_007.png" srcset="../_images/sphx_glr_phasorpy_fret_007.png" alt="Acceptor channel" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 5</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.587 seconds)</p>
+<img src="../_images/sphx_glr_phasorpy_fret_008.png" srcset="../_images/sphx_glr_phasorpy_fret_008.png" alt="Acceptor channel" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 5
+mypy: disable-error-code=”arg-type”</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.105 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-fret-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/adc887e6e34b87826b8fcaf96e66193b/phasorpy_fret.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_fret.ipynb</span></code></a></p>
@@ -791,20 +721,20 @@ in vitro experiment:</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="phasorpy_phasorplot.html"
+       href="phasorpy_phasor_from_lifetime.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Phasor plot</p>
+        <p class="prev-next-title">Phasor coordinates from lifetimes</p>
       </div>
     </a>
     <a class="right-next"
-       href="benchmarks/index.html"
+       href="phasorpy_phasorplot.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Benchmarks</p>
+        <p class="prev-next-title">Phasor plot</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -831,6 +761,7 @@ in vitro experiment:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#donor-bleedthrough">Donor bleedthrough</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-fluorescence">Background fluorescence</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-parameters">Many parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-plot">Interactive plot</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-frequency-plot">Multi-frequency plot</a></li>
 </ul>
   </nav></div>
