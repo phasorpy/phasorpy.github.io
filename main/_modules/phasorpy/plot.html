@@ -978,6 +978,58 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 
 
+<div class="viewcode-block" id="PhasorPlot.cursor">
+<a class="viewcode-back" href="../../api/plot.html#phasorpy.plot.PhasorPlot.cursor">[docs]</a>
+    <span class="k">def</span> <span class="nf">cursor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="n">real_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imag_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation grid lines and arcs at phasor coordinates.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        real : float</span>
+<span class="sd">            Real component of phasor coordinate.</span>
+<span class="sd">        imag : float</span>
+<span class="sd">            Imaginary component of phasor coordinate.</span>
+<span class="sd">        real_limit : float, optional</span>
+<span class="sd">            Real component of limiting phasor coordinate.</span>
+<span class="sd">        imag_limit : float, optional</span>
+<span class="sd">            Imaginary component of limiting phasor coordinate.</span>
+<span class="sd">        radius : float, optional</span>
+<span class="sd">            Radius of circle limiting phase and modulation grid lines and arcs.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional parameters passed to</span>
+<span class="sd">            :py:class:`matplotlib.lines.Line2D`,</span>
+<span class="sd">            :py:class:`matplotlib.patches.Circle`, and</span>
+<span class="sd">            :py:class:`matplotlib.patches.Arc`.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        phasorpy.plot.PhasorPlot.polar_cursor</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">real_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">imag_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar_cursor</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
+                <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real_limit</span><span class="p">,</span> <span class="n">imag_limit</span><span class="p">),</span>
+                <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar_cursor</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+            <span class="c1"># _circle_only=True,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="PhasorPlot.polar_cursor">
 <a class="viewcode-back" href="../../api/plot.html#phasorpy.plot.PhasorPlot.polar_cursor">[docs]</a>
     <span class="k">def</span> <span class="nf">polar_cursor</span><span class="p">(</span>
@@ -1011,6 +1063,10 @@ document.write(`
 <span class="sd">            :py:class:`matplotlib.patches.Circle`, and</span>
 <span class="sd">            :py:class:`matplotlib.patches.Arc`.</span>
 
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        phasorpy.plot.PhasorPlot.cursor</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
@@ -1019,11 +1075,14 @@ document.write(`
             <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
             <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">_circle_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_circle_only&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span>
         <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">_circle_only</span><span class="p">:</span>
+                <span class="k">return</span>
             <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
             <span class="n">p0</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">circle_line_intersection</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">((</span><span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
@@ -1033,8 +1092,8 @@ document.write(`
                     <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                     <span class="n">modulation</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
                     <span class="n">modulation</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
-                    <span class="n">theta1</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
-                    <span class="n">theta2</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                    <span class="n">theta1</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                    <span class="n">theta2</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
                     <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
