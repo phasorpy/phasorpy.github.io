@@ -499,11 +499,18 @@ document.write(`
 <span class="sd">  - :py:func:`phasor_from_fret_donor`</span>
 <span class="sd">  - :py:func:`phasor_from_fret_acceptor`</span>
 
+<span class="sd">- convert between single component lifetimes and optimal frequency:</span>
+
+<span class="sd">  - :py:func:`frequency_from_lifetime`</span>
+<span class="sd">  - :py:func:`frequency_to_lifetime`</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;frequency_from_lifetime&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;frequency_to_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_calibrate&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_apparent_lifetime&#39;</span><span class="p">,</span>
@@ -1554,6 +1561,105 @@ document.write(`
     <span class="k">return</span> <span class="n">_phasor_from_apparent_lifetime</span><span class="p">(</span>
         <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="frequency_from_lifetime">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.frequency_from_lifetime">[docs]</a>
+<span class="k">def</span> <span class="nf">frequency_from_lifetime</span><span class="p">(</span>
+    <span class="n">lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return optimal frequency for resolving single component lifetime.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lifetime : array_like</span>
+<span class="sd">        Single component lifetime.</span>
+<span class="sd">    unit_conversion : float, optional, default: 1e-3</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    frequency : ndarray</span>
+<span class="sd">        Optimal laser pulse or modulation frequency for resolving `lifetime`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The optimal frequency :math:`f` to resolve a single component lifetime</span>
+<span class="sd">    :math:`\tau` is</span>
+<span class="sd">    (:ref:`Redford &amp; Clegg 2005 &lt;redford-clegg-2005&gt;`. Eq. B.6):</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \omega &amp;= 2 \pi f</span>
+
+<span class="sd">        \omega^2 &amp;= \frac{1 + \sqrt{3}}{2 \tau^2}</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Measurements of a lifetime near 4 ns should be made at 47 MHz,</span>
+<span class="sd">    near 1 ns at 186 MHz:</span>
+
+<span class="sd">    &gt;&gt;&gt; frequency_from_lifetime([4.0, 1.0])  # doctest: +NUMBER</span>
+<span class="sd">    array([46.5, 186])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">*=</span> <span class="mf">0.18601566519848653</span> <span class="o">/</span> <span class="n">unit_conversion</span>
+    <span class="k">return</span> <span class="n">t</span></div>
+
+
+
+<div class="viewcode-block" id="frequency_to_lifetime">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.frequency_to_lifetime">[docs]</a>
+<span class="k">def</span> <span class="nf">frequency_to_lifetime</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return single component lifetime best resolved at frequency.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency.</span>
+<span class="sd">    unit_conversion : float, optional, default: 1e-3</span>
+<span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lifetime : ndarray</span>
+<span class="sd">        Single component lifetime best resolved at `frequency`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The lifetime :math:`\tau` that is best resolved at frequency :math:`f` is</span>
+<span class="sd">    (:ref:`Redford &amp; Clegg 2005 &lt;redford-clegg-2005&gt;`. Eq. B.6):</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \omega &amp;= 2 \pi f</span>
+
+<span class="sd">        \tau^2 &amp;=  \frac{1 + \sqrt{3}}{2 \omega^2}</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Measurements at frequencies of 47 and 186 MHz are best for measuring</span>
+<span class="sd">    lifetimes near 4 and 1 ns respectively:</span>
+
+<span class="sd">    &gt;&gt;&gt; frequency_to_lifetime([46.5, 186])  # doctest: +NUMBER</span>
+<span class="sd">    array([4, 1])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">*=</span> <span class="mf">0.18601566519848653</span> <span class="o">/</span> <span class="n">unit_conversion</span>
+    <span class="k">return</span> <span class="n">t</span></div>
 
 
 

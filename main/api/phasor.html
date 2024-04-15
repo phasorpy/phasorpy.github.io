@@ -530,7 +530,82 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_fret_acceptor" title="phasorpy.phasor.phasor_from_fret_acceptor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>convert between single component lifetimes and optimal frequency:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.frequency_from_lifetime" title="phasorpy.phasor.frequency_from_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">frequency_from_lifetime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.frequency_to_lifetime" title="phasorpy.phasor.frequency_to_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">frequency_to_lifetime()</span></code></a></p></li>
 </ul>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.frequency_from_lifetime">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">frequency_from_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#frequency_from_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.frequency_from_lifetime" title="Link to this definition">#</a></dt>
+<dd><p>Return optimal frequency for resolving single component lifetime.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lifetime</strong> (<em>array_like</em>) – Single component lifetime.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1e-3</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>frequency</strong> – Optimal laser pulse or modulation frequency for resolving <cite>lifetime</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The optimal frequency <span class="math notranslate nohighlight">\(f\)</span> to resolve a single component lifetime
+<span class="math notranslate nohighlight">\(\tau\)</span> is
+(<a class="reference internal" href="../phasor_approach.html#redford-clegg-2005"><span class="std std-ref">Redford &amp; Clegg 2005</span></a>. Eq. B.6):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\omega^2 &amp;= \frac{1 + \sqrt{3}}{2 \tau^2}\end{aligned}\end{align} \]</div>
+<p class="rubric">Examples</p>
+<p>Measurements of a lifetime near 4 ns should be made at 47 MHz,
+near 1 ns at 186 MHz:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frequency_from_lifetime</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>  
+<span class="go">array([46.5, 186])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.frequency_to_lifetime">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">frequency_to_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#frequency_to_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.frequency_to_lifetime" title="Link to this definition">#</a></dt>
+<dd><p>Return single component lifetime best resolved at frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1e-3</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>lifetime</strong> – Single component lifetime best resolved at <cite>frequency</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The lifetime <span class="math notranslate nohighlight">\(\tau\)</span> that is best resolved at frequency <span class="math notranslate nohighlight">\(f\)</span> is
+(<a class="reference internal" href="../phasor_approach.html#redford-clegg-2005"><span class="std std-ref">Redford &amp; Clegg 2005</span></a>. Eq. B.6):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\\tau^2 &amp;=  \frac{1 + \sqrt{3}}{2 \omega^2}\end{aligned}\end{align} \]</div>
+<p class="rubric">Examples</p>
+<p>Measurements at frequencies of 47 and 186 MHz are best for measuring
+lifetimes near 4 and 1 ns respectively:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frequency_to_lifetime</span><span class="p">([</span><span class="mf">46.5</span><span class="p">,</span> <span class="mi">186</span><span class="p">])</span>  
+<span class="go">array([4, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_calibrate">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_calibrate" title="Link to this definition">#</a></dt>
@@ -1577,6 +1652,8 @@ only if the polar coordinates lie on the universal semicircle:</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_from_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_from_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_to_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_to_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>
