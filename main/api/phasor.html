@@ -536,7 +536,87 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.frequency_to_lifetime" title="phasorpy.phasor.frequency_to_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">frequency_to_lifetime()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>convert between fractional intensities and pre-exponential amplitudes:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.fraction_from_amplitude" title="phasorpy.phasor.fraction_from_amplitude"><code class="xref py py-func docutils literal notranslate"><span class="pre">fraction_from_amplitude()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.fraction_to_amplitude" title="phasorpy.phasor.fraction_to_amplitude"><code class="xref py py-func docutils literal notranslate"><span class="pre">fraction_to_amplitude()</span></code></a></p></li>
 </ul>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.fraction_from_amplitude">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">fraction_from_amplitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amplitude</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#fraction_from_amplitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.fraction_from_amplitude" title="Link to this definition">#</a></dt>
+<dd><p>Return fractional intensity from pre-exponential amplitude.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime of components.</p></li>
+<li><p><strong>amplitude</strong> (<em>array_like</em>) – Pre-exponential amplitudes of lifetime components.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis over which to compute fractional intensities.
+The default is the last axis (-1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fraction</strong> – Fractional intensities, normalized to sum to 1 along <cite>axis</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.phasor.fraction_to_amplitude" title="phasorpy.phasor.fraction_to_amplitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.fraction_to_amplitude</span></code></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The fractional intensity <span class="math notranslate nohighlight">\(\alpha\)</span> of component <span class="math notranslate nohighlight">\(j\)</span> with
+lifetime <span class="math notranslate nohighlight">\(\tau\)</span> and pre-exponential amplitude <span class="math notranslate nohighlight">\(a\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_{j} = \frac{a_{j} \tau_{j}}{\sum_{j} a_{j} \tau_{j}}\]</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fraction_from_amplitude</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>  
+<span class="go">array([0.8, 0.2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.fraction_to_amplitude">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">fraction_to_amplitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#fraction_to_amplitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.fraction_to_amplitude" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-exponential amplitude from fractional intensity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime components.</p></li>
+<li><p><strong>fraction</strong> (<em>array_like</em>) – Fractional intensities of lifetime components.
+Fractions are normalized to sum to 1.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis over which to compute pre-exponential amplitudes.
+The default is the last axis (-1).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>amplitude</strong> – Pre-exponential amplitudes.
+The product of <cite>amplitude</cite> and <cite>lifetime</cite> sums to 1 along <cite>axis</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.phasor.fraction_from_amplitude" title="phasorpy.phasor.fraction_from_amplitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.fraction_from_amplitude</span></code></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The pre-exponential amplitude <span class="math notranslate nohighlight">\(a\)</span> of component <span class="math notranslate nohighlight">\(j\)</span> with
+lifetime <span class="math notranslate nohighlight">\(\tau\)</span> and fractional intensity <span class="math notranslate nohighlight">\(\alpha\)</span> is:</p>
+<div class="math notranslate nohighlight">
+\[a_{j} = \frac{\alpha_{j}}{\tau_{j} \cdot \sum_{j} \alpha_{j}}\]</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fraction_to_amplitude</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>  
+<span class="go">array([0.2, 0.2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.frequency_from_lifetime">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">frequency_from_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#frequency_from_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.frequency_from_lifetime" title="Link to this definition">#</a></dt>
@@ -1652,6 +1732,8 @@ only if the polar coordinates lie on the universal semicircle:</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.fraction_from_amplitude"><code class="docutils literal notranslate"><span class="pre">fraction_from_amplitude()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.fraction_to_amplitude"><code class="docutils literal notranslate"><span class="pre">fraction_to_amplitude()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_from_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_from_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_to_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_to_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
