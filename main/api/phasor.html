@@ -543,6 +543,11 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.fraction_to_amplitude" title="phasorpy.phasor.fraction_to_amplitude"><code class="xref py py-func docutils literal notranslate"><span class="pre">fraction_to_amplitude()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>calculate phasor coordinates on semicircle at other harmonics:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_at_harmonic" title="phasorpy.phasor.phasor_at_harmonic"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_at_harmonic()</span></code></a></p></li>
+</ul>
+</li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.fraction_from_amplitude">
@@ -683,6 +688,57 @@ Use 1.0 for Hz and s.</p></li>
 lifetimes near 4 and 1 ns respectively:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frequency_to_lifetime</span><span class="p">([</span><span class="mf">46.5</span><span class="p">,</span> <span class="mi">186</span><span class="p">])</span>  
 <span class="go">array([4, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_at_harmonic">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_at_harmonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_harmonic</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_at_harmonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_at_harmonic" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates on universal semicircle at other harmonics.</p>
+<p>Return phasor coordinates at any harmonic, given the real component of
+phasor coordinates of a single exponential lifetime at a certain harmonic.
+The input and output phasor coordinates lie on the universal semicircle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates of single exponential lifetime
+at <cite>harmonic</cite>.</p></li>
+<li><p><strong>harmonic</strong> (<em>array_like</em>) – Harmonic of <cite>real</cite> coordinate. Must be integer &gt;= 1.</p></li>
+<li><p><strong>other_harmonic</strong> (<em>array_like</em>) – Harmonic for which to return phasor coordinates. Must be integer &gt;= 1.</p></li>
+<li><p><strong>**kwargs</strong> – Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real_other</strong> (<em>ndarray</em>) – Real component of phasor coordinates at <cite>other_harmonic</cite>.</p></li>
+<li><p><strong>imag_other</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates at <cite>other_harmonic</cite>.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The phasor coordinates
+<span class="math notranslate nohighlight">\(g_{n}\)</span> (<cite>real_other</cite>) and <span class="math notranslate nohighlight">\(s_{n}\)</span> (<cite>imag_other</cite>)
+of a single exponential lifetime at harmonic <span class="math notranslate nohighlight">\(n\)</span> (<cite>other_harmonic</cite>)
+is calculated from the real part of the phasor coordinates
+<span class="math notranslate nohighlight">\(g_{m}\)</span> (<cite>real</cite>) at harmonic <span class="math notranslate nohighlight">\(m\)</span> (<cite>harmonic</cite>) according to
+(<a class="reference internal" href="../phasor_approach.html#torrado-2022"><span class="std std-ref">Torrado, Malacrida, &amp; Ranjit. 2022</span></a>. Eq. 25):</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}g_{n} &amp;= \frac{m^2 \cdot g_{m}}{n^2 + (m^2-n^2) \cdot g_{m}}\\s_{n} &amp;= \sqrt{G_{n} - g_{n}^2}\end{aligned}\end{align} \]</div>
+<p>This function is equivalent to the following operations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">other_harmonic</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="o">=</span><span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">real</span> <span class="o">-</span> <span class="n">real</span> <span class="o">*</span> <span class="n">real</span><span class="p">),</span> <span class="n">frequency</span><span class="o">=</span><span class="n">harmonic</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<p>The phasor coordinates at higher harmonics are approaching the origin:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_at_harmonic</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>  
+<span class="go">(array([0.5, 0.2, 0.05882, 0.01538]), array([0.5, 0.4, 0.2353, 0.1231]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -839,7 +895,8 @@ If None, <cite>modulation_lifetime</cite> is same as <cite>phase_lifetime</cite>
 <li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
 The default is 1e-3 for MHz and ns, or Hz and ms.
 Use 1.0 for Hz and s.</p></li>
-<li><p><strong>**kwargs</strong> – Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1737,6 +1794,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.fraction_to_amplitude"><code class="docutils literal notranslate"><span class="pre">fraction_to_amplitude()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_from_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_from_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.frequency_to_lifetime"><code class="docutils literal notranslate"><span class="pre">frequency_to_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_at_harmonic"><code class="docutils literal notranslate"><span class="pre">phasor_at_harmonic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>

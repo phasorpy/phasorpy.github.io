@@ -509,6 +509,10 @@ document.write(`
 <span class="sd">  - :py:func:`fraction_from_amplitude`</span>
 <span class="sd">  - :py:func:`fraction_to_amplitude`</span>
 
+<span class="sd">- calculate phasor coordinates on semicircle at other harmonics:</span>
+
+<span class="sd">  - :py:func:`phasor_at_harmonic`</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -518,6 +522,7 @@ document.write(`
     <span class="s1">&#39;fraction_to_amplitude&#39;</span><span class="p">,</span>
     <span class="s1">&#39;frequency_from_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;frequency_to_lifetime&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_at_harmonic&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_calibrate&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_apparent_lifetime&#39;</span><span class="p">,</span>
@@ -555,6 +560,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">._phasorpy</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_phasor_at_harmonic</span><span class="p">,</span>
     <span class="n">_phasor_from_apparent_lifetime</span><span class="p">,</span>
     <span class="n">_phasor_from_fret_acceptor</span><span class="p">,</span>
     <span class="n">_phasor_from_fret_donor</span><span class="p">,</span>
@@ -1764,6 +1770,87 @@ document.write(`
     <span class="n">t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">t</span> <span class="o">/=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">t</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_at_harmonic">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_at_harmonic">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_at_harmonic</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">other_harmonic</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return phasor coordinates on universal semicircle at other harmonics.</span>
+
+<span class="sd">    Return phasor coordinates at any harmonic, given the real component of</span>
+<span class="sd">    phasor coordinates of a single exponential lifetime at a certain harmonic.</span>
+<span class="sd">    The input and output phasor coordinates lie on the universal semicircle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates of single exponential lifetime</span>
+<span class="sd">        at `harmonic`.</span>
+<span class="sd">    harmonic : array_like</span>
+<span class="sd">        Harmonic of `real` coordinate. Must be integer &gt;= 1.</span>
+<span class="sd">    other_harmonic : array_like</span>
+<span class="sd">        Harmonic for which to return phasor coordinates. Must be integer &gt;= 1.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real_other : ndarray</span>
+<span class="sd">        Real component of phasor coordinates at `other_harmonic`.</span>
+<span class="sd">    imag_other : ndarray</span>
+<span class="sd">        Imaginary component of phasor coordinates at `other_harmonic`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The phasor coordinates</span>
+<span class="sd">    :math:`g_{n}` (`real_other`) and :math:`s_{n}` (`imag_other`)</span>
+<span class="sd">    of a single exponential lifetime at harmonic :math:`n` (`other_harmonic`)</span>
+<span class="sd">    is calculated from the real part of the phasor coordinates</span>
+<span class="sd">    :math:`g_{m}` (`real`) at harmonic :math:`m` (`harmonic`) according to</span>
+<span class="sd">    (:ref:`Torrado, Malacrida, &amp; Ranjit. 2022 &lt;torrado-2022&gt;`. Eq. 25):</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        g_{n} &amp;= \frac{m^2 \cdot g_{m}}{n^2 + (m^2-n^2) \cdot g_{m}}</span>
+
+<span class="sd">        s_{n} &amp;= \sqrt{G_{n} - g_{n}^2}</span>
+
+<span class="sd">    This function is equivalent to the following operations:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        phasor_from_lifetime(</span>
+<span class="sd">            frequency=other_harmonic,</span>
+<span class="sd">            lifetime=phasor_to_apparent_lifetime(</span>
+<span class="sd">                real, sqrt(real - real * real), frequency=harmonic</span>
+<span class="sd">            )[0],</span>
+<span class="sd">        )</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The phasor coordinates at higher harmonics are approaching the origin:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_at_harmonic(0.5, 1, [1, 2, 4, 8])  # doctest: +NUMBER</span>
+<span class="sd">    (array([0.5, 0.2, 0.05882, 0.01538]), array([0.5, 0.4, 0.2353, 0.1231]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">harmonic</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid harmonic&#39;</span><span class="p">)</span>
+
+    <span class="n">other_harmonic</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">other_harmonic</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">other_harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid other_harmonic&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_phasor_at_harmonic</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">harmonic</span><span class="p">,</span> <span class="n">other_harmonic</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
