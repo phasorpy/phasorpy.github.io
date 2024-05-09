@@ -668,10 +668,10 @@ document.write(`
 
 <span class="sd">    &gt;&gt;&gt; sample_phase = numpy.linspace(0, 2 * math.pi, 5, endpoint=False)[::-1]</span>
 <span class="sd">    &gt;&gt;&gt; signal = 1.1 * (</span>
-<span class="sd">    ...     numpy.cos(sample_phase - 0.78539816) * 2 *  0.70710678 + 1</span>
+<span class="sd">    ...     numpy.cos(sample_phase - 0.78539816) * 2 * 0.70710678 + 1</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; phasor_from_signal(</span>
-<span class="sd">    ...    signal, sample_phase=sample_phase</span>
+<span class="sd">    ...     signal, sample_phase=sample_phase</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (1.1, 0.5, 0.5)</span>
 
@@ -818,7 +818,7 @@ document.write(`
 
 <span class="sd">    &gt;&gt;&gt; sample_phase = numpy.linspace(0, 2 * math.pi, 5, endpoint=False)</span>
 <span class="sd">    &gt;&gt;&gt; signal = 1.1 * (</span>
-<span class="sd">    ...     numpy.cos(sample_phase - 0.78539816) * 2 *  0.70710678 + 1</span>
+<span class="sd">    ...     numpy.cos(sample_phase - 0.78539816) * 2 * 0.70710678 + 1</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; phasor_from_signal_fft(signal, harmonic=[1, 2])  # doctest: +NUMBER</span>
 <span class="sd">    (1.1, array([0.5, 0.0]), array([0.5, -0]))</span>
@@ -1044,10 +1044,13 @@ document.write(`
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
-<span class="sd">    ...    [0.1, 0.2, 0.3], [0.4, 0.5, 0.6],</span>
-<span class="sd">    ...    [0.2, 0.3, 0.4], [0.5, 0.6, 0.7],</span>
-<span class="sd">    ...    frequency=80, lifetime=4</span>
-<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    ...     [0.1, 0.2, 0.3],</span>
+<span class="sd">    ...     [0.4, 0.5, 0.6],</span>
+<span class="sd">    ...     [0.2, 0.3, 0.4],</span>
+<span class="sd">    ...     [0.5, 0.6, 0.7],</span>
+<span class="sd">    ...     frequency=80,</span>
+<span class="sd">    ...     lifetime=4,</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([0.0658, 0.132, 0.198]), array([0.2657, 0.332, 0.399]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1138,18 +1141,15 @@ document.write(`
 <span class="sd">    Use scalar reference coordinates to rotate and scale phasor coordinates:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_transform(</span>
-<span class="sd">    ...     [0.1, 0.2, 0.3],</span>
-<span class="sd">    ...     [0.4, 0.5, 0.6],</span>
-<span class="sd">    ...     0.1,</span>
-<span class="sd">    ...     0.5</span>
-<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    ...     [0.1, 0.2, 0.3], [0.4, 0.5, 0.6], 0.1, 0.5</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([0.0298, 0.0745, 0.119]), array([0.204, 0.259, 0.3135]))</span>
 
 <span class="sd">    Use separate reference coordinates for each phasor coordinate:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_transform(</span>
 <span class="sd">    ...     [0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.2, 0.2, 0.3], [0.5, 0.2, 0.3]</span>
-<span class="sd">    ... ) # doctest: +NUMBER</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([0.00927, 0.0193, 0.0328]), array([0.206, 0.106, 0.1986]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1213,7 +1213,7 @@ document.write(`
 
 <span class="sd">        polar_from_reference(</span>
 <span class="sd">            *phasor_to_polar(measured_real, measured_imag),</span>
-<span class="sd">            *phasor_to_polar(known_real, known_imag)</span>
+<span class="sd">            *phasor_to_polar(known_real, known_imag),</span>
 <span class="sd">        )</span>
 
 <span class="sd">    Examples</span>
@@ -1459,7 +1459,7 @@ document.write(`
 <span class="sd">    only if the phasor coordinates lie on the universal semicircle:</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_to_apparent_lifetime(</span>
-<span class="sd">    ...    0.5, [0.5, 0.45], frequency=80</span>
+<span class="sd">    ...     0.5, [0.5, 0.45], frequency=80</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([1.989, 1.79]), array([1.989, 2.188]))</span>
 
@@ -1894,7 +1894,7 @@ document.write(`
 <span class="sd">    Phasor coordinates of many single-component lifetimes (fractions omitted):</span>
 
 <span class="sd">    &gt;&gt;&gt; phasor_from_lifetime(</span>
-<span class="sd">    ...     80.0, [3.9788735, 1.9894368, 0.9947183],</span>
+<span class="sd">    ...     80.0, [3.9788735, 1.9894368, 0.9947183]</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([0.2, 0.5, 0.8]), array([0.4, 0.5, 0.4]))</span>
 
@@ -1920,7 +1920,7 @@ document.write(`
 <span class="sd">    ...     [40e6, 80e6],</span>
 <span class="sd">    ...     [[1e-9, 0.9947183e-9], [3.9788735e-9, 0.9947183e-9]],</span>
 <span class="sd">    ...     [[0, 1], [0.5, 0.5]],</span>
-<span class="sd">    ...    unit_conversion=1.0</span>
+<span class="sd">    ...     unit_conversion=1.0,</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
 <span class="sd">    (array([[0.941, 0.721], [0.8, 0.5]]), array([[0.235, 0.368], [0.4, 0.4]]))</span>
 
