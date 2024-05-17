@@ -951,7 +951,7 @@ document.write(`
     <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return calibrated/referenced phasor coordinates.</span>
@@ -997,7 +997,7 @@ document.write(`
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
-<span class="sd">    skip_axes : int or sequence of int, optional</span>
+<span class="sd">    skip_axis : int or sequence of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 
@@ -1034,7 +1034,7 @@ document.write(`
 <span class="sd">                *phasor_center(</span>
 <span class="sd">                    reference_real,</span>
 <span class="sd">                    reference_imag,</span>
-<span class="sd">                    skip_axes,</span>
+<span class="sd">                    skip_axis,</span>
 <span class="sd">                    method,</span>
 <span class="sd">                ),</span>
 <span class="sd">                *phasor_from_lifetime(</span>
@@ -1072,7 +1072,7 @@ document.write(`
             <span class="sa">f</span><span class="s1">&#39;!= reference_imag.shape</span><span class="si">{</span><span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
     <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
-        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">skip_axes</span><span class="o">=</span><span class="n">skip_axes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
+        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
     <span class="p">)</span>
     <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
         <span class="n">frequency</span><span class="p">,</span>
@@ -1084,6 +1084,17 @@ document.write(`
     <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">polar_from_reference_phasor</span><span class="p">(</span>
         <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span><span class="p">,</span> <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span>
     <span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">phi_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                <span class="n">phi_zero</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
+                <span class="n">mod_zero</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="n">phasor_transform</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span><span class="p">)</span></div>
 
 
@@ -2454,8 +2465,9 @@ document.write(`
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">skip_axes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return center of phasor coordinates.</span>
 
@@ -2465,7 +2477,7 @@ document.write(`
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
-<span class="sd">    skip_axes : int or sequence of int, optional</span>
+<span class="sd">    skip_axis : int or sequence of int, optional</span>
 <span class="sd">        Axes to be excluded during center calculation. If None, all</span>
 <span class="sd">        axes are considered.</span>
 <span class="sd">    method : str, optional</span>
@@ -2473,6 +2485,10 @@ document.write(`
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
+
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional arguments passed to :py:func:`numpy.mean` or</span>
+<span class="sd">        :py:func:`numpy.median`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -2511,22 +2527,14 @@ document.write(`
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">skip_axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">axis</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">skip_axes</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
-            <span class="n">skip_axes</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_axes</span><span class="p">,)</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">skip_axes</span><span class="si">=}</span><span class="s1"> out of range </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">skip_axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">)</span>
-        <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axes</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
         <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">_mean</span><span class="p">,</span>
         <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median</span><span class="p">,</span>
     <span class="p">}[</span>
         <span class="n">method</span>
-    <span class="p">](</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span></div>
+    <span class="p">](</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
@@ -2588,6 +2596,54 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_skip_axis</span><span class="p">(</span>
+    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">ndim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return axes to skip and not to skip.</span>
+
+<span class="sd">    This helper function is used to validate and parse `skip_axis`</span>
+<span class="sd">    parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    skip_axis : Sequence of int, or None</span>
+<span class="sd">        Axes to skip. If None, no axes are skipped.</span>
+<span class="sd">    ndim : int</span>
+<span class="sd">        Dimensionality of array in which to skip axes.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    skip_axis</span>
+<span class="sd">        Ordered, positive values of `skip_axis`.</span>
+<span class="sd">    other_axis</span>
+<span class="sd">        Axes indices not included in `skip_axis`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    IndexError</span>
+<span class="sd">        If any `skip_axis` value is out of bounds of `ndim`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; _parse_skip_axis((1, -2), 5)</span>
+<span class="sd">    ((1, 3), (0, 2, 4))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">skip_axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(),</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+        <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_axis</span><span class="p">,)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">ndim</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;skip_axis=</span><span class="si">{</span><span class="n">skip_axis</span><span class="si">}</span><span class="s2"> out of range for </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">skip_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">))</span>
+    <span class="n">other_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">skip_axis</span><span class="p">,</span> <span class="n">other_axis</span>
 </pre></div>
 
                 </article>
