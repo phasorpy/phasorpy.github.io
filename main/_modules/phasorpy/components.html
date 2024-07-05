@@ -473,7 +473,9 @@ document.write(`
 <span class="sd">  harmonic information (not implemented)</span>
 
 <span class="sd">- calculate fractions of two or three components of known location by</span>
-<span class="sd">  resolving graphically with histogram (not implemented)</span>
+<span class="sd">  resolving graphically with histogram:</span>
+
+<span class="sd">  - :py:func:`graphical_component_analysis`</span>
 
 <span class="sd">- blindly resolve fractions of n components by using harmonic</span>
 <span class="sd">  information (not implemented)</span>
@@ -482,18 +484,24 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;two_fractions_from_phasor&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;two_fractions_from_phasor&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;graphical_component_analysis&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">project_phasor_to_line</span>
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">line_from_components</span><span class="p">,</span>
+    <span class="n">mask_cursor</span><span class="p">,</span>
+    <span class="n">mask_segment</span><span class="p">,</span>
+    <span class="n">project_phasor_to_line</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="two_fractions_from_phasor">
@@ -501,8 +509,8 @@ document.write(`
 <span class="k">def</span> <span class="nf">two_fractions_from_phasor</span><span class="p">(</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">real_components</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">imag_components</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">components_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">components_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return fractions of two components from phasor coordinates.</span>
@@ -513,21 +521,21 @@ document.write(`
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
-<span class="sd">    real_components: array_like</span>
+<span class="sd">    components_real: array_like, shape (2,)</span>
 <span class="sd">        Real coordinates of the first and second components.</span>
-<span class="sd">    imag_components: array_like</span>
+<span class="sd">    components_imag: array_like, shape (2,)</span>
 <span class="sd">        Imaginary coordinates of the first and second components.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fraction_of_first_component : ndarray</span>
-<span class="sd">        Fractions of the first component.</span>
-<span class="sd">    fraction_of_second_component : ndarray</span>
-<span class="sd">        Fractions of the second component.</span>
+<span class="sd">    fractions : tuple of ndarray</span>
+<span class="sd">        A tuple containing arrays with the fractions of a specific component.</span>
+<span class="sd">        The order of the arrays in the tuple corresponds to the order of the</span>
+<span class="sd">        components used in the calculation.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For the moment, calculation of fraction of components from different</span>
+<span class="sd">    For now, calculation of fraction of components from different</span>
 <span class="sd">    channels or frequencies is not supported. Only one pair of components can</span>
 <span class="sd">    be analyzed and will be broadcasted to all channels/frequencies.</span>
 
@@ -536,7 +544,6 @@ document.write(`
 <span class="sd">    ValueError</span>
 <span class="sd">        If the real and/or imaginary coordinates of the known components are</span>
 <span class="sd">        not of size 2.</span>
-<span class="sd">        If the two components have the same coordinates.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -546,35 +553,167 @@ document.write(`
 <span class="sd">    (array([0.44, 0.56, 0.68]), array([0.56, 0.44, 0.32]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">real_components</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real_components</span><span class="p">)</span>
-    <span class="n">imag_components</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag_components</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">real_components</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real_components</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != (2,)&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">imag_components</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">imag_components</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != (2,)&#39;</span><span class="p">)</span>
-    <span class="n">first_component_phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">real_components</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">imag_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">components_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">components_real</span><span class="p">)</span>
+    <span class="n">components_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">components_imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">components_real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">components_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != (2,)&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">components_imag</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">components_imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != (2,)&#39;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">distance_between_components</span> <span class="o">=</span> <span class="n">line_from_components</span><span class="p">(</span>
+        <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span>
     <span class="p">)</span>
-    <span class="n">second_component_phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">real_components</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">imag_components</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="p">)</span>
-    <span class="n">total_distance_between_components</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">second_component_phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">first_component_phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-        <span class="p">(</span><span class="n">second_component_phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">first_component_phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">total_distance_between_components</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;components must have different coordinates&#39;</span><span class="p">)</span>
     <span class="n">projected_real</span><span class="p">,</span> <span class="n">projected_imag</span> <span class="o">=</span> <span class="n">project_phasor_to_line</span><span class="p">(</span>
-        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">real_components</span><span class="p">,</span> <span class="n">imag_components</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span>
     <span class="p">)</span>
     <span class="n">distances_to_first_component</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">projected_real</span><span class="p">)</span> <span class="o">-</span> <span class="n">first_component_phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">projected_imag</span><span class="p">)</span> <span class="o">-</span> <span class="n">first_component_phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">projected_real</span><span class="p">)</span> <span class="o">-</span> <span class="n">components_real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">projected_imag</span><span class="p">)</span> <span class="o">-</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">fraction_of_second_component</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">distances_to_first_component</span> <span class="o">/</span> <span class="n">total_distance_between_components</span>
+    <span class="n">second_component_fractions</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">distances_to_first_component</span> <span class="o">/</span> <span class="n">distance_between_components</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">fraction_of_second_component</span><span class="p">,</span> <span class="n">fraction_of_second_component</span></div>
+    <span class="n">first_component_fractions</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">second_component_fractions</span>
+    <span class="k">return</span> <span class="n">first_component_fractions</span><span class="p">,</span> <span class="n">second_component_fractions</span></div>
+
+
+
+<div class="viewcode-block" id="graphical_component_analysis">
+<a class="viewcode-back" href="../../api/components.html#phasorpy.components.graphical_component_analysis">[docs]</a>
+<span class="k">def</span> <span class="nf">graphical_component_analysis</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">components_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">components_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return fractions of two or three components from phasor coordinates.</span>
+
+<span class="sd">    The graphical method is based on moving circular cursors along the line</span>
+<span class="sd">    between pairs of components, and quantifying the phasors for each fraction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">    components_real: array_like, shape (2,) or (3,)</span>
+<span class="sd">        Real coordinates for two or three components.</span>
+<span class="sd">    components_imag: array_like, shape (2,) or (3,)</span>
+<span class="sd">        Imaginary coordinates for two or three components.</span>
+<span class="sd">    radius: float, optional</span>
+<span class="sd">        Radius of the cursor in phasor coordinates.</span>
+<span class="sd">    steps: int, optional</span>
+<span class="sd">        Number of steps to move the cursor along the line between components.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    counts : tuple of ndarray</span>
+<span class="sd">        Counts along each line segment connecting the components, ordered</span>
+<span class="sd">        0-1, 0-2, 1-2 (for 3 components) or simply 0-1 (for 2 components).</span>
+<span class="sd">    fractions : ndarray</span>
+<span class="sd">        Fractions for the combinations of each pair of components, from 0 to 1.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For now, calculation of fraction of components from different</span>
+<span class="sd">    channels or frequencies is not supported. Only one set of components can</span>
+<span class="sd">    be analyzed and will be broadcasted to all channels/frequencies.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        The array shapes of `real` and `imag`, or `components_real` and</span>
+<span class="sd">        `components_imag` do not match.</span>
+<span class="sd">        Number of components is less than 2 or greater than 3.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :ref:`sphx_glr_tutorials_phasorpy_components.py`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Count the number of phasors and fractions between two components:</span>
+
+<span class="sd">    &gt;&gt;&gt; graphical_component_analysis(</span>
+<span class="sd">    ...     [0.6, 0.3], [0.35, 0.38], [0.2, 0.9], [0.4, 0.3], steps=5</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    ((array([0, 0, 1, 0, 1, 0]),), array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+
+<span class="sd">    Count the number of phasors and fractions between the combinations</span>
+<span class="sd">    of three components:</span>
+
+<span class="sd">    &gt;&gt;&gt; graphical_component_analysis(</span>
+<span class="sd">    ...     [0.4, 0.5],</span>
+<span class="sd">    ...     [0.2, 0.3],</span>
+<span class="sd">    ...     [0.0, 0.2, 0.9],</span>
+<span class="sd">    ...     [0.0, 0.4, 0.3],</span>
+<span class="sd">    ...     steps=5,</span>
+<span class="sd">    ... )  # doctest: +NUMBER +NORMALIZE_WHITESPACE</span>
+<span class="sd">    ((array([0, 1, 1, 1, 1, 0]),</span>
+<span class="sd">    array([0, 1, 0, 0, 0, 0]),</span>
+<span class="sd">    array([0, 1, 2, 0, 0, 0])),</span>
+<span class="sd">    array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">components_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">components_real</span><span class="p">)</span>
+    <span class="n">components_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">components_imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span>
+        <span class="ow">or</span> <span class="n">components_real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">components_imag</span><span class="o">.</span><span class="n">shape</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input array shapes must match&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">components_real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Components arrays are not one-dimensional: &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">components_real</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1"> dimensions found&#39;</span>
+        <span class="p">)</span>
+    <span class="n">num_components</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">components_real</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_components</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Number of components must be 2 or 3&quot;</span><span class="p">)</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fractions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">real_a</span><span class="p">,</span> <span class="n">imag_a</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+        <span class="nb">zip</span><span class="p">(</span><span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_components</span><span class="p">):</span>
+            <span class="n">real_b</span><span class="p">,</span> <span class="n">imag_b</span> <span class="o">=</span> <span class="n">components_real</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">components_imag</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">unit_vector</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">line_from_components</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">real_b</span><span class="p">,</span> <span class="n">real_a</span><span class="p">],</span> <span class="p">[</span><span class="n">imag_b</span><span class="p">,</span> <span class="n">imag_a</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">cursor_real</span><span class="p">,</span> <span class="n">cursor_imag</span> <span class="o">=</span> <span class="n">real_b</span><span class="p">,</span> <span class="n">imag_b</span>
+            <span class="n">step_size</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">/</span> <span class="n">steps</span>
+            <span class="n">component_counts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">num_components</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_cursor</span><span class="p">(</span>
+                        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cursor_real</span><span class="p">,</span> <span class="n">cursor_imag</span><span class="p">,</span> <span class="n">radius</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">num_components</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">real_c</span><span class="p">,</span> <span class="n">imag_c</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">components_real</span><span class="p">[</span><span class="mi">3</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">],</span>
+                        <span class="n">components_imag</span><span class="p">[</span><span class="mi">3</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">],</span>
+                    <span class="p">)</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_segment</span><span class="p">(</span>
+                        <span class="n">real</span><span class="p">,</span>
+                        <span class="n">imag</span><span class="p">,</span>
+                        <span class="n">cursor_real</span><span class="p">,</span>
+                        <span class="n">cursor_imag</span><span class="p">,</span>
+                        <span class="n">real_c</span><span class="p">,</span>
+                        <span class="n">imag_c</span><span class="p">,</span>
+                        <span class="n">radius</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="n">fraction_counts</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+                <span class="n">component_counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fraction_counts</span><span class="p">)</span>
+                <span class="n">cursor_real</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="n">unit_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">cursor_imag</span> <span class="o">+=</span> <span class="n">step_size</span> <span class="o">*</span> <span class="n">unit_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">component_counts</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">counts</span><span class="p">),</span> <span class="n">fractions</span><span class="p">)</span></div>
 
 </pre></div>
 

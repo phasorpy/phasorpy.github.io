@@ -497,40 +497,110 @@ known (not implemented)</p></li>
 <li><p>calculate fractions of three or four known components by using higher
 harmonic information (not implemented)</p></li>
 <li><p>calculate fractions of two or three components of known location by
-resolving graphically with histogram (not implemented)</p></li>
+resolving graphically with histogram:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></p></li>
+</ul>
+</li>
 <li><p>blindly resolve fractions of n components by using harmonic
 information (not implemented)</p></li>
 </ul>
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.components.graphical_component_analysis">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">graphical_component_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/components.html#graphical_component_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.graphical_component_analysis" title="Link to this definition">#</a></dt>
+<dd><p>Return fractions of two or three components from phasor coordinates.</p>
+<p>The graphical method is based on moving circular cursors along the line
+between pairs of components, and quantifying the phasors for each fraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>components_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>) or </em><em>(</em><em>3</em><em>,</em><em>)</em>) – Real coordinates for two or three components.</p></li>
+<li><p><strong>components_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>) or </em><em>(</em><em>3</em><em>,</em><em>)</em>) – Imaginary coordinates for two or three components.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of the cursor in phasor coordinates.</p></li>
+<li><p><strong>steps</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of steps to move the cursor along the line between components.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>counts</strong> (<em>tuple of ndarray</em>) – Counts along each line segment connecting the components, ordered
+0-1, 0-2, 1-2 (for 3 components) or simply 0-1 (for 2 components).</p></li>
+<li><p><strong>fractions</strong> (<em>ndarray</em>) – Fractions for the combinations of each pair of components, from 0 to 1.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For now, calculation of fraction of components from different
+channels or frequencies is not supported. Only one set of components can
+be analyzed and will be broadcasted to all channels/frequencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>components_real</cite> and
+    <cite>components_imag</cite> do not match.
+    Number of components is less than 2 or greater than 3.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../tutorials/phasorpy_components.html#sphx-glr-tutorials-phasorpy-components-py"><span class="std std-ref">Component analysis</span></a></p>
+</div>
+<p class="rubric">Examples</p>
+<p>Count the number of phasors and fractions between two components:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graphical_component_analysis</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">((array([0, 0, 1, 0, 1, 0]),), array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+</pre></div>
+</div>
+<p>Count the number of phasors and fractions between the combinations
+of three components:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graphical_component_analysis</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">((array([0, 1, 1, 1, 1, 0]),</span>
+<span class="go">array([0, 1, 0, 0, 0, 0]),</span>
+<span class="go">array([0, 1, 2, 0, 0, 0])),</span>
+<span class="go">array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.components.two_fractions_from_phasor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">two_fractions_from_phasor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_components</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/components.html#two_fractions_from_phasor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.two_fractions_from_phasor" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">two_fractions_from_phasor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/components.html#two_fractions_from_phasor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.two_fractions_from_phasor" title="Link to this definition">#</a></dt>
 <dd><p>Return fractions of two components from phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>real_components</strong> (<em>array_like</em>) – Real coordinates of the first and second components.</p></li>
-<li><p><strong>imag_components</strong> (<em>array_like</em>) – Imaginary coordinates of the first and second components.</p></li>
+<li><p><strong>components_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Real coordinates of the first and second components.</p></li>
+<li><p><strong>components_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Imaginary coordinates of the first and second components.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>fraction_of_first_component</strong> (<em>ndarray</em>) – Fractions of the first component.</p></li>
-<li><p><strong>fraction_of_second_component</strong> (<em>ndarray</em>) – Fractions of the second component.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>fractions</strong> – A tuple containing arrays with the fractions of a specific component.
+The order of the arrays in the tuple corresponds to the order of the
+components used in the calculation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of ndarray</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>For the moment, calculation of fraction of components from different
+<p>For now, calculation of fraction of components from different
 channels or frequencies is not supported. Only one pair of components can
 be analyzed and will be broadcasted to all channels/frequencies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – If the real and/or imaginary coordinates of the known components are
-    not of size 2.
-    If the two components have the same coordinates.</p>
+    not of size 2.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -590,6 +660,7 @@ be analyzed and will be broadcasted to all channels/frequencies.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.graphical_component_analysis"><code class="docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.two_fractions_from_phasor"><code class="docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a></li>
 </ul>
   </nav></div>
