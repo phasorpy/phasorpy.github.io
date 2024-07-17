@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>phasorpy.components &#8212; PhasorPy 0.1.dev documentation</title>
+    <title>phasorpy.cursors &#8212; PhasorPy 0.1.dev documentation</title>
   
   
   
@@ -47,11 +47,11 @@
     <script src="../_static/tabs.js?v=3ee01567"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=30646c52"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/components';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/cursors';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="phasorpy.plot" href="plot.html" />
-    <link rel="prev" title="phasorpy.cursors" href="cursors.html" />
+    <link rel="next" title="phasorpy.components" href="components.html" />
+    <link rel="prev" title="phasorpy.phasor" href="phasor.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -417,8 +417,8 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="phasorpy.html">phasorpy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasor.html">phasorpy.phasor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cursors.html">phasorpy.cursors</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">phasorpy.components</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">phasorpy.cursors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">phasorpy.components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="plot.html">phasorpy.plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="io.html">phasorpy.io</a></li>
 <li class="toctree-l1"><a class="reference internal" href="color.html">phasorpy.color</a></li>
@@ -465,7 +465,7 @@ document.write(`
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">API reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">phasorpy.components</li>
+    <li class="breadcrumb-item active" aria-current="page">phasorpy.cursors</li>
   </ul>
 </nav>
 </div>
@@ -482,133 +482,161 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-phasorpy.components">
-<span id="phasorpy-components"></span><h1>phasorpy.components<a class="headerlink" href="#module-phasorpy.components" title="Link to this heading">#</a></h1>
-<p>Component analysis of phasor coordinates.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.components</span></code> module provides functions to:</p>
+  <section id="module-phasorpy.cursors">
+<span id="phasorpy-cursors"></span><h1>phasorpy.cursors<a class="headerlink" href="#module-phasorpy.cursors" title="Link to this heading">#</a></h1>
+<p>Select regions of interest (cursors) from phasor coordinates.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.cursors</span></code> module provides functions to:</p>
 <ul class="simple">
-<li><p>calculate fractions of two components of known location by projecting to
-line between components:</p>
+<li><p>create masks for regions of interests in the phasor space:</p>
 <ul>
-<li><p><a class="reference internal" href="#phasorpy.components.two_fractions_from_phasor" title="phasorpy.components.two_fractions_from_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.cursors.mask_from_circular_cursor" title="phasorpy.cursors.mask_from_circular_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_circular_cursor()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.cursors.mask_from_polar_cursor" title="phasorpy.cursors.mask_from_polar_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_polar_cursor()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>calculate phasor coordinates of second component if only one is
-known (not implemented)</p></li>
-<li><p>calculate fractions of three or four known components by using higher
-harmonic information (not implemented)</p></li>
-<li><p>calculate fractions of two or three components of known location by
-resolving graphically with histogram:</p>
+<li><p>create pseudo-color image from average signal and cursor masks:</p>
 <ul>
-<li><p><a class="reference internal" href="#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color"><code class="xref py py-func docutils literal notranslate"><span class="pre">pseudo_color()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>blindly resolve fractions of n components by using harmonic
-information (not implemented)</p></li>
 </ul>
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.components.graphical_component_analysis">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">graphical_component_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/components.html#graphical_component_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.graphical_component_analysis" title="Link to this definition">#</a></dt>
-<dd><p>Return fractions of two or three components from phasor coordinates.</p>
-<p>The graphical method is based on moving circular cursors along the line
-between pairs of components, and quantifying the phasors for each fraction.</p>
+<dt class="sig sig-object py" id="phasorpy.cursors.mask_from_circular_cursor">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_circular_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_circular_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_circular_cursor" title="Link to this definition">#</a></dt>
+<dd><p>Return masks for circular cursors of phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>components_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>) or </em><em>(</em><em>3</em><em>,</em><em>)</em>) – Real coordinates for two or three components.</p></li>
-<li><p><strong>components_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>) or </em><em>(</em><em>3</em><em>,</em><em>)</em>) – Imaginary coordinates for two or three components.</p></li>
-<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of the cursor in phasor coordinates.</p></li>
-<li><p><strong>steps</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of steps to move the cursor along the line between components.</p></li>
+<li><p><strong>center_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Real coordinates of circle centers.</p></li>
+<li><p><strong>center_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Imaginary coordinates of circle centers.</p></li>
+<li><p><strong>radius</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Radii of circles.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis along which the masks are returned. Default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>counts</strong> (<em>tuple of ndarray</em>) – Counts along each line segment connecting the components, ordered
-0-1, 0-2, 1-2 (for 3 components) or simply 0-1 (for 2 components).</p></li>
-<li><p><strong>fractions</strong> (<em>ndarray</em>) – Fractions for the combinations of each pair of components, from 0 to 1.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>masks</strong> – Phasor coordinates masked for each circular cursor.</p>
 </dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>For now, calculation of fraction of components from different
-channels or frequencies is not supported. Only one set of components can
-be analyzed and will be broadcasted to all channels/frequencies.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>components_real</cite> and
-    <cite>components_imag</cite> do not match.
-    Number of components is less than 2 or greater than 3.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>center_real</cite> and
+    <cite>center_imag</cite> do not match.
+    The axis is out of bounds.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="../tutorials/phasorpy_components.html#sphx-glr-tutorials-phasorpy-components-py"><span class="std std-ref">Component analysis</span></a></p>
+<p><a class="reference internal" href="../tutorials/phasorpy_cursors.html#sphx-glr-tutorials-phasorpy-cursors-py"><span class="std std-ref">Cursors</span></a></p>
 </div>
 <p class="rubric">Examples</p>
-<p>Count the number of phasors and fractions between two components:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graphical_component_analysis</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span>
-<span class="gp">... </span><span class="p">)</span>  
-<span class="go">((array([0, 0, 1, 0, 1, 0]),), array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+<p>Create mask for a single circular cursor:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="go">array([False,  True])</span>
 </pre></div>
 </div>
-<p>Count the number of phasors and fractions between the combinations
-of three components:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graphical_component_analysis</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="gp">... </span><span class="p">)</span>  
-<span class="go">((array([0, 1, 1, 1, 1, 0]),</span>
-<span class="go">array([0, 1, 0, 0, 0, 0]),</span>
-<span class="go">array([0, 1, 2, 0, 0, 0])),</span>
-<span class="go">array([0, 0.2, 0.4, 0.6, 0.8, 1]))</span>
+<p>Create masks for two circular cursors with different radius:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">array([[ True, False],</span>
+<span class="go">       [False, False]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.components.two_fractions_from_phasor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">two_fractions_from_phasor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">components_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/components.html#two_fractions_from_phasor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.two_fractions_from_phasor" title="Link to this definition">#</a></dt>
-<dd><p>Return fractions of two components from phasor coordinates.</p>
+<dt class="sig sig-object py" id="phasorpy.cursors.mask_from_polar_cursor">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_range</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_polar_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_polar_cursor" title="Link to this definition">#</a></dt>
+<dd><p>Return mask for polar cursor of polar coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
-<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>components_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Real coordinates of the first and second components.</p></li>
-<li><p><strong>components_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Imaginary coordinates of the first and second components.</p></li>
+<li><p><strong>phase</strong> (<em>array_like</em>) – Angular component of polar coordinates in radians.</p></li>
+<li><p><strong>modulation</strong> (<em>array_like</em>) – Radial component of polar coordinates.</p></li>
+<li><p><strong>phase_range</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>...</em><em>, </em><em>2</em><em>)</em>) – Angular range of the cursors in radians.
+The start and end of the range must be in the last dimension.</p></li>
+<li><p><strong>modulation_range</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>...</em><em>, </em><em>2</em><em>)</em>) – Radial range of the cursors.
+The start and end of the range must be in the last dimension.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis along which the masks are returned. Default is 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>fractions</strong> – A tuple containing arrays with the fractions of a specific component.
-The order of the arrays in the tuple corresponds to the order of the
-components used in the calculation.</p>
+<dd class="field-even"><p><strong>masks</strong> – Polar coordinates masked for each polar cursor.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple of ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>phase</cite> and <cite>modulation</cite>, or <cite>phase_range</cite> and
+    <cite>modulation_range</cite> do not match.
+    The last dimension of <cite>phase_range</cite> and <cite>modulation_range</cite> is not 2.
+    The axis is out of bounds.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>For now, calculation of fraction of components from different
-channels or frequencies is not supported. Only one pair of components can
-be analyzed and will be broadcasted to all channels/frequencies.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../tutorials/phasorpy_cursors.html#sphx-glr-tutorials-phasorpy-cursors-py"><span class="std std-ref">Cursors</span></a></p>
+</div>
+<p class="rubric">Example</p>
+<p>Create mask from a single polar cursor:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_polar_cursor</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="go">array([False,  True])</span>
+</pre></div>
+</div>
+<p>Create masks for two polar cursors with different ranges:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_polar_cursor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">270</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">array([[False,  True],</span>
+<span class="go">       [ True, False]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.cursors.pseudo_color">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">pseudo_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#pseudo_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.pseudo_color" title="Link to this definition">#</a></dt>
+<dd><p>Return the average of signal pseudo-colored for each cursor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the real and/or imaginary coordinates of the known components are
-    not of size 2.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Average of signal (zero harmonic).</p></li>
+<li><p><strong>masks</strong> (<em>ndarray</em>) – Masks for each cursor.</p></li>
+<li><p><strong>colors</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>3</em><em>)</em>) – Colors assigned to each cursor. Last dimension must contain the
+RGB values. Default is <a class="reference internal" href="color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL"><code class="xref py py-data docutils literal notranslate"><span class="pre">phasorpy.color.CATEGORICAL</span></code></a>.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis with masks. Default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pseudocolor</strong> – Average of signal replaced by colors for each cursor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The <cite>colors</cite> array is not 2 dimensional and/or the last dimension is
+    not of size 3 (must contain RGB values).
+    The <cite>masks</cite> shape along axis does not match <cite>mean</cite> shape.
+    Axis is out of bounds.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">two_fractions_from_phasor</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../tutorials/phasorpy_cursors.html#sphx-glr-tutorials-phasorpy-cursors-py"><span class="std std-ref">Cursors</span></a></p>
+</div>
+<p class="rubric">Example</p>
+<p>Pseudo-color for a single mask.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pseudo_color</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>  
+<span class="go">array([[0.825, 0.095, 0.127], [0, 0, 0], [0.825, 0.095, 0.127]])</span>
+</pre></div>
+</div>
+<p>Pseudo-color for two masks.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pseudo_color</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]]</span>
 <span class="gp">... </span><span class="p">)</span>  
-<span class="go">(array([0.44, 0.56, 0.68]), array([0.56, 0.44, 0.32]))</span>
+<span class="go">array([[0.825, 0.095, 0.127], [0.095, 0.413, 1]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -626,20 +654,20 @@ be analyzed and will be broadcasted to all channels/frequencies.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="cursors.html"
+       href="phasor.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">phasorpy.cursors</p>
+        <p class="prev-next-title">phasorpy.phasor</p>
       </div>
     </a>
     <a class="right-next"
-       href="plot.html"
+       href="components.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">phasorpy.plot</p>
+        <p class="prev-next-title">phasorpy.components</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -661,8 +689,9 @@ be analyzed and will be broadcasted to all channels/frequencies.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.graphical_component_analysis"><code class="docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.two_fractions_from_phasor"><code class="docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.mask_from_circular_cursor"><code class="docutils literal notranslate"><span class="pre">mask_from_circular_cursor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.mask_from_polar_cursor"><code class="docutils literal notranslate"><span class="pre">mask_from_polar_cursor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.pseudo_color"><code class="docutils literal notranslate"><span class="pre">pseudo_color()</span></code></a></li>
 </ul>
   </nav></div>
 
