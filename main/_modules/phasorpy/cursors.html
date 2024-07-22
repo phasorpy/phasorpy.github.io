@@ -30,7 +30,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -484,7 +484,6 @@ document.write(`
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Any</span><span class="p">,</span>
         <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">NDArray</span><span class="p">,</span>
     <span class="p">)</span>
@@ -492,6 +491,13 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <span class="n">CATEGORICAL</span>
+
+<span class="kn">from</span> <span class="nn">._phasorpy</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_blend_normal</span><span class="p">,</span>
+    <span class="n">_blend_overlay</span><span class="p">,</span>
+    <span class="n">_is_inside_circle</span><span class="p">,</span>
+    <span class="n">_is_inside_polar_rectangle</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="mask_from_circular_cursor">
@@ -504,7 +510,6 @@ document.write(`
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return masks for circular cursors of phasor coordinates.</span>
 
@@ -518,22 +523,23 @@ document.write(`
 <span class="sd">        Real coordinates of circle centers.</span>
 <span class="sd">    center_imag : array_like, shape (n,)</span>
 <span class="sd">        Imaginary coordinates of circle centers.</span>
-<span class="sd">    radius : array_like, shape (n,)</span>
+<span class="sd">    radius : array_like, optional, shape (n,)</span>
 <span class="sd">        Radii of circles.</span>
-<span class="sd">    axis : int, optional</span>
-<span class="sd">        Axis along which the masks are returned. Default is 0.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    masks : ndarray</span>
-<span class="sd">        Phasor coordinates masked for each circular cursor.</span>
+<span class="sd">        Boolean array of shape `(n, *real.shape)`.</span>
+<span class="sd">        The first dimension is omitted if `center_*` and `radius` are scalars.</span>
+<span class="sd">        Values are True if phasor coordinates are inside circular cursor,</span>
+<span class="sd">        else False.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        The array shapes of `real` and `imag`, or `center_real` and</span>
-<span class="sd">        `center_imag` do not match.</span>
-<span class="sd">        The axis is out of bounds.</span>
+<span class="sd">        The array shapes of `real` and `imag` do not match.</span>
+<span class="sd">        The array shapes of `center_*` or `radius` have more than</span>
+<span class="sd">        one dimension.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -543,89 +549,94 @@ document.write(`
 <span class="sd">    --------</span>
 <span class="sd">    Create mask for a single circular cursor:</span>
 
-<span class="sd">    &gt;&gt;&gt; mask_from_circular_cursor([0.0, 0.0], [0.0, 0.5], 0.0, 0.5, radius=0.1)</span>
-<span class="sd">    array([False,  True])</span>
+<span class="sd">    &gt;&gt;&gt; mask_from_circular_cursor([0.2, 0.5], [0.4, 0.5], 0.2, 0.4, radius=0.1)</span>
+<span class="sd">    array([ True, False])</span>
 
 <span class="sd">    Create masks for two circular cursors with different radius:</span>
 
 <span class="sd">    &gt;&gt;&gt; mask_from_circular_cursor(</span>
-<span class="sd">    ...     [0.0, 1.0], [0.0, 0.5], [0.0, 1.0], [0.0, 0.4], radius=[0.1, 0.05]</span>
+<span class="sd">    ...     [0.2, 0.5], [0.4, 0.5], [0.2, 0.5], [0.4, 0.5], radius=[0.1, 0.05]</span>
 <span class="sd">    ... )</span>
 <span class="sd">    array([[ True, False],</span>
-<span class="sd">           [False, False]])</span>
+<span class="sd">           [False,  True]])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
     <span class="n">center_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center_real</span><span class="p">)</span>
     <span class="n">center_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center_imag</span><span class="p">)</span>
     <span class="n">radius</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">center_real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">center_imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">center_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">center_imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">radius</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, or </span><span class="si">{</span><span class="n">radius</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> &gt; 1&#39;</span>
+        <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">center_real</span><span class="p">)</span> <span class="ow">or</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">radius</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">real</span> <span class="o">-</span> <span class="n">center_real</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span>
-        <span class="n">imag</span> <span class="o">-</span> <span class="n">center_imag</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">_is_inside_circle</span><span class="p">(</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="kc">True</span>
     <span class="p">)</span>
-    <span class="n">masks</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">center_real</span><span class="p">)</span> <span class="ow">or</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_axis</span> <span class="o">=</span> <span class="n">masks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="n">max_axis</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">axis</span> <span class="o">&lt;=</span> <span class="n">max_axis</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Invalid axis </span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1">.&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;Must be between </span><span class="si">{</span><span class="o">-</span><span class="n">max_axis</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">max_axis</span><span class="si">}</span><span class="s1">.&#39;</span>
-            <span class="p">)</span>
-        <span class="n">masks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
-    <span class="c1"># TODO: handle radius dimension &gt; 1</span>
-    <span class="k">return</span> <span class="n">masks</span></div>
+    <span class="k">if</span> <span class="n">moveaxis</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="mask_from_polar_cursor">
 <a class="viewcode-back" href="../../api/cursors.html#phasorpy.cursors.mask_from_polar_cursor">[docs]</a>
 <span class="k">def</span> <span class="nf">mask_from_polar_cursor</span><span class="p">(</span>
-    <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">modulation</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">phase_range</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
-    <span class="n">modulation_range</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">phase_min</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">phase_max</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">modulation_min</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">modulation_max</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return mask for polar cursor of polar coordinates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    phase: array_like</span>
-<span class="sd">        Angular component of polar coordinates in radians.</span>
-<span class="sd">    modulation: array_like</span>
-<span class="sd">        Radial component of polar coordinates.</span>
-<span class="sd">    phase_range: array_like, shape (..., 2)</span>
-<span class="sd">        Angular range of the cursors in radians.</span>
-<span class="sd">        The start and end of the range must be in the last dimension.</span>
-<span class="sd">    modulation_range: array_like, shape (..., 2)</span>
-<span class="sd">        Radial range of the cursors.</span>
-<span class="sd">        The start and end of the range must be in the last dimension.</span>
-<span class="sd">    axis: int, optional</span>
-<span class="sd">        Axis along which the masks are returned. Default is 0.</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">    phase_min : array_like, shape (n,)</span>
+<span class="sd">        Minimum of angular range of cursors in radians.</span>
+<span class="sd">        Values should be between -pi and pi.</span>
+<span class="sd">    phase_max : array_like, shape (n,)</span>
+<span class="sd">        Maximum of angular range of cursors in radians.</span>
+<span class="sd">        Values should be between -pi and pi.</span>
+<span class="sd">    modulation_min : array_like, shape (n,)</span>
+<span class="sd">        Minimum of radial range of cursors.</span>
+<span class="sd">    modulation_max : array_like, shape (n,)</span>
+<span class="sd">        Maximum of radial range of cursors.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    masks: ndarray</span>
-<span class="sd">        Polar coordinates masked for each polar cursor.</span>
+<span class="sd">    masks : ndarray</span>
+<span class="sd">        Boolean array of shape `(n, *real.shape)`.</span>
+<span class="sd">        The first dimension is omitted if `phase_*` and `modulation_*`</span>
+<span class="sd">        are scalars.</span>
+<span class="sd">        Values are True if phasor coordinates are inside polar range cursor,</span>
+<span class="sd">        else False.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        The array shapes of `phase` and `modulation`, or `phase_range` and</span>
 <span class="sd">        `modulation_range` do not match.</span>
-<span class="sd">        The last dimension of `phase_range` and `modulation_range` is not 2.</span>
-<span class="sd">        The axis is out of bounds.</span>
+<span class="sd">        The array shapes of `phase_*` or `modulation_*` have more than</span>
+<span class="sd">        one dimension.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -635,92 +646,103 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    Create mask from a single polar cursor:</span>
 
-<span class="sd">    &gt;&gt;&gt; mask_from_polar_cursor([5, 100], [0.2, 0.4], [50, 150], [0.2, 0.5])</span>
-<span class="sd">    array([False,  True])</span>
+<span class="sd">    &gt;&gt;&gt; mask_from_polar_cursor([0.2, 0.5], [0.4, 0.5], 1.1, 1.2, 0.4, 0.5)</span>
+<span class="sd">    array([ True, False])</span>
 
 <span class="sd">    Create masks for two polar cursors with different ranges:</span>
 
 <span class="sd">    &gt;&gt;&gt; mask_from_polar_cursor(</span>
-<span class="sd">    ...     [5, 100], [0.2, 0.4], [[50, 150], [0, 270]], [[0.2, 0.5], [0, 0.3]]</span>
+<span class="sd">    ...     [0.2, 0.5],</span>
+<span class="sd">    ...     [0.4, 0.5],</span>
+<span class="sd">    ...     [1.1, 0.7],</span>
+<span class="sd">    ...     [1.2, 0.8],</span>
+<span class="sd">    ...     [0.4, 0.7],</span>
+<span class="sd">    ...     [0.5, 0.8],</span>
 <span class="sd">    ... )</span>
-<span class="sd">    array([[False,  True],</span>
-<span class="sd">           [ True, False]])</span>
+<span class="sd">    array([[ True, False],</span>
+<span class="sd">           [False,  True]])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
-    <span class="n">modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation</span><span class="p">)</span>
-    <span class="n">phase_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">phase_range</span><span class="p">)</span>
-    <span class="n">modulation_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">modulation_range</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">phase_min</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase_min</span><span class="p">)</span>
+    <span class="n">phase_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phase_max</span><span class="p">)</span>
+    <span class="n">modulation_min</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation_min</span><span class="p">)</span>
+    <span class="n">modulation_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">modulation_max</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">phase</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">modulation</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">modulation</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">phase_range</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">modulation_range</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_range</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">modulation_range</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">phase_range</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_range</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s1"> != 2&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">phase_min</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">phase_max</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">modulation_min</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">modulation_max</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_min</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">phase_max</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">modulation_min</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, or </span><span class="si">{</span><span class="n">modulation_max</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> &gt; 1&#39;</span>
+        <span class="p">)</span>
     <span class="c1"># TODO: check if angles are between -pi and pi</span>
 
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phase_range</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">modulation</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">phase_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">phase_range</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-        <span class="n">modulation_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">modulation_range</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
-    <span class="n">phase_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">phase</span> <span class="o">&gt;=</span> <span class="n">phase_range</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span>
-        <span class="n">phase</span> <span class="o">&lt;=</span> <span class="n">phase_range</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">phase_min</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">phase_max</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">modulation_min</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">modulation_max</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">_is_inside_polar_rectangle</span><span class="p">(</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">phase_min</span><span class="p">,</span> <span class="n">phase_max</span><span class="p">,</span> <span class="n">modulation_min</span><span class="p">,</span> <span class="n">modulation_max</span><span class="p">,</span> <span class="kc">True</span>
     <span class="p">)</span>
-    <span class="n">modulation_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">modulation</span> <span class="o">&gt;=</span> <span class="n">modulation_range</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span>
-        <span class="n">modulation</span> <span class="o">&lt;=</span> <span class="n">modulation_range</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="n">masks</span> <span class="o">=</span> <span class="n">phase_mask</span> <span class="o">&amp;</span> <span class="n">modulation_mask</span>
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phase_range</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">max_axis</span> <span class="o">=</span> <span class="n">masks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="n">max_axis</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">axis</span> <span class="o">&lt;=</span> <span class="n">max_axis</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Invalid axis </span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1">.&#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;Must be between </span><span class="si">{</span><span class="o">-</span><span class="n">max_axis</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">max_axis</span><span class="si">}</span><span class="s1">.&#39;</span>
-            <span class="p">)</span>
-        <span class="n">masks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">masks</span></div>
+    <span class="k">if</span> <span class="n">moveaxis</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="pseudo_color">
 <a class="viewcode-back" href="../../api/cursors.html#phasorpy.cursors.pseudo_color">[docs]</a>
 <span class="k">def</span> <span class="nf">pseudo_color</span><span class="p">(</span>
-    <span class="n">mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
-    <span class="n">masks</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
-    <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">masks</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">intensity</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">colors</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the average of signal pseudo-colored for each cursor.</span>
+    <span class="n">vmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return pseudo-colored image from cursor masks.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    mean: ndarray</span>
-<span class="sd">        Average of signal (zero harmonic).</span>
-<span class="sd">    masks: ndarray</span>
-<span class="sd">        Masks for each cursor.</span>
-<span class="sd">    colors: array_like, optional, shape (N, 3)</span>
-<span class="sd">        Colors assigned to each cursor. Last dimension must contain the</span>
-<span class="sd">        RGB values. Default is :py:data:`phasorpy.color.CATEGORICAL`.</span>
-<span class="sd">    axis: int, optional</span>
-<span class="sd">        Axis with masks. Default is 0.</span>
+<span class="sd">    *masks : array_like</span>
+<span class="sd">        Boolean mask for each cursor.</span>
+<span class="sd">    intensity : array_like, optional</span>
+<span class="sd">        Intensity used as base layer to blend cursor colors in &quot;overlay&quot; mode.</span>
+<span class="sd">        If None, cursor masks are blended using &quot;screen&quot; mode.</span>
+<span class="sd">    vmin : float, optional</span>
+<span class="sd">        Minimum value to normalize `intensity`.</span>
+<span class="sd">        If None, the minimum value of `intensity` is used.</span>
+<span class="sd">    vmax : float, optional</span>
+<span class="sd">        Maximum value to normalize `intensity`.</span>
+<span class="sd">        If None, the maximum value of `intensity` is used.</span>
+<span class="sd">    colors : array_like, optional, shape (N, 3)</span>
+<span class="sd">        Colors assigned to each cursor.</span>
+<span class="sd">        The last dimension contains the normalized RGB floating point values.</span>
+<span class="sd">        The default is :py:data:`phasorpy.color.CATEGORICAL`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    pseudocolor: ndarray</span>
-<span class="sd">        Average of signal replaced by colors for each cursor.</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Pseudo-colored image of shape ``(*masks[0].shape, 3)``.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        The `colors` array is not 2 dimensional and/or the last dimension is</span>
-<span class="sd">        not of size 3 (must contain RGB values).</span>
-<span class="sd">        The `masks` shape along axis does not match `mean` shape.</span>
-<span class="sd">        Axis is out of bounds.</span>
+<span class="sd">        `colors` is not a (n, 3) shaped floating point array.</span>
+<span class="sd">        The shapes of `masks` or `mean` cannot broadcast.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -728,21 +750,27 @@ document.write(`
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    Pseudo-color for a single mask.</span>
+<span class="sd">    Create pseudo-color image from single mask:</span>
 
-<span class="sd">    &gt;&gt;&gt; pseudo_color([0, 1, 2], [True, False, True])  # doctest: +NUMBER</span>
-<span class="sd">    array([[0.825, 0.095, 0.127], [0, 0, 0], [0.825, 0.095, 0.127]])</span>
+<span class="sd">    &gt;&gt;&gt; pseudo_color([True, False, True])  # doctest: +NUMBER</span>
+<span class="sd">    array([[0.8254, 0.09524, 0.127],</span>
+<span class="sd">           [0, 0, 0],</span>
+<span class="sd">           [0.8254, 0.09524, 0.127]]...)</span>
 
-<span class="sd">    Pseudo-color for two masks.</span>
+<span class="sd">    Create pseudo-color image from two masks and intensity image:</span>
 
 <span class="sd">    &gt;&gt;&gt; pseudo_color(</span>
-<span class="sd">    ...     [0, 1], [[True, False], [False, True]]</span>
+<span class="sd">    ...     [True, False], [False, True], intensity=[0.4, 0.6], vmax=1.0</span>
 <span class="sd">    ... )  # doctest: +NUMBER</span>
-<span class="sd">    array([[0.825, 0.095, 0.127], [0.095, 0.413, 1]])</span>
+<span class="sd">    array([[0.6603, 0.07619, 0.1016],</span>
+<span class="sd">           [0.2762, 0.5302, 1]]...)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
-    <span class="n">masks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">masks</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">masks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;pseudo_color() missing 1 required positional argument: &#39;masks&#39;&quot;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="n">CATEGORICAL</span>
     <span class="k">else</span><span class="p">:</span>
@@ -751,26 +779,49 @@ document.write(`
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">colors</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> != 2&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">colors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">colors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">=}</span><span class="s1"> != 3&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="o">-</span><span class="n">masks</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;=</span> <span class="n">axis</span> <span class="o">&lt;</span> <span class="n">masks</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;Invalid </span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1">.&#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;Must be between </span><span class="si">{</span><span class="o">-</span><span class="n">masks</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">masks</span><span class="o">.</span><span class="n">ndim</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">.&#39;</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">colors</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;colors is not a floating point array&#39;</span><span class="p">)</span>
     <span class="c1"># TODO: add support for matplotlib colors</span>
 
-    <span class="n">pseudocolor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
-    <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="n">masks</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">masks</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">masks</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">pseudocolor</span><span class="p">[</span><span class="n">masks</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">masks</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;shapes of the mask along axis must match `mean` shape&#39;</span>
-            <span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mask</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rollaxis</span><span class="p">(</span><span class="n">masks</span><span class="p">,</span> <span class="n">axis</span><span class="p">)):</span>
-            <span class="n">pseudocolor</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span>
 
+    <span class="k">if</span> <span class="n">intensity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># normalize intensity to range 0..1</span>
+        <span class="n">intensity</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">intensity</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">intensity</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">vmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">vmin</span> <span class="o">=</span> <span class="n">intensity</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">vmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">vmax</span> <span class="o">=</span> <span class="n">intensity</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">vmin</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">intensity</span> <span class="o">-=</span> <span class="n">vmin</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span>
+            <span class="k">if</span> <span class="n">scale</span> <span class="o">!=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">scale</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="n">intensity</span> <span class="o">/=</span> <span class="n">scale</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">intensity</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">intensity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">intensity</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">shape</span><span class="p">:</span>
+            <span class="n">intensity</span> <span class="o">=</span> <span class="n">intensity</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">pseudocolor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pseudocolor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># TODO: support intensity or RGB input in addition to masks</span>
+    <span class="n">blend</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">pseudocolor</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mask_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">masks</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mask_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;masks[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">].shape=</span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">blend</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">blend</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">intensity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># TODO: replace by _blend_screen?</span>
+            <span class="n">_blend_normal</span><span class="p">(</span><span class="n">pseudocolor</span><span class="p">,</span> <span class="n">blend</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">pseudocolor</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_blend_overlay</span><span class="p">(</span><span class="n">pseudocolor</span><span class="p">,</span> <span class="n">blend</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">pseudocolor</span><span class="p">)</span>
+
+    <span class="n">pseudocolor</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">pseudocolor</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pseudocolor</span></div>
 
 </pre></div>
@@ -823,7 +874,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.6.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

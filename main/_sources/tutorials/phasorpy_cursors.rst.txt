@@ -33,7 +33,6 @@ Import required modules, functions, and classes:
 
 
     import matplotlib.pyplot as plt
-    import tifffile
 
     from phasorpy.color import CATEGORICAL
     from phasorpy.cursors import (
@@ -42,7 +41,8 @@ Import required modules, functions, and classes:
         pseudo_color,
     )
     from phasorpy.datasets import fetch
-    from phasorpy.phasor import phasor_from_signal, phasor_to_polar
+    from phasorpy.io import read_lsm
+    from phasorpy.phasor import phasor_from_signal
     from phasorpy.plot import PhasorPlot
 
 
@@ -52,22 +52,40 @@ Import required modules, functions, and classes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-30
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
-Circular cursors
-----------------
+Open a hyperspectral dataset used throughout this tutorial:
 
-Use circular cursors in the phasor space to mask regions of interest:
-
-.. GENERATED FROM PYTHON SOURCE LINES 30-39
+.. GENERATED FROM PYTHON SOURCE LINES 27-31
 
 .. code-block:: Python
 
 
-    signal = tifffile.imread(fetch('paramecium.lsm'))
+    signal = read_lsm(fetch('paramecium.lsm'))
     mean, real, imag = phasor_from_signal(signal, axis=0)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 32-36
+
+Circular cursors
+----------------
+
+Use circular cursors to mask regions of interest in the phasor space:
+
+.. GENERATED FROM PYTHON SOURCE LINES 36-44
+
+.. code-block:: Python
+
+
     cursors_real = [-0.33, 0.55]
     cursors_imag = [-0.72, -0.72]
+
     circular_mask = mask_from_circular_cursor(
         real, imag, cursors_real, cursors_imag, radius=0.2
     )
@@ -79,18 +97,18 @@ Use circular cursors in the phasor space to mask regions of interest:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
-Show the circular cursors in the phasor plot:
+Show the circular cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-55
+.. GENERATED FROM PYTHON SOURCE LINES 46-61
 
 .. code-block:: Python
 
 
     threshold = mean > 1
 
-    plot = PhasorPlot(allquadrants=True, title='Two circular cursors')
+    plot = PhasorPlot(allquadrants=True, title='Circular cursors')
     plot.hist2d(real[threshold], imag[threshold])
     for i in range(len(cursors_real)):
         plot.cursor(
@@ -100,12 +118,13 @@ Show the circular cursors in the phasor plot:
             color=CATEGORICAL[i],
             linestyle='-',
         )
+    plot.show()
 
 
 
 
 .. image-sg:: /tutorials/images/sphx_glr_phasorpy_cursors_001.png
-   :alt: Two circular cursors
+   :alt: Circular cursors
    :srcset: /tutorials/images/sphx_glr_phasorpy_cursors_001.png
    :class: sphx-glr-single-img
 
@@ -113,57 +132,61 @@ Show the circular cursors in the phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-60
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
-Polar cursor
-------------
+Polar cursors
+-------------
 
-Create a mask with phase and modulation values:
+Create a mask with two ranges of phase and modulation values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-67
-
-.. code-block:: Python
-
-
-    phase, mod = phasor_to_polar(real, imag)
-
-    phase_range = [[-2.27, -1.57], [-1.22, -0.70]]
-    modulation_range = [[0.7, 0.9], [0.8, 1.0]]
-    polar_mask = mask_from_polar_cursor(phase, mod, phase_range, modulation_range)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
-
-Show cursors in the phasor plot:
-
-.. GENERATED FROM PYTHON SOURCE LINES 69-82
+.. GENERATED FROM PYTHON SOURCE LINES 66-76
 
 .. code-block:: Python
 
 
-    plot = PhasorPlot(allquadrants=True, title='Two polar cursors')
-    plot.hist2d(real[threshold], imag[threshold], cmap='Blues')
-    for i in range(len(phase_range[0])):
+    phase_min = [-2.27, -1.22]
+    phase_max = [-1.57, -0.70]
+    modulation_min = [0.7, 0.8]
+    modulation_max = [0.9, 1.0]
+
+    polar_mask = mask_from_polar_cursor(
+        real, imag, phase_min, phase_max, modulation_min, modulation_max
+    )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
+
+Show the polar cursors in a phasor plot:
+
+.. GENERATED FROM PYTHON SOURCE LINES 78-92
+
+.. code-block:: Python
+
+
+    plot = PhasorPlot(allquadrants=True, title='Polar cursors')
+    plot.hist2d(real[threshold], imag[threshold])
+    for i in range(len(phase_min)):
         plot.polar_cursor(
-            phase=phase_range[i][0],
-            phase_limit=phase_range[i][1],
-            modulation=modulation_range[i][0],
-            modulation_limit=modulation_range[i][1],
+            phase=phase_min[i],
+            phase_limit=phase_max[i],
+            modulation=modulation_min[i],
+            modulation_limit=modulation_max[i],
             color=CATEGORICAL[i + 2],
             linestyle='-',
         )
+    plot.show()
 
 
 
 
 .. image-sg:: /tutorials/images/sphx_glr_phasorpy_cursors_002.png
-   :alt: Two polar cursors
+   :alt: Polar cursors
    :srcset: /tutorials/images/sphx_glr_phasorpy_cursors_002.png
    :class: sphx-glr-single-img
 
@@ -171,31 +194,32 @@ Show cursors in the phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-88
+.. GENERATED FROM PYTHON SOURCE LINES 93-99
 
-Pseudo-color
-------------
+Pseudo-color images
+-------------------
 
-Average images can be pseudo-colored (segmented) using cursor's masks.
-Segmented image with circular cursors:
+The cursor masks and optionally the intensity image can be
+blended to produce pseudo-colored images.
+Blending the masks from the circular cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-96
+.. GENERATED FROM PYTHON SOURCE LINES 99-107
 
 .. code-block:: Python
 
 
-    segmented_image = pseudo_color(mean, circular_mask)
+    pseudo_color_image = pseudo_color(*circular_mask)
 
     fig, ax = plt.subplots()
-    ax.set_title('Segmented image with circular cursors')
-    ax.imshow(segmented_image)
+    ax.set_title('Pseudo-color image from circular cursors')
+    ax.imshow(pseudo_color_image)
     plt.show()
 
 
 
 
 .. image-sg:: /tutorials/images/sphx_glr_phasorpy_cursors_003.png
-   :alt: Segmented image with circular cursors
+   :alt: Pseudo-color image from circular cursors
    :srcset: /tutorials/images/sphx_glr_phasorpy_cursors_003.png
    :class: sphx-glr-single-img
 
@@ -203,27 +227,30 @@ Segmented image with circular cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
-Segmented image with polar cursors:
+Using the mean intensity image as a base layer to overlay the masks from
+the polar cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-106
+.. GENERATED FROM PYTHON SOURCE LINES 110-120
 
 .. code-block:: Python
 
 
-    segmented_image = pseudo_color(mean, polar_mask, colors=CATEGORICAL[2:])
+    pseudo_color_image = pseudo_color(
+        *polar_mask, intensity=mean, colors=CATEGORICAL[2:]
+    )
 
     fig, ax = plt.subplots()
-    ax.set_title('Segmented image with polar cursors')
-    ax.imshow(segmented_image)
+    ax.set_title('Pseudo-color image from polar cursors and intensity')
+    ax.imshow(pseudo_color_image)
     plt.show()
 
 
 
 
 .. image-sg:: /tutorials/images/sphx_glr_phasorpy_cursors_004.png
-   :alt: Segmented image with polar cursors
+   :alt: Pseudo-color image from polar cursors and intensity
    :srcset: /tutorials/images/sphx_glr_phasorpy_cursors_004.png
    :class: sphx-glr-single-img
 
@@ -231,14 +258,14 @@ Segmented image with polar cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-108
+.. GENERATED FROM PYTHON SOURCE LINES 121-122
 
 sphinx_gallery_thumbnail_number = 1
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.063 seconds)
+   **Total running time of the script:** (0 minutes 0.989 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_cursors.py:
@@ -254,6 +281,10 @@ sphinx_gallery_thumbnail_number = 1
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: phasorpy_cursors.py <phasorpy_cursors.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: phasorpy_cursors.zip <phasorpy_cursors.zip>`
 
 
 .. only:: html

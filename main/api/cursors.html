@@ -31,7 +31,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -501,7 +501,7 @@ document.write(`
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cursors.mask_from_circular_cursor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_circular_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_circular_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_circular_cursor" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_circular_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_circular_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_circular_cursor" title="Link to this definition">#</a></dt>
 <dd><p>Return masks for circular cursors of phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -510,20 +510,22 @@ document.write(`
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
 <li><p><strong>center_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Real coordinates of circle centers.</p></li>
 <li><p><strong>center_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Imaginary coordinates of circle centers.</p></li>
-<li><p><strong>radius</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Radii of circles.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis along which the masks are returned. Default is 0.</p></li>
+<li><p><strong>radius</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Radii of circles.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>masks</strong> – Phasor coordinates masked for each circular cursor.</p>
+<dd class="field-even"><p><strong>masks</strong> – Boolean array of shape <cite>(n, *real.shape)</cite>.
+The first dimension is omitted if <cite>center_*</cite> and <cite>radius</cite> are scalars.
+Values are True if phasor coordinates are inside circular cursor,
+else False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>center_real</cite> and
-    <cite>center_imag</cite> do not match.
-    The axis is out of bounds.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    The array shapes of <cite>center_*</cite> or <cite>radius</cite> have more than
+    one dimension.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -532,38 +534,43 @@ document.write(`
 </div>
 <p class="rubric">Examples</p>
 <p>Create mask for a single circular cursor:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="go">array([False,  True])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="go">array([ True, False])</span>
 </pre></div>
 </div>
 <p>Create masks for two circular cursors with different radius:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">array([[ True, False],</span>
-<span class="go">       [False, False]])</span>
+<span class="go">       [False,  True]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cursors.mask_from_polar_cursor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_range</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_polar_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_polar_cursor" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_max</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_polar_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_polar_cursor" title="Link to this definition">#</a></dt>
 <dd><p>Return mask for polar cursor of polar coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase</strong> (<em>array_like</em>) – Angular component of polar coordinates in radians.</p></li>
-<li><p><strong>modulation</strong> (<em>array_like</em>) – Radial component of polar coordinates.</p></li>
-<li><p><strong>phase_range</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>...</em><em>, </em><em>2</em><em>)</em>) – Angular range of the cursors in radians.
-The start and end of the range must be in the last dimension.</p></li>
-<li><p><strong>modulation_range</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>...</em><em>, </em><em>2</em><em>)</em>) – Radial range of the cursors.
-The start and end of the range must be in the last dimension.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis along which the masks are returned. Default is 0.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>phase_min</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Minimum of angular range of cursors in radians.
+Values should be between -pi and pi.</p></li>
+<li><p><strong>phase_max</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Maximum of angular range of cursors in radians.
+Values should be between -pi and pi.</p></li>
+<li><p><strong>modulation_min</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Minimum of radial range of cursors.</p></li>
+<li><p><strong>modulation_max</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Maximum of radial range of cursors.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>masks</strong> – Polar coordinates masked for each polar cursor.</p>
+<dd class="field-even"><p><strong>masks</strong> – Boolean array of shape <cite>(n, *real.shape)</cite>.
+The first dimension is omitted if <cite>phase_*</cite> and <cite>modulation_*</cite>
+are scalars.
+Values are True if phasor coordinates are inside polar range cursor,
+else False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray</p>
@@ -571,8 +578,8 @@ The start and end of the range must be in the last dimension.</p></li>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>phase</cite> and <cite>modulation</cite>, or <cite>phase_range</cite> and
     <cite>modulation_range</cite> do not match.
-    The last dimension of <cite>phase_range</cite> and <cite>modulation_range</cite> is not 2.
-    The axis is out of bounds.</p>
+    The array shapes of <cite>phase_*</cite> or <cite>modulation_*</cite> have more than
+    one dimension.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -581,45 +588,53 @@ The start and end of the range must be in the last dimension.</p></li>
 </div>
 <p class="rubric">Example</p>
 <p>Create mask from a single polar cursor:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_polar_cursor</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
-<span class="go">array([False,  True])</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_polar_cursor</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="go">array([ True, False])</span>
 </pre></div>
 </div>
 <p>Create masks for two polar cursors with different ranges:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_polar_cursor</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">270</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]]</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">array([[False,  True],</span>
-<span class="go">       [ True, False]])</span>
+<span class="go">array([[ True, False],</span>
+<span class="go">       [False,  True]])</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cursors.pseudo_color">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">pseudo_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#pseudo_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.pseudo_color" title="Link to this definition">#</a></dt>
-<dd><p>Return the average of signal pseudo-colored for each cursor.</p>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">pseudo_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#pseudo_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.pseudo_color" title="Link to this definition">#</a></dt>
+<dd><p>Return pseudo-colored image from cursor masks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mean</strong> (<em>ndarray</em>) – Average of signal (zero harmonic).</p></li>
-<li><p><strong>masks</strong> (<em>ndarray</em>) – Masks for each cursor.</p></li>
-<li><p><strong>colors</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>3</em><em>)</em>) – Colors assigned to each cursor. Last dimension must contain the
-RGB values. Default is <a class="reference internal" href="color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL"><code class="xref py py-data docutils literal notranslate"><span class="pre">phasorpy.color.CATEGORICAL</span></code></a>.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis with masks. Default is 0.</p></li>
+<li><p><strong>*masks</strong> (<em>array_like</em>) – Boolean mask for each cursor.</p></li>
+<li><p><strong>intensity</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Intensity used as base layer to blend cursor colors in “overlay” mode.
+If None, cursor masks are blended using “screen” mode.</p></li>
+<li><p><strong>vmin</strong> (<em>float</em><em>, </em><em>optional</em>) – Minimum value to normalize <cite>intensity</cite>.
+If None, the minimum value of <cite>intensity</cite> is used.</p></li>
+<li><p><strong>vmax</strong> (<em>float</em><em>, </em><em>optional</em>) – Maximum value to normalize <cite>intensity</cite>.
+If None, the maximum value of <cite>intensity</cite> is used.</p></li>
+<li><p><strong>colors</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>N</em><em>, </em><em>3</em><em>)</em>) – Colors assigned to each cursor.
+The last dimension contains the normalized RGB floating point values.
+The default is <a class="reference internal" href="color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL"><code class="xref py py-data docutils literal notranslate"><span class="pre">phasorpy.color.CATEGORICAL</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>pseudocolor</strong> – Average of signal replaced by colors for each cursor.</p>
+<dd class="field-even"><p>Pseudo-colored image of shape <code class="docutils literal notranslate"><span class="pre">(*masks[0].shape,</span> <span class="pre">3)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – The <cite>colors</cite> array is not 2 dimensional and/or the last dimension is
-    not of size 3 (must contain RGB values).
-    The <cite>masks</cite> shape along axis does not match <cite>mean</cite> shape.
-    Axis is out of bounds.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – <cite>colors</cite> is not a (n, 3) shaped floating point array.
+    The shapes of <cite>masks</cite> or <cite>mean</cite> cannot broadcast.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -627,16 +642,19 @@ RGB values. Default is <a class="reference internal" href="color.html#phasorpy.c
 <p><a class="reference internal" href="../tutorials/phasorpy_cursors.html#sphx-glr-tutorials-phasorpy-cursors-py"><span class="std std-ref">Cursors</span></a></p>
 </div>
 <p class="rubric">Example</p>
-<p>Pseudo-color for a single mask.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pseudo_color</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>  
-<span class="go">array([[0.825, 0.095, 0.127], [0, 0, 0], [0.825, 0.095, 0.127]])</span>
+<p>Create pseudo-color image from single mask:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pseudo_color</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">])</span>  
+<span class="go">array([[0.8254, 0.09524, 0.127],</span>
+<span class="go">       [0, 0, 0],</span>
+<span class="go">       [0.8254, 0.09524, 0.127]]...)</span>
 </pre></div>
 </div>
-<p>Pseudo-color for two masks.</p>
+<p>Create pseudo-color image from two masks and intensity image:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pseudo_color</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]]</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span> <span class="n">intensity</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span>
 <span class="gp">... </span><span class="p">)</span>  
-<span class="go">array([[0.825, 0.095, 0.127], [0.095, 0.413, 1]])</span>
+<span class="go">array([[0.6603, 0.07619, 0.1016],</span>
+<span class="go">       [0.2762, 0.5302, 1]]...)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -729,7 +747,7 @@ RGB values. Default is <a class="reference internal" href="color.html#phasorpy.c
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.6.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>
