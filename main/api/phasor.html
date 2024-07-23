@@ -519,9 +519,10 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.polar_from_reference_phasor" title="phasorpy.phasor.polar_from_reference_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">polar_from_reference_phasor()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>reduce arrays of phasor coordinates to single coordinates:</p>
+<li><p>reduce dimensionality of arrays of phasor coordinates:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></p></li>
+<li><p>:py:phasor_to_principal_plane`</p></li>
 </ul>
 </li>
 <li><p>calculate phasor coordinates for FRET donor and acceptor channels:</p>
@@ -1517,6 +1518,88 @@ are converted to polar coordinates <cite>phase</cite> (<span class="math notrans
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_principal_plane">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_principal_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_to_principal_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_principal_plane" title="Link to this definition">#</a></dt>
+<dd><p>Return multi-harmonic phasor coordinates projected onto principal plane.</p>
+<p>The Principal Component Analysis (PCA) is used to project
+multi-harmonic phasor coordinates onto a plane, along which
+coordinate axes the phasor coordinates have the largest variations.</p>
+<p>The transformed coordinates are not phasor coordinates. However, the
+coordinates can be used in visualization and cursor analysis since
+the transformation is affine (preserving collinearity and ratios
+of distances).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of multi-harmonic phasor coordinates.
+The first axis is the frequency dimension.
+If less than 2-dimensional, size-1 dimensions are prepended.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of multi-harmonic phasor coordinates.
+Must be of same shape as <cite>real</cite>.</p></li>
+<li><p><strong>reorient</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – Reorient coordinates for easier visualization.
+The projected coordinates are rotated and scaled, such that
+the center lies in same quadrant and the projection
+of [1, 0] lies at [1, 0].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul>
+<li><p><strong>x</strong> (<em>ndarray</em>) – X-coordinates of projected phasor coordinates.
+If not <cite>reorient</cite>, this is the coordinate on the first principal axis.
+The shape is <code class="docutils literal notranslate"><span class="pre">real.shape[1:]</span></code>.</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – Y-coordinates of projected phasor coordinates.
+If not <cite>reorient</cite>, this is the coordinate on the second principal axis.</p></li>
+<li><p><strong>transformation_matrix</strong> (<em>ndarray</em>) – Affine transformation matrix used to project phasor coordinates.
+The shape is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">real.shape[0])</span></code>.
+The matrix can be used to project multi-harmonic phasor coordinates,
+where the first axis is the frequency:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+        <span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">imag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">transformation_matrix</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../tutorials/phasorpy_pca.html#sphx-glr-tutorials-phasorpy-pca-py"><span class="std std-ref">Principal component analysis</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>An application of PCA to full-harmonic phasor coordinates from MRI signals
+can be found in <a class="footnote-reference brackets" href="#id8" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">1</a><span class="fn-bracket">]</span></span>
+<p>Franssen WMJ, Vergeldt FJ, Bader AN, van Amerongen H, &amp; Terenzi C.
+<a class="reference external" href="https://doi.org/10.1021/acs.jpclett.0c02319">Full-harmonics phasor analysis: unravelling multiexponential trends
+in magnetic resonance imaging data</a>.
+<em>J Phys Chem Lett</em>, 11(21): 9152-9158 (2020)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<p>The phasor coordinates of multi-exponential decays may be almost
+indistinguishable at certain frequencies but are separated in the
+projection on the principal plane:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">real</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.495</span><span class="p">,</span> <span class="mf">0.502</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.354</span><span class="p">,</span> <span class="mf">0.304</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imag</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.333</span><span class="p">,</span> <span class="mf">0.334</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.301</span><span class="p">,</span> <span class="mf">0.349</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">phasor_to_principal_plane</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span>  
+<span class="go">(array([0.294, 0.262]), array([0.192, 0.242]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">transformation_matrix</span>  
+<span class="go">array([[0.67, 0.33, -0.09, -0.41], [0.52, -0.52, -0.04, 0.44]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_transform">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_transform" title="Link to this definition">#</a></dt>
 <dd><p>Return rotated and scaled phasor coordinates.</p>
@@ -1808,6 +1891,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_semicircle"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_polar"><code class="docutils literal notranslate"><span class="pre">phasor_to_polar()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_principal_plane"><code class="docutils literal notranslate"><span class="pre">phasor_to_principal_plane()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_transform"><code class="docutils literal notranslate"><span class="pre">phasor_transform()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.polar_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">polar_from_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.polar_from_reference"><code class="docutils literal notranslate"><span class="pre">polar_from_reference()</span></code></a></li>

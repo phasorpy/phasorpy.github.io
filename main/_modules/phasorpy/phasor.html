@@ -488,9 +488,10 @@ document.write(`
 <span class="sd">  - :py:func:`polar_from_reference`</span>
 <span class="sd">  - :py:func:`polar_from_reference_phasor`</span>
 
-<span class="sd">- reduce arrays of phasor coordinates to single coordinates:</span>
+<span class="sd">- reduce dimensionality of arrays of phasor coordinates:</span>
 
 <span class="sd">  - :py:func:`phasor_center`</span>
+<span class="sd">  - :py:phasor_to_principal_plane`</span>
 
 <span class="sd">- calculate phasor coordinates for FRET donor and acceptor channels:</span>
 
@@ -530,6 +531,7 @@ document.write(`
     <span class="s1">&#39;phasor_from_polar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_signal&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_signal_fft&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_to_principal_plane&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_apparent_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_polar&#39;</span><span class="p">,</span>
@@ -2452,6 +2454,172 @@ document.write(`
         <span class="n">background_real</span><span class="p">,</span>
         <span class="n">background_imag</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_to_principal_plane">
+<a class="viewcode-back" href="../../api/phasor.html#phasorpy.phasor.phasor_to_principal_plane">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_to_principal_plane</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">reorient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return multi-harmonic phasor coordinates projected onto principal plane.</span>
+
+<span class="sd">    The Principal Component Analysis (PCA) is used to project</span>
+<span class="sd">    multi-harmonic phasor coordinates onto a plane, along which</span>
+<span class="sd">    coordinate axes the phasor coordinates have the largest variations.</span>
+
+<span class="sd">    The transformed coordinates are not phasor coordinates. However, the</span>
+<span class="sd">    coordinates can be used in visualization and cursor analysis since</span>
+<span class="sd">    the transformation is affine (preserving collinearity and ratios</span>
+<span class="sd">    of distances).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of multi-harmonic phasor coordinates.</span>
+<span class="sd">        The first axis is the frequency dimension.</span>
+<span class="sd">        If less than 2-dimensional, size-1 dimensions are prepended.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of multi-harmonic phasor coordinates.</span>
+<span class="sd">        Must be of same shape as `real`.</span>
+<span class="sd">    reorient : bool, optional, default: True</span>
+<span class="sd">        Reorient coordinates for easier visualization.</span>
+<span class="sd">        The projected coordinates are rotated and scaled, such that</span>
+<span class="sd">        the center lies in same quadrant and the projection</span>
+<span class="sd">        of [1, 0] lies at [1, 0].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x : ndarray</span>
+<span class="sd">        X-coordinates of projected phasor coordinates.</span>
+<span class="sd">        If not `reorient`, this is the coordinate on the first principal axis.</span>
+<span class="sd">        The shape is ``real.shape[1:]``.</span>
+<span class="sd">    y : ndarray</span>
+<span class="sd">        Y-coordinates of projected phasor coordinates.</span>
+<span class="sd">        If not `reorient`, this is the coordinate on the second principal axis.</span>
+<span class="sd">    transformation_matrix : ndarray</span>
+<span class="sd">        Affine transformation matrix used to project phasor coordinates.</span>
+<span class="sd">        The shape is ``(2, 2 * real.shape[0])``.</span>
+<span class="sd">        The matrix can be used to project multi-harmonic phasor coordinates,</span>
+<span class="sd">        where the first axis is the frequency::</span>
+
+<span class="sd">            x, y = numpy.dot(</span>
+<span class="sd">                numpy.vstack(</span>
+<span class="sd">                    real.reshape(real.shape[0], -1),</span>
+<span class="sd">                    imag.reshape(imag.shape[0], -1),</span>
+<span class="sd">                ),</span>
+<span class="sd">                transformation_matrix,</span>
+<span class="sd">            ).reshape(2, *real.shape[1:])</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :ref:`sphx_glr_tutorials_phasorpy_pca.py`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    An application of PCA to full-harmonic phasor coordinates from MRI signals</span>
+<span class="sd">    can be found in [1]_.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [1] Franssen WMJ, Vergeldt FJ, Bader AN, van Amerongen H, &amp; Terenzi C.</span>
+<span class="sd">      `Full-harmonics phasor analysis: unravelling multiexponential trends</span>
+<span class="sd">      in magnetic resonance imaging data</span>
+<span class="sd">      &lt;https://doi.org/10.1021/acs.jpclett.0c02319&gt;`_.</span>
+<span class="sd">      *J Phys Chem Lett*, 11(21): 9152-9158 (2020)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The phasor coordinates of multi-exponential decays may be almost</span>
+<span class="sd">    indistinguishable at certain frequencies but are separated in the</span>
+<span class="sd">    projection on the principal plane:</span>
+
+<span class="sd">    &gt;&gt;&gt; real = [[0.495, 0.502], [0.354, 0.304]]</span>
+<span class="sd">    &gt;&gt;&gt; imag = [[0.333, 0.334], [0.301, 0.349]]</span>
+<span class="sd">    &gt;&gt;&gt; x, y, transformation_matrix = phasor_to_principal_plane(real, imag)</span>
+<span class="sd">    &gt;&gt;&gt; x, y  # doctest: +SKIP</span>
+<span class="sd">    (array([0.294, 0.262]), array([0.192, 0.242]))</span>
+<span class="sd">    &gt;&gt;&gt; transformation_matrix  # doctest: +SKIP</span>
+<span class="sd">    array([[0.67, 0.33, -0.09, -0.41], [0.52, -0.52, -0.04, 0.44]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;real=</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != imag=</span><span class="si">{</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># reshape to variables in row, observations in column</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># vector of multi-frequency phasor coordinates</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">))</span>
+
+    <span class="c1"># vector of centered coordinates</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">coordinates</span> <span class="o">-=</span> <span class="n">center</span>
+
+    <span class="c1"># covariance matrix (scatter matrix would also work)</span>
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># calculate eigenvectors</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">eigvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+
+    <span class="c1"># projection matrix: two eigenvectors with largest eigenvalues</span>
+    <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">eigvec</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">reorient</span><span class="p">:</span>
+        <span class="c1"># for single harmonic, this should restore original coordinates.</span>
+
+        <span class="c1"># 1. rotate and scale such that projection of [1, 0] lies at [1, 0]</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="n">transformation_matrix</span><span class="p">,</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(([[</span><span class="mf">1.0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">frequencies</span><span class="p">,</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">frequencies</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">+=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="p">[[</span><span class="n">cos</span><span class="p">,</span> <span class="o">-</span><span class="n">sin</span><span class="p">],</span> <span class="p">[</span><span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">]],</span> <span class="n">transformation_matrix</span>
+        <span class="p">)</span>
+        <span class="n">scale_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="p">[[</span><span class="n">scale_factor</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">]],</span> <span class="n">transformation_matrix</span>
+        <span class="p">)</span>
+
+        <span class="c1"># 2. mirror such that projected center lies in same quadrant</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">transformation_matrix</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">cs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="n">cs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">cs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="n">cs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">],</span>
+            <span class="n">transformation_matrix</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># project multi-frequency phasor coordinates onto principal plane</span>
+    <span class="n">coordinates</span> <span class="o">+=</span> <span class="n">center</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">transformation_matrix</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>  <span class="c1"># x coordinates</span>
+        <span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>  <span class="c1"># y coordinates</span>
+        <span class="n">transformation_matrix</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
