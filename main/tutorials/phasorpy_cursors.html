@@ -50,8 +50,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/phasorpy_cursors';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Förster Resonance Energy Transfer" href="phasorpy_fret.html" />
-    <link rel="prev" title="Introduction to PhasorPy" href="phasorpy_introduction.html" />
+    <link rel="next" title="Phasor coordinates from lifetimes" href="phasorpy_phasor_from_lifetime.html" />
+    <link rel="prev" title="Principal component analysis" href="phasorpy_pca.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -416,11 +416,11 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_introduction.html">Introduction to PhasorPy</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Cursors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_fret.html">Förster Resonance Energy Transfer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_pca.html">Principal component analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_phasorplot.html">Phasor plot</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Cursors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phasorpy_phasorplot.html">Phasor plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_components.html">Component analysis</a></li>
 </ul>
 <ul class="nav bd-sidenav">
@@ -498,6 +498,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a>
 <span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="p">(</span>
     <a href="../api/cursors.html#phasorpy.cursors.mask_from_circular_cursor" title="phasorpy.cursors.mask_from_circular_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_circular_cursor</span></a><span class="p">,</span>
+    <a href="../api/cursors.html#phasorpy.cursors.mask_from_elliptic_cursor" title="phasorpy.cursors.mask_from_elliptic_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_elliptic_cursor</span></a><span class="p">,</span>
     <a href="../api/cursors.html#phasorpy.cursors.mask_from_polar_cursor" title="phasorpy.cursors.mask_from_polar_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_polar_cursor</span></a><span class="p">,</span>
     <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">,</span>
 <span class="p">)</span>
@@ -510,36 +511,89 @@ document.write(`
 <p>Open a hyperspectral dataset used throughout this tutorial:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <a href="../api/io.html#phasorpy.io.read_lsm" title="phasorpy.io.read_lsm" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">read_lsm</span></a><span class="p">(</span><a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;paramecium.lsm&#39;</span><span class="p">))</span>
 <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">threshold</span> <span class="o">=</span> <span class="n">mean</span> <span class="o">&gt;</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <section id="circular-cursors">
 <h2>Circular cursors<a class="headerlink" href="#circular-cursors" title="Link to this heading">#</a></h2>
 <p>Use circular cursors to mask regions of interest in the phasor space:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">]</span>
-<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.72</span><span class="p">]</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">]</span>
+<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.74</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">]</span>
 
 <span class="n">circular_mask</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.mask_from_circular_cursor" title="phasorpy.cursors.mask_from_circular_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_circular_cursor</span></a><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cursors_real</span><span class="p">,</span> <span class="n">cursors_imag</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cursors_real</span><span class="p">,</span> <span class="n">cursors_imag</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Show the circular cursors in a phasor plot:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">threshold</span> <span class="o">=</span> <span class="n">mean</span> <span class="o">&gt;</span> <span class="mi">1</span>
-
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Circular cursors&#39;</span><span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">threshold</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Circular cursors&#39;</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
     <a href="../api/plot.html#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span>
         <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
         <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-        <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
         <span class="n">color</span><span class="o">=</span><a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span>
         <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
     <span class="p">)</span>
 <a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_cursors_001.png" srcset="../_images/sphx_glr_phasorpy_cursors_001.png" alt="Circular cursors" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_cursors_001.png" srcset="../_images/sphx_glr_phasorpy_cursors_001.png" alt="Circular cursors" class = "sphx-glr-single-img"/><p>The cursor masks can be blended to produce a pseudo-colored image:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">circular_mask</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_cursors_002.png" srcset="../_images/sphx_glr_phasorpy_cursors_002.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
+<section id="elliptic-cursors">
+<h2>Elliptic cursors<a class="headerlink" href="#elliptic-cursors" title="Link to this heading">#</a></h2>
+<p>Use elliptic cursors to mask more defined regions of interest in the
+phasor space:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">]</span>
+<span class="n">radius_minor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
+
+<span class="n">elliptic_mask</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.mask_from_elliptic_cursor" title="phasorpy.cursors.mask_from_elliptic_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_elliptic_cursor</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">cursors_real</span><span class="p">,</span>
+    <span class="n">cursors_imag</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+    <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the elliptic cursors in a phasor plot:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Elliptic cursors&#39;</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
+    <a href="../api/plot.html#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span>
+        <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_cursors_003.png" srcset="../_images/sphx_glr_phasorpy_cursors_003.png" alt="Elliptic cursors" class = "sphx-glr-single-img"/><p>The mean intensity image can be used as a base layer to overlay
+the masks from the elliptic cursors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">elliptic_mask</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from elliptic cursors and intensity&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_cursors_004.png" srcset="../_images/sphx_glr_phasorpy_cursors_004.png" alt="Pseudo-color image from elliptic cursors and intensity" class = "sphx-glr-single-img"/></section>
 <section id="polar-cursors">
 <h2>Polar cursors<a class="headerlink" href="#polar-cursors" title="Link to this heading">#</a></h2>
 <p>Create a mask with two ranges of phase and modulation values:</p>
@@ -555,7 +609,7 @@ document.write(`
 </div>
 <p>Show the polar cursors in a phasor plot:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Polar cursors&#39;</span><span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">threshold</span><span class="p">])</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">threshold</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phase_min</span><span class="p">)):</span>
     <a href="../api/plot.html#phasorpy.plot.PhasorPlot.polar_cursor" title="phasorpy.plot.PhasorPlot.polar_cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">polar_cursor</span></a><span class="p">(</span>
         <span class="n">phase</span><span class="o">=</span><span class="n">phase_min</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
@@ -568,22 +622,8 @@ document.write(`
 <a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_cursors_002.png" srcset="../_images/sphx_glr_phasorpy_cursors_002.png" alt="Polar cursors" class = "sphx-glr-single-img"/></section>
-<section id="pseudo-color-images">
-<h2>Pseudo-color images<a class="headerlink" href="#pseudo-color-images" title="Link to this heading">#</a></h2>
-<p>The cursor masks and optionally the intensity image can be
-blended to produce pseudo-colored images.
-Blending the masks from the circular cursors:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">circular_mask</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-<img src="../_images/sphx_glr_phasorpy_cursors_003.png" srcset="../_images/sphx_glr_phasorpy_cursors_003.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/><p>Using the mean intensity image as a base layer to overlay the masks from
-the polar cursors:</p>
+<img src="../_images/sphx_glr_phasorpy_cursors_005.png" srcset="../_images/sphx_glr_phasorpy_cursors_005.png" alt="Polar cursors" class = "sphx-glr-single-img"/><p>The mean intensity image can be used as a base layer to overlay
+the masks from the polar cursors:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span>
     <span class="o">*</span><span class="n">polar_mask</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
 <span class="p">)</span>
@@ -594,8 +634,8 @@ the polar cursors:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_cursors_004.png" srcset="../_images/sphx_glr_phasorpy_cursors_004.png" alt="Pseudo-color image from polar cursors and intensity" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 1</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.926 seconds)</p>
+<img src="../_images/sphx_glr_phasorpy_cursors_006.png" srcset="../_images/sphx_glr_phasorpy_cursors_006.png" alt="Pseudo-color image from polar cursors and intensity" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 1</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.337 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-cursors-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/19192f653cbb57a934e348239ca7e840/phasorpy_cursors.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_cursors.ipynb</span></code></a></p>
@@ -622,20 +662,20 @@ the polar cursors:</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="phasorpy_introduction.html"
+       href="phasorpy_pca.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Introduction to PhasorPy</p>
+        <p class="prev-next-title">Principal component analysis</p>
       </div>
     </a>
     <a class="right-next"
-       href="phasorpy_fret.html"
+       href="phasorpy_phasor_from_lifetime.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Förster Resonance Energy Transfer</p>
+        <p class="prev-next-title">Phasor coordinates from lifetimes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -658,8 +698,8 @@ the polar cursors:</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circular-cursors">Circular cursors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elliptic-cursors">Elliptic cursors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#polar-cursors">Polar cursors</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pseudo-color-images">Pseudo-color images</a></li>
 </ul>
   </nav></div>
 

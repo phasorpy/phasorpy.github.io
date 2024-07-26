@@ -492,7 +492,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">FontProperties</span>
 <span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span>
 <span class="kn">from</span> <span class="nn">matplotlib.lines</span> <span class="kn">import</span> <span class="n">Line2D</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span>
 <span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patheffects</span> <span class="kn">import</span> <span class="n">AbstractPathEffect</span>
 <span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
@@ -1061,6 +1061,9 @@ document.write(`
         <span class="n">real_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imag_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_minor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation grid lines and arcs at phasor coordinates.</span>
@@ -1077,10 +1080,23 @@ document.write(`
 <span class="sd">            Imaginary component of limiting phasor coordinate.</span>
 <span class="sd">        radius : float, optional</span>
 <span class="sd">            Radius of circle limiting phase and modulation grid lines and arcs.</span>
+<span class="sd">        radius_minor : float, optional</span>
+<span class="sd">            Radius of elliptic cursor along semi-minor axis.</span>
+<span class="sd">            By default, `radius_minor` is equal to `radius`, that is,</span>
+<span class="sd">            the ellipse is circular.</span>
+<span class="sd">        angle : float, optional</span>
+<span class="sd">            Rotation angle of semi-major axis of elliptic cursor in radians.</span>
+<span class="sd">            If None (default), orient ellipse cursor according to</span>
+<span class="sd">            `align_semicircle`.</span>
+<span class="sd">        align_semicircle : bool, optional</span>
+<span class="sd">            Determines elliptic cursor orientation if `angle` is not provided.</span>
+<span class="sd">            If true, align the minor axis of the ellipse with the closest</span>
+<span class="sd">            tangent on the universal semicircle, else align to the unit circle.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional parameters passed to</span>
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`,</span>
-<span class="sd">            :py:class:`matplotlib.patches.Circle`, and</span>
+<span class="sd">            :py:class:`matplotlib.patches.Circle`,</span>
+<span class="sd">            :py:class:`matplotlib.patches.Ellipse`, or</span>
 <span class="sd">            :py:class:`matplotlib.patches.Arc`.</span>
 
 <span class="sd">        See Also</span>
@@ -1093,11 +1109,17 @@ document.write(`
                 <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
                 <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real_limit</span><span class="p">,</span> <span class="n">imag_limit</span><span class="p">),</span>
                 <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
+                <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                <span class="n">align_semicircle</span><span class="o">=</span><span class="n">align_semicircle</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar_cursor</span><span class="p">(</span>
             <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
             <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+            <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
+            <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+            <span class="n">align_semicircle</span><span class="o">=</span><span class="n">align_semicircle</span><span class="p">,</span>
             <span class="c1"># _circle_only=True,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
@@ -1112,6 +1134,9 @@ document.write(`
         <span class="n">phase_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">modulation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_minor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation grid lines and arcs.</span>
@@ -1130,10 +1155,23 @@ document.write(`
 <span class="sd">            Phase grid lines are drawn from `modulation` to `modulation_limit`.</span>
 <span class="sd">        radius : float, optional</span>
 <span class="sd">            Radius of circle limiting phase and modulation grid lines and arcs.</span>
+<span class="sd">        radius_minor : float, optional</span>
+<span class="sd">            Radius of elliptic cursor along semi-minor axis.</span>
+<span class="sd">            By default, `radius_minor` is equal to `radius`, that is,</span>
+<span class="sd">            the ellipse is circular.</span>
+<span class="sd">        angle : float, optional</span>
+<span class="sd">            Rotation angle of semi-major axis of elliptic cursor in radians.</span>
+<span class="sd">            If None (default), orient ellipse cursor according to</span>
+<span class="sd">            `align_semicircle`.</span>
+<span class="sd">        align_semicircle : bool, optional</span>
+<span class="sd">            Determines elliptic cursor orientation if `angle` is not provided.</span>
+<span class="sd">            If true, align the minor axis of the ellipse with the closest</span>
+<span class="sd">            tangent on the universal semicircle, else align to the unit circle.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional parameters passed to</span>
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`,</span>
-<span class="sd">            :py:class:`matplotlib.patches.Circle`, and</span>
+<span class="sd">            :py:class:`matplotlib.patches.Circle`,</span>
+<span class="sd">            :py:class:`matplotlib.patches.Ellipse`, or</span>
 <span class="sd">            :py:class:`matplotlib.patches.Arc`.</span>
 
 <span class="sd">        See Also</span>
@@ -1153,9 +1191,27 @@ document.write(`
         <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">radius_minor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">radius_minor</span> <span class="o">!=</span> <span class="n">radius</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">align_semicircle</span><span class="p">:</span>
+                        <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">angle</span> <span class="o">=</span> <span class="n">phase</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
+                    <span class="n">Ellipse</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                        <span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">radius_minor</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># TODO: implement gridlines intersecting with ellipse</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">_circle_only</span><span class="p">:</span>
-                <span class="k">return</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
             <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">_intersection_circle_line</span><span class="p">(</span>
                 <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
@@ -1175,7 +1231,7 @@ document.write(`
                     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-            <span class="k">return</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">phase_limit</span><span class="p">):</span>
@@ -1209,7 +1265,8 @@ document.write(`
                         <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># filling arc objects is not supported</span>
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="p">)</span></div>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="PhasorPlot.polar_grid">

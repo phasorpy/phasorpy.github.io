@@ -490,6 +490,7 @@ document.write(`
 <li><p>create masks for regions of interests in the phasor space:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.cursors.mask_from_circular_cursor" title="phasorpy.cursors.mask_from_circular_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_circular_cursor()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.cursors.mask_from_elliptic_cursor" title="phasorpy.cursors.mask_from_elliptic_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_elliptic_cursor()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.cursors.mask_from_polar_cursor" title="phasorpy.cursors.mask_from_polar_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_polar_cursor()</span></code></a></p></li>
 </ul>
 </li>
@@ -541,6 +542,70 @@ else False.</p>
 <p>Create masks for two circular cursors with different radius:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_circular_cursor</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">array([[ True, False],</span>
+<span class="go">       [False,  True]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.cursors.mask_from_elliptic_cursor">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursors.</span></span><span class="sig-name descname"><span class="pre">mask_from_elliptic_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_minor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_semicircle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/cursors.html#mask_from_elliptic_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursors.mask_from_elliptic_cursor" title="Link to this definition">#</a></dt>
+<dd><p>Return masks for elliptic cursors of phasor coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>center_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Real coordinates of ellipses centers.</p></li>
+<li><p><strong>center_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Imaginary coordinates of ellipses centers.</p></li>
+<li><p><strong>radius</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Radii of ellipses along semi-major axis.</p></li>
+<li><p><strong>radius_minor</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Radii of ellipses along semi-minor axis.
+By default, the ellipses are circular.</p></li>
+<li><p><strong>angle</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>,</em><em>)</em>) – Rotation angles of semi-major axes of ellipses in radians.
+By default, the ellipses are automatically oriented depending on
+<cite>align_semicircle</cite>.</p></li>
+<li><p><strong>align_semicircle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Determines orientation of ellipses if <cite>angle</cite> is not provided.
+If true, align the minor axes of the ellipses with the closest tangent
+on the universal semicircle, else the unit circle (default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>masks</strong> – Boolean array of shape <cite>(n, *real.shape)</cite>.
+The first dimension is omitted if <cite>center*</cite>, <cite>radius*</cite>, and <cite>angle</cite>
+are scalars.
+Values are True if phasor coordinates are inside elliptic cursor,
+else False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    The array shapes of <cite>center*</cite>, <cite>radius*</cite>, or <cite>angle</cite> have more than
+    one dimension.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../tutorials/phasorpy_cursors.html#sphx-glr-tutorials-phasorpy-cursors-py"><span class="std std-ref">Cursors</span></a></p>
+</div>
+<p class="rubric">Examples</p>
+<p>Create mask for a single elliptic cursor:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_elliptic_cursor</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="go">array([ True, False])</span>
+</pre></div>
+</div>
+<p>Create masks for two elliptic cursors with different radii:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask_from_elliptic_cursor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">radius</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">radius_minor</span><span class="o">=</span><span class="p">[</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">angle</span><span class="o">=</span><span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">],</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="go">array([[ True, False],</span>
 <span class="go">       [False,  True]])</span>
@@ -708,6 +773,7 @@ The default is <a class="reference internal" href="color.html#phasorpy.color.CAT
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.mask_from_circular_cursor"><code class="docutils literal notranslate"><span class="pre">mask_from_circular_cursor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.mask_from_elliptic_cursor"><code class="docutils literal notranslate"><span class="pre">mask_from_elliptic_cursor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.mask_from_polar_cursor"><code class="docutils literal notranslate"><span class="pre">mask_from_polar_cursor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cursors.pseudo_color"><code class="docutils literal notranslate"><span class="pre">pseudo_color()</span></code></a></li>
 </ul>

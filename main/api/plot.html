@@ -576,7 +576,7 @@ and <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 
 <dl class="py method">
 <dt class="sig sig-object py" id="phasorpy.plot.PhasorPlot.cursor">
-<span class="sig-name descname"><span class="pre">cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/plot.html#PhasorPlot.cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.cursor" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_minor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_semicircle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/plot.html#PhasorPlot.cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.cursor" title="Link to this definition">#</a></dt>
 <dd><p>Plot phase and modulation grid lines and arcs at phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -586,9 +586,19 @@ and <code class="xref py py-meth docutils literal notranslate"><span class="pre"
 <li><p><strong>real_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – Real component of limiting phasor coordinate.</p></li>
 <li><p><strong>imag_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – Imaginary component of limiting phasor coordinate.</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of circle limiting phase and modulation grid lines and arcs.</p></li>
+<li><p><strong>radius_minor</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of elliptic cursor along semi-minor axis.
+By default, <cite>radius_minor</cite> is equal to <cite>radius</cite>, that is,
+the ellipse is circular.</p></li>
+<li><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotation angle of semi-major axis of elliptic cursor in radians.
+If None (default), orient ellipse cursor according to
+<cite>align_semicircle</cite>.</p></li>
+<li><p><strong>align_semicircle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Determines elliptic cursor orientation if <cite>angle</cite> is not provided.
+If true, align the minor axis of the ellipse with the closest
+tangent on the universal semicircle, else align to the unit circle.</p></li>
 <li><p><strong>**kwargs</strong> – Additional parameters passed to
 <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code>,
-<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Circle</span></code>, and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Circle</span></code>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Ellipse</span></code>, or
 <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Arc</span></code>.</p></li>
 </ul>
 </dd>
@@ -694,7 +704,7 @@ May be a sequence if phasor coordinates are two dimensional arrays.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="phasorpy.plot.PhasorPlot.polar_cursor">
-<span class="sig-name descname"><span class="pre">polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/plot.html#PhasorPlot.polar_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.polar_cursor" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_minor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_semicircle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/plot.html#PhasorPlot.polar_cursor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.polar_cursor" title="Link to this definition">#</a></dt>
 <dd><p>Plot phase and modulation grid lines and arcs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -706,9 +716,19 @@ Modulation grid arcs are drawn between <cite>phase</cite> and <cite>phase_limit<
 <li><p><strong>modulation_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – Radial component of limiting polar coordinate.
 Phase grid lines are drawn from <cite>modulation</cite> to <cite>modulation_limit</cite>.</p></li>
 <li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of circle limiting phase and modulation grid lines and arcs.</p></li>
+<li><p><strong>radius_minor</strong> (<em>float</em><em>, </em><em>optional</em>) – Radius of elliptic cursor along semi-minor axis.
+By default, <cite>radius_minor</cite> is equal to <cite>radius</cite>, that is,
+the ellipse is circular.</p></li>
+<li><p><strong>angle</strong> (<em>float</em><em>, </em><em>optional</em>) – Rotation angle of semi-major axis of elliptic cursor in radians.
+If None (default), orient ellipse cursor according to
+<cite>align_semicircle</cite>.</p></li>
+<li><p><strong>align_semicircle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Determines elliptic cursor orientation if <cite>angle</cite> is not provided.
+If true, align the minor axis of the ellipse with the closest
+tangent on the universal semicircle, else align to the unit circle.</p></li>
 <li><p><strong>**kwargs</strong> – Additional parameters passed to
 <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code>,
-<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Circle</span></code>, and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Circle</span></code>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Ellipse</span></code>, or
 <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Arc</span></code>.</p></li>
 </ul>
 </dd>

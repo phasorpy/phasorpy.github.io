@@ -464,6 +464,7 @@ document.write(`
 <span class="sd">- create masks for regions of interests in the phasor space:</span>
 
 <span class="sd">  - :py:func:`mask_from_circular_cursor`</span>
+<span class="sd">  - :py:func:`mask_from_elliptic_cursor`</span>
 <span class="sd">  - :py:func:`mask_from_polar_cursor`</span>
 
 <span class="sd">- create pseudo-color image from average signal and cursor masks:</span>
@@ -476,6 +477,7 @@ document.write(`
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;mask_from_circular_cursor&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mask_from_elliptic_cursor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;mask_from_polar_cursor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;pseudo_color&#39;</span><span class="p">,</span>
 <span class="p">]</span>
@@ -496,6 +498,7 @@ document.write(`
     <span class="n">_blend_normal</span><span class="p">,</span>
     <span class="n">_blend_overlay</span><span class="p">,</span>
     <span class="n">_is_inside_circle</span><span class="p">,</span>
+    <span class="n">_is_inside_ellipse_</span><span class="p">,</span>
     <span class="n">_is_inside_polar_rectangle</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -584,6 +587,153 @@ document.write(`
 
     <span class="n">mask</span> <span class="o">=</span> <span class="n">_is_inside_circle</span><span class="p">(</span>
         <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">moveaxis</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="mask_from_elliptic_cursor">
+<a class="viewcode-back" href="../../api/cursors.html#phasorpy.cursors.mask_from_elliptic_cursor">[docs]</a>
+<span class="k">def</span> <span class="nf">mask_from_elliptic_cursor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">center_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">center_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">radius_minor</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">angle</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return masks for elliptic cursors of phasor coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">    center_real : array_like, shape (n,)</span>
+<span class="sd">        Real coordinates of ellipses centers.</span>
+<span class="sd">    center_imag : array_like, shape (n,)</span>
+<span class="sd">        Imaginary coordinates of ellipses centers.</span>
+<span class="sd">    radius : array_like, optional, shape (n,)</span>
+<span class="sd">        Radii of ellipses along semi-major axis.</span>
+<span class="sd">    radius_minor : array_like, optional, shape (n,)</span>
+<span class="sd">        Radii of ellipses along semi-minor axis.</span>
+<span class="sd">        By default, the ellipses are circular.</span>
+<span class="sd">    angle : array_like, optional, shape (n,)</span>
+<span class="sd">        Rotation angles of semi-major axes of ellipses in radians.</span>
+<span class="sd">        By default, the ellipses are automatically oriented depending on</span>
+<span class="sd">        `align_semicircle`.</span>
+<span class="sd">    align_semicircle : bool, optional</span>
+<span class="sd">        Determines orientation of ellipses if `angle` is not provided.</span>
+<span class="sd">        If true, align the minor axes of the ellipses with the closest tangent</span>
+<span class="sd">        on the universal semicircle, else the unit circle (default).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    masks : ndarray</span>
+<span class="sd">        Boolean array of shape `(n, *real.shape)`.</span>
+<span class="sd">        The first dimension is omitted if `center*`, `radius*`, and `angle`</span>
+<span class="sd">        are scalars.</span>
+<span class="sd">        Values are True if phasor coordinates are inside elliptic cursor,</span>
+<span class="sd">        else False.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        The array shapes of `real` and `imag` do not match.</span>
+<span class="sd">        The array shapes of `center*`, `radius*`, or `angle` have more than</span>
+<span class="sd">        one dimension.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :ref:`sphx_glr_tutorials_phasorpy_cursors.py`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Create mask for a single elliptic cursor:</span>
+
+<span class="sd">    &gt;&gt;&gt; mask_from_elliptic_cursor([0.2, 0.5], [0.4, 0.5], 0.2, 0.4, radius=0.1)</span>
+<span class="sd">    array([ True, False])</span>
+
+<span class="sd">    Create masks for two elliptic cursors with different radii:</span>
+
+<span class="sd">    &gt;&gt;&gt; mask_from_elliptic_cursor(</span>
+<span class="sd">    ...     [0.2, 0.5],</span>
+<span class="sd">    ...     [0.4, 0.5],</span>
+<span class="sd">    ...     [0.2, 0.5],</span>
+<span class="sd">    ...     [0.4, 0.5],</span>
+<span class="sd">    ...     radius=[0.1, 0.05],</span>
+<span class="sd">    ...     radius_minor=[0.15, 0.1],</span>
+<span class="sd">    ...     angle=[math.pi, math.pi / 2],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    array([[ True, False],</span>
+<span class="sd">           [False,  True]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">center_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center_real</span><span class="p">)</span>
+    <span class="n">center_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">center_imag</span><span class="p">)</span>
+    <span class="n">radius_a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">radius_minor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">radius_b</span> <span class="o">=</span> <span class="n">radius_a</span>  <span class="c1"># circular by default</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">radius_b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># TODO: vectorize align_semicircle?</span>
+        <span class="k">if</span> <span class="n">align_semicircle</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">)</span>
+
+    <span class="n">angle_sin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">angle_cos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">radius_a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">radius_b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="ow">or</span> <span class="n">angle_sin</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;radius.ndim=</span><span class="si">{</span><span class="n">radius_a</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1">, &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;radius_minor.ndim=</span><span class="si">{</span><span class="n">radius_b</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1">, or &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;angle.ndim=</span><span class="si">{</span><span class="n">angle_sin</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1">, &gt; 1&#39;</span>
+        <span class="p">)</span>
+
+    <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="n">center_real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">center_imag</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">radius_a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">radius_b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">or</span> <span class="n">angle_sin</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">_is_inside_ellipse_</span><span class="p">(</span>
+        <span class="n">real</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">,</span>
+        <span class="n">center_real</span><span class="p">,</span>
+        <span class="n">center_imag</span><span class="p">,</span>
+        <span class="n">radius_a</span><span class="p">,</span>
+        <span class="n">radius_b</span><span class="p">,</span>
+        <span class="n">angle_sin</span><span class="p">,</span>
+        <span class="n">angle_cos</span><span class="p">,</span>
+        <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">moveaxis</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
