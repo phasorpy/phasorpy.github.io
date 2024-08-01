@@ -501,7 +501,7 @@ coordinates from time-resolved or spectral signals:</p>
 <li><p><a class="reference internal" href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal()</span></code></a>,
 implemented mostly in Cython for efficiency.</p></li>
 <li><p><a class="reference internal" href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal_fft()</span></code></a>,
-a pure Python reference implementation based on <code class="docutils literal notranslate"><span class="pre">numpy.fft.fft</span></code>.</p></li>
+a pure Python reference implementation based on <code class="docutils literal notranslate"><span class="pre">numpy.fft.rfft</span></code>.</p></li>
 </ul>
 <p>This tutorial compares the performance of the two implementations.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">timeit</span>
@@ -512,12 +512,12 @@ a pure Python reference implementation based on <code class="docutils literal no
 <span class="kn">from</span> <span class="nn">phasorpy.utils</span> <span class="kn">import</span> <a href="../../api/utils.html#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">fft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
+    <span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">scipy_fft</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">mkl_fft._numpy_fft</span> <span class="kn">import</span> <span class="n">fft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
+    <span class="kn">from</span> <span class="nn">mkl_fft._numpy_fft</span> <span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
@@ -555,7 +555,7 @@ and number of threads:</p>
 
         <span class="n">num_threads</span> <span class="o">=</span> <a href="../../api/utils.html#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">num_threads</span><span class="o">=</span><span class="n">num_threads</span><span class="p">)</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;num_threads&#39;</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">}</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
             <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  threads </span><span class="si">{</span><span class="n">num_threads</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
@@ -568,7 +568,7 @@ and number of threads:</p>
             <span class="n">fft_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">fft_name</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">fft_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fft_func</span><span class="o">=</span><span class="n">fft_func</span><span class="p">)</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rfft_func&#39;</span><span class="p">:</span> <span class="n">fft_func</span><span class="p">}</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
             <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">fft_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 </pre></div>
@@ -577,88 +577,87 @@ and number of threads:</p>
   axis -1
     phasor_from_signal       0.057s   1.00
       threads 2              0.031s   0.54
-    phasor_from_signal_fft   0.402s   7.08
-      scipy_fft              0.399s   7.03
+    phasor_from_signal_fft   0.217s   3.82
+      scipy_fft              0.232s   4.08
   axis 0
-    phasor_from_signal       0.163s   2.88
-      threads 2              0.079s   1.40
-    phasor_from_signal_fft   0.685s  12.07
-      scipy_fft              0.482s   8.49
+    phasor_from_signal       0.164s   2.89
+      threads 2              0.080s   1.41
+    phasor_from_signal_fft   0.451s   7.94
+      scipy_fft              0.346s   6.10
   axis 2
     phasor_from_signal       0.057s   1.00
-      threads 2              0.032s   0.56
-    phasor_from_signal_fft   0.402s   7.08
-      scipy_fft              0.399s   7.04
+      threads 2              0.031s   0.55
+    phasor_from_signal_fft   0.215s   3.79
+      scipy_fft              0.233s   4.11
 harmonics 8
   axis -1
-    phasor_from_signal       0.452s   7.97
-      threads 2              0.244s   4.30
-    phasor_from_signal_fft   0.420s   7.40
-      scipy_fft              0.413s   7.28
+    phasor_from_signal       0.472s   8.31
+      threads 2              0.245s   4.32
+    phasor_from_signal_fft   0.230s   4.05
+      scipy_fft              0.244s   4.31
   axis 0
-    phasor_from_signal       1.305s  23.00
-      threads 2              0.652s  11.49
-    phasor_from_signal_fft   0.693s  12.21
-      scipy_fft              0.482s   8.49
+    phasor_from_signal       1.313s  23.13
+      threads 2              0.656s  11.56
+    phasor_from_signal_fft   0.457s   8.05
+      scipy_fft              0.352s   6.20
   axis 2
-    phasor_from_signal       0.453s   7.98
-      threads 2              0.245s   4.31
-    phasor_from_signal_fft   0.416s   7.34
-      scipy_fft              0.415s   7.31
+    phasor_from_signal       0.463s   8.15
+      threads 2              0.245s   4.32
+    phasor_from_signal_fft   0.228s   4.02
+      scipy_fft              0.245s   4.31
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">harmonics</span> <span class="mi">1</span>
   <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.347</span><span class="n">s</span>  <span class="mf">10.22</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.160</span><span class="n">s</span>   <span class="mf">4.71</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.035</span><span class="n">s</span>   <span class="mf">1.00</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.24</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.270</span><span class="n">s</span>   <span class="mf">7.72</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.236</span><span class="n">s</span>   <span class="mf">6.74</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.128</span><span class="n">s</span>   <span class="mf">3.67</span>
   <span class="n">axis</span> <span class="mi">0</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.77</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.10</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">2.236</span><span class="n">s</span>  <span class="mf">65.80</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.922</span><span class="n">s</span>  <span class="mf">27.14</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.195</span><span class="n">s</span>   <span class="mf">5.73</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.158</span><span class="n">s</span>   <span class="mf">4.50</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.036</span><span class="n">s</span>   <span class="mf">1.02</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.724</span><span class="n">s</span>  <span class="mf">20.66</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.516</span><span class="n">s</span>  <span class="mf">14.72</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.177</span><span class="n">s</span>   <span class="mf">5.04</span>
   <span class="n">axis</span> <span class="mi">2</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.037</span><span class="n">s</span>   <span class="mf">1.09</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.22</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.360</span><span class="n">s</span>  <span class="mf">10.60</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.395</span><span class="n">s</span>  <span class="mf">11.62</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.169</span><span class="n">s</span>   <span class="mf">4.98</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.035</span><span class="n">s</span>   <span class="mf">1.01</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.007</span><span class="n">s</span>   <span class="mf">0.19</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.273</span><span class="n">s</span>   <span class="mf">7.79</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.243</span><span class="n">s</span>   <span class="mf">6.93</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.131</span><span class="n">s</span>   <span class="mf">3.73</span>
 <span class="n">harmonics</span> <span class="mi">8</span>
   <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.281</span><span class="n">s</span>   <span class="mf">8.26</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.35</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.367</span><span class="n">s</span>  <span class="mf">10.79</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.410</span><span class="n">s</span>  <span class="mf">12.06</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.180</span><span class="n">s</span>   <span class="mf">5.31</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.268</span><span class="n">s</span>   <span class="mf">7.65</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.040</span><span class="n">s</span>   <span class="mf">1.15</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.289</span><span class="n">s</span>   <span class="mf">8.26</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.252</span><span class="n">s</span>   <span class="mf">7.19</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.148</span><span class="n">s</span>   <span class="mf">4.21</span>
   <span class="n">axis</span> <span class="mi">0</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">1.211</span><span class="n">s</span>  <span class="mf">35.63</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.345</span><span class="n">s</span>  <span class="mf">10.16</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">2.263</span><span class="n">s</span>  <span class="mf">66.58</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.936</span><span class="n">s</span>  <span class="mf">27.54</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.200</span><span class="n">s</span>   <span class="mf">5.89</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">1.260</span><span class="n">s</span>  <span class="mf">35.96</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.308</span><span class="n">s</span>   <span class="mf">8.78</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.718</span><span class="n">s</span>  <span class="mf">20.49</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.528</span><span class="n">s</span>  <span class="mf">15.06</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.172</span><span class="n">s</span>   <span class="mf">4.91</span>
   <span class="n">axis</span> <span class="mi">2</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.284</span><span class="n">s</span>   <span class="mf">8.37</span>
-      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.046</span><span class="n">s</span>   <span class="mf">1.34</span>
-    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.377</span><span class="n">s</span>  <span class="mf">11.10</span>
-      <span class="n">scipy_fft</span>              <span class="mf">0.431</span><span class="n">s</span>  <span class="mf">12.69</span>
-      <span class="n">mkl_fft</span>                <span class="mf">0.185</span><span class="n">s</span>   <span class="mf">5.44</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>       <span class="mf">0.274</span><span class="n">s</span>   <span class="mf">7.82</span>
+      <span class="n">threads</span> <span class="mi">6</span>              <span class="mf">0.041</span><span class="n">s</span>   <span class="mf">1.18</span>
+    <a href="../../api/phasor.html#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal_fft</span></a>   <span class="mf">0.283</span><span class="n">s</span>   <span class="mf">8.06</span>
+      <span class="n">scipy_fft</span>              <span class="mf">0.253</span><span class="n">s</span>   <span class="mf">7.21</span>
+      <span class="n">mkl_fft</span>                <span class="mf">0.143</span><span class="n">s</span>   <span class="mf">4.08</span>
 </pre></div>
 </div>
 </section>
 <section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is an order of magnitude faster
-than the <code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code> based reference implementation for single harmonics.</p></li>
-<li><p>The FFT functions from <code class="docutils literal notranslate"><span class="pre">scipy</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> usually outperform
-numpy.fft.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is significantly faster than
+the <code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code> based reference implementation for single harmonics.</p></li>
+<li><p>The FFT functions from <code class="docutils literal notranslate"><span class="pre">scipy</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> outperform numpy.fft.
+<code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> is very performant.</p></li>
 <li><p>Using FFT becomes more competitive when calculating larger number of
 harmonics.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> is very performant for first and last axes.</p></li>
 <li><p>Computing over the last axis is significantly faster compared to the first
 axis. That is because the samples in the last dimension are contiguous,
 closer together in memory.</p></li>
@@ -671,7 +670,7 @@ closer together in memory.</p></li>
 <p>The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> implementation is a reasonable default.
 The <code class="docutils literal notranslate"><span class="pre">phasor_from_signal_fft</span></code> function may be a better choice, for example,
 when computing large number of harmonics with an optimized FFT function.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 9.775 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.622 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-benchmarks-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9d07845b628b555914639d30910d46da/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>
@@ -773,7 +772,7 @@ when computing large number of harmonics with an optimized FFT function.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

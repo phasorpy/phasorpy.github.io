@@ -283,7 +283,34 @@ lifetime (Fluorescein, 4.2 ns):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-148
+.. GENERATED FROM PYTHON SOURCE LINES 143-145
+
+If necessary, the calibration can be undone/reversed using the
+same reference:
+
+.. GENERATED FROM PYTHON SOURCE LINES 145-156
+
+.. code-block:: Python
+
+
+    uncalibrated_real, uncalibrated_imag = phasor_calibrate(
+        real,
+        imag,
+        reference_real,
+        reference_imag,
+        frequency=frequency,
+        lifetime=4.2,
+        reverse=True,
+    )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 157-162
 
 Filter phasor coordinates
 -------------------------
@@ -291,7 +318,7 @@ Filter phasor coordinates
 Applying median filter to the calibrated phasor coordinates,
 often multiple times, improves contrast:
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-156
+.. GENERATED FROM PYTHON SOURCE LINES 162-170
 
 .. code-block:: Python
 
@@ -310,12 +337,12 @@ often multiple times, improves contrast:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 171-173
 
 Pixels with low intensities are commonly excluded from analysis and
 visualization of phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-165
+.. GENERATED FROM PYTHON SOURCE LINES 173-179
 
 .. code-block:: Python
 
@@ -332,7 +359,7 @@ visualization of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-174
+.. GENERATED FROM PYTHON SOURCE LINES 180-188
 
 Plot phasor coordinates
 -----------------------
@@ -343,7 +370,7 @@ plotting phasor and polar coordinates.
 Large number of phasor coordinates, such as obtained from imaging,
 are commonly visualized as 2D histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 174-183
+.. GENERATED FROM PYTHON SOURCE LINES 188-197
 
 .. code-block:: Python
 
@@ -368,17 +395,17 @@ are commonly visualized as 2D histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-185
+.. GENERATED FROM PYTHON SOURCE LINES 198-199
 
 For comparison, the uncalibrated, unfiltered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-191
+.. GENERATED FROM PYTHON SOURCE LINES 199-205
 
 .. code-block:: Python
 
 
     plot = PhasorPlot(allquadrants=True, title='Raw phasor coordinates')
-    plot.hist2d(*phasor_from_signal(signal, axis=0)[1:])
+    plot.hist2d(uncalibrated_real, uncalibrated_imag)
     plot.semicircle()
     plot.show()
 
@@ -394,19 +421,19 @@ For comparison, the uncalibrated, unfiltered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-194
+.. GENERATED FROM PYTHON SOURCE LINES 206-208
 
 To be continued
 ---------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-200
+.. GENERATED FROM PYTHON SOURCE LINES 210-214
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-203
+.. GENERATED FROM PYTHON SOURCE LINES 214-217
 
 .. code-block:: Python
 
@@ -434,21 +461,21 @@ Print information about Python interpreter and installed packages:
     skimage-0.24.0
     sklearn-n/a
     pandas-2.2.2
-    xarray-2024.6.0
+    xarray-2024.7.0
     click-8.1.7
     pooch-v1.8.2
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-205
+.. GENERATED FROM PYTHON SOURCE LINES 218-219
 
 sphinx_gallery_thumbnail_number = 3
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.684 seconds)
+   **Total running time of the script:** (0 minutes 11.479 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:
