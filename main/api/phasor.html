@@ -553,6 +553,11 @@ lifetime:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_at_harmonic" title="phasorpy.phasor.phasor_at_harmonic"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_at_harmonic()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>filter phasor coordinates:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_filter" title="phasorpy.phasor.phasor_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter()</span></code></a></p></li>
+</ul>
+</li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.fraction_from_amplitude">
@@ -907,6 +912,61 @@ axes are considered.</p></li>
 <p>Compute center coordinates with the ‘median’ method:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_center</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span>
 <span class="go">(2.0, 5.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_filter">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter" title="Link to this definition">#</a></dt>
+<dd><p>Return filtered phasor coordinates.</p>
+<p>By default, a median filter is applied to the real and imaginary
+components of phasor coordinates once with a kernel size of 3
+multiplied by the number of dimensions of the input arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to be filtered.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to be filtered.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for filtering:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
+</ul>
+</p></li>
+<li><p><strong>repeat</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to apply filter. The default is 1.</p></li>
+<li><p><strong>**kwargs</strong> – Optional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Filtered real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Filtered imaginary component of phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the specified method is not supported.
+    The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    If <cite>repeat</cite> is less than 1.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For now, only the median filter method is implemented.
+Additional filtering methods may be added in the future.</p>
+<p class="rubric">Examples</p>
+<p>Apply three times a median filter with a kernel size of three:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_filter</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(array([[0, 0, 0],</span>
+<span class="go">        [2, 2, 2],</span>
+<span class="go">        [2, 2, 2]]),</span>
+<span class="go">array([[3, 3, 3],</span>
+<span class="go">        [4, 4, 4],</span>
+<span class="go">        [4, 4, 4]]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1970,6 +2030,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_at_harmonic"><code class="docutils literal notranslate"><span class="pre">phasor_at_harmonic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_filter"><code class="docutils literal notranslate"><span class="pre">phasor_filter()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_acceptor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_donor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_donor()</span></code></a></li>
