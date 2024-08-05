@@ -31,21 +31,28 @@ using the PhasorPy library instead of the
 `Globals for Images · SimFCS <https://www.lfd.uci.edu/globals/>`_
 and Excel software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. note::
+
+    This tutorial is work in progress. Not all of SimFCS's functionality is
+    available in the PhasorPy library yet.
+
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Import required modules and functions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-40
+.. GENERATED FROM PYTHON SOURCE LINES 24-47
 
 .. code-block:: Python
 
 
     import numpy
+    from matplotlib import pyplot
 
     from phasorpy.datasets import fetch
     from phasorpy.io import read_ref
     from phasorpy.phasor import (
-        fraction_from_amplitude,
+        lifetime_fraction_from_amplitude,
+        lifetime_to_signal,
         phasor_filter,
         phasor_from_fret_donor,
         phasor_from_lifetime,
@@ -67,7 +74,7 @@ Import required modules and functions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-57
+.. GENERATED FROM PYTHON SOURCE LINES 48-64
 
 Phasor properties
 -----------------
@@ -86,7 +93,7 @@ To demonstrate this effect, calculate:
 
 - the phasor at a single frequency for a combination of four exponentials:
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-73
+.. GENERATED FROM PYTHON SOURCE LINES 64-82
 
 .. code-block:: Python
 
@@ -101,7 +108,9 @@ To demonstrate this effect, calculate:
     )
 
     plot = PhasorPlot(frequency=frequency)
-    plot.components(*phasor_single, fraction_from_amplitude(lifetimes, amplitudes))
+    plot.components(
+        *phasor_single, lifetime_fraction_from_amplitude(lifetimes, amplitudes)
+    )
     plot.plot(*phasor_single, label='single components')
     plot.plot(*phasor_combined, label='combined components')
     plot.show()
@@ -118,11 +127,11 @@ To demonstrate this effect, calculate:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-75
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 - the multi-frequency fluorescence modulation and phase curves:
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-86
+.. GENERATED FROM PYTHON SOURCE LINES 84-95
 
 .. code-block:: Python
 
@@ -149,15 +158,41 @@ To demonstrate this effect, calculate:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
 - the time-domain fluorescence decay:
 
-.. todo::
+.. GENERATED FROM PYTHON SOURCE LINES 97-111
 
-    Generate time-domain signal.
+.. code-block:: Python
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-111
+
+    signal, instrument_response, times = lifetime_to_signal(
+        frequency, lifetimes, amplitudes, preexponential=True, samples=256
+    )
+
+    fig, ax = pyplot.subplots()
+    ax.set(
+        title='Multi-exponential decay',
+        xlabel='Times [ns]',
+        ylabel='Intensity [au]',
+    )
+    ax.plot(times, signal)
+    pyplot.show()
+
+
+
+
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_003.png
+   :alt: Multi-exponential decay
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 112-128
 
 Two state equilibrium
 ---------------------
@@ -176,7 +211,7 @@ Simulate the phasor for different combinations (relative amplitudes)
 of a 4 ns lifetime state and a 1 ns lifetime state
 (e.g. amplitude 1 = 0.2, amplitude 2 = 0.8).
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-120
+.. GENERATED FROM PYTHON SOURCE LINES 128-137
 
 .. code-block:: Python
 
@@ -196,12 +231,12 @@ of a 4 ns lifetime state and a 1 ns lifetime state
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-123
+.. GENERATED FROM PYTHON SOURCE LINES 138-140
 
 Record S (the phasor y coordinate) and G (the phasor x coordinate)
 values for each combination.
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-127
+.. GENERATED FROM PYTHON SOURCE LINES 140-144
 
 .. code-block:: Python
 
@@ -223,11 +258,11 @@ values for each combination.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
 
 Plot S vs. G to see how the phasor changes with different combinations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-132
+.. GENERATED FROM PYTHON SOURCE LINES 146-149
 
 .. code-block:: Python
 
@@ -237,16 +272,16 @@ Plot S vs. G to see how the phasor changes with different combinations.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_003.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_004.png
    :alt: Phasor plot (80 MHz)
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_003.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_004.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-141
+.. GENERATED FROM PYTHON SOURCE LINES 150-158
 
 Questions:
 
@@ -257,7 +292,7 @@ Questions:
 - What information is needed to calculate concentration
   from the position of a phasor?
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-154
+.. GENERATED FROM PYTHON SOURCE LINES 160-171
 
 Capillaries
 ...........
@@ -271,7 +306,7 @@ Read the file, calculate phasor coordinates from phase and modulation,
 display the images, and plot the phasor coordinates of first and second
 harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-163
+.. GENERATED FROM PYTHON SOURCE LINES 171-180
 
 .. code-block:: Python
 
@@ -291,7 +326,7 @@ harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-167
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
 
 .. code-block:: Python
 
@@ -301,16 +336,16 @@ harmonics:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_004.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_005.png
    :alt: capillaries1001.ref, mean, G, real, S, imag
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_004.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_005.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-176
+.. GENERATED FROM PYTHON SOURCE LINES 185-193
 
 .. code-block:: Python
 
@@ -325,16 +360,16 @@ harmonics:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_005.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_006.png
    :alt: 1st Harmonics (80.0 MHz)
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_005.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-186
+.. GENERATED FROM PYTHON SOURCE LINES 194-203
 
 .. code-block:: Python
 
@@ -350,16 +385,16 @@ harmonics:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_006.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_007.png
    :alt: 2nd Harmonics (160.0 MHz)
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_006.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_007.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-198
+.. GENERATED FROM PYTHON SOURCE LINES 204-215
 
 The two phasor plots show the pixel phasor distribution for the first and
 second harmonics (for the two-photon systems these would be 80 MHz and 160
@@ -373,7 +408,7 @@ Note that this will also reduce the spatial resolution in the phasor.
 If high spatial resolution is needed, make sure to have at least 100
 photons in each pixel of the image.
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-202
+.. GENERATED FROM PYTHON SOURCE LINES 215-219
 
 .. code-block:: Python
 
@@ -388,7 +423,7 @@ photons in each pixel of the image.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-210
+.. GENERATED FROM PYTHON SOURCE LINES 220-227
 
 In addition, small amounts of room light will appear towards the lower
 left-hand corner of the phasor (room light is uncorrelated, so it has
@@ -398,7 +433,7 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
     Use a ``phasor_threshold`` function?
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-217
+.. GENERATED FROM PYTHON SOURCE LINES 227-234
 
 .. code-block:: Python
 
@@ -416,7 +451,7 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-226
+.. GENERATED FROM PYTHON SOURCE LINES 235-243
 
 .. code-block:: Python
 
@@ -431,16 +466,16 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_007.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_008.png
    :alt: 1st Harmonics (80.0 MHz) filtered
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_007.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_008.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 227-236
+.. GENERATED FROM PYTHON SOURCE LINES 244-253
 
 .. code-block:: Python
 
@@ -456,16 +491,16 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_008.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_009.png
    :alt: 2nd Harmonics (160.0 MHz) filtered
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_008.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_009.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-292
+.. GENERATED FROM PYTHON SOURCE LINES 254-309
 
 Note that if the room light is significant compared to the fluorescence
 signal, it will bias the fluorescence phasors by pulling them toward the
@@ -523,7 +558,7 @@ single exponential lifetime around 1.5 ns in phosphate buffer at pH 7.0.
 The explanations in the last two paragraphs should help answer
 the last question above, about the components in the middle channel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-313
+.. GENERATED FROM PYTHON SOURCE LINES 311-330
 
 Quenching, FRET
 ---------------
@@ -545,7 +580,7 @@ Calculate the phasor for a fluorophore with a 4 ns lifetime.
 Then calculate its phasor under different efficiencies of energy transfer.
 How does this differ from what we saw with the two-state system?
 
-.. GENERATED FROM PYTHON SOURCE LINES 313-323
+.. GENERATED FROM PYTHON SOURCE LINES 330-340
 
 .. code-block:: Python
 
@@ -562,16 +597,16 @@ How does this differ from what we saw with the two-state system?
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_009.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_010.png
    :alt: FRET Donor
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_009.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_010.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-333
+.. GENERATED FROM PYTHON SOURCE LINES 341-350
 
 If only the donor fluorophore is excited (no direct excitation of the
 acceptor), the acceptor fluorescence shows a very unusual phenomenon.
@@ -583,7 +618,7 @@ and the acceptor lifetime is 4 ns, the acceptor can be simulated
 by a lifetime of 0.5 ns with amplitude of -1 and a lifetime of 4 ns with
 amplitude of 1:
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-349
+.. GENERATED FROM PYTHON SOURCE LINES 350-366
 
 .. code-block:: Python
 
@@ -606,16 +641,16 @@ amplitude of 1:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_010.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_011.png
    :alt: 87.5% FRET efficiency
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_010.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_011.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 350-355
+.. GENERATED FROM PYTHON SOURCE LINES 367-372
 
 Often in FRET experiments, only a fraction of the donor molecules experience
 FRET. The others continue to fluoresce with an unquenched lifetime.
@@ -623,7 +658,7 @@ Simulate the situation where 50% of the donors remain unquenched.
 Rationalize the results in terms of the quenching simulations done above
 and the two state experiments we did earlier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-365
+.. GENERATED FROM PYTHON SOURCE LINES 372-382
 
 .. code-block:: Python
 
@@ -640,16 +675,16 @@ and the two state experiments we did earlier.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_011.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_012.png
    :alt: Donors FRETing
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_011.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_012.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 366-371
+.. GENERATED FROM PYTHON SOURCE LINES 383-388
 
 CFP-YFP
 .......
@@ -657,7 +692,7 @@ CFP-YFP
 Open the file ``CFPpax8651866.ref``, which contains referenced FLIM data
 for a cell transfected with a CFP paxillin construct.
 
-.. GENERATED FROM PYTHON SOURCE LINES 371-379
+.. GENERATED FROM PYTHON SOURCE LINES 388-396
 
 .. code-block:: Python
 
@@ -672,21 +707,21 @@ for a cell transfected with a CFP paxillin construct.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_012.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_013.png
    :alt: CFPpax8651866.ref, mean, G, real, S, imag
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_012.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_013.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 380-382
+.. GENERATED FROM PYTHON SOURCE LINES 397-399
 
 Open the file ``1011rac1002.ref``, which contains referenced FLIM data
 for a cell transfected with a CFP-YFP fusion protein:
 
-.. GENERATED FROM PYTHON SOURCE LINES 382-390
+.. GENERATED FROM PYTHON SOURCE LINES 399-407
 
 .. code-block:: Python
 
@@ -701,20 +736,20 @@ for a cell transfected with a CFP-YFP fusion protein:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_013.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_014.png
    :alt: 1011rac1002.ref, mean, G, real, S, imag
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_013.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_014.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 391-392
+.. GENERATED FROM PYTHON SOURCE LINES 408-409
 
 Plot the phasor distributions together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 392-399
+.. GENERATED FROM PYTHON SOURCE LINES 409-416
 
 .. code-block:: Python
 
@@ -728,21 +763,21 @@ Plot the phasor distributions together:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_014.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_015.png
    :alt: CFPpax8651866 and 1011rac1002
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_014.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_015.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 400-402
+.. GENERATED FROM PYTHON SOURCE LINES 417-419
 
 Set the intensity threshold to 32 to remove any room light
 and smooth the phasor.
 
-.. GENERATED FROM PYTHON SOURCE LINES 402-422
+.. GENERATED FROM PYTHON SOURCE LINES 419-439
 
 .. code-block:: Python
 
@@ -769,16 +804,16 @@ and smooth the phasor.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_015.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_016.png
    :alt: Filtered CFPpax8651866 (blue) and 1011rac1002 (red)
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_015.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_016.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 423-430
+.. GENERATED FROM PYTHON SOURCE LINES 440-447
 
 Load ``CFP and CFP-YFP.ref`` and ``CFP-YFP many cells with background.ref``.
 These files were acquired using the Lambert frequency domain FLIM instrument
@@ -788,7 +823,7 @@ various amounts of background.
 Set the intensity threshold to 6202 counts, such that the background phasor
 is visible.
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-439
+.. GENERATED FROM PYTHON SOURCE LINES 447-456
 
 .. code-block:: Python
 
@@ -804,16 +839,16 @@ is visible.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_016.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_017.png
    :alt: CFP and CFP-YFp.ref, mean, G, real, S, imag
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_016.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_017.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 440-450
+.. GENERATED FROM PYTHON SOURCE LINES 457-467
 
 .. code-block:: Python
 
@@ -830,16 +865,16 @@ is visible.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_017.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_018.png
    :alt: CFP-YFP many cells with background.ref, mean, G, real, S, imag
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_017.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_018.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 451-469
+.. GENERATED FROM PYTHON SOURCE LINES 468-486
 
 .. code-block:: Python
 
@@ -864,16 +899,16 @@ is visible.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_018.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_019.png
    :alt: "CFP and CFP-YFp" and "CFP-YFP many cells"
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_018.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_019.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 470-476
+.. GENERATED FROM PYTHON SOURCE LINES 487-493
 
 Before starting the analysis of the FRET trajectory, identify the phasor
 of the donor without the acceptor and the phasor of the background or
@@ -882,7 +917,7 @@ autofluorescence.
 Set two cursors of size 0.03 at the phasor coordinates of
 the unquenched donor (0.72, 0.45) and the background (0.62, 0.41):
 
-.. GENERATED FROM PYTHON SOURCE LINES 476-494
+.. GENERATED FROM PYTHON SOURCE LINES 493-511
 
 .. code-block:: Python
 
@@ -907,16 +942,16 @@ the unquenched donor (0.72, 0.45) and the background (0.62, 0.41):
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_019.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_020.png
    :alt: FRET Donor (green) and background (black)
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_019.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_020.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 495-501
+.. GENERATED FROM PYTHON SOURCE LINES 512-518
 
 Calculate two trajectories, one for the quenching due to FRET and the other
 for the superposition of the FRETing population with the background.
@@ -925,7 +960,7 @@ The FRET efficiency for the file with very little background is about 0.23.
 Instead, the best agreement for the file with large background is obtained
 with the combination shown below, that results in about 0.32 FRET efficiency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-544
+.. GENERATED FROM PYTHON SOURCE LINES 518-561
 
 .. code-block:: Python
 
@@ -975,22 +1010,22 @@ with the combination shown below, that results in about 0.32 FRET efficiency.
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_020.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_021.png
    :alt: FRET trajectories
-   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_020.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_lfd_workshop_021.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 545-548
+.. GENERATED FROM PYTHON SOURCE LINES 562-565
 
 For this sample, it seems that all the cells are FRETing and that
 the change of lifetime between the cells is due to combination with
 the background fluorescence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 550-557
+.. GENERATED FROM PYTHON SOURCE LINES 567-574
 
 .. todo::
 
@@ -1000,7 +1035,7 @@ the background fluorescence.
     Assign component 1 and component 2 to the extremes of the lines of the
     linear combination.
 
-.. GENERATED FROM PYTHON SOURCE LINES 559-571
+.. GENERATED FROM PYTHON SOURCE LINES 576-588
 
 Comments and questions
 ----------------------
@@ -1015,14 +1050,14 @@ expresses one protein of the other.
 - What percentage of the species is FRETing in the CFP-YFP image?
 - Is the FRET efficiency high or low?
 
-.. GENERATED FROM PYTHON SOURCE LINES 573-574
+.. GENERATED FROM PYTHON SOURCE LINES 590-591
 
 sphinx_gallery_thumbnail_number = -1
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.857 seconds)
+   **Total running time of the script:** (0 minutes 4.357 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_lfd_workshop.py:
