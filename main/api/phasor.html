@@ -491,7 +491,6 @@ document.write(`
 <li><p>calculate phasor coordinates from time-resolved and spectral signals:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code></a></p></li>
-<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal_fft()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>synthesize signals from phasor coordinates or lifetimes:</p>
@@ -1469,7 +1468,7 @@ are converted to phasor coordinates <cite>real</cite> (<span class="math notrans
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_signal">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1488,9 +1487,18 @@ The default is the first harmonic (fundamental frequency).</p></li>
 If None (default), samples are assumed to be uniformly spaced along
 one period.
 The array size must equal the number of samples along <cite>axis</cite>.
-Cannot be used with <cite>harmonic</cite>.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64 (default).</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
+Cannot be used with <cite>harmonic!=1</cite> or <cite>use_fft=True</cite>.</p></li>
+<li><p><strong>use_fft</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, use a real forward Fast Fourier Transform (FFT).
+If false, use a Cython implementation that is optimized (faster and
+resource saving) for calculating few harmonics.
+By default, FFT is only used when all or at least 8 harmonics are
+calculated, or <cite>rfft</cite> is specified.</p></li>
+<li><p><strong>rfft</strong> (<em>callable</em><em>, </em><em>optional</em>) – Drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.rfft</span></code>.
+For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.rfft</span></code> or <code class="docutils literal notranslate"><span class="pre">mkl_fft._numpy_fft.rfft</span></code>.
+Used to calculate the real forward FFT.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
+The default is float64 unless the <cite>signal</cite> is float32.</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization when not using FFT.
 By default, multi-threading is disabled.
 If zero, up to half of logical CPUs are used.
 OpenMP may not be available on all platforms.</p></li>
@@ -1504,24 +1512,6 @@ OpenMP may not be available on all platforms.</p></li>
 </ul>
 </p>
 </dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal_fft</span></code></a>, <a class="reference internal" href="../tutorials/benchmarks/phasorpy_phasor_from_signal.html#sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"><span class="std std-ref">Benchmark phasor_from_signal</span></a></p>
-</div>
-<p class="rubric">Notes</p>
-<p>Compared to the <a class="reference internal" href="#phasorpy.phasor.phasor_from_signal_fft" title="phasorpy.phasor.phasor_from_signal_fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_signal_fft()</span></code></a> reference implementation,
-this function does not use FFT, uses less memory, should be faster for
-few harmonics, supports out-of-order samples, and returns zeros instead
-of nan, inf, or excessively large values.</p>
-<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>), <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>), and
-<cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) are calculated from <span class="math notranslate nohighlight">\(K\)</span> samples of the
-signal <span class="math notranslate nohighlight">\(F\)</span> af <cite>harmonic</cite> <span class="math notranslate nohighlight">\(h\)</span> according to:</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}F_{DC} &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}\\G &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
-\cos{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\\S &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
-\sin{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\end{aligned}\end{align} \]</div>
-<dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ValueError</strong> – The <cite>signal</cite> has less than three samples along <cite>axis</cite>.
@@ -1533,69 +1523,35 @@ signal <span class="math notranslate nohighlight">\(F\)</span> af <cite>harmonic
 </ul>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_to_signal</span></code></a>, <a class="reference internal" href="../tutorials/benchmarks/phasorpy_phasor_from_signal.html#sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"><span class="std std-ref">Benchmark phasor_from_signal</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>), <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>), and
+<cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) are calculated from <span class="math notranslate nohighlight">\(K\ge3\)</span> samples of the
+signal <span class="math notranslate nohighlight">\(F\)</span> af <cite>harmonic</cite> <span class="math notranslate nohighlight">\(h\)</span> according to:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}F_{DC} &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}\\G &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
+\cos{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\\S &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
+\sin{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\end{aligned}\end{align} \]</div>
+<p>If <span class="math notranslate nohighlight">\(F_{DC} = 0\)</span>, the phasor coordinates are undefined
+(<span class="math notranslate nohighlight">\(NaN\)</span> or <span class="math notranslate nohighlight">\(\infty\)</span>).
+Use <cite>NaN</cite>-aware software to further process the phasor coordinates.</p>
+<p>The phasor coordinates may be zero, for example, in case of only constant
+background in time-resolved signals, or as the result of linear
+combination of non-zero spectral phasors coordinates.</p>
 <p class="rubric">Examples</p>
 <p>Calculate phasor coordinates of a phase-shifted sinusoidal waveform:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sample_phase</span> <span class="o">-</span> <span class="mf">0.785398</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">0.707107</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_signal</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">signal</span><span class="p">,</span> <span class="n">sample_phase</span><span class="o">=</span><span class="n">sample_phase</span>
-<span class="gp">... </span><span class="p">)</span>  
-<span class="go">(1.1, 0.5, 0.5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>  
+<span class="go">(array(1.1), array(0.5), array(0.5))</span>
 </pre></div>
 </div>
 <p>The sinusoidal signal does not have a second harmonic component:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  
-<span class="go">(1.1, 0.0, 0.0)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_signal_fft">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal_fft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_from_signal_fft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal_fft" title="Link to this definition">#</a></dt>
-<dd><p>Return phasor coordinates from signal using fast Fourier transform.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>signal</strong> (<em>array_like</em>) – Frequency-domain, time-domain, or hyperspectral data.
-A minimum of three uniformly spaced samples are required along <cite>axis</cite>.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis over which to compute phasor coordinates.
-The default is the last axis (-1).</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonics to return.
-If <cite>‘all’</cite>, return all harmonics for <cite>signal</cite> samples along <cite>axis</cite>.
-Else, harmonics must be at least one and no larger than half the
-number of <cite>signal</cite> samples along <cite>axis</cite>.
-The default is the first harmonic (fundamental frequency).</p></li>
-<li><p><strong>rfft_func</strong> (<em>callable</em><em>, </em><em>optional</em>) – A drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.rfft</span></code>.
-For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.rfft</span></code> or <code class="docutils literal notranslate"><span class="pre">mkl_fft._numpy_fft.rfft</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>mean</strong> (<em>ndarray</em>) – Average of <cite>signal</cite> along <cite>axis</cite> (zero harmonic).</p></li>
-<li><p><strong>real</strong> (<em>ndarray</em>) – Real component of phasor coordinates at <cite>harmonic</cite> along <cite>axis</cite>.</p></li>
-<li><p><strong>imag</strong> (<em>ndarray</em>) – Imaginary component of phasor coordinates at <cite>harmonic</cite> along <cite>axis</cite>.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ValueError</strong> – <cite>signal</cite> has less than three samples along <cite>axis</cite>.</p></li>
-<li><p><strong>IndexError</strong> – <cite>harmonic</cite> is smaller than 1 or greater than half the samples along
-    <cite>axis</cite>.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal</span></code></a>, <a class="reference internal" href="../tutorials/benchmarks/phasorpy_phasor_from_signal.html#sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"><span class="std std-ref">Benchmark phasor_from_signal</span></a></p>
-</div>
-<p class="rubric">Examples</p>
-<p>Calculate phasor coordinates of a phase-shifted sinusoidal signal:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sample_phase</span> <span class="o">-</span> <span class="mf">0.785398</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">0.707107</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_signal_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>  
-<span class="go">(1.1, array([0.5, 0.0]), array([0.5, -0.0]))</span>
+<span class="go">(array(1.1), array(0.0), array(0.0))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1889,7 +1845,7 @@ projection on the principal plane:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_signal">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irfft_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_to_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_signal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_to_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_signal" title="Link to this definition">#</a></dt>
 <dd><p>Return signal from phasor coordinates using inverse Fourier transform.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1913,8 +1869,9 @@ The phasor coordinates of missing harmonics are zeroed
 if <cite>samples</cite> is greater than twice the number of harmonics.</p></li>
 <li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis at which to return signal samples.
 The default is the last axis (-1).</p></li>
-<li><p><strong>irfft_func</strong> (<em>callable</em><em>, </em><em>optional</em>) – A drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.irfft</span></code>.
-For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.irfft</span></code> or <code class="docutils literal notranslate"><span class="pre">mkl_fft._numpy_fft.irfft</span></code>.</p></li>
+<li><p><strong>irfft</strong> (<em>callable</em><em>, </em><em>optional</em>) – Drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.irfft</span></code>.
+For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.irfft</span></code> or <code class="docutils literal notranslate"><span class="pre">mkl_fft._numpy_fft.irfft</span></code>.
+Used to calculate the real inverse FFT.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1924,6 +1881,10 @@ For example, <code class="docutils literal notranslate"><span class="pre">scipy.
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal</span></code></a></p>
+</div>
 <p class="rubric">Examples</p>
 <p>Reconstruct exact signal from phasor coordinates at all harmonics:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1931,7 +1892,7 @@ For example, <code class="docutils literal notranslate"><span class="pre">scipy.
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span>
 <span class="go">array([2.2, 2.486, 0.8566, -0.4365, 0.3938])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_signal</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="o">*</span><span class="n">phasor_from_signal_fft</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">),</span>
 <span class="gp">... </span>    <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">samples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>  
@@ -2238,7 +2199,6 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_polar"><code class="docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_signal"><code class="docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_signal_fft"><code class="docutils literal notranslate"><span class="pre">phasor_from_signal_fft()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_multiply"><code class="docutils literal notranslate"><span class="pre">phasor_multiply()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_semicircle"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></li>
