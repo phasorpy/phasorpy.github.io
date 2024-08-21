@@ -1083,6 +1083,10 @@ multiplied by the number of dimensions of the input arrays.</p>
 <p class="rubric">Notes</p>
 <p>For now, only the median filter method is implemented.
 Additional filtering methods may be added in the future.</p>
+<p>The implementation of the median filter method is based on
+<code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>,
+which has undefined behavior if the input arrays contain <cite>NaN</cite> values.
+See <a class="reference external" href="https://github.com/phasorpy/phasorpy/issues/87">issue #87</a>.</p>
 <p class="rubric">Examples</p>
 <p>Apply three times a median filter with a kernel size of three:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_filter</span><span class="p">(</span>
@@ -1835,7 +1839,7 @@ are converted to polar coordinates <cite>phase</cite> (<span class="math notrans
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_principal_plane">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_principal_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/phasor.html#phasor_to_principal_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_principal_plane" title="Link to this definition">#</a></dt>
 <dd><p>Return multi-harmonic phasor coordinates projected onto principal plane.</p>
-<p>The Principal Component Analysis (PCA) is used to project
+<p>Principal Component Analysis (PCA) is used to project
 multi-harmonic phasor coordinates onto a plane, along which
 coordinate axes the phasor coordinates have the largest variations.</p>
 <p>The transformed coordinates are not phasor coordinates. However, the
@@ -1857,26 +1861,14 @@ of [1, 0] lies at [1, 0].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – X-coordinates of projected phasor coordinates.
 If not <cite>reorient</cite>, this is the coordinate on the first principal axis.
 The shape is <code class="docutils literal notranslate"><span class="pre">real.shape[1:]</span></code>.</p></li>
 <li><p><strong>y</strong> (<em>ndarray</em>) – Y-coordinates of projected phasor coordinates.
 If not <cite>reorient</cite>, this is the coordinate on the second principal axis.</p></li>
 <li><p><strong>transformation_matrix</strong> (<em>ndarray</em>) – Affine transformation matrix used to project phasor coordinates.
-The shape is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">real.shape[0])</span></code>.
-The matrix can be used to project multi-harmonic phasor coordinates,
-where the first axis is the frequency:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
-        <span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-        <span class="n">imag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-    <span class="p">),</span>
-    <span class="n">transformation_matrix</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-</pre></div>
-</div>
-</li>
+The shape is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">real.shape[0])</span></code>.</p></li>
 </ul>
 </p>
 </dd>
@@ -1886,6 +1878,19 @@ where the first axis is the frequency:</p>
 <p><a class="reference internal" href="../tutorials/phasorpy_pca.html#sphx-glr-tutorials-phasorpy-pca-py"><span class="std std-ref">Principal component analysis</span></a></p>
 </div>
 <p class="rubric">Notes</p>
+<p>This implementation does not work with coordinates containing
+undefined <cite>NaN</cite> values.</p>
+<p>The transformation matrix can be used to project multi-harmonic phasor
+coordinates, where the first axis is the frequency:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+        <span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">imag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">transformation_matrix</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+</div>
 <p>An application of PCA to full-harmonic phasor coordinates from MRI signals
 can be found in <a class="footnote-reference brackets" href="#id11" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
@@ -1955,6 +1960,9 @@ Used to calculate the real inverse FFT.</p></li>
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal</span></code></a></p>
 </div>
+<p class="rubric">Notes</p>
+<p>The reconstructed signal may be undefined if the input phasor coordinates
+or signal mean contain <cite>NaN</cite> values.</p>
 <p class="rubric">Examples</p>
 <p>Reconstruct exact signal from phasor coordinates at all harmonics:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

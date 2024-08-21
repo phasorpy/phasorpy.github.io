@@ -790,6 +790,7 @@ document.write(`
             <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
+        <span class="c1"># complex division by mean signal</span>
         <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
             <span class="n">real</span> <span class="o">/=</span> <span class="n">dc</span>
             <span class="n">imag</span> <span class="o">/=</span> <span class="n">dc</span>
@@ -897,6 +898,11 @@ document.write(`
 <span class="sd">    --------</span>
 <span class="sd">    phasorpy.phasor.phasor_from_signal</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The reconstructed signal may be undefined if the input phasor coordinates</span>
+<span class="sd">    or signal mean contain `NaN` values.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    Reconstruct exact signal from phasor coordinates at all harmonics:</span>
@@ -965,6 +971,7 @@ document.write(`
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
+    <span class="c1"># complex multiplication by mean signal</span>
     <span class="n">real</span> <span class="o">*=</span> <span class="n">mean</span>
     <span class="n">imag</span> <span class="o">*=</span> <span class="n">mean</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
@@ -2991,7 +2998,7 @@ document.write(`
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return multi-harmonic phasor coordinates projected onto principal plane.</span>
 
-<span class="sd">    The Principal Component Analysis (PCA) is used to project</span>
+<span class="sd">    Principal Component Analysis (PCA) is used to project</span>
 <span class="sd">    multi-harmonic phasor coordinates onto a plane, along which</span>
 <span class="sd">    coordinate axes the phasor coordinates have the largest variations.</span>
 
@@ -3027,16 +3034,6 @@ document.write(`
 <span class="sd">    transformation_matrix : ndarray</span>
 <span class="sd">        Affine transformation matrix used to project phasor coordinates.</span>
 <span class="sd">        The shape is ``(2, 2 * real.shape[0])``.</span>
-<span class="sd">        The matrix can be used to project multi-harmonic phasor coordinates,</span>
-<span class="sd">        where the first axis is the frequency::</span>
-
-<span class="sd">            x, y = numpy.dot(</span>
-<span class="sd">                numpy.vstack(</span>
-<span class="sd">                    real.reshape(real.shape[0], -1),</span>
-<span class="sd">                    imag.reshape(imag.shape[0], -1),</span>
-<span class="sd">                ),</span>
-<span class="sd">                transformation_matrix,</span>
-<span class="sd">            ).reshape(2, *real.shape[1:])</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -3044,6 +3041,22 @@ document.write(`
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
+
+<span class="sd">    This implementation does not work with coordinates containing</span>
+<span class="sd">    undefined `NaN` values.</span>
+
+<span class="sd">    The transformation matrix can be used to project multi-harmonic phasor</span>
+<span class="sd">    coordinates, where the first axis is the frequency:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        x, y = numpy.dot(</span>
+<span class="sd">            numpy.vstack(</span>
+<span class="sd">                real.reshape(real.shape[0], -1),</span>
+<span class="sd">                imag.reshape(imag.shape[0], -1),</span>
+<span class="sd">            ),</span>
+<span class="sd">            transformation_matrix,</span>
+<span class="sd">        ).reshape(2, *real.shape[1:])</span>
 
 <span class="sd">    An application of PCA to full-harmonic phasor coordinates from MRI signals</span>
 <span class="sd">    can be found in [1]_.</span>
@@ -3086,7 +3099,7 @@ document.write(`
     <span class="n">coordinates</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">))</span>
 
     <span class="c1"># vector of centered coordinates</span>
-    <span class="n">center</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">coordinates</span> <span class="o">-=</span> <span class="n">center</span>
 
     <span class="c1"># covariance matrix (scatter matrix would also work)</span>
@@ -3197,6 +3210,11 @@ document.write(`
 <span class="sd">    -----</span>
 <span class="sd">    For now, only the median filter method is implemented.</span>
 <span class="sd">    Additional filtering methods may be added in the future.</span>
+
+<span class="sd">    The implementation of the median filter method is based on</span>
+<span class="sd">    :py:func:`scipy.ndimage.median_filter`,</span>
+<span class="sd">    which has undefined behavior if the input arrays contain `NaN` values.</span>
+<span class="sd">    See `issue #87 &lt;https://github.com/phasorpy/phasorpy/issues/87&gt;`_.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
