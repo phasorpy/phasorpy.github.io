@@ -501,6 +501,7 @@ document.write(`
     <span class="n">_fraction_on_segment</span><span class="p">,</span>
     <span class="n">_is_inside_circle</span><span class="p">,</span>
     <span class="n">_is_inside_stadium</span><span class="p">,</span>
+    <span class="n">_segment_direction_and_length</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -596,7 +597,7 @@ document.write(`
     <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
     <span class="n">fractions</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return fractions of two or three components from phasor coordinates.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return fractions of two or three components from phasor coordinates.</span>
 
 <span class="sd">    The graphical method is based on moving circular cursors along the line</span>
 <span class="sd">    between pairs of components, and quantifying the phasors for each</span>
@@ -614,11 +615,14 @@ document.write(`
 <span class="sd">        Imaginary coordinates for two or three components.</span>
 <span class="sd">    radius: float, optional, default: 0.05</span>
 <span class="sd">        Radius of the cursor in phasor coordinates.</span>
-<span class="sd">    fractions: array_like or int, optional, default: 100</span>
+<span class="sd">    fractions: array_like or int, optional</span>
 <span class="sd">        Number of equidistant fractions, or 1D array of fraction values.</span>
 <span class="sd">        Fraction values must be in range [0.0, 1.0].</span>
 <span class="sd">        If an integer, ``numpy.linspace(0.0, 1.0, fractions)`` fraction values</span>
 <span class="sd">        are used.</span>
+<span class="sd">        If None (default), the number of fractions is determined from the</span>
+<span class="sd">        longest distance between any pair of components and the radius of</span>
+<span class="sd">        the cursor (see Notes below).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -645,6 +649,20 @@ document.write(`
 <span class="sd">    be analyzed and will be broadcasted to all channels/frequencies.</span>
 
 <span class="sd">    The graphical method was first introduced in [1]_.</span>
+
+<span class="sd">    If no `fractions` are provided, the number of fractions (:math:`N`) used</span>
+<span class="sd">    is determined from the longest distance between any pair of components</span>
+<span class="sd">    (:math:`D`) and the radius of the cursor (:math:`R`):</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        N = \frac{2 \cdot D}{R} + 1</span>
+
+<span class="sd">    The fractions can be retrieved by:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        fractions = numpy.linspace(0.0, 1.0, len(counts[0]))</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -696,7 +714,22 @@ document.write(`
     <span class="k">if</span> <span class="n">num_components</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;number of components must be 2 or 3&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">fractions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">longest_distance</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_components</span><span class="p">):</span>
+            <span class="n">a_real</span> <span class="o">=</span> <span class="n">components_real</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">a_imag</span> <span class="o">=</span> <span class="n">components_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_components</span><span class="p">):</span>
+                <span class="n">b_real</span> <span class="o">=</span> <span class="n">components_real</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">b_imag</span> <span class="o">=</span> <span class="n">components_imag</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">_segment_direction_and_length</span><span class="p">(</span>
+                    <span class="n">a_real</span><span class="p">,</span> <span class="n">a_imag</span><span class="p">,</span> <span class="n">b_real</span><span class="p">,</span> <span class="n">b_imag</span>
+                <span class="p">)</span>
+                <span class="n">longest_distance</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">longest_distance</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+        <span class="n">fractions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">longest_distance</span> <span class="o">/</span> <span class="p">(</span><span class="n">radius</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
         <span class="n">fractions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">fractions</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fractions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fractions</span><span class="p">)</span>
