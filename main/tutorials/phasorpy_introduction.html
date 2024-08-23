@@ -47,10 +47,11 @@
     <script src="../_static/tabs.js?v=3ee01567"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/phasorpy_introduction';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Förster Resonance Energy Transfer" href="phasorpy_fret.html" />
+    <link rel="next" title="LFD Workshop FLIM Tutorial" href="phasorpy_lfd_workshop.html" />
     <link rel="prev" title="Tutorials" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -416,16 +417,20 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to PhasorPy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_fret.html">Förster Resonance Energy Transfer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_pca.html">Principal component analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_cursors.html">Cursors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_lifetime_to_signal.html">Synthesize signals from lifetimes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_phasorplot.html">Phasor plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="phasorpy_components.html">Component analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="phasorpy_lfd_workshop.html">LFD Workshop FLIM Tutorial</a></li>
 </ul>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">Programming interface</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_fret.html">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_pca.html">Principal component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_cursors.html">Cursors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_phasor_from_lifetime.html">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_lifetime_to_signal.html">Synthesize signals from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_phasorplot.html">Phasor plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/phasorpy_components.html">Component analysis</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="applications/index.html">Applications</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="benchmarks/index.html">Benchmarks</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="benchmarks/phasorpy_phasor_from_signal.html">Benchmark phasor_from_signal</a></li>
 </ul>
@@ -496,6 +501,8 @@ document.write(`
 <p>An introduction to using the PhasorPy library.</p>
 <p>PhasorPy is an open-source Python library for the analysis of fluorescence
 lifetime and hyperspectral images using the <a class="reference internal" href="../phasor_approach.html"><span class="doc">Phasor approach</span></a>.</p>
+<p>Using the PhasorPy library requires familiarity with the phasor approach,
+image processing, array programming, and Python.</p>
 <section id="install-python">
 <h2>Install Python<a class="headerlink" href="#install-python" title="Link to this heading">#</a></h2>
 <p>An installation of Python version 3.10 or higher is required to use the
@@ -511,20 +518,20 @@ for an introduction to Python.</p>
 <h2>Install PhasorPy<a class="headerlink" href="#install-phasorpy" title="Link to this heading">#</a></h2>
 <p>To download and install the PhasorPy library and all its dependencies from
 the <a class="reference external" href="https://pypi.org/project/phasorpy/">Python Package Index</a> (PyPI),
-run the following command on a command prompt, shell or terminal:</p>
+run the following command on a command prompt, shell, or terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s2">&quot;phasorpy[all]&quot;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The PhasorPy library is in its early stages of development
-and has not yet been released to PyPI.
-The development version of PhasorPy can be <a class="reference external" href="https://packaging.python.org/en/latest/tutorials/installing-packages/">installed manually</a>,
-for example, using the binary wheels from <a class="reference external" href="https://github.com/phasorpy/phasorpy/actions/workflows/build_wheels.yml">GitHub Actions</a>,
-or the source code on GitHub (requires a C compiler):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">git</span>
-</pre></div>
+and has not yet been released to PyPI.</p>
 </div>
+<p>The development version of PhasorPy can be installed instead from the
+latest source code on GitHub. This requires a C compiler, such as
+XCode, Visual Studio, or gcc, to be installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
 </div>
 </section>
 <section id="import-phasorpy">
@@ -539,6 +546,16 @@ and print its version:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.1.dev
 </pre></div>
 </div>
+<p>Besides the phasorpy library, the <a class="reference external" href="https://numpy.org/">numpy</a> and
+<a class="reference external" href="https://matplotlib.org/">matplotlib</a> libraries are used for
+array computing and plotting throughout this tutorial:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">tifffile</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
+
+<span class="kn">from</span> <span class="nn">phasorpy.datasets</span> <span class="kn">import</span> <a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
+</pre></div>
+</div>
 </section>
 <section id="read-signal-from-file">
 <h2>Read signal from file<a class="headerlink" href="#read-signal-from-file" title="Link to this heading">#</a></h2>
@@ -548,12 +565,11 @@ single photon counting (TCSPC) histogram obtained at 80 MHz.</p>
 <p>The <a class="reference internal" href="../api/io.html#module-phasorpy.io" title="phasorpy.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.io</span></code></a> module provides many functions to read
 time-resolved and hyperspectral image and metadata from file formats used
 in microscopy. However, here the
-<a class="reference external" href="https://pypi.org/project/tifffile/">tifffile</a> library is used directly:</p>
+<a class="reference external" href="https://pypi.org/project/tifffile/">tifffile</a> library is used directly
+to read image stacks from files.</p>
+<p>The image data is referred to as the <code class="docutils literal notranslate"><span class="pre">signal</span></code> in the phasorpy library.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: use phasorpy.io function to read histogram and metadata from PTU file</span>
 
-<span class="kn">import</span> <span class="nn">tifffile</span>
-
-<span class="kn">from</span> <span class="nn">phasorpy.datasets</span> <span class="kn">import</span> <a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
 
 <span class="n">signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
 <span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>
@@ -574,26 +590,66 @@ in microscopy. However, here the
 <section id="calculate-phasor-coordinates">
 <h2>Calculate phasor coordinates<a class="headerlink" href="#calculate-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../api/phasor.html#module-phasorpy.phasor" title="phasorpy.phasor"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.phasor</span></code></a> module provides functions to calculate,
-convert, and correct phasor coordinates.</p>
-<p>Phasor coordinate are calculated from the signal, a TCSPC histogram in
-this case. The histogram samples are in the first dimension (<cite>axis=0</cite>):</p>
+calibrate, filter, and convert phasor coordinates.</p>
+<p>Phasor coordinates are the real and imaginary components of the complex
+numbers returned by a real forward Digital Fourier Transform (DFT)
+of a signal at certain harmonics, normalized by the mean intensity
+(the zeroth harmonic).
+Phasor coordinates are named <code class="docutils literal notranslate"><span class="pre">real</span></code> and <code class="docutils literal notranslate"><span class="pre">imag</span></code> in the phasorpy library.
+In literature and other software, they are also known as
+(<span class="math notranslate nohighlight">\(G\)</span>) and (<span class="math notranslate nohighlight">\(S\)</span>).</p>
+<p>Phasor coordinates of the first harmonic are calculated from the signal,
+a TCSPC histogram in this case.
+The histogram samples are in the first dimension (<cite>axis=0</cite>):</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>
 
 <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The phasor coordinates are undefined if the mean intensity is zero.
+In that case, the arrays contain special NaN (Not a Number) values,
+which are ignored in further analysis:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">real</span><span class="p">[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[        nan         nan -0.27292411         nan]
+ [        nan         nan  0.16095963         nan]
+ [        nan         nan  0.90096887         nan]
+ [        nan  0.6234898          nan         nan]]
+</pre></div>
+</div>
 <p>Plot the calculated phasor coordinates:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a>
 
-<a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Sample&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_introduction_002.png" srcset="../_images/sphx_glr_phasorpy_introduction_002.png" alt="mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
+<img src="../_images/sphx_glr_phasorpy_introduction_002.png" srcset="../_images/sphx_glr_phasorpy_introduction_002.png" alt="Sample, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>By default, only the phasor coordinates at the first harmonic are calculated.
+However, only when the phasor coordinates at all harmonics are considered
+(including the mean intensity) is the signal completely described:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_signal</span></a>
+
+<span class="n">phasor_all_harmonics</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="n">reconstructed_signal</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_signal</span></a><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_all_harmonics</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">reconstructed_signal</span><span class="p">),</span> <span class="n">signal</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="calibrate-phasor-coordinates">
 <h2>Calibrate phasor coordinates<a class="headerlink" href="#calibrate-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>Phasor coordinates from time-resolved measurements must be calibrated
-with coordinates obtained from a reference standard of known lifetime,
-acquired with the same instrument settings.</p>
+<p>The signals from time-resolved measurements are convoluted with an
+instrument response function, causing the phasor-coordinates to be
+phase shifted and modulated (scaled) by unknown amounts.
+The phasor coordinates must therefore be calibrated with coordinates
+obtained from a reference standard of known lifetime, acquired with
+the same instrument settings.</p>
+<p>In this case, a homogeneous solution of Fluorescein with a lifetime of
+4.2 ns was imaged.</p>
 <p>Read the signal of the reference measurement from a file:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
 </pre></div>
@@ -604,7 +660,13 @@ acquired with the same instrument settings.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Calibrate the raw phasor coordinates with the reference coordinates of known
+<p>Show the calculated reference phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span>
+    <span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Reference&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_003.png" srcset="../_images/sphx_glr_phasorpy_introduction_003.png" alt="Reference, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>Calibrate the raw phasor coordinates with the reference coordinates of known
 lifetime (Fluorescein, 4.2 ns):</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_calibrate" title="phasorpy.phasor.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a>
 
@@ -618,6 +680,12 @@ lifetime (Fluorescein, 4.2 ns):</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>Show the calibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_004.png" srcset="../_images/sphx_glr_phasorpy_introduction_004.png" alt="Calibrated, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>The phasor coordinates are now located in the first quadrant, except for
+those with low signal to noise level.</p>
 <p>If necessary, the calibration can be undone/reversed using the
 same reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_calibrate" title="phasorpy.phasor.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
@@ -629,13 +697,19 @@ same reference:</p>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
     <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">),</span>
+    <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="filter-phasor-coordinates">
 <h2>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Applying median filter to the calibrated phasor coordinates,
-often multiple times, improves contrast:</p>
+often multiple times, improves contrast and reduces noise:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_filter" title="phasorpy.phasor.phasor_filter" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_filter</span></a>
 
 <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_filter" title="phasorpy.phasor.phasor_filter" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_filter</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -645,10 +719,15 @@ often multiple times, improves contrast:</p>
 visualization of phasor coordinates:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a>
 
-<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_005.png" srcset="../_images/sphx_glr_phasorpy_introduction_005.png" alt="Calibrated, filtered phasor coordinates, mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
 <section id="plot-phasor-coordinates">
 <h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../api/plot.html#module-phasorpy.plot" title="phasorpy.plot"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.plot</span></code></a> module provides functions and classes for
@@ -657,24 +736,105 @@ plotting phasor and polar coordinates.</p>
 are commonly visualized as 2D histograms:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a>
 
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">phasorpy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PhasorPlot</span></a><span class="p">(</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasorplot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
 <span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_introduction_003.png" srcset="../_images/sphx_glr_phasorpy_introduction_003.png" alt="Calibrated, filtered phasor coordinates" class = "sphx-glr-single-img"/><p>For comparison, the uncalibrated, unfiltered phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates&#39;</span><span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">)</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.semicircle" title="phasorpy.plot.PhasorPlot.semicircle" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span></a><span class="p">()</span>
-<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<img src="../_images/sphx_glr_phasorpy_introduction_006.png" srcset="../_images/sphx_glr_phasorpy_introduction_006.png" alt="Calibrated, filtered phasor coordinates" class = "sphx-glr-single-img"/><p>The calibrated phasor coordinates of all pixels lie inside the universal
+semicircle (on which theoretically the phasor coordinates of all single
+exponential lifetimes are located).
+That means, all pixels contain mixtures of signals from multiple lifetime
+components.</p>
+<p>For comparison, the uncalibrated, unfiltered phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasorplot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates&#39;</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_phasorpy_introduction_004.png" srcset="../_images/sphx_glr_phasorpy_introduction_004.png" alt="Raw phasor coordinates" class = "sphx-glr-single-img"/></section>
-<section id="to-be-continued">
-<h2>To be continued<a class="headerlink" href="#to-be-continued" title="Link to this heading">#</a></h2>
+<img src="../_images/sphx_glr_phasorpy_introduction_007.png" srcset="../_images/sphx_glr_phasorpy_introduction_007.png" alt="Raw phasor coordinates" class = "sphx-glr-single-img"/></section>
+<section id="cursor-selection">
+<h2>Cursor selection<a class="headerlink" href="#cursor-selection" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
 </section>
+<section id="component-analysis">
+<h2>Component analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</section>
+<section id="spectral-phasors">
+<h2>Spectral phasors<a class="headerlink" href="#spectral-phasors" title="Link to this heading">#</a></h2>
+<p>Phasor coordinates can be calculated from hyperspectral images (acquired
+at many equidistant emission wavelengths) and processed in much the same
+way as time-resolved signals. Calibration is not necessary.</p>
+<p>Open a hyperspectral dataset acquired with a laser scanning microscope:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.io</span> <span class="kn">import</span> <a href="../api/io.html#phasorpy.io.read_lsm" title="phasorpy.io.read_lsm" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">read_lsm</span></a>
+
+<span class="n">signal</span> <span class="o">=</span> <a href="../api/io.html#phasorpy.io.read_lsm" title="phasorpy.io.read_lsm" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">read_lsm</span></a><span class="p">(</span><a href="../api/datasets.html#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;paramecium.lsm&#39;</span><span class="p">))</span>
+
+<a href="../api/plot.html#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_signal_image</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hyperspectral image&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_008.png" srcset="../_images/sphx_glr_phasorpy_introduction_008.png" alt="Hyperspectral image, mean, axis 0, mean" class = "sphx-glr-single-img"/><p>Calculate phasor coordinates at the first harmonic and filter out
+pixels with low intensities:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../api/phasor.html#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the phasor coordinates as a two-dimensional histogram and select two
+clusters in the phasor plot by means of elliptical cursors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a>
+
+<span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">]</span>
+<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.74</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">]</span>
+<span class="n">radius_minor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
+
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasorplot</span></a> <span class="o">=</span> <a href="../api/plot.html#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spectral phasor plot&#39;</span><span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
+    <a href="../api/plot.html#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span>
+        <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><a href="../api/color.html#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+<a href="../api/plot.html#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_009.png" srcset="../_images/sphx_glr_phasorpy_introduction_009.png" alt="Spectral phasor plot" class = "sphx-glr-single-img"/><p>Use the elliptic cursors to mask regions of interest in the phasor space:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <a href="../api/cursors.html#phasorpy.cursors.mask_from_elliptic_cursor" title="phasorpy.cursors.mask_from_elliptic_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_elliptic_cursor</span></a>
+
+<span class="n">elliptic_masks</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.mask_from_elliptic_cursor" title="phasorpy.cursors.mask_from_elliptic_cursor" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">mask_from_elliptic_cursor</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">cursors_real</span><span class="p">,</span>
+    <span class="n">cursors_imag</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+    <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot a pseudo-color image, composited from the elliptic cursor masks and
+the mean intensity image:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a>
+
+<span class="n">pseudo_color_image</span> <span class="o">=</span> <a href="../api/cursors.html#phasorpy.cursors.pseudo_color" title="phasorpy.cursors.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursors sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">elliptic_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_phasorpy_introduction_010.png" srcset="../_images/sphx_glr_phasorpy_introduction_010.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
 <section id="appendix">
 <h2>Appendix<a class="headerlink" href="#appendix" title="Link to this heading">#</a></h2>
 <p>Print information about Python interpreter and installed packages:</p>
@@ -699,8 +859,9 @@ click-8.1.7
 pooch-v1.8.2
 </pre></div>
 </div>
-<p>sphinx_gallery_thumbnail_number = 3</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.212 seconds)</p>
+<p>sphinx_gallery_thumbnail_number = -5
+mypy: disable-error-code=”arg-type”</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 36.476 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>
@@ -736,11 +897,11 @@ pooch-v1.8.2
       </div>
     </a>
     <a class="right-next"
-       href="phasorpy_fret.html"
+       href="phasorpy_lfd_workshop.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Förster Resonance Energy Transfer</p>
+        <p class="prev-next-title">LFD Workshop FLIM Tutorial</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -770,7 +931,9 @@ pooch-v1.8.2
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrate-phasor-coordinates">Calibrate phasor coordinates</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-phasor-coordinates">Filter phasor coordinates</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-phasor-coordinates">Plot phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-be-continued">To be continued</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cursor-selection">Cursor selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-analysis">Component analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-phasors">Spectral phasors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix">Appendix</a></li>
 </ul>
   </nav></div>
