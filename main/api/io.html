@@ -425,6 +425,11 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">phasorpy.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">phasorpy.utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">Command line interface</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="_private/index.html">Private modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="_private/_utils.html">phasorpy._utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="_private/_phasorpy.html">phasorpy._phasorpy</a></li>
+</ul>
+</details></li>
 </ul>
 </div>
 </nav></div>
@@ -487,11 +492,17 @@ document.write(`
 <p>Read and write time-resolved and hyperspectral image file formats.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.io</span></code> module provides functions to:</p>
 <ul>
-<li><p>store phasor coordinate images to OME-TIFF files for import in
-Bio-Formats and Fiji:</p>
+<li><p>read and write phasor coordinate images in OME-TIFF format, which can be
+imported in Bio-Formats and Fiji:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_to_ometiff" title="phasorpy.io.phasor_to_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_ometiff()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_ometiff" title="phasorpy.io.phasor_from_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_ometiff()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>read and write phasor coordinate images in SimFCS referenced R64 format:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#phasorpy.io.phasor_to_simfcs_referenced" title="phasorpy.io.phasor_to_simfcs_referenced"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_simfcs_referenced()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_simfcs_referenced()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>read time-resolved and hyperspectral image data and metadata (as relevant
@@ -503,8 +514,6 @@ to phasor analysis) from many file formats used in bio-imaging:</p>
 <li><p><a class="reference internal" href="#phasorpy.io.read_ptu" title="phasorpy.io.read_ptu"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_ptu()</span></code></a> - PicoQuant PTU</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_fbd" title="phasorpy.io.read_fbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_fbd()</span></code></a> - FLIMbox FBD</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_flif" title="phasorpy.io.read_flif"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_flif()</span></code></a> - FlimFast FLIF</p></li>
-<li><p><a class="reference internal" href="#phasorpy.io.read_ref" title="phasorpy.io.read_ref"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_ref()</span></code></a> - SimFCS REF</p></li>
-<li><p><a class="reference internal" href="#phasorpy.io.read_r64" title="phasorpy.io.read_r64"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_r64()</span></code></a> - SimFCS R64</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_b64" title="phasorpy.io.read_b64"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_b64()</span></code></a> - SimFCS B64</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_z64" title="phasorpy.io.read_z64"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_z64()</span></code></a> - SimFCS Z64</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_bhz" title="phasorpy.io.read_bhz"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_bhz()</span></code></a> - SimFCS BHZ</p></li>
@@ -578,7 +587,7 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'H'</span></code> : lifetime histogram (OME)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'E'</span></code> : lambda (OME. Excitation wavelength)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'F'</span></code> : frequency (ISS)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'Q'</span></code> : other (OME)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'Q'</span></code> : other (OME. Harmonics in PhasorPy TIFF)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'L'</span></code> : exposure (FluoView)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'V'</span></code> : event (FluoView)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'M'</span></code> : mosaic (LSM 6)</p></li>
@@ -595,8 +604,11 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>mean</strong> (<em>xarray.DataArray</em>) – Average intensity image.</p></li>
-<li><p><strong>real</strong> (<em>xarray.DataArray</em>) – Image of real component of phasor coordinates.</p></li>
+<li><p><strong>mean</strong> (<em>xarray.DataArray</em>) – Average intensity image.
+<code class="docutils literal notranslate"><span class="pre">mean.attrs['description']</span></code> contains the dataset description, if any.</p></li>
+<li><p><strong>real</strong> (<em>xarray.DataArray</em>) – Image of real component of phasor coordinates.
+<code class="docutils literal notranslate"><span class="pre">real.attrs['frequency']</span></code> contains the fundamental frequency, if any.
+<code class="docutils literal notranslate"><span class="pre">real.attrs['harmonic']</span></code> contains the harmonics present in the array.</p></li>
 <li><p><strong>imag</strong> (<em>xarray.DataArray</em>) – Image of imaginary component of phasor coordinates.</p></li>
 </ul>
 </p>
@@ -641,14 +653,62 @@ harmonics are present).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.phasor_from_simfcs_referenced">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_simfcs_referenced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_from_simfcs_referenced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_simfcs_referenced" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinate images from SimFCS referenced (REF, R64) file.</p>
+<p>SimFCS referenced REF and R64 files contain phasor coordinate images
+(encoded as phase and modulation) for two harmonics.
+Phasor coordinates from lifetime-resolved signals are calibrated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of REF or R64 file to read.</p></li>
+<li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonics to include in returned phasor coordinates.
+By default, only the first harmonic is returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Average intensity image.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Image of real component of phasor coordinates.
+Multiple harmonics, if any, are in the first axis.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Image of imaginary component of phasor coordinates.
+Multiple harmonics, if any, are in the first axis.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tifffile.LfdfileError</strong> – File is not a SimFCS REF or R64 file.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.io.phasor_to_simfcs_referenced" title="phasorpy.io.phasor_to_simfcs_referenced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.io.phasor_to_simfcs_referenced</span></code></a></p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_simfcs_referenced</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s1">&#39;_phasorpy.r64&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_simfcs_referenced</span><span class="p">(</span><span class="s1">&#39;_phasorpy.r64&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span>
+<span class="go">array([[...]], dtype=float32)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_to_ometiff">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_to_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_to_ometiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_to_ometiff" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_to_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_to_ometiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_to_ometiff" title="Link to this definition">#</a></dt>
 <dd><p>Write phasor coordinate images and metadata to OME-TIFF file.</p>
+<p>The OME-TIFF format is compatible with Bio-Formats and Fiji.</p>
 <p>By default, write phasor coordinates as single precision floating point
 values to separate image series.
 Write images larger than (1024, 1024) as (256, 256) tiles, datasets
 larger than 2 GB as BigTIFF, and datasets larger than 8 KB zlib-compressed.</p>
-<p>The OME-TIFF format is compatible with Bio-Formats and Fiji.</p>
+<p>This file format is experimental and might be incompatible with future
+versions of this library. It is intended for temporarily exchanging
+phasor coordinates with other software, not as a long-term storage
+solution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -673,6 +733,7 @@ Refer to the OME-TIFF model for allowed axes and their order.</p></li>
 <li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em>) – Floating point data type used to store phasor coordinates.
 The default is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, which has 6 digits of precision
 and maximizes compatibility with other software.</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Plain-text description of dataset. Write as OME dataset description.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to <code class="xref py py-class docutils literal notranslate"><span class="pre">tifffile.TiffWriter</span></code> and
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">tifffile.TiffWriter.write()</span></code>.
 For example, <code class="docutils literal notranslate"><span class="pre">compression=None</span></code> writes image data uncompressed.</p></li>
@@ -687,11 +748,57 @@ For example, <code class="docutils literal notranslate"><span class="pre">compre
 <p>Scalar or one-dimensional phasor coordinate arrays are written as images.</p>
 <p>The OME-TIFF format is specified in the
 <a class="reference external" href="https://ome-model.readthedocs.io/">OME Data Model and File Formats Documentation</a>.</p>
+<p>The <a class="reference external" href="https://ome-model.readthedocs.io/en/latest/developers/6d-7d-and-8d-storage.html">6D, 7D and 8D storage</a>
+extension is used to store multi-harmonic phasor coordinates.
+The modulo type for the first, harmonic dimension is “other”.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_ometiff</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="s1">&#39;_phasorpy.ome.tif&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;ZYX&#39;</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
 <span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.phasor_to_simfcs_referenced">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_to_simfcs_referenced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_to_simfcs_referenced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_to_simfcs_referenced" title="Link to this definition">#</a></dt>
+<dd><p>Write phasor coordinate images to SimFCS referenced R64 file(s).</p>
+<p>SimFCS referenced R64 files store square-shaped (commonly 256x256)
+images of the average intensity, and the calibrated phasor coordinates
+(encoded as phase and modulation) of two harmonics as ZIP-compressed,
+single precision floating point arrays.
+The file format does not support any metadata.</p>
+<p>Images with more than two dimensions or larger than square size are
+chunked to square-sized images and saved to separate files with
+a name pattern, for example, “filename_T099_Y256_X000.r64”.
+Images or chunks with less than two dimensions or smaller than square size
+are padded with NaN values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS referenced R64 file to write.
+The file extension must be <code class="docutils literal notranslate"><span class="pre">.r64</span></code>.</p></li>
+<li><p><strong>mean</strong> (<em>array_like</em>) – Average intensity image.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Image of real component of calibrated phasor coordinates.
+Multiple harmonics, if any, must be in the first dimension.
+Harmonics must be starting at and increasing by one.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Image of imaginary component of calibrated phasor coordinates.
+Multiple harmonics, if any, must be in the first dimension.
+Harmonics must be starting at and increasing by one.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of X and Y dimensions of square-sized images stored in file.
+By default, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">min(256,</span> <span class="pre">max(4,</span> <span class="pre">sizey,</span> <span class="pre">sizex))</span></code>.</p></li>
+<li><p><strong>axes</strong> (<em>str</em><em>, </em><em>optional</em>) – Character codes for <cite>mean</cite> dimensions used to format file names.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_simfcs_referenced</span></code></a></p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_simfcs_referenced</span><span class="p">(</span><span class="s1">&#39;_phasorpy.r64&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1086,98 +1193,6 @@ in <code class="docutils literal notranslate"><span class="pre">dtype</span></co
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.io.read_r64">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">read_r64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#read_r64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.read_r64" title="Link to this definition">#</a></dt>
-<dd><p>Return referenced lifetime data and metadata from SimFCS R64 file.</p>
-<p>R64 files contain referenced fluorescence lifetime image data:
-an average intensity image and lifetime polar coordinates for two
-harmonics. R64 files contain no metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS R64 file to read.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Referenced fluorescence lifetime polar coordinates.
-An array of five 256x256 images of type <code class="docutils literal notranslate"><span class="pre">float32</span></code>:</p>
-<ol class="arabic simple" start="0">
-<li><p>average intensity</p></li>
-<li><p>phase of 1st harmonic in degrees</p></li>
-<li><p>modulation of 1st harmonic normalized</p></li>
-<li><p>phase of 2nd harmonic in degrees</p></li>
-<li><p>modulation of 2nd harmonic normalized</p></li>
-</ol>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>xarray.DataArray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS R64 file.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">read_r64</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.r64&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">values</span>
-<span class="go">array(...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span>
-<span class="go">dtype(&#39;float32&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-<span class="go">(5, 256, 256)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
-<span class="go">(&#39;S&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array([&#39;mean&#39;, &#39;phase&#39;, &#39;modulation&#39;, &#39;phase2&#39;, &#39;modulation2&#39;],...</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.io.read_ref">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">read_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#read_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.read_ref" title="Link to this definition">#</a></dt>
-<dd><p>Return referenced lifetime data and metadata from SimFCS REF file.</p>
-<p>REF files contain referenced fluorescence lifetime image data:
-an average intensity image and lifetime polar coordinates for two
-harmonics. REF files contain no metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS REF file to read.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Referenced fluorescence lifetime polar coordinates.
-An array of five 256x256 images of type <code class="docutils literal notranslate"><span class="pre">float32</span></code>:</p>
-<ol class="arabic simple" start="0">
-<li><p>average intensity</p></li>
-<li><p>phase of 1st harmonic in degrees</p></li>
-<li><p>modulation of 1st harmonic normalized</p></li>
-<li><p>phase of 2nd harmonic in degrees</p></li>
-<li><p>modulation of 2nd harmonic normalized</p></li>
-</ol>
-</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>xarray.DataArray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS REF file.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">read_ref</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.ref&#39;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">values</span>
-<span class="go">array(...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span>
-<span class="go">dtype(&#39;float32&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
-<span class="go">(5, 256, 256)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
-<span class="go">(&#39;S&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array([&#39;mean&#39;, &#39;phase&#39;, &#39;modulation&#39;, &#39;phase2&#39;, &#39;modulation2&#39;],...</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.read_sdt">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">read_sdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#read_sdt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.read_sdt" title="Link to this definition">#</a></dt>
 <dd><p>Return time-resolved image and metadata from Becker &amp; Hickl SDT file.</p>
@@ -1310,7 +1325,9 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_ometiff"><code class="docutils literal notranslate"><span class="pre">phasor_from_ometiff()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_simfcs_referenced"><code class="docutils literal notranslate"><span class="pre">phasor_from_simfcs_referenced()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_to_ometiff"><code class="docutils literal notranslate"><span class="pre">phasor_to_ometiff()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_to_simfcs_referenced"><code class="docutils literal notranslate"><span class="pre">phasor_to_simfcs_referenced()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_b64"><code class="docutils literal notranslate"><span class="pre">read_b64()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_bh"><code class="docutils literal notranslate"><span class="pre">read_bh()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_bhz"><code class="docutils literal notranslate"><span class="pre">read_bhz()</span></code></a></li>
@@ -1319,8 +1336,6 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_ifli"><code class="docutils literal notranslate"><span class="pre">read_ifli()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_lsm"><code class="docutils literal notranslate"><span class="pre">read_lsm()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_ptu"><code class="docutils literal notranslate"><span class="pre">read_ptu()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_r64"><code class="docutils literal notranslate"><span class="pre">read_r64()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_ref"><code class="docutils literal notranslate"><span class="pre">read_ref()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_sdt"><code class="docutils literal notranslate"><span class="pre">read_sdt()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_z64"><code class="docutils literal notranslate"><span class="pre">read_z64()</span></code></a></li>
 </ul>

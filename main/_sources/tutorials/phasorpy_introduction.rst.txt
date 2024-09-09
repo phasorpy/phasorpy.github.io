@@ -98,7 +98,7 @@ and print its version:
 
 .. GENERATED FROM PYTHON SOURCE LINES 63-66
 
-Besides the phasorpy library, the `numpy <https://numpy.org/>`_ and
+Besides the PhasorPy library, the `numpy <https://numpy.org/>`_ and
 `matplotlib <https://matplotlib.org/>`_ libraries are used for
 array computing and plotting throughout this tutorial:
 
@@ -108,7 +108,7 @@ array computing and plotting throughout this tutorial:
 
 
     import numpy
-    import tifffile
+    import tifffile  # TODO: from phasorpy.io import read_ometiff
     from matplotlib import pyplot
 
     from phasorpy.datasets import fetch
@@ -120,33 +120,34 @@ array computing and plotting throughout this tutorial:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-88
+.. GENERATED FROM PYTHON SOURCE LINES 74-91
 
 Read signal from file
 ---------------------
 
+The :py:mod:`phasorpy.io` module provides functions to read time-resolved
+and hyperspectral image stacks and metadata from many file formats used
+in microscopy, for example PicoQuant PTU, OME-TIFF, Zeiss LSM, and files
+written by SimFCS software.
+However, any other means that yields image stacks in numpy-array compatible
+form can be used instead.
+Image stacks, which may have any number of dimensions, are referred to as
+``signal`` in the PhasorPy library.
+
 The :py:mod:`phasorpy.datasets` module provides access to various sample
-files, for example, a TIFF file containing a time-correlated
-single photon counting (TCSPC) histogram obtained at 80 MHz.
+files. For example, an Imspector TIFF file from the
+`FLUTE <https://zenodo.org/records/8046636>`_  project containing a
+time-correlated single photon counting (TCSPC) histogram
+of a zebrafish embryo at day 3, acquired at 80 MHz:
 
-The :py:mod:`phasorpy.io` module provides many functions to read
-time-resolved and hyperspectral image and metadata from file formats used
-in microscopy. However, here the
-`tifffile <https://pypi.org/project/tifffile/>`_ library is used directly
-to read image stacks from files.
-
-The image data is referred to as the ``signal`` in the phasorpy library.
-
-.. GENERATED FROM PYTHON SOURCE LINES 88-97
+.. GENERATED FROM PYTHON SOURCE LINES 91-98
 
 .. code-block:: Python
 
 
-    # TODO: use phasorpy.io function to read histogram and metadata from PTU file
-
 
     signal = tifffile.imread(fetch('Embryo.tif'))
-    frequency = 80.0
+    frequency = 80.11  # MHz; from the XML metadata in the file
 
     print(signal.shape, signal.dtype)
 
@@ -163,11 +164,11 @@ The image data is referred to as the ``signal`` in the phasorpy library.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-99
+.. GENERATED FROM PYTHON SOURCE LINES 99-100
 
 Plot the spatial and histogram averages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-104
+.. GENERATED FROM PYTHON SOURCE LINES 100-105
 
 .. code-block:: Python
 
@@ -188,7 +189,7 @@ Plot the spatial and histogram averages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-122
+.. GENERATED FROM PYTHON SOURCE LINES 106-123
 
 Calculate phasor coordinates
 ----------------------------
@@ -198,17 +199,17 @@ calibrate, filter, and convert phasor coordinates.
 
 Phasor coordinates are the real and imaginary components of the complex
 numbers returned by a real forward Digital Fourier Transform (DFT)
-of a signal at certain harmonics, normalized by the mean intensity
-(the zeroth harmonic).
-Phasor coordinates are named ``real`` and ``imag`` in the phasorpy library.
+of a signal at certain harmonics (multiples of the fundamental frequency),
+normalized by the mean intensity (the zeroth harmonic).
+Phasor coordinates are named ``real`` and ``imag`` in the PhasorPy library.
 In literature and other software, they are also known as
-(:math:`G`) and (:math:`S`).
+:math:`G` and :math:`S` or :math:`a` and :math:`b` (as in :math:`a + bi`).
 
 Phasor coordinates of the first harmonic are calculated from the signal,
 a TCSPC histogram in this case.
 The histogram samples are in the first dimension (`axis=0`):
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 123-128
 
 .. code-block:: Python
 
@@ -224,13 +225,13 @@ The histogram samples are in the first dimension (`axis=0`):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-131
+.. GENERATED FROM PYTHON SOURCE LINES 129-132
 
 The phasor coordinates are undefined if the mean intensity is zero.
 In that case, the arrays contain special ``NaN`` (Not a Number) values,
 which are ignored in further analysis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-134
+.. GENERATED FROM PYTHON SOURCE LINES 132-135
 
 .. code-block:: Python
 
@@ -253,11 +254,11 @@ which are ignored in further analysis:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-136
+.. GENERATED FROM PYTHON SOURCE LINES 136-137
 
 Plot the calculated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-141
+.. GENERATED FROM PYTHON SOURCE LINES 137-142
 
 .. code-block:: Python
 
@@ -278,13 +279,13 @@ Plot the calculated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-145
+.. GENERATED FROM PYTHON SOURCE LINES 143-146
 
 By default, only the phasor coordinates at the first harmonic are calculated.
 However, only when the phasor coordinates at all harmonics are considered
 (including the mean intensity) is the signal completely described:
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-157
+.. GENERATED FROM PYTHON SOURCE LINES 146-158
 
 .. code-block:: Python
 
@@ -307,14 +308,14 @@ However, only when the phasor coordinates at all harmonics are considered
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-172
+.. GENERATED FROM PYTHON SOURCE LINES 159-173
 
 Calibrate phasor coordinates
 ----------------------------
 
 The signals from time-resolved measurements are convoluted with an
 instrument response function, causing the phasor-coordinates to be
-phase shifted and modulated (scaled) by unknown amounts.
+phase-shifted and modulated (scaled) by unknown amounts.
 The phasor coordinates must therefore be calibrated with coordinates
 obtained from a reference standard of known lifetime, acquired with
 the same instrument settings.
@@ -324,7 +325,7 @@ In this case, a homogeneous solution of Fluorescein with a lifetime of
 
 Read the signal of the reference measurement from a file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-175
+.. GENERATED FROM PYTHON SOURCE LINES 173-176
 
 .. code-block:: Python
 
@@ -338,11 +339,11 @@ Read the signal of the reference measurement from a file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-177
+.. GENERATED FROM PYTHON SOURCE LINES 177-178
 
 Calculate phasor coordinates from the measured reference signal:
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-182
+.. GENERATED FROM PYTHON SOURCE LINES 178-183
 
 .. code-block:: Python
 
@@ -358,11 +359,11 @@ Calculate phasor coordinates from the measured reference signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-184
+.. GENERATED FROM PYTHON SOURCE LINES 184-185
 
 Show the calculated reference phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-189
+.. GENERATED FROM PYTHON SOURCE LINES 185-190
 
 .. code-block:: Python
 
@@ -383,12 +384,12 @@ Show the calculated reference phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-192
+.. GENERATED FROM PYTHON SOURCE LINES 191-193
 
 Calibrate the raw phasor coordinates with the reference coordinates of known
 lifetime (Fluorescein, 4.2 ns):
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-204
+.. GENERATED FROM PYTHON SOURCE LINES 193-205
 
 .. code-block:: Python
 
@@ -411,11 +412,11 @@ lifetime (Fluorescein, 4.2 ns):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-206
+.. GENERATED FROM PYTHON SOURCE LINES 206-207
 
 Show the calibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-209
+.. GENERATED FROM PYTHON SOURCE LINES 207-210
 
 .. code-block:: Python
 
@@ -434,15 +435,15 @@ Show the calibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-215
+.. GENERATED FROM PYTHON SOURCE LINES 211-216
 
 The phasor coordinates are now located in the first quadrant, except for
-those with low signal to noise level.
+some with low signal to noise level.
 
 If necessary, the calibration can be undone/reversed using the
 same reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-232
+.. GENERATED FROM PYTHON SOURCE LINES 216-233
 
 .. code-block:: Python
 
@@ -470,7 +471,7 @@ same reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-238
+.. GENERATED FROM PYTHON SOURCE LINES 234-239
 
 Filter phasor coordinates
 -------------------------
@@ -478,7 +479,7 @@ Filter phasor coordinates
 Applying median filter to the calibrated phasor coordinates,
 often multiple times, improves contrast and reduces noise:
 
-.. GENERATED FROM PYTHON SOURCE LINES 238-243
+.. GENERATED FROM PYTHON SOURCE LINES 239-244
 
 .. code-block:: Python
 
@@ -494,12 +495,12 @@ often multiple times, improves contrast and reduces noise:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-246
+.. GENERATED FROM PYTHON SOURCE LINES 245-247
 
 Pixels with low intensities are commonly excluded from analysis and
 visualization of phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-251
+.. GENERATED FROM PYTHON SOURCE LINES 247-252
 
 .. code-block:: Python
 
@@ -515,7 +516,11 @@ visualization of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-257
+.. GENERATED FROM PYTHON SOURCE LINES 253-254
+
+Show the calibrated, filtered phasor coordinates:
+
+.. GENERATED FROM PYTHON SOURCE LINES 254-259
 
 .. code-block:: Python
 
@@ -536,7 +541,7 @@ visualization of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 258-267
+.. GENERATED FROM PYTHON SOURCE LINES 260-269
 
 Store phasor coordinates
 ------------------------
@@ -548,7 +553,7 @@ formatted files, which are compatible with Bio-Formats and Fiji.
 Write the calibrated and filtered phasor coordinates, and frequency to an
 OME-TIFF file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-274
+.. GENERATED FROM PYTHON SOURCE LINES 269-285
 
 .. code-block:: Python
 
@@ -556,7 +561,16 @@ OME-TIFF file:
     from phasorpy.io import phasor_from_ometiff, phasor_to_ometiff
 
     phasor_to_ometiff(
-        'phasors.ome.tif', mean, real, imag, frequency=frequency, harmonic=1
+        'phasors.ome.tif',
+        mean,
+        real,
+        imag,
+        frequency=frequency,
+        harmonic=1,
+        description=(
+            'Phasor coordinates of a zebrafish embryo at day 3, '
+            'calibrated, median-filtered, and thresholded.'
+        ),
     )
 
 
@@ -566,11 +580,11 @@ OME-TIFF file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 275-276
+.. GENERATED FROM PYTHON SOURCE LINES 286-287
 
 Read the phasor coordinates and metadata back from the OME-TIFF file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 276-284
+.. GENERATED FROM PYTHON SOURCE LINES 287-296
 
 .. code-block:: Python
 
@@ -581,6 +595,7 @@ Read the phasor coordinates and metadata back from the OME-TIFF file:
     assert real_.dtype == numpy.float32
     assert real_.attrs['frequency'] == frequency
     assert real_.attrs['harmonic'] == 1
+    assert mean_.attrs['description'].startswith('Phasor coordinates of')
 
 
 
@@ -589,11 +604,11 @@ Read the phasor coordinates and metadata back from the OME-TIFF file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 285-286
+.. GENERATED FROM PYTHON SOURCE LINES 297-298
 
-The functions transparently work with multi-harmonic phasor coordinates.
+The functions also transparently work with multi-harmonic phasor coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 288-296
+.. GENERATED FROM PYTHON SOURCE LINES 300-308
 
 Plot phasor coordinates
 -----------------------
@@ -604,7 +619,7 @@ plotting phasor and polar coordinates.
 Large number of phasor coordinates, such as obtained from imaging,
 are commonly visualized as 2D histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-305
+.. GENERATED FROM PYTHON SOURCE LINES 308-317
 
 .. code-block:: Python
 
@@ -629,7 +644,7 @@ are commonly visualized as 2D histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-311
+.. GENERATED FROM PYTHON SOURCE LINES 318-323
 
 The calibrated phasor coordinates of all pixels lie inside the universal
 semicircle (on which theoretically the phasor coordinates of all single
@@ -637,11 +652,11 @@ exponential lifetimes are located).
 That means, all pixels contain mixtures of signals from multiple lifetime
 components.
 
-.. GENERATED FROM PYTHON SOURCE LINES 313-314
+.. GENERATED FROM PYTHON SOURCE LINES 325-326
 
 For comparison, the uncalibrated, unfiltered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 314-319
+.. GENERATED FROM PYTHON SOURCE LINES 326-331
 
 .. code-block:: Python
 
@@ -662,12 +677,12 @@ For comparison, the uncalibrated, unfiltered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 320-322
+.. GENERATED FROM PYTHON SOURCE LINES 332-334
 
 Select phasor coordinates
 -------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 322-325
+.. GENERATED FROM PYTHON SOURCE LINES 334-337
 
 .. code-block:: Python
 
@@ -681,12 +696,12 @@ Select phasor coordinates
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-328
+.. GENERATED FROM PYTHON SOURCE LINES 338-340
 
 Component analysis
 ------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 328-331
+.. GENERATED FROM PYTHON SOURCE LINES 340-343
 
 .. code-block:: Python
 
@@ -700,7 +715,7 @@ Component analysis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 332-341
+.. GENERATED FROM PYTHON SOURCE LINES 344-353
 
 Spectral phasors
 ----------------
@@ -712,7 +727,7 @@ way as time-resolved signals. Calibration is not necessary.
 Open a hyperspectral dataset acquired with a laser scanning microscope
 at 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 341-348
+.. GENERATED FROM PYTHON SOURCE LINES 353-360
 
 .. code-block:: Python
 
@@ -735,12 +750,12 @@ at 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 349-351
+.. GENERATED FROM PYTHON SOURCE LINES 361-363
 
 Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-355
+.. GENERATED FROM PYTHON SOURCE LINES 363-367
 
 .. code-block:: Python
 
@@ -755,12 +770,12 @@ pixels with low intensities:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 356-358
+.. GENERATED FROM PYTHON SOURCE LINES 368-370
 
 Plot the phasor coordinates as a two-dimensional histogram and select two
 clusters in the phasor plot by means of elliptical cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 358-379
+.. GENERATED FROM PYTHON SOURCE LINES 370-391
 
 .. code-block:: Python
 
@@ -797,11 +812,11 @@ clusters in the phasor plot by means of elliptical cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 380-381
+.. GENERATED FROM PYTHON SOURCE LINES 392-393
 
 Use the elliptic cursors to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-393
+.. GENERATED FROM PYTHON SOURCE LINES 393-405
 
 .. code-block:: Python
 
@@ -824,12 +839,12 @@ Use the elliptic cursors to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 394-396
+.. GENERATED FROM PYTHON SOURCE LINES 406-408
 
 Plot a pseudo-color image, composited from the elliptic cursor masks and
 the mean intensity image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-406
+.. GENERATED FROM PYTHON SOURCE LINES 408-418
 
 .. code-block:: Python
 
@@ -855,14 +870,14 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 407-411
+.. GENERATED FROM PYTHON SOURCE LINES 419-423
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 411-414
+.. GENERATED FROM PYTHON SOURCE LINES 423-426
 
 .. code-block:: Python
 
@@ -897,7 +912,7 @@ Print information about Python interpreter and installed packages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-417
+.. GENERATED FROM PYTHON SOURCE LINES 427-429
 
 sphinx_gallery_thumbnail_number = -5
 mypy: disable-error-code="arg-type"
@@ -905,7 +920,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 50.228 seconds)
+   **Total running time of the script:** (0 minutes 14.066 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:

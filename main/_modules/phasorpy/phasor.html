@@ -606,6 +606,7 @@ document.write(`
     <span class="n">_polar_from_single_lifetime</span><span class="p">,</span>
     <span class="n">_polar_to_apparent_lifetime</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">parse_harmonic</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">number_threads</span>
 
 
@@ -745,7 +746,7 @@ document.write(`
     <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dtype</span><span class="si">=}</span><span class="s1"> not supported&#39;</span><span class="p">)</span>
 
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="n">_parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
     <span class="n">num_harmonics</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sample_phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -936,7 +937,7 @@ document.write(`
         <span class="n">samples_</span> <span class="o">=</span> <span class="n">samples</span>
 
     <span class="n">harmonic_</span> <span class="o">=</span> <span class="n">harmonic</span>
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">_parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples_</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples_</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">):</span>
         <span class="c1"># single axis contains harmonic</span>
@@ -1107,7 +1108,7 @@ document.write(`
     <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">harmonic</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
     <span class="n">all_hamonics</span> <span class="o">=</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span>
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 16&#39;</span><span class="p">)</span>
@@ -3514,9 +3515,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    real : numpy.ndarray</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Real components of phasor coordinates.</span>
-<span class="sd">    imag : numpy.ndarray</span>
+<span class="sd">    imag : ndarray</span>
 <span class="sd">        Imaginary components of phasor coordinates.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional arguments passed to :py:func:`numpy.nanmean`.</span>
@@ -3544,9 +3545,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    real : numpy.ndarray</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Real components of the phasor coordinates.</span>
-<span class="sd">    imag : numpy.ndarray</span>
+<span class="sd">    imag : ndarray</span>
 <span class="sd">        Imaginary components of the phasor coordinates.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional arguments passed to :py:func:`numpy.nanmedian`.</span>
@@ -3580,9 +3581,9 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    real : numpy.ndarray</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Real components of the phasor coordinates.</span>
-<span class="sd">    imag : numpy.ndarray</span>
+<span class="sd">    imag : ndarray</span>
 <span class="sd">        Imaginary components of the phasor coordinates.</span>
 <span class="sd">    repeat : int, optional</span>
 <span class="sd">        Number of times to apply filter. The default is 1.</span>
@@ -3654,50 +3655,6 @@ document.write(`
     <span class="n">skip_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">))</span>
     <span class="n">other_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">skip_axis</span><span class="p">,</span> <span class="n">other_axis</span>
-
-
-<span class="k">def</span> <span class="nf">_parse_harmonic</span><span class="p">(</span>
-    <span class="n">harmonic</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return parsed harmonic parameter.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    IndexError</span>
-<span class="sd">        Any element is out of range [1..harmonic_max].</span>
-<span class="sd">    TypeError</span>
-<span class="sd">        Any element is not an integer.</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        Elements are not unique.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 3&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">False</span>
-
-    <span class="n">harmonic_max</span> <span class="o">=</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">harmonic</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> out of range [1..</span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)],</span> <span class="kc">False</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">harmonic_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="kc">True</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=!r}</span><span class="s1"> is not a valid harmonic&#39;</span><span class="p">)</span>
-
-    <span class="n">h</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">harmonic</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s1">&#39;iu&#39;</span> <span class="ow">or</span> <span class="n">h</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element not an integer&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element out of range [1..</span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">}</span><span class="s1">]&#39;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">h</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> elements must be unique&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="kc">True</span>
 </pre></div>
 
                 </article>
