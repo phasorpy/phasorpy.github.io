@@ -771,12 +771,12 @@ document.write(`
         <span class="k">if</span> <span class="n">rfft</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">rfft</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span>
 
-        <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+        <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
 
         <span class="n">mean</span> <span class="o">=</span> <span class="n">fft</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
-        <span class="n">fft</span> <span class="o">=</span> <span class="n">fft</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">fft</span> <span class="o">=</span> <span class="n">fft</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
         <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">fft</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
         <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">fft</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">fft</span>
@@ -930,7 +930,7 @@ document.write(`
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">)</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">))</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c1"># harmonics are expected in the first axes of real and imag</span>
         <span class="n">samples_</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -977,7 +977,7 @@ document.write(`
     <span class="n">imag</span> <span class="o">*=</span> <span class="n">mean</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
 
-    <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+    <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
         <span class="p">(</span><span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">complex128</span>
     <span class="p">)</span>
     <span class="n">fft</span><span class="o">.</span><span class="n">real</span><span class="p">[[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mean</span>
@@ -987,7 +987,7 @@ document.write(`
     <span class="k">if</span> <span class="n">irfft</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">irfft</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">irfft</span>
 
-    <span class="n">signal</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">irfft</span><span class="p">(</span><span class="n">fft</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">irfft</span><span class="p">(</span><span class="n">fft</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">keepdims</span><span class="p">:</span>
         <span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
@@ -1359,7 +1359,9 @@ document.write(`
     <span class="c1">#     factor_real, factor_imag</span>
     <span class="c1"># )</span>
     <span class="c1"># return c.real, c.imag</span>
-    <span class="k">return</span> <span class="n">_phasor_multiply</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">factor_real</span><span class="p">,</span> <span class="n">factor_imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_multiply</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">factor_real</span><span class="p">,</span> <span class="n">factor_imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -1425,7 +1427,9 @@ document.write(`
     <span class="c1">#     divisor_real, divisor_imag</span>
     <span class="c1"># )</span>
     <span class="c1"># return c.real, c.imag</span>
-    <span class="k">return</span> <span class="n">_phasor_divide</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">divisor_real</span><span class="p">,</span> <span class="n">divisor_imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_divide</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">divisor_real</span><span class="p">,</span> <span class="n">divisor_imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -1697,13 +1701,15 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">modulation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_phasor_transform_const</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_phasor_transform_const</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
             <span class="n">real</span><span class="p">,</span>
             <span class="n">imag</span><span class="p">,</span>
             <span class="n">modulation</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">),</span>
             <span class="n">modulation</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">),</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">_phasor_transform</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_transform</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -1765,7 +1771,7 @@ document.write(`
 <span class="sd">    (0.0, 2.0)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_polar_from_reference_phasor</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">_polar_from_reference_phasor</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">measured_real</span><span class="p">,</span> <span class="n">measured_imag</span><span class="p">,</span> <span class="n">known_real</span><span class="p">,</span> <span class="n">known_imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
@@ -1818,7 +1824,7 @@ document.write(`
 <span class="sd">    (0.2, 3.25)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_polar_from_reference</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">_polar_from_reference</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">measured_phase</span><span class="p">,</span>
         <span class="n">measured_modulation</span><span class="p">,</span>
         <span class="n">known_phase</span><span class="p">,</span>
@@ -1879,7 +1885,9 @@ document.write(`
 <span class="sd">    (array([0, 0.7854, 1.571]), array([1, 0.7071, 1]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_phasor_to_polar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_to_polar</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -1936,7 +1944,9 @@ document.write(`
 <span class="sd">    (array([1, 0.5, 0.0]), array([0, 0.5, 1]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_phasor_from_polar</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_from_polar</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -2021,7 +2031,9 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
-    <span class="k">return</span> <span class="n">_phasor_to_apparent_lifetime</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_to_apparent_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -2107,8 +2119,10 @@ document.write(`
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">if</span> <span class="n">modulation_lifetime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_phasor_from_single_lifetime</span><span class="p">(</span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_phasor_from_apparent_lifetime</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_phasor_from_single_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+            <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_phasor_from_apparent_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
@@ -2391,7 +2405,9 @@ document.write(`
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">other_harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;invalid other_harmonic&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">_phasor_at_harmonic</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">harmonic</span><span class="p">,</span> <span class="n">other_harmonic</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_phasor_at_harmonic</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">harmonic</span><span class="p">,</span> <span class="n">other_harmonic</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -2684,7 +2700,9 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
-    <span class="k">return</span> <span class="n">_polar_to_apparent_lifetime</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">_polar_to_apparent_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
@@ -2758,8 +2776,10 @@ document.write(`
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
     <span class="k">if</span> <span class="n">modulation_lifetime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_polar_from_single_lifetime</span><span class="p">(</span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_polar_from_apparent_lifetime</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">_polar_from_single_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+            <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_polar_from_apparent_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
@@ -2851,7 +2871,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
-    <span class="k">return</span> <span class="n">_phasor_from_fret_donor</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">_phasor_from_fret_donor</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">omega</span><span class="p">,</span>
         <span class="n">donor_lifetime</span><span class="p">,</span>
         <span class="n">fret_efficiency</span><span class="p">,</span>
@@ -2972,7 +2992,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
     <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
-    <span class="k">return</span> <span class="n">_phasor_from_fret_acceptor</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">_phasor_from_fret_acceptor</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">omega</span><span class="p">,</span>
         <span class="n">donor_lifetime</span><span class="p">,</span>
         <span class="n">acceptor_lifetime</span><span class="p">,</span>
@@ -3398,7 +3418,9 @@ document.write(`
         <span class="n">threshold_mean_only</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">threshold_mean_only</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_phasor_threshold_nan</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_phasor_threshold_nan</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+            <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">threshold_mean_only</span><span class="p">:</span>
         <span class="n">mean_func</span> <span class="o">=</span> <span class="p">(</span>
@@ -3406,12 +3428,14 @@ document.write(`
             <span class="k">if</span> <span class="n">open_interval</span>
             <span class="k">else</span> <span class="n">_phasor_threshold_mean_closed</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">mean_func</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="p">,</span> <span class="n">mean_max</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_func</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+            <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="p">,</span> <span class="n">mean_max</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
 
     <span class="n">func</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">_phasor_threshold_open</span> <span class="k">if</span> <span class="n">open_interval</span> <span class="k">else</span> <span class="n">_phasor_threshold_closed</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">func</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">func</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">mean</span><span class="p">,</span>
         <span class="n">real</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">,</span>
