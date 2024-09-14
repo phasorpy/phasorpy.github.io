@@ -581,7 +581,9 @@ document.write(`
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># initialize empty phasor plot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">format_coord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_format_coord</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">format_coord</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore[method-assign]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_format_coord</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_semicircle_ticks</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1434,7 +1436,7 @@ document.write(`
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_on_format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_on_format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function to update coordinates displayed in toolbar.&quot;&quot;&quot;</span>
         <span class="n">phi</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span>
@@ -2045,8 +2047,9 @@ document.write(`
         <span class="n">gc0</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">gc</span><span class="p">)</span>
 
         <span class="c1"># TODO: this uses private methods of the base class</span>
-        <span class="n">gc0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_gc</span><span class="p">(</span><span class="n">gc0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gc</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="n">trans</span> <span class="o">=</span> <span class="n">affine</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset_transform</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">gc0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_gc</span><span class="p">(</span><span class="n">gc0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gc</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">affine</span>
+        <span class="n">trans</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset_transform</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
 
         <span class="n">font</span> <span class="o">=</span> <span class="n">FontProperties</span><span class="p">()</span>
         <span class="c1"># approximate half size of &#39;x&#39;</span>
