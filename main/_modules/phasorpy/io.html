@@ -672,12 +672,12 @@ document.write(`
 <span class="sd">    harmonic : int or sequence of int, optional</span>
 <span class="sd">        Harmonics present in the first dimension of `real` and `imag`, if any.</span>
 <span class="sd">        Write to image series named &#39;Phasor harmonic&#39;.</span>
-<span class="sd">        Only needed if harmonics are not starting at or increasing by one.</span>
+<span class="sd">        Only needed if harmonics are not starting at and increasing by one.</span>
 <span class="sd">    axes : str, optional</span>
 <span class="sd">        Character codes for `mean` image dimensions.</span>
 <span class="sd">        By default, the last dimensions are assumed to be &#39;TZCYX&#39;.</span>
-<span class="sd">        If harmonics are present in `real` and `imag`, the ``Q`` dimension</span>
-<span class="sd">        is prepended to axes for those arrays.</span>
+<span class="sd">        If harmonics are present in `real` and `imag`, an &quot;other&quot; (``Q``)</span>
+<span class="sd">        dimension is prepended to axes for those arrays.</span>
 <span class="sd">        Refer to the OME-TIFF model for allowed axes and their order.</span>
 <span class="sd">    dtype : dtype-like, optional</span>
 <span class="sd">        Floating point data type used to store phasor coordinates.</span>
@@ -832,25 +832,47 @@ document.write(`
 <span class="k">def</span> <span class="nf">phasor_from_ometiff</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DataArray</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor images and metadata from OME-TIFF written by PhasorPy.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of OME-TIFF file to read.</span>
+<span class="sd">    harmonic : int, sequence of int, or &#39;all&#39;, optional</span>
+<span class="sd">        Harmonic(s) to return from file.</span>
+<span class="sd">        If None (default), return the first harmonic stored in the file.</span>
+<span class="sd">        If `&#39;all&#39;`, return all harmonics as stored in file.</span>
+<span class="sd">        If a list, the first axes of the returned `real` and `imag` arrays</span>
+<span class="sd">        contain specified harmonic(s).</span>
+<span class="sd">        If an integer, the returned `real` and `imag` arrays are single</span>
+<span class="sd">        harmonic and have the same shape as `mean`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    mean : xarray.DataArray</span>
+<span class="sd">    mean : ndarray</span>
 <span class="sd">        Average intensity image.</span>
-<span class="sd">        ``mean.attrs[&#39;description&#39;]`` contains the dataset description, if any.</span>
-<span class="sd">    real : xarray.DataArray</span>
+<span class="sd">    real : ndarray</span>
 <span class="sd">        Image of real component of phasor coordinates.</span>
-<span class="sd">        ``real.attrs[&#39;frequency&#39;]`` contains the fundamental frequency, if any.</span>
-<span class="sd">        ``real.attrs[&#39;harmonic&#39;]`` contains the harmonics present in the array.</span>
-<span class="sd">    imag : xarray.DataArray</span>
+<span class="sd">    imag : ndarray</span>
 <span class="sd">        Image of imaginary component of phasor coordinates.</span>
+<span class="sd">    attrs : dict</span>
+<span class="sd">        Select metadata:</span>
+
+<span class="sd">        - ``&#39;axes&#39;`` (str):</span>
+<span class="sd">          Character codes for `mean` image dimensions.</span>
+<span class="sd">        - ``&#39;harmonic&#39;`` (int or list of int):</span>
+<span class="sd">          Harmonic(s) present in `real` and `imag`.</span>
+<span class="sd">          If a scalar, `real` and `imag` are single harmonic and contain no</span>
+<span class="sd">          harmonic axes.</span>
+<span class="sd">          If a list, `real` and `imag` contain one or more harmonics in the</span>
+<span class="sd">          first axis.</span>
+<span class="sd">        - ``&#39;frequency&#39;`` (float, optional):</span>
+<span class="sd">          Fundamental frequency of time-resolved phasor coordinates.</span>
+<span class="sd">        - ``&#39;description&#39;`` (str, optional):</span>
+<span class="sd">          OME dataset plain-text description.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -858,6 +880,8 @@ document.write(`
 <span class="sd">        File is not a TIFF file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not an OME-TIFF containing phasor coordinates.</span>
+<span class="sd">    IndexError</span>
+<span class="sd">        Requested harmonic is not found in file.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -866,12 +890,8 @@ document.write(`
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    Scalar or one-dimensional phasor coordinates stored in the file are</span>
-<span class="sd">    returned as two-dimensional images (tree-dimensional if multiple</span>
+<span class="sd">    returned as two-dimensional images (three-dimensional if multiple</span>
 <span class="sd">    harmonics are present).</span>
-
-<span class="sd">    The OME-TIFF format is specified in the</span>
-<span class="sd">    `OME Data Model and File Formats Documentation</span>
-<span class="sd">    &lt;https://ome-model.readthedocs.io/&gt;`_.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -879,23 +899,22 @@ document.write(`
 <span class="sd">    &gt;&gt;&gt; phasor_to_ometiff(</span>
 <span class="sd">    ...     &#39;_phasorpy.ome.tif&#39;, mean, real, imag, axes=&#39;ZYX&#39;, frequency=80.0</span>
 <span class="sd">    ... )</span>
-<span class="sd">    &gt;&gt;&gt; mean, real, imag = phasor_from_ometiff(&#39;_phasorpy.ome.tif&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; mean.data</span>
+<span class="sd">    &gt;&gt;&gt; mean, real, imag, attrs = phasor_from_ometiff(&#39;_phasorpy.ome.tif&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; mean</span>
 <span class="sd">    array(...)</span>
 <span class="sd">    &gt;&gt;&gt; mean.dtype</span>
 <span class="sd">    dtype(&#39;float32&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; mean.shape</span>
 <span class="sd">    (32, 32, 32)</span>
-<span class="sd">    &gt;&gt;&gt; mean.dims</span>
-<span class="sd">    (&#39;Z&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; real.attrs[&#39;frequency&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;axes&#39;]</span>
+<span class="sd">    &#39;ZYX&#39;</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;frequency&#39;]</span>
 <span class="sd">    80.0</span>
-<span class="sd">    &gt;&gt;&gt; real.attrs[&#39;harmonic&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;harmonic&#39;]</span>
 <span class="sd">    1</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">tifffile</span>
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -911,19 +930,20 @@ document.write(`
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s1"> is not an OME-TIFF containing phasor images&#39;</span>
             <span class="p">)</span>
 
+        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;axes&#39;</span><span class="p">:</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="p">}</span>
+
         <span class="c1"># TODO: read coords from OME-XML</span>
         <span class="n">ome_xml</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">ome_metadata</span>
         <span class="k">assert</span> <span class="n">ome_xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># TODO: parse OME-XML</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
             <span class="sa">r</span><span class="s1">&#39;&gt;&lt;Description&gt;(.*)&lt;/Description&gt;&lt;&#39;</span><span class="p">,</span>
             <span class="n">ome_xml</span><span class="p">,</span>
             <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">description</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&amp;amp;&#39;</span><span class="p">,</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&amp;gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">)</span>
@@ -932,9 +952,7 @@ document.write(`
 
         <span class="n">has_harmonic_dim</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span>
         <span class="n">nharmonics</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">has_harmonic_dim</span> <span class="k">else</span> <span class="mi">1</span>
-
-        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">coords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">maxharmonic</span> <span class="o">=</span> <span class="n">nharmonics</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">break</span>
@@ -945,46 +963,76 @@ document.write(`
             <span class="k">elif</span> <span class="n">series</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Phasor harmonic&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">has_harmonic_dim</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                    <span class="n">maxharmonic</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">has_harmonic_dim</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">nharmonics</span><span class="p">:</span>
                     <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-                    <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+                    <span class="n">maxharmonic</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s1">&#39;harmonic=</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s1"> does not match phasor &#39;</span>
                         <span class="sa">f</span><span class="s1">&#39;shape=</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
                     <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;Q&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
-                <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nharmonics</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-            <span class="k">if</span> <span class="s1">&#39;harmonic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
-                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="s1">&#39;harmonic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s1">&#39;harmonic&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nharmonics</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">harmonic_stored</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
 
-        <span class="n">series</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span>
-        <span class="p">)</span>
-        <span class="n">real</span> <span class="o">=</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">asarray</span><span class="p">(),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># first harmonic in file</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic_stored</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">harmonic_stored</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">harmonic_stored</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
+                <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
+                <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="c1"># all harmonics as stored in file</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># specified harmonics</span>
+            <span class="n">harmonic</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">maxharmonic</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic_stored</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">harmonic_stored</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">harmonic</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="p">[[</span><span class="n">harmonic_stored</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">harmonic</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;harmonic not found&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
 
-        <span class="n">series</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span>
-            <span class="n">series</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;imag&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span>
-        <span class="p">)</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">asarray</span><span class="p">(),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
-
-        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">}</span> <span class="k">if</span> <span class="n">description</span> <span class="k">else</span> <span class="p">{}</span>
-        <span class="n">series</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">series</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
-        <span class="n">mean</span> <span class="o">=</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">asarray</span><span class="p">(),</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">keepdims</span><span class="p">:</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">harmonic_stored</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">]</span>
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">harmonic_stored</span><span class="p">[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">keepdims</span><span class="p">:</span>
+                <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+                <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+                <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">harmonic_stored</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">real</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+                <span class="n">imag</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="p">:]</span> <span class="o">!=</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span><span class="p">:]</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span></div>
 
 
 
@@ -1146,7 +1194,7 @@ document.write(`
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of REF or R64 file to read.</span>
 <span class="sd">    harmonic : int or sequence of int, optional</span>
-<span class="sd">        Harmonics to include in returned phasor coordinates.</span>
+<span class="sd">        Harmonic(s) to include in returned phasor coordinates.</span>
 <span class="sd">        By default, only the first harmonic is returned.</span>
 
 <span class="sd">    Returns</span>
@@ -1162,7 +1210,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    tifffile.LfdfileError</span>
+<span class="sd">    lfdfiles.LfdfileError</span>
 <span class="sd">        File is not a SimFCS REF or R64 file.</span>
 
 <span class="sd">    See Also</span>
@@ -1358,7 +1406,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not an ISS IFLI file.</span>
 
 <span class="sd">    Examples</span>
@@ -1644,7 +1692,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a FlimFast FLIF file.</span>
 
 <span class="sd">    Examples</span>
@@ -1743,7 +1791,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a FLIMbox FBD file.</span>
 
 <span class="sd">    Examples</span>
@@ -1838,7 +1886,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS B64 file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File does not contain an image stack.</span>
@@ -1899,7 +1947,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS Z64 file.</span>
 
 <span class="sd">    Examples</span>
@@ -1952,7 +2000,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS B&amp;H file.</span>
 
 <span class="sd">    Examples</span>
@@ -2006,7 +2054,7 @@ document.write(`
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
-<span class="sd">    lfdfile.LfdFileError</span>
+<span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS BHZ file.</span>
 
 <span class="sd">    Examples</span>

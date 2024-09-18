@@ -596,20 +596,42 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_ometiff">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_from_ometiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_ometiff" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phasorpy/io.html#phasor_from_ometiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_ometiff" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor images and metadata from OME-TIFF written by PhasorPy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of OME-TIFF file to read.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of OME-TIFF file to read.</p></li>
+<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonic(s) to return from file.
+If None (default), return the first harmonic stored in the file.
+If <cite>‘all’</cite>, return all harmonics as stored in file.
+If a list, the first axes of the returned <cite>real</cite> and <cite>imag</cite> arrays
+contain specified harmonic(s).
+If an integer, the returned <cite>real</cite> and <cite>imag</cite> arrays are single
+harmonic and have the same shape as <cite>mean</cite>.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>mean</strong> (<em>xarray.DataArray</em>) – Average intensity image.
-<code class="docutils literal notranslate"><span class="pre">mean.attrs['description']</span></code> contains the dataset description, if any.</p></li>
-<li><p><strong>real</strong> (<em>xarray.DataArray</em>) – Image of real component of phasor coordinates.
-<code class="docutils literal notranslate"><span class="pre">real.attrs['frequency']</span></code> contains the fundamental frequency, if any.
-<code class="docutils literal notranslate"><span class="pre">real.attrs['harmonic']</span></code> contains the harmonics present in the array.</p></li>
-<li><p><strong>imag</strong> (<em>xarray.DataArray</em>) – Image of imaginary component of phasor coordinates.</p></li>
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Average intensity image.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Image of real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Image of imaginary component of phasor coordinates.</p></li>
+<li><p><strong>attrs</strong> (<em>dict</em>) – Select metadata:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'axes'</span></code> (str):
+Character codes for <cite>mean</cite> image dimensions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'harmonic'</span></code> (int or list of int):
+Harmonic(s) present in <cite>real</cite> and <cite>imag</cite>.
+If a scalar, <cite>real</cite> and <cite>imag</cite> are single harmonic and contain no
+harmonic axes.
+If a list, <cite>real</cite> and <cite>imag</cite> contain one or more harmonics in the
+first axis.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float, optional):
+Fundamental frequency of time-resolved phasor coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'description'</span></code> (str, optional):
+OME dataset plain-text description.</p></li>
+</ul>
+</li>
 </ul>
 </p>
 </dd>
@@ -617,6 +639,7 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tifffile.TiffFileError</strong> – File is not a TIFF file.</p></li>
 <li><p><strong>ValueError</strong> – File is not an OME-TIFF containing phasor coordinates.</p></li>
+<li><p><strong>IndexError</strong> – Requested harmonic is not found in file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -626,27 +649,25 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 </div>
 <p class="rubric">Notes</p>
 <p>Scalar or one-dimensional phasor coordinates stored in the file are
-returned as two-dimensional images (tree-dimensional if multiple
+returned as two-dimensional images (three-dimensional if multiple
 harmonics are present).</p>
-<p>The OME-TIFF format is specified in the
-<a class="reference external" href="https://ome-model.readthedocs.io/">OME Data Model and File Formats Documentation</a>.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_ometiff</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="s1">&#39;_phasorpy.ome.tif&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="s1">&#39;ZYX&#39;</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_ometiff</span><span class="p">(</span><span class="s1">&#39;_phasorpy.ome.tif&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="o">.</span><span class="n">data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_ometiff</span><span class="p">(</span><span class="s1">&#39;_phasorpy.ome.tif&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span>
 <span class="go">array(...)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="o">.</span><span class="n">dtype</span>
 <span class="go">dtype(&#39;float32&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span>
 <span class="go">(32, 32, 32)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="o">.</span><span class="n">dims</span>
-<span class="go">(&#39;Z&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">real</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;axes&#39;</span><span class="p">]</span>
+<span class="go">&#39;ZYX&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
 <span class="go">80.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">real</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
 <span class="go">1</span>
 </pre></div>
 </div>
@@ -663,7 +684,7 @@ Phasor coordinates from lifetime-resolved signals are calibrated.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of REF or R64 file to read.</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonics to include in returned phasor coordinates.
+<li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonic(s) to include in returned phasor coordinates.
 By default, only the first harmonic is returned.</p></li>
 </ul>
 </dd>
@@ -678,7 +699,7 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tifffile.LfdfileError</strong> – File is not a SimFCS REF or R64 file.</p>
+<dd class="field-odd"><p><strong>lfdfiles.LfdfileError</strong> – File is not a SimFCS REF or R64 file.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -724,11 +745,11 @@ Write to image series named ‘Phasor imag’.</p></li>
 Write to image series named ‘Phasor frequency’.</p></li>
 <li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonics present in the first dimension of <cite>real</cite> and <cite>imag</cite>, if any.
 Write to image series named ‘Phasor harmonic’.
-Only needed if harmonics are not starting at or increasing by one.</p></li>
+Only needed if harmonics are not starting at and increasing by one.</p></li>
 <li><p><strong>axes</strong> (<em>str</em><em>, </em><em>optional</em>) – Character codes for <cite>mean</cite> image dimensions.
 By default, the last dimensions are assumed to be ‘TZCYX’.
-If harmonics are present in <cite>real</cite> and <cite>imag</cite>, the <code class="docutils literal notranslate"><span class="pre">Q</span></code> dimension
-is prepended to axes for those arrays.
+If harmonics are present in <cite>real</cite> and <cite>imag</cite>, an “other” (<code class="docutils literal notranslate"><span class="pre">Q</span></code>)
+dimension is prepended to axes for those arrays.
 Refer to the OME-TIFF model for allowed axes and their order.</p></li>
 <li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em>) – Floating point data type used to store phasor coordinates.
 The default is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, which has 6 digits of precision
@@ -821,7 +842,7 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS B64 file.</p></li>
+<li><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS B64 file.</p></li>
 <li><p><strong>ValueError</strong> – File does not contain an image stack.</p></li>
 </ul>
 </dd>
@@ -861,7 +882,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS B&amp;H file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS B&amp;H file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -897,7 +918,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS BHZ file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS BHZ file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -950,7 +971,7 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a FLIMbox FBD file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a FLIMbox FBD file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -998,7 +1019,7 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a FlimFast FLIF file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a FlimFast FLIF file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1055,7 +1076,7 @@ frequencies.</p></li>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not an ISS IFLI file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not an ISS IFLI file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1259,7 +1280,7 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfile.LfdFileError</strong> – File is not a SimFCS Z64 file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS Z64 file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
