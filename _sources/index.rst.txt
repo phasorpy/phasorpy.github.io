@@ -10,16 +10,16 @@ lifetime and hyperspectral images using the phasor approach.
 Documentation
 =============
 
-The `PhasorPy documentation <docs/stable>`_ thorougly documents all aspects
+The `PhasorPy documentation <docs/stable/>`_ thorougly documents all aspects
 of the library, including:
 
 - `Tutorials <docs/stable/tutorials/>`_
 - `API reference <docs/stable/api/>`_
-- `Release notes <docs/stable/release.html>`_
-- `Contributing guide <docs/stable/contributing.html>`_
-- `Code of conduct <docs/stable/code_of_conduct.html>`_
-- `Acknowledgments <docs/stable/acknowledgments.html>`_
-- `License <docs/stable/license.html>`_
+- `Release notes <docs/stable/release/>`_
+- `Contributing guide <docs/stable/contributing/>`_
+- `Code of conduct <docs/stable/code_of_conduct/>`_
+- `Acknowledgments <docs/stable/acknowledgments/>`_
+- `License <docs/stable/license/>`_
 
 Resources
 =========
