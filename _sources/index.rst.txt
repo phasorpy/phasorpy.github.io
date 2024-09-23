@@ -48,7 +48,7 @@ The PhasorPy project will be presented at the following events:
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
-More :doc:`events/index`.
+More :doc:`events`.
 
 Index
 =====
@@ -56,5 +56,5 @@ Index
 .. toctree::
     :maxdepth: 1
 
-    docs/index
-    events/index
+    docs
+    events
