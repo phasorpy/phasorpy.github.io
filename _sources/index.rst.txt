@@ -22,6 +22,8 @@ of the library, including:
 - `Acknowledgments <docs/stable/acknowledgments/>`_
 - `MIT License <docs/stable/license/>`_
 
+All :doc:`docs`.
+
 Resources
 =========
 
@@ -131,11 +133,3 @@ The PhasorPy project is presented at the following events:
   <https://www.lfd.uci.edu/workshop/>`_.
   October 23-27, 2023. Laboratory for Fluorescence Dynamics,
   University of California, Irvine, USA.
-
-Index
-=====
-
-.. toctree::
-    :maxdepth: 1
-
-    docs

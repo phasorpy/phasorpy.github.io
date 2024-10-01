@@ -1,5 +1,7 @@
-Documentation
-=============
+:orphan:
 
-- `Stable (release) <stable/>`_
-- `Latest (development) <dev/>`_
+Documentation versions
+======================
+
+- `Development <dev/>`_
+- `0.1 (stable) <stable/>`_
