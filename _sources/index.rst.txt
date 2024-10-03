@@ -28,9 +28,9 @@ Resources
 =========
 
 - `Source code <https://github.com/phasorpy/phasorpy>`_ is maintained on GitHub.com.
-- `Download releases <https://pypi.org/project/phasorpy/>`_ from PyPI.org. 
+- `Download releases <https://pypi.org/project/phasorpy/>`_ from PyPI.org.
 - `Data files <https://zenodo.org/communities/phasorpy>`_ are shared on Zenodo.org.
-- `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`_ on the GitHub issue tracker. 
+- `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`_ on the GitHub issue tracker.
 
 News
 ====
@@ -133,3 +133,24 @@ The PhasorPy project is presented at the following events:
   <https://www.lfd.uci.edu/workshop/>`_.
   October 23-27, 2023. Laboratory for Fluorescence Dynamics,
   University of California, Irvine, USA.
+
+Citation
+========
+
+Please cite `doi: 10.5281/zenodo.13862587 <https://zenodo.org/records/13862587>`_
+if PhasorPy contributes to a project that leads to a publication.
+
+Contact
+=======
+
+PhasorPy is a community-maintained project.
+
+`Contributions <docs/stable/contributing/>`_
+in the form of bug reports, bug fixes, feature implementations, documentation,
+datasets, and enhancement proposals are welcome.
+
+Questions regarding the PhasorPy library are answered on the GitHub
+`issue tracker <https://github.com/phasorpy/phasorpy/issues>`_.
+
+Alternatively, contact the
+`PhasorPy developers <https://github.com/orgs/phasorpy/people>`_ directly.
