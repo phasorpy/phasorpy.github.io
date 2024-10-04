@@ -491,9 +491,150 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;number_threads&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;anscombe_transformation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;anscombe_transformation_inverse&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;number_threads&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">ArrayLike</span>
+
+<span class="kn">from</span> <span class="nn">._phasorpy</span> <span class="kn">import</span> <span class="n">_anscombe</span><span class="p">,</span> <span class="n">_anscombe_inverse</span><span class="p">,</span> <span class="n">_anscombe_inverse_approx</span>
+
+
+<div class="viewcode-block" id="anscombe_transformation">
+<a class="viewcode-back" href="../../../api/utils/#phasorpy.utils.anscombe_transformation">[docs]</a>
+<span class="k">def</span> <span class="nf">anscombe_transformation</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return Anscombe variance-stabilizing transformation.</span>
+
+<span class="sd">    The Anscombe transformation normalizes the standard deviation of noisy,</span>
+<span class="sd">    Poisson-distributed data.</span>
+<span class="sd">    It can be used to transform un-normalized phasor coordinates to</span>
+<span class="sd">    approximate standard Gaussian distributions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: array_like</span>
+<span class="sd">        Noisy Poisson-distributed data to be transformed.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Anscombe-transformed data with variance of approximately 1.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The Anscombe transformation according to [1]_:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        z = 2 \cdot \sqrt{x + 3 / 8}</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [1] Anscombe FJ.</span>
+<span class="sd">       `The transformation of Poisson, binomial and negative-binomial data</span>
+<span class="sd">       &lt;https://doi.org/10.2307/2332343&gt;`_.</span>
+<span class="sd">       *Biometrika*, 35(3-4): 246-254 (1948)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; z = anscombe_transformation(numpy.random.poisson(10, 10000))</span>
+<span class="sd">    &gt;&gt;&gt; numpy.allclose(numpy.std(z), 1.0, atol=0.1)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_anscombe</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[no-any-return]</span></div>
+
+
+
+<div class="viewcode-block" id="anscombe_transformation_inverse">
+<a class="viewcode-back" href="../../../api/utils/#phasorpy.utils.anscombe_transformation_inverse">[docs]</a>
+<span class="k">def</span> <span class="nf">anscombe_transformation_inverse</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">approx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return inverse Anscombe transformation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: array_like</span>
+<span class="sd">        Anscombe-transformed data.</span>
+<span class="sd">    approx: bool, default: False</span>
+<span class="sd">        If true, return approximation of exact unbiased inverse.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Inverse Anscombe-transformed data.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The inverse Anscombe transformation according to [1]_:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        x = (z / 2.0)^2 - 3 / 8</span>
+
+<span class="sd">    The approximate inverse Anscombe transformation according to [2]_ and [3]_:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        x = 1/4 \cdot z^2{2}</span>
+<span class="sd">          + 1/4 \cdot \sqrt{3/2} \cdot z^{-1}</span>
+<span class="sd">          - 11/8 \cdot z^{-2}</span>
+<span class="sd">          + 5/8 \cdot \sqrt(3/2) \cdot z^{-3}</span>
+<span class="sd">          - 1/8</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [2] Makitalo M, and Foi A.</span>
+<span class="sd">       `A closed-form approximation of the exact unbiased inverse of the</span>
+<span class="sd">       Anscombe variance-stabilizing transformation</span>
+<span class="sd">       &lt;https://doi.org/10.1109/TIP.2011.2121085&gt;`_.</span>
+<span class="sd">       IEEE Trans Image Process, 20(9): 2697-8 (2011).</span>
+
+<span class="sd">    .. [3] Makitalo M, and Foi A</span>
+<span class="sd">       `Optimal inversion of the generalized Anscombe transformation for</span>
+<span class="sd">       Poisson-Gaussian noise</span>
+<span class="sd">       &lt;https://doi.org/10.1109/TIP.2012.2202675&gt;`_,</span>
+<span class="sd">       IEEE Trans Image Process, 22(1): 91-103 (2013)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; x = numpy.random.poisson(10, 100)</span>
+<span class="sd">    &gt;&gt;&gt; x2 = anscombe_transformation_inverse(anscombe_transformation(x))</span>
+<span class="sd">    &gt;&gt;&gt; numpy.allclose(x, x2, atol=1e-3)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">approx</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_anscombe_inverse_approx</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+            <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_anscombe_inverse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[no-any-return]</span></div>
+
 
 
 <div class="viewcode-block" id="number_threads">

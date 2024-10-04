@@ -47,6 +47,7 @@
     <script src="../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/utils';</script>
     <script src="../../_static/custom-icons.js?v=74687d30"></script>
     <link rel="index" title="Index" href="../../genindex/" />
@@ -515,6 +516,107 @@ document.write(`
 <p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.utils</span></code> module provides auxiliary and convenience functions
 that do not naturally fit into other modules.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.utils.anscombe_transformation">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">anscombe_transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#anscombe_transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.anscombe_transformation" title="Link to this definition">#</a></dt>
+<dd><p>Return Anscombe variance-stabilizing transformation.</p>
+<p>The Anscombe transformation normalizes the standard deviation of noisy,
+Poisson-distributed data.
+It can be used to transform un-normalized phasor coordinates to
+approximate standard Gaussian distributions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array_like</em>) – Noisy Poisson-distributed data to be transformed.</p></li>
+<li><p><strong>**kwargs</strong> – Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Anscombe-transformed data with variance of approximately 1.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The Anscombe transformation according to <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[z = 2 \cdot \sqrt{x + 3 / 8}\]</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p>Anscombe FJ.
+<a class="reference external" href="https://doi.org/10.2307/2332343">The transformation of Poisson, binomial and negative-binomial data</a>.
+<em>Biometrika</em>, 35(3-4): 246-254 (1948)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">anscombe_transformation</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.utils.anscombe_transformation_inverse">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">anscombe_transformation_inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#anscombe_transformation_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.anscombe_transformation_inverse" title="Link to this definition">#</a></dt>
+<dd><p>Return inverse Anscombe transformation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>array_like</em>) – Anscombe-transformed data.</p></li>
+<li><p><strong>approx</strong> (<em>bool</em><em>, </em><em>default: False</em>) – If true, return approximation of exact unbiased inverse.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inverse Anscombe-transformed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The inverse Anscombe transformation according to <a class="footnote-reference brackets" href="#id2" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[x = (z / 2.0)^2 - 3 / 8\]</div>
+<p>The approximate inverse Anscombe transformation according to <a class="footnote-reference brackets" href="#id7" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> and <a class="footnote-reference brackets" href="#id8" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[x = 1/4 \cdot z^2{2}
+  + 1/4 \cdot \sqrt{3/2} \cdot z^{-1}
+  - 11/8 \cdot z^{-2}
+  + 5/8 \cdot \sqrt(3/2) \cdot z^{-3}
+  - 1/8\]</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
+<p>Makitalo M, and Foi A.
+<a class="reference external" href="https://doi.org/10.1109/TIP.2011.2121085">A closed-form approximation of the exact unbiased inverse of the
+Anscombe variance-stabilizing transformation</a>.
+IEEE Trans Image Process, 20(9): 2697-8 (2011).</p>
+</aside>
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p>Makitalo M, and Foi A
+<a class="reference external" href="https://doi.org/10.1109/TIP.2012.2202675">Optimal inversion of the generalized Anscombe transformation for
+Poisson-Gaussian noise</a>,
+IEEE Trans Image Process, 22(1): 91-103 (2013)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x2</span> <span class="o">=</span> <span class="n">anscombe_transformation_inverse</span><span class="p">(</span><span class="n">anscombe_transformation</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.utils.number_threads">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">number_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#number_threads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.number_threads" title="Link to this definition">#</a></dt>
 <dd><p>Return number of threads for parallel computations on CPU cores.</p>
@@ -588,6 +690,8 @@ variable if set, else half the CPU cores up to <cite>max_threads</cite> or 32.</
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.anscombe_transformation"><code class="docutils literal notranslate"><span class="pre">anscombe_transformation()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.anscombe_transformation_inverse"><code class="docutils literal notranslate"><span class="pre">anscombe_transformation_inverse()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.number_threads"><code class="docutils literal notranslate"><span class="pre">number_threads()</span></code></a></li>
 </ul>
   </nav></div>
