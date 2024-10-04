@@ -759,52 +759,65 @@ document.write(`
 <a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.parse_harmonic">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_harmonic</span><span class="p">(</span>
     <span class="n">harmonic</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">harmonic_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return parsed harmonic parameter.</span>
+
+<span class="sd">    This function performs common, but not necessarily all, verifications</span>
+<span class="sd">    of user-provided `harmonic` parameter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    harmonic : int, list of int, &#39;all&#39;, or None</span>
 <span class="sd">        Harmonic parameter to parse.</span>
-<span class="sd">    samples : int</span>
-<span class="sd">        Number of samples in signal.</span>
-<span class="sd">        Used to verify harmonic values and set maximum harmonic value.</span>
+<span class="sd">    harmonic_max : int, optional</span>
+<span class="sd">        Maximum value allowed in `hamonic`. Must be one or greater.</span>
+<span class="sd">        To verify against known number of signal samples,</span>
+<span class="sd">        pass ``samples // 2``.</span>
+<span class="sd">        If `harmonic=&#39;all&#39;`, a range of harmonics from one to `harmonic_max`</span>
+<span class="sd">        (included) is returned.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    harmonic : list of int</span>
 <span class="sd">        Parsed list of harmonics.</span>
 <span class="sd">    has_harmonic_axis : bool</span>
-<span class="sd">        If true, `harmonic` input parameter is an integer, else a list.</span>
+<span class="sd">        False if `harmonic` input parameter is a scalar integer.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    IndexError</span>
-<span class="sd">        Any element is out of range [1..samples // 2].</span>
+<span class="sd">        Any element is out of range `[1..harmonic_max]`.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        Elements are not unique.</span>
 <span class="sd">        Harmonic is empty.</span>
 <span class="sd">        String input is not &#39;all&#39;.</span>
+<span class="sd">        `harmonic_max` is smaller than 1.</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        Any element is not an integer.</span>
+<span class="sd">        `harmonic` is `&#39;all&#39;` and `harmonic_max` is None.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 3&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">harmonic_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">harmonic_max</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">=}</span><span class="s1"> &lt; 1&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">False</span>
 
-    <span class="n">harmonic_max</span> <span class="o">=</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">harmonic</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">harmonic</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">harmonic_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> out of range [1..</span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)],</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">harmonic_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;maximum harmonic must be specified for </span><span class="si">{</span><span class="n">harmonic</span><span class="si">=!r}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
             <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">harmonic_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="kc">True</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=!r}</span><span class="s1"> is not a valid harmonic&#39;</span><span class="p">)</span>
 
@@ -813,10 +826,10 @@ document.write(`
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> is empty&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s1">&#39;iu&#39;</span> <span class="ow">or</span> <span class="n">h</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element not an integer&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element out of range [1..</span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">}</span><span class="s1">]&#39;</span>
-        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element &lt; 1&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">harmonic_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">h</span> <span class="o">&gt;</span> <span class="n">harmonic_max</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> element &gt; </span><span class="si">{</span><span class="n">harmonic_max</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">h</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> elements must be unique&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="kc">True</span></div>

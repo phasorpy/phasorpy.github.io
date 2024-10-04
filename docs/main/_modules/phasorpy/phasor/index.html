@@ -588,7 +588,6 @@ document.write(`
 <span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">numbers</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
@@ -666,6 +665,8 @@ document.write(`
 <span class="sd">        Else, harmonics must be at least one and no larger than half the</span>
 <span class="sd">        number of `signal` samples along `axis`.</span>
 <span class="sd">        The default is the first harmonic (fundamental frequency).</span>
+<span class="sd">        A minimum of `harmonic * 2 + 1` samples are required along `axis`</span>
+<span class="sd">        to calculate correct phasor coordinates at `harmonic`.</span>
 <span class="sd">    sample_phase : array_like, optional</span>
 <span class="sd">        Phase values (in radians) of `signal` samples along `axis`.</span>
 <span class="sd">        If None (default), samples are assumed to be uniformly spaced along</span>
@@ -771,7 +772,7 @@ document.write(`
     <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dtype</span><span class="si">=}</span><span class="s1"> not supported&#39;</span><span class="p">)</span>
 
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">keepdims</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">num_harmonics</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sample_phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -789,7 +790,7 @@ document.write(`
         <span class="n">use_fft</span> <span class="o">=</span> <span class="n">sample_phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
             <span class="n">rfft</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="ow">or</span> <span class="n">num_harmonics</span> <span class="o">&gt;</span> <span class="mi">7</span>
-            <span class="ow">or</span> <span class="n">num_harmonics</span> <span class="o">==</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="ow">or</span> <span class="n">num_harmonics</span> <span class="o">&gt;=</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">use_fft</span><span class="p">:</span>
@@ -902,7 +903,7 @@ document.write(`
 <span class="sd">        coordinates (most commonly, lower harmonics are present if the number</span>
 <span class="sd">        of dimensions of `mean` is one less than `real`).</span>
 <span class="sd">        If `&#39;all&#39;`, the harmonics in the first axis of phasor coordinates are</span>
-<span class="sd">        the lower harmonics.</span>
+<span class="sd">        the lower harmonics necessary to synthesize `samples`.</span>
 <span class="sd">        Else, harmonics must be at least one and no larger than half of</span>
 <span class="sd">        `samples`.</span>
 <span class="sd">        The phasor coordinates of missing harmonics are zeroed</span>
@@ -951,18 +952,15 @@ document.write(`
 <span class="sd">    array([2.2, 2.486, 0.8566, -0.4365, 0.3938])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 3&#39;</span><span class="p">)</span>
+
     <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Integral</span><span class="p">))</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1"># harmonics are expected in the first axes of real and imag</span>
-        <span class="n">samples_</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">samples_</span> <span class="o">=</span> <span class="n">samples</span>
-
     <span class="n">harmonic_</span> <span class="o">=</span> <span class="n">harmonic</span>
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples_</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">):</span>
         <span class="c1"># single axis contains harmonic</span>
@@ -1133,7 +1131,7 @@ document.write(`
     <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">harmonic</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
     <span class="n">all_hamonics</span> <span class="o">=</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span>
-    <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 16&#39;</span><span class="p">)</span>
