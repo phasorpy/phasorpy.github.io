@@ -97,7 +97,7 @@ The PhasorPy project is presented at the following events:
 - Leonel Malacrida.
   PhasorPy: a Python open-source library for phasor analysis of FLIM and HSI data.
   `CZI Open Science 2024 <https://chanzuckerberg.com/science/programs-resources/open-science/>`_.
-  June 11-14, 2024. Boston.
+  June 11-14, 2024. Boston, USA.
 
 - Leonel Malacirda.
   The phasor plots for time-resolved and hyperspectral imaging: fundamentals and new developments.
@@ -127,6 +127,12 @@ The PhasorPy project is presented at the following events:
   <https://pasteur.uy/cursos-y-charlas/1st-latin-american-workshop-development-and-applications-of-biosensors-from-fluorescent-proteins-to-synthetic-biology/>`_.
   Nov 27 - Dec 1, 2023. Institut Pasteur de Montevideo, Uruguay.
 
+- Bruno Schüty, Bruno Pannunzio, and Leonel Malacrida.
+  Practical section 3: PhasorPy and Napari plugin for FLIM & HSI analysis.
+  `5th Annual Workshop in Advanced Microscopy and Biophotonics
+  <https://pasteur.uy/2023/5th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
+  November 19-24, 2023. Institut Pasteur de Montevideo, Uruguay.
+
 - Christoph Gohlke and Leonel Malacrida.
   Introduction to PhasorPy.
   `17th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
@@ -134,8 +140,8 @@ The PhasorPy project is presented at the following events:
   October 23-27, 2023. Laboratory for Fluorescence Dynamics,
   University of California, Irvine, USA.
 
-Citation
-========
+Cite
+====
 
 Please cite `doi: 10.5281/zenodo.13862587 <https://zenodo.org/records/13862587>`_
 if PhasorPy contributes to a project that leads to a publication.
