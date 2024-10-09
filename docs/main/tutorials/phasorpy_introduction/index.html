@@ -448,6 +448,7 @@ document.write(`
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_pca/">Principal component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_multi-harmonic/">Multi-harmonic phasor coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_cursors/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
@@ -783,7 +784,8 @@ OME-TIFF file:</p>
 <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Phasor coordinates of&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The functions also transparently work with multi-harmonic phasor coordinates.</p>
+<p>These functions also work transparently with multi-harmonic phasor
+coordinates.</p>
 </section>
 <section id="plot-phasor-coordinates">
 <h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
@@ -814,10 +816,47 @@ components.</p>
 <img src="../../_images/sphx_glr_phasorpy_introduction_007.png" srcset="../../_images/sphx_glr_phasorpy_introduction_007.png" alt="Raw phasor coordinates" class = "sphx-glr-single-img"/></section>
 <section id="select-phasor-coordinates">
 <h2>Select phasor coordinates<a class="headerlink" href="#select-phasor-coordinates" title="Link to this heading">#</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+<p>The <a class="reference internal" href="../../api/cursors/#module-phasorpy.cursors" title="phasorpy.cursors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.cursors</span></code></a> module provides functions for selecting phasor
+coordinates to define and mask regions of interest within the phasor space.</p>
+<p>Mask regions of interest in the phasor space using circular cursors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <span class="n">CATEGORICAL</span>
+<span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">mask_from_circular_cursor</span>
+
+<span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.69</span><span class="p">,</span> <span class="mf">0.59</span><span class="p">]</span>
+<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.32</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="n">cursors_masks</span> <span class="o">=</span> <span class="n">mask_from_circular_cursor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cursors_real</span><span class="p">,</span> <span class="n">cursors_imag</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-</section>
+<p>Plot the cursors in distinct colors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cursors&#39;</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
+    <span class="n">phasorplot</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+        <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_008.png" srcset="../../_images/sphx_glr_phasorpy_introduction_008.png" alt="Cursors" class = "sphx-glr-single-img"/><p>Blend the cursor masks with the mean intensity image to produce a
+pseudo-colored image:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">pseudo_color</span>
+
+<span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">cursors_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_009.png" srcset="../../_images/sphx_glr_phasorpy_introduction_009.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
 <section id="component-analysis">
 <h2>Component analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
@@ -838,7 +877,7 @@ at 30 emission wavelengths:</p>
 <span class="n">plot_signal_image</span><span class="p">(</span><span class="n">hyperspectral_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hyperspectral image&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_phasorpy_introduction_008.png" srcset="../../_images/sphx_glr_phasorpy_introduction_008.png" alt="Hyperspectral image, mean, axis 0, mean" class = "sphx-glr-single-img"/><p>Calculate phasor coordinates at the first harmonic and filter out
+<img src="../../_images/sphx_glr_phasorpy_introduction_010.png" srcset="../../_images/sphx_glr_phasorpy_introduction_010.png" alt="Hyperspectral image, mean, axis 0, mean" class = "sphx-glr-single-img"/><p>Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">hyperspectral_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">_</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -846,9 +885,7 @@ pixels with low intensities:</p>
 </div>
 <p>Plot the phasor coordinates as a two-dimensional histogram and select two
 clusters in the phasor plot by means of elliptical cursors:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <span class="n">CATEGORICAL</span>
-
-<span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">]</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">]</span>
 <span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.74</span><span class="p">]</span>
 <span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">]</span>
 <span class="n">radius_minor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
@@ -867,7 +904,7 @@ clusters in the phasor plot by means of elliptical cursors:</p>
 <span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_phasorpy_introduction_009.png" srcset="../../_images/sphx_glr_phasorpy_introduction_009.png" alt="Spectral phasor plot" class = "sphx-glr-single-img"/><p>Use the elliptic cursors to mask regions of interest in the phasor space:</p>
+<img src="../../_images/sphx_glr_phasorpy_introduction_011.png" srcset="../../_images/sphx_glr_phasorpy_introduction_011.png" alt="Spectral phasor plot" class = "sphx-glr-single-img"/><p>Use the elliptic cursors to mask regions of interest in the phasor space:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">mask_from_elliptic_cursor</span>
 
 <span class="n">elliptic_masks</span> <span class="o">=</span> <span class="n">mask_from_elliptic_cursor</span><span class="p">(</span>
@@ -882,24 +919,22 @@ clusters in the phasor plot by means of elliptical cursors:</p>
 </div>
 <p>Plot a pseudo-color image, composited from the elliptic cursor masks and
 the mean intensity image:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">pseudo_color</span>
-
-<span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">elliptic_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">elliptic_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from elliptic cursors&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
 <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_phasorpy_introduction_010.png" srcset="../../_images/sphx_glr_phasorpy_introduction_010.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
+<img src="../../_images/sphx_glr_phasorpy_introduction_012.png" srcset="../../_images/sphx_glr_phasorpy_introduction_012.png" alt="Pseudo-color image from elliptic cursors" class = "sphx-glr-single-img"/></section>
 <section id="appendix">
 <h2>Appendix<a class="headerlink" href="#appendix" title="Link to this heading">#</a></h2>
 <p>Print information about Python interpreter and installed packages:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">versions</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Python-3.12.6
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Python-3.12.7
 phasorpy-0.2.dev
 numpy-2.1.2
 tifffile-2024.9.20
@@ -917,10 +952,10 @@ click-8.1.7
 pooch-v1.8.2
 </pre></div>
 </div>
-<p>sphinx_gallery_thumbnail_number = -5
+<p>sphinx_gallery_thumbnail_number = -7
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 6.583 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 3.450 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>

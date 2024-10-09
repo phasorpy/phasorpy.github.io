@@ -1467,12 +1467,13 @@ document.write(`
     <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">lifetime</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
     <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
-    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return calibrated/referenced phasor coordinates.</span>
@@ -1497,10 +1498,22 @@ document.write(`
 <span class="sd">        Must be measured with the same instrument setting as the phasor</span>
 <span class="sd">        coordinates to be calibrated.</span>
 <span class="sd">    frequency : array_like</span>
-<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
-<span class="sd">        A scalar or one-dimensional sequence.</span>
+<span class="sd">        Fundamental laser pulse or modulation frequency in MHz.</span>
 <span class="sd">    lifetime : array_like</span>
-<span class="sd">        Lifetime components in ns. Must be scalar or one dimensional.</span>
+<span class="sd">        Lifetime components in ns. Must be scalar or one-dimensional.</span>
+<span class="sd">    harmonic : int, sequence of int, or &#39;all&#39;, default: 1</span>
+<span class="sd">        Harmonics included in `real` and `imag`.</span>
+<span class="sd">        If an integer, the harmonics at which `real` and `imag` were acquired</span>
+<span class="sd">        or calculated.</span>
+<span class="sd">        If a sequence, the harmonics included in the first axis of `real` and</span>
+<span class="sd">        `imag`.</span>
+<span class="sd">        If `&#39;all&#39;`, the first axis of `real` and `imag` contains lower</span>
+<span class="sd">        harmonics.</span>
+<span class="sd">        The default is the first harmonic (fundamental frequency).</span>
+<span class="sd">    skip_axis : int or sequence of int, optional</span>
+<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
+<span class="sd">        axes are considered, except for the first axis if multiple harmonics</span>
+<span class="sd">        are specified.</span>
 <span class="sd">    fraction : array_like, optional</span>
 <span class="sd">        Fractional intensities or pre-exponential amplitudes of the lifetime</span>
 <span class="sd">        components. Fractions are normalized to sum to 1.</span>
@@ -1520,9 +1533,6 @@ document.write(`
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
-<span class="sd">    skip_axis : int or sequence of int, optional</span>
-<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
-<span class="sd">        axes are considered.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1536,6 +1546,7 @@ document.write(`
 <span class="sd">    ValueError</span>
 <span class="sd">        The array shapes of `real` and `imag`, or `reference_real` and</span>
 <span class="sd">        `reference_imag` do not match.</span>
+<span class="sd">        Number of harmonics does not match the first axis of `real` and `imag`.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -1618,6 +1629,22 @@ document.write(`
             <span class="sa">f</span><span class="s1">&#39;reference_real.shape=</span><span class="si">{</span><span class="n">ref_re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> &#39;</span>
             <span class="sa">f</span><span class="s1">&#39;!= reference_imag.shape</span><span class="si">{</span><span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_harmonic_axis</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">!=</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != real.shape[0]=</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">harmonic</span>
+
+    <span class="n">skip_axis</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_harmonic_axis</span><span class="p">:</span>
+        <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">+</span> <span class="n">skip_axis</span> <span class="k">if</span> <span class="mi">0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span> <span class="k">else</span> <span class="n">skip_axis</span>
+        <span class="n">skip_axis</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+
     <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
         <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
     <span class="p">)</span>
@@ -1635,7 +1662,6 @@ document.write(`
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">phi_zero</span><span class="p">)</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">mod_zero</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">mod_zero</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">phi_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
                 <span class="n">phi_zero</span><span class="p">,</span>
@@ -3281,7 +3307,7 @@ document.write(`
     <span class="n">methods</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median_filter</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Method not supported, supported methods are: &quot;</span>
+            <span class="sa">f</span><span class="s1">&#39;Method not supported, supported methods are: &#39;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
@@ -3541,7 +3567,7 @@ document.write(`
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Method not supported, supported methods are: &quot;</span>
+            <span class="sa">f</span><span class="s1">&#39;Method not supported, supported methods are: &#39;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
@@ -3698,7 +3724,7 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
         <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_axis</span><span class="p">,)</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">ndim</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;skip_axis=</span><span class="si">{</span><span class="n">skip_axis</span><span class="si">}</span><span class="s2"> out of range for </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;skip_axis=</span><span class="si">{</span><span class="n">skip_axis</span><span class="si">}</span><span class="s1"> out of range for </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">skip_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">))</span>
     <span class="n">other_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">skip_axis</span><span class="p">,</span> <span class="n">other_axis</span>

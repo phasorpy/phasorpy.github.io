@@ -873,7 +873,7 @@ is calculated from the real part of the phasor coordinates
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_calibrate">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_calibrate" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_calibrate" title="Link to this definition">#</a></dt>
 <dd><p>Return calibrated/referenced phasor coordinates.</p>
 <p>Calibration of phasor coordinates from time-resolved measurements is
 necessary to account for the instrument response function (IRF) and delays
@@ -890,9 +890,19 @@ coordinates to be calibrated.</p></li>
 lifetime.
 Must be measured with the same instrument setting as the phasor
 coordinates to be calibrated.</p></li>
-<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency in MHz.
-A scalar or one-dimensional sequence.</p></li>
-<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime components in ns. Must be scalar or one dimensional.</p></li>
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Fundamental laser pulse or modulation frequency in MHz.</p></li>
+<li><p><strong>lifetime</strong> (<em>array_like</em>) – Lifetime components in ns. Must be scalar or one-dimensional.</p></li>
+<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>default: 1</em>) – Harmonics included in <cite>real</cite> and <cite>imag</cite>.
+If an integer, the harmonics at which <cite>real</cite> and <cite>imag</cite> were acquired
+or calculated.
+If a sequence, the harmonics included in the first axis of <cite>real</cite> and
+<cite>imag</cite>.
+If <cite>‘all’</cite>, the first axis of <cite>real</cite> and <cite>imag</cite> contains lower
+harmonics.
+The default is the first harmonic (fundamental frequency).</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to be excluded during center calculation. If None, all
+axes are considered, except for the first axis if multiple harmonics
+are specified.</p></li>
 <li><p><strong>fraction</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Fractional intensities or pre-exponential amplitudes of the lifetime
 components. Fractions are normalized to sum to 1.
 Must be same size as <cite>lifetime</cite>.</p></li>
@@ -909,8 +919,6 @@ Use 1.0 for Hz and s.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
 </ul>
 </p></li>
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to be excluded during center calculation. If None, all
-axes are considered.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -922,7 +930,8 @@ axes are considered.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>reference_real</cite> and
-    <cite>reference_imag</cite> do not match.</p>
+    <cite>reference_imag</cite> do not match.
+    Number of harmonics does not match the first axis of <cite>real</cite> and <cite>imag</cite>.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
