@@ -81,10 +81,22 @@ The PhasorPy project is presented at the following events:
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
+- Bruno Schüty.
+  PhasorPy hands-on training.
+  `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
+  <https://www.lfd.uci.edu/workshop/>`_.
+  October 21-24, 2024.
+  Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
+
 **Past events**
 
+- Bruno Pannunzio, Bruno Schüty, Christoph Gohlke, and Leonel Malacrida.
+  PhasorPy: un nuevo software abierto para el análisis de imágenes espectrales y tiempo de vida por gráficos de fasores.
+  `Semana Académica del Hospital de Clínicas <https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681>`_.
+  September 23-27, 2024. Montevideo, Uruguay.
+
 - Leonel Malacrida.
-  Phasor Analysis for FLIM & STED.
+  Phasor analysis for FLIM & STED.
   `Montreal Light Microscopy Course (MLMC). In-Focus: STimulated Emission Depletion (STED) Microscopy
   <https://www.canadabioimaging.org/mlmc-infocus-sted>`_.
   July 22-26, 2024. Montreal, Canada.
@@ -143,7 +155,7 @@ The PhasorPy project is presented at the following events:
 Cite
 ====
 
-Please cite `doi: 10.5281/zenodo.13862587 <https://zenodo.org/records/13862587>`_
+Please cite `doi: 10.5281/zenodo.13862587 <https://dx.doi.org/10.5281/zenodo.13862587>`_
 if PhasorPy contributes to a project that leads to a publication.
 
 Contact
