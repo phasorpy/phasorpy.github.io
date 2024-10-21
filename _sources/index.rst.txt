@@ -74,15 +74,21 @@ The PhasorPy project is presented at the following events:
   <https://www.i2kconference.org/workshops>`_.
   October 29, 2024. Online.
 
-- Christoph Gohlke and Leonel Malacrida.
-  Introduction to PhasorPy.
+- Leonel Malacrida.
+  Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
+  `Euro-Bioimaging Virtual Pub <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
+  October 25, 2024.
+  Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
+
+- Bruno Schüty.
+  PhasorPy hands-on training.
   `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
   <https://www.lfd.uci.edu/workshop/>`_.
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
-- Bruno Schüty.
-  PhasorPy hands-on training.
+- Christoph Gohlke and Leonel Malacrida.
+  Introduction to PhasorPy.
   `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
   <https://www.lfd.uci.edu/workshop/>`_.
   October 21-24, 2024.
