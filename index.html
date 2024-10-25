@@ -16,25 +16,28 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script src="_static/documentation_options.js?v=187304be"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
@@ -46,6 +49,7 @@
     <link rel="search" title="Search" href="search/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -61,19 +65,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search/"
       method="get">
@@ -81,7 +74,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search the docs ..."
          aria-label="Search the docs ..."
          autocomplete="off"
@@ -89,8 +81,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -124,7 +116,7 @@
     
     
     <img src="_static/logo.png" class="logo__image only-light" alt="PhasorPy"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="PhasorPy"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
   
   
     <p class="title logo__title">PhasorPy</p>
@@ -152,15 +144,11 @@
       
         <div class="navbar-item">
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script></div>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
       
         <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -213,7 +201,8 @@ document.write(`
       
         
       
-      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
   
@@ -240,15 +229,11 @@ document.write(`
         
           <div class="navbar-item">
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script></div>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
         
           <div class="navbar-item"><ul class="navbar-icon-links"
     aria-label="Icon Links">
@@ -324,7 +309,7 @@ of the library, including:</p>
 <li><p><a class="reference external" href="docs/stable/acknowledgments/">Acknowledgments</a></p></li>
 <li><p><a class="reference external" href="docs/stable/license/">MIT License</a></p></li>
 </ul>
-<p>All <a class="reference internal" href="docs/"><span class="doc">Documentation versions</span></a>.</p>
+<p>Other versions: <a class="reference external" href="docs/dev">latest development</a>, <a class="reference internal" href="docs/"><span class="doc">all</span></a></p>
 </section>
 <section id="resources">
 <h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">#</a></h2>
@@ -338,6 +323,7 @@ of the library, including:</p>
 <section id="news">
 <h2>News<a class="headerlink" href="#news" title="Link to this heading">#</a></h2>
 <ul class="simple">
+<li><p>Oct 22, 2024: PhasorPy project update and practical are presented at the <a class="reference external" href="https://www.lfd.uci.edu/workshop/">18th LFD Workshop</a>.</p></li>
 <li><p>Sept 30, 2024: <a class="reference external" href="https://pypi.org/project/phasorpy/">PhasorPy 0.1</a> is released to PyPI.</p></li>
 <li><p>Sept 23, 2024: <a class="reference external" href="https://github.com/phasorpy/phasorpy/graphs/contributors">100th commit</a> to the PhasorPy source code.</p></li>
 <li><p>June 12, 2024: PhasorPy is featured at the <a class="reference external" href="https://chanzuckerberg.com/science/programs-resources/open-science/">CZI Open Science 2024</a> meeting.</p></li>
@@ -362,6 +348,9 @@ is awarded to Leonel Malacrida and Enrico Gratton for the development of the Pha
 PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
 <a class="reference external" href="https://www.i2kconference.org/workshops">Virtual I2K 2024: Online tutorials on image analysis</a>.
 October 29, 2024. Online.</p></li>
+</ul>
+<p><strong>Past events</strong></p>
+<ul class="simple">
 <li><p>Leonel Malacrida.
 Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
 <a class="reference external" href="https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/">Euro-Bioimaging Virtual Pub</a>.
@@ -371,14 +360,11 @@ PhasorPy hands-on training.
 <a class="reference external" href="https://www.lfd.uci.edu/workshop/">18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics</a>.
 October 21-24, 2024.
 Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.</p></li>
-<li><p>Christoph Gohlke and Leonel Malacrida.
+<li><p>Christoph Gohlke.
 Introduction to PhasorPy.
 <a class="reference external" href="https://www.lfd.uci.edu/workshop/">18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics</a>.
 October 21-24, 2024.
 Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.</p></li>
-</ul>
-<p><strong>Past events</strong></p>
-<ul class="simple">
 <li><p>Bruno Pannunzio, Bruno Schüty, Christoph Gohlke, and Leonel Malacrida.
 PhasorPy: un nuevo software abierto para el análisis de imágenes espectrales y tiempo de vida por gráficos de fasores.
 <a class="reference external" href="https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681">Semana Académica del Hospital de Clínicas</a>.
@@ -455,7 +441,8 @@ datasets, and enhancement proposals are welcome.</p>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -488,8 +475,8 @@ datasets, and enhancement proposals are welcome.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -522,7 +509,7 @@ datasets, and enhancement proposals are welcome.</p>
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
 </p></div>
       
     </div>

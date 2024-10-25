@@ -22,7 +22,7 @@ of the library, including:
 - `Acknowledgments <docs/stable/acknowledgments/>`_
 - `MIT License <docs/stable/license/>`_
 
-All :doc:`docs`.
+Other versions: `latest development <docs/dev>`_, :doc:`all <docs>`
 
 Resources
 =========
@@ -34,6 +34,8 @@ Resources
 
 News
 ====
+
+- Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`_.
 
 - Sept 30, 2024: `PhasorPy 0.1 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
@@ -74,6 +76,8 @@ The PhasorPy project is presented at the following events:
   <https://www.i2kconference.org/workshops>`_.
   October 29, 2024. Online.
 
+**Past events**
+
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
   `Euro-Bioimaging Virtual Pub <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
@@ -86,14 +90,12 @@ The PhasorPy project is presented at the following events:
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
-- Christoph Gohlke and Leonel Malacrida.
+- Christoph Gohlke.
   Introduction to PhasorPy.
   `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
   <https://www.lfd.uci.edu/workshop/>`_.
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
-
-**Past events**
 
 - Bruno Pannunzio, Bruno Schüty, Christoph Gohlke, and Leonel Malacrida.
   PhasorPy: un nuevo software abierto para el análisis de imágenes espectrales y tiempo de vida por gráficos de fasores.
