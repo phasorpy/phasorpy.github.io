@@ -76,8 +76,6 @@ The PhasorPy project is presented at the following events:
   <https://www.i2kconference.org/workshops>`_.
   October 29, 2024. Online.
 
-**Past events**
-
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
   `Euro-Bioimaging Virtual Pub <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
