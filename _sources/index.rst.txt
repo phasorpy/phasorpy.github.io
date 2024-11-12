@@ -70,6 +70,12 @@ Events
 
 The PhasorPy project is presented at the following events:
 
+- Bruno Schüty.
+  Introduction to PhasorPy.
+  `GloBIAS Bioimage Analysts Workshop
+  <https://www.globias.org/activities/annual-workshop-gothenburg-2024>`_.
+  November 5-8, 2024. Gothenburg, Sweden.
+
 - Bruno Pannunzio.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
   `Virtual I2K 2024: Online tutorials on image analysis
@@ -78,7 +84,8 @@ The PhasorPy project is presented at the following events:
 
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
-  `Euro-Bioimaging Virtual Pub <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
+  `Euro-Bioimaging Virtual Pub
+  <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
   October 25, 2024. Online.
 
 - Bruno Schüty.
@@ -97,7 +104,8 @@ The PhasorPy project is presented at the following events:
 
 - Bruno Pannunzio, Bruno Schüty, Christoph Gohlke, and Leonel Malacrida.
   PhasorPy: un nuevo software abierto para el análisis de imágenes espectrales y tiempo de vida por gráficos de fasores.
-  `Semana Académica del Hospital de Clínicas <https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681>`_.
+  `Semana Académica del Hospital de Clínicas
+  <https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681>`_.
   September 23-27, 2024. Montevideo, Uruguay.
 
 - Leonel Malacrida.
@@ -108,17 +116,20 @@ The PhasorPy project is presented at the following events:
 
 - Leonel Malacrida.
   The phasor approach for biophysical studies of condensates and membranes using DAN probes.
-  `XXVII Congreso Nazionale SIBPA <https://www.sibpa.it/CongressoNazionaleSIBPAGenova/>`_.
+  `XXVII Congreso Nazionale SIBPA
+  <https://www.sibpa.it/CongressoNazionaleSIBPAGenova/>`_.
   June 16-20, 2024. Genoa, Italy.
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library for phasor analysis of FLIM and HSI data.
-  `CZI Open Science 2024 <https://chanzuckerberg.com/science/programs-resources/open-science/>`_.
+  `CZI Open Science 2024
+  <https://chanzuckerberg.com/science/programs-resources/open-science/>`_.
   June 11-14, 2024. Boston, USA.
 
 - Leonel Malacirda.
   The phasor plots for time-resolved and hyperspectral imaging: fundamentals and new developments.
-  `Sociedad Argentina de Microscopia <https://www.samictucuman2024.com/>`_.
+  `Sociedad Argentina de Microscopia
+  <https://www.samictucuman2024.com/>`_.
   May 29-31, 2024. Tucuman, Argentina.
 
 - Leonel Malacrida.
@@ -129,7 +140,8 @@ The PhasorPy project is presented at the following events:
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library as SimFCS legacy for phasor analysis of FLIM and HSI data.
-  `Frontiers in Biological Fluorescence 2024 <https://www.lfd.uci.edu/frontiers/>`_.
+  `Frontiers in Biological Fluorescence 2024
+  <https://www.lfd.uci.edu/frontiers/>`_.
   May 10, 2024. University of California, Irvine, USA.
 
 - Leonel Malacrida.
