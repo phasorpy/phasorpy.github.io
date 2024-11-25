@@ -70,6 +70,12 @@ Events
 
 The PhasorPy project is presented at the following events:
 
+- Leonel Malacrida.
+  The PhasorPy library for FLIM and HSI phasor analysis.
+  `Optica Webinar Series
+  <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`_.
+  November 25, 2024. Online.
+
 - Bruno Schüty.
   Introduction to PhasorPy.
   `GloBIAS Bioimage Analysts Workshop
