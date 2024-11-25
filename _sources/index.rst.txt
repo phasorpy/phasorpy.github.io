@@ -87,12 +87,14 @@ The PhasorPy project is presented at the following events:
   `Virtual I2K 2024: Online tutorials on image analysis
   <https://www.i2kconference.org/workshops>`_.
   October 29, 2024. Online.
+  `Recording <https://www.youtube.com/watch?v=VGKGF8Zj3tY>`__
 
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
   `Euro-Bioimaging Virtual Pub
   <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
   October 25, 2024. Online.
+  `Recording <https://www.youtube.com/watch?v=cI7WydgIG00>`__
 
 - Bruno Schüty.
   PhasorPy hands-on training.
@@ -143,6 +145,7 @@ The PhasorPy project is presented at the following events:
   `Latin American Hub for Bioimaging Through Open Hardware (LIBRE Hub) Seminars
   <https://librehub.github.io/2024/04/03/leonel-malacrida.html>`_.
   May 15, 2024. Online.
+  `Recording <https://www.youtube.com/watch?v=CbmDNjwo_sg>`__
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library as SimFCS legacy for phasor analysis of FLIM and HSI data.
