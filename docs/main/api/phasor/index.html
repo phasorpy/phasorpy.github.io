@@ -1122,7 +1122,7 @@ and <cite>divisor_imag</cite> (<span class="math notranslate nohighlight">\(s\)<
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_filter">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter" title="Link to this definition">#</a></dt>
 <dd><p>Return filtered phasor coordinates.</p>
 <p>By default, a median filter is applied to the real and imaginary
 components of phasor coordinates once with a kernel size of 3
@@ -1135,9 +1135,18 @@ multiplied by the number of dimensions of the input arrays.</p>
 <li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for filtering:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'median_scipy'</span></code>: Spatial median of phasor coordinates
+based on <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.</p></li>
 </ul>
 </p></li>
 <li><p><strong>repeat</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to apply filter. The default is 1.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the filter kernel. The default is 3.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axis or axes to skip filtering. By default all axes are filtered.</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization. Available for
+filtering in two dimensions with the <cite>median</cite> method only.
+By default, multi-threading is disabled.
+If zero, up to half of logical CPUs are used.
+OpenMP may not be available on all platforms.</p></li>
 <li><p><strong>**kwargs</strong> – Optional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.</p></li>
 </ul>
 </dd>
@@ -1150,14 +1159,19 @@ multiplied by the number of dimensions of the input arrays.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – If the specified method is not supported.
-    The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
-    If <cite>repeat</cite> is less than 1.</p>
+    If <cite>repeat</cite> is less than 0.
+    If <cite>size</cite> is less than 1.
+    The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>For now, only the median filter method is implemented.
-Additional filtering methods may be added in the future.</p>
-<p>The implementation of the median filter method is based on
+<p>Additional filtering methods may be added in the future.</p>
+<p>The <cite>median</cite> method ignores <cite>NaN</cite> values. If the kernel contains an even
+number of elements, the median is the average of the two middle elements.</p>
+<p>When filtering in more than two dimensions, the <cite>median</cite> method is 3 to 6
+times slower than the <cite>median_scipy</cite> method. When filtering in two
+dimensions, both methods have similar performance.</p>
+<p>The implementation of the <cite>median_scipy</cite> method is based on
 <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>,
 which has undefined behavior if the input arrays contain <cite>NaN</cite> values.
 See <a class="reference external" href="https://github.com/phasorpy/phasorpy/issues/87">issue #87</a>.</p>
