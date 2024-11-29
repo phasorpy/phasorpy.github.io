@@ -642,8 +642,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">._phasorpy</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">_apply_2d_median_filter</span><span class="p">,</span>
     <span class="n">_gaussian_signal</span><span class="p">,</span>
+    <span class="n">_median_filter_2d</span><span class="p">,</span>
     <span class="n">_phasor_at_harmonic</span><span class="p">,</span>
     <span class="n">_phasor_divide</span><span class="p">,</span>
     <span class="n">_phasor_from_apparent_lifetime</span><span class="p">,</span>
@@ -3284,8 +3284,8 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return filtered phasor coordinates.</span>
 
-<span class="sd">    By default, a median filter is applied to the real and imaginary</span>
-<span class="sd">    components of phasor coordinates once with a kernel size of 3</span>
+<span class="sd">    By default, a median filter is applied independently to the real and</span>
+<span class="sd">    imaginary components of phasor coordinates once with a kernel size of 3</span>
 <span class="sd">    multiplied by the number of dimensions of the input arrays.</span>
 
 <span class="sd">    Parameters</span>
@@ -3304,12 +3304,12 @@
 <span class="sd">    repeat : int, optional</span>
 <span class="sd">        Number of times to apply filter. The default is 1.</span>
 <span class="sd">    size : int, optional</span>
-<span class="sd">        Size of the filter kernel. The default is 3.</span>
+<span class="sd">        Size of filter kernel. The default is 3.</span>
 <span class="sd">    skip_axis : int or sequence of int, optional</span>
 <span class="sd">        Axis or axes to skip filtering. By default all axes are filtered.</span>
 <span class="sd">    num_threads : int, optional</span>
-<span class="sd">        Number of OpenMP threads to use for parallelization. Available for</span>
-<span class="sd">        filtering in two dimensions with the `median` method only.</span>
+<span class="sd">        Number of OpenMP threads to use for parallelization.</span>
+<span class="sd">        Applies to filtering in two dimensions with the `median` method only.</span>
 <span class="sd">        By default, multi-threading is disabled.</span>
 <span class="sd">        If zero, up to half of logical CPUs are used.</span>
 <span class="sd">        OpenMP may not be available on all platforms.</span>
@@ -3338,14 +3338,14 @@
 <span class="sd">    The `median` method ignores `NaN` values. If the kernel contains an even</span>
 <span class="sd">    number of elements, the median is the average of the two middle elements.</span>
 
-<span class="sd">    When filtering in more than two dimensions, the `median` method is 3 to 6</span>
-<span class="sd">    times slower than the `median_scipy` method. When filtering in two</span>
-<span class="sd">    dimensions, both methods have similar performance.</span>
-
 <span class="sd">    The implementation of the `median_scipy` method is based on</span>
 <span class="sd">    :py:func:`scipy.ndimage.median_filter`,</span>
 <span class="sd">    which has undefined behavior if the input arrays contain `NaN` values.</span>
 <span class="sd">    See `issue #87 &lt;https://github.com/phasorpy/phasorpy/issues/87&gt;`_.</span>
+
+<span class="sd">    When filtering in more than two dimensions, the `median` method is</span>
+<span class="sd">    slower than the `median_scipy` method. When filtering in two</span>
+<span class="sd">    dimensions, both methods have similar performance.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -3353,7 +3353,7 @@
 
 <span class="sd">    &gt;&gt;&gt; phasor_filter(</span>
 <span class="sd">    ...     [[0, 0, 0], [5, 5, 5], [2, 2, 2]],</span>
-<span class="sd">    ...     [[3, 3, 3], [6, 6, 6], [4, 4, 4]],</span>
+<span class="sd">    ...     [[3, 3, 3], [6, math.nan, 6], [4, 4, 4]],</span>
 <span class="sd">    ...     size=3,</span>
 <span class="sd">    ...     repeat=3,</span>
 <span class="sd">    ... )</span>
@@ -3361,12 +3361,12 @@
 <span class="sd">            [2, 2, 2],</span>
 <span class="sd">            [2, 2, 2]]),</span>
 <span class="sd">    array([[3, 3, 3],</span>
-<span class="sd">            [4, 4, 4],</span>
+<span class="sd">            [4, nan, 4],</span>
 <span class="sd">            [4, 4, 4]]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">methods</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median_filter_2d</span><span class="p">,</span>
+        <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median_filter</span><span class="p">,</span>
         <span class="s1">&#39;median_scipy&#39;</span><span class="p">:</span> <span class="n">_median_filter_scipy</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
@@ -3697,18 +3697,18 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of the phasor coordinates.</span>
+<span class="sd">        Real components of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of the phasor coordinates.</span>
+<span class="sd">        Imaginary components of phasor coordinates.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional arguments passed to :py:func:`numpy.nanmedian`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    real_center : ndarray</span>
-<span class="sd">        Spatial median center for real coordinates.</span>
+<span class="sd">        Spatial median center of real coordinates.</span>
 <span class="sd">    imag_center : ndarray</span>
-<span class="sd">        Spatial median center for imaginary coordinates.</span>
+<span class="sd">        Spatial median center of imaginary coordinates.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -3719,7 +3719,7 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_median_filter_2d</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">_median_filter</span><span class="p">(</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">axes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
@@ -3729,20 +3729,20 @@
     <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the phasor coordinates after applying a 2D median filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return median-filtered phasor coordinates, ignoring NaN values.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of the phasor coordinates.</span>
+<span class="sd">        Real components of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of the phasor coordinates.</span>
+<span class="sd">        Imaginary components of phasor coordinates.</span>
 <span class="sd">    axes : sequence of int</span>
-<span class="sd">        Axes along which to apply the filter.</span>
+<span class="sd">        Axes along which to apply median filter.</span>
 <span class="sd">    repeat : int, optional</span>
 <span class="sd">        Number of times to apply filter. The default is 1.</span>
 <span class="sd">    size : int, optional</span>
-<span class="sd">        The size of the median filter kernel. Default is 3.</span>
+<span class="sd">        Size of median filter kernel. The default is 3.</span>
 <span class="sd">    num_threads : int, optional</span>
 <span class="sd">        Number of OpenMP threads to use for parallelization.</span>
 <span class="sd">        By default, multi-threading is disabled.</span>
@@ -3752,9 +3752,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    real : ndarray</span>
-<span class="sd">        Filtered real component of phasor coordinates.</span>
+<span class="sd">        Median-filtered real component of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
-<span class="sd">        Filtered imaginary component of phasor coordinates.</span>
+<span class="sd">        Median-filtered imaginary component of phasor coordinates.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
@@ -3770,92 +3770,55 @@
         <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_median_filter_nd</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+        <span class="c1"># n-dimensional median filter using numpy</span>
+        <span class="kn">from</span> <span class="nn">numpy.lib.stride_tricks</span> <span class="kn">import</span> <span class="n">sliding_window_view</span>
 
+        <span class="n">kernel_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">size</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">kernel_shape</span>
+        <span class="p">]</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
+
+        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
+
+    <span class="c1"># 2-dimensional median filter using optimized Cython implementation</span>
     <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
 
     <span class="n">filtered_slice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
         <span class="nb">tuple</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span>
     <span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span>
-            <span class="o">*</span><span class="p">[</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">]</span>
-        <span class="p">):</span>
-            <span class="n">index_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-                <span class="n">index_list</span> <span class="o">=</span> <span class="n">index_list</span><span class="p">[:</span><span class="n">ax</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">index_list</span><span class="p">[</span><span class="n">ax</span><span class="p">:]</span>
-            <span class="n">full_index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">index_list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">[</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="n">index_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">index_list</span> <span class="o">=</span> <span class="n">index_list</span><span class="p">[:</span><span class="n">ax</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">index_list</span><span class="p">[</span><span class="n">ax</span><span class="p">:]</span>
+        <span class="n">full_index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">index_list</span><span class="p">)</span>
 
-            <span class="n">real_slice</span> <span class="o">=</span> <span class="n">real</span><span class="p">[</span><span class="n">full_index</span><span class="p">]</span>
-            <span class="n">imag_slice</span> <span class="o">=</span> <span class="n">imag</span><span class="p">[</span><span class="n">full_index</span><span class="p">]</span>
+        <span class="n">_median_filter_2d</span><span class="p">(</span>
+            <span class="n">real</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span>
+        <span class="p">)</span>
 
-            <span class="n">_apply_2d_median_filter</span><span class="p">(</span>
-                <span class="n">real_slice</span><span class="p">,</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">num_threads</span>
-            <span class="p">)</span>
-            <span class="n">_apply_2d_median_filter</span><span class="p">(</span>
-                <span class="n">imag_slice</span><span class="p">,</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">num_threads</span>
-            <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_median_filter_nd</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">axes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-    <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the phasor coordinates after applying a median filter.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    real : numpy.ndarray</span>
-<span class="sd">        Real components of the phasor coordinates.</span>
-<span class="sd">    imag : numpy.ndarray</span>
-<span class="sd">        Imaginary components of the phasor coordinates.</span>
-<span class="sd">    axes : sequence of int</span>
-<span class="sd">        Axes along which to apply the filter.</span>
-<span class="sd">    repeat : int, optional</span>
-<span class="sd">        Number of times to apply filter. The default is 1.</span>
-<span class="sd">    size : int, optional</span>
-<span class="sd">        The size of the median filter kernel. Default is 3.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Filtered real component of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Filtered imaginary component of phasor coordinates.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">numpy.lib.stride_tricks</span> <span class="kn">import</span> <span class="n">sliding_window_view</span>
-
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-
-    <span class="n">kernel_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">size</span><span class="p">,)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">kernel_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
-        <span class="n">kernel_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">real</span><span class="p">))</span>
-    <span class="p">)</span>
-    <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">kernel_shape</span><span class="p">]</span>
-    <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">real</span><span class="p">)</span> <span class="o">|</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-    <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel_shape</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
-        <span class="n">real_pad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
-        <span class="n">imag_pad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
-
-        <span class="n">windows_real</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">real_pad</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
-        <span class="n">windows_imag</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">imag_pad</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
-
-        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">windows_real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">windows_imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">))</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">))</span>
+        <span class="n">_median_filter_2d</span><span class="p">(</span>
+            <span class="n">imag</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span>
+        <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
 
@@ -3870,31 +3833,31 @@
     <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the phasor coordinates after applying a median filter.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return median-filtered phasor coordinates.</span>
 
 <span class="sd">    Convenience wrapper around :py:func:`scipy.ndimage.median_filter`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of the phasor coordinates.</span>
+<span class="sd">        Real components of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of the phasor coordinates.</span>
+<span class="sd">        Imaginary components of phasor coordinates.</span>
 <span class="sd">    axes : sequence of int</span>
-<span class="sd">        Axes along which to apply the filter.</span>
+<span class="sd">        Axes along which to apply median filter.</span>
 <span class="sd">    repeat : int, optional</span>
 <span class="sd">        Number of times to apply filter. The default is 1.</span>
 <span class="sd">    size : int, optional</span>
-<span class="sd">        The size of the median filter kernel. Default is 3.</span>
+<span class="sd">        Size of median filter kernel. The default is 3.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional arguments passed to :py:func:`scipy.ndimage.median_filter`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    real : ndarray</span>
-<span class="sd">        Filtered real component of phasor coordinates.</span>
+<span class="sd">        Median-filtered real component of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
-<span class="sd">        Filtered imaginary component of phasor coordinates.</span>
+<span class="sd">        Median-filtered imaginary component of phasor coordinates.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">median_filter</span>
