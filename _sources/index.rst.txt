@@ -183,7 +183,7 @@ The PhasorPy project is presented at the following events:
 Cite
 ====
 
-Please cite `doi: 10.5281/zenodo.13862587 <https://dx.doi.org/10.5281/zenodo.13862587>`_
+Please cite `doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`_
 if PhasorPy contributes to a project that leads to a publication.
 
 Contact
