@@ -1,0 +1,1131 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction to PhasorPy &#8212; PhasorPy 0.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=2e2e1c2b"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/tabs.js?v=3ee01567"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/phasorpy_introduction';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.2';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        </script>
+    <script src="../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="LFD Workshop FLIM Tutorial" href="../phasorpy_lfd_workshop/" />
+    <link rel="prev" title="Tutorials" href="../" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.2" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PhasorPy"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/">
+    Release notes
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../code_of_conduct/">
+    Code of conduct
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../license/">
+    MIT License
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/">
+    Release notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../code_of_conduct/">
+    Code of conduct
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../license/">
+    MIT License
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction to PhasorPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy_lfd_workshop/">LFD Workshop FLIM Tutorial</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_pca/">Principal component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_multi-harmonic/">Multi-harmonic phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_cursors/">Cursors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasorplot/">Phasor plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_components/">Component analysis</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../applications/">Applications</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarks/">Benchmarks</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../benchmarks/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../" class="nav-link">Tutorials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Introduction to PhasorPy</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="sphx-glr-example-title" id="introduction-to-phasorpy">
+<span id="sphx-glr-tutorials-phasorpy-introduction-py"></span><h1>Introduction to PhasorPy<a class="headerlink" href="#introduction-to-phasorpy" title="Link to this heading">#</a></h1>
+<p>An introduction to using the PhasorPy library.</p>
+<p>PhasorPy is an open-source Python library for the analysis of fluorescence
+lifetime and hyperspectral images using the <a class="reference internal" href="../../phasor_approach/"><span class="doc">Phasor approach</span></a>.</p>
+<p>Using the PhasorPy library requires familiarity with the phasor approach,
+image processing, array programming, and Python.</p>
+<section id="install-python">
+<h2>Install Python<a class="headerlink" href="#install-python" title="Link to this heading">#</a></h2>
+<p>An installation of Python version 3.10 or higher is required to use the
+PhasorPy library.
+Python is an easy to learn, powerful programming language.
+Python installers can be obtained from, for example,
+<a class="reference external" href="https://www.python.org/downloads/">Python.org</a> or
+<a class="reference external" href="https://www.anaconda.com/">Anaconda.com</a>.
+Refer to the <a class="reference external" href="https://docs.python.org/3/tutorial/">Python Tutorial</a>
+for an introduction to Python.</p>
+</section>
+<section id="install-phasorpy">
+<h2>Install PhasorPy<a class="headerlink" href="#install-phasorpy" title="Link to this heading">#</a></h2>
+<p>To download and install the PhasorPy library and all its dependencies from
+the <a class="reference external" href="https://pypi.org/project/phasorpy/">Python Package Index</a> (PyPI),
+run the following command on a command prompt, shell, or terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="s2">&quot;phasorpy[all]&quot;</span>
+</pre></div>
+</div>
+<p>The development version of PhasorPy can be installed instead from the
+latest source code on GitHub. This requires a C compiler, such as
+XCode, Visual Studio, or gcc, to be installed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">/</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Update optional dependencies as needed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">lfdfiles</span> <span class="n">sdtfile</span> <span class="n">ptufile</span>
+</pre></div>
+</div>
+</section>
+<section id="import-phasorpy">
+<h2>Import phasorpy<a class="headerlink" href="#import-phasorpy" title="Link to this heading">#</a></h2>
+<p>Start the Python interpreter, import the <code class="docutils literal notranslate"><span class="pre">phasorpy</span></code> package,
+and print its version:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">phasorpy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.2
+</pre></div>
+</div>
+<p>Besides the PhasorPy library, the <a class="reference external" href="https://numpy.org/">numpy</a> and
+<a class="reference external" href="https://matplotlib.org/">matplotlib</a> libraries are used for
+array computing and plotting throughout this tutorial:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">tifffile</span>  <span class="c1"># TODO: from phasorpy.io import read_ometiff</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
+
+<span class="kn">from</span> <span class="nn">phasorpy.datasets</span> <span class="kn">import</span> <span class="n">fetch</span>
+</pre></div>
+</div>
+</section>
+<section id="read-signal-from-file">
+<h2>Read signal from file<a class="headerlink" href="#read-signal-from-file" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../../api/io/#module-phasorpy.io" title="phasorpy.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.io</span></code></a> module provides functions to read time-resolved
+and hyperspectral image stacks and metadata from many file formats used
+in microscopy, for example PicoQuant PTU, OME-TIFF, Zeiss LSM, and files
+written by SimFCS software.
+However, any other means that yields image stacks in numpy-array compatible
+form can be used instead.
+Image stacks, which may have any number of dimensions, are referred to as
+<code class="docutils literal notranslate"><span class="pre">signal</span></code> in the PhasorPy library.</p>
+<p>The <a class="reference internal" href="../../api/datasets/#module-phasorpy.datasets" title="phasorpy.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.datasets</span></code></a> module provides access to various sample
+files. For example, an Imspector TIFF file from the
+<a class="reference external" href="https://zenodo.org/records/8046636">FLUTE</a>  project containing a
+time-correlated single photon counting (TCSPC) histogram
+of a zebrafish embryo at day 3, acquired at 80 MHz:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.11</span>  <span class="c1"># MHz; from the XML metadata in the file</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(56, 512, 512) uint16
+</pre></div>
+</div>
+<p>Plot the spatial and histogram averages:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">plot_signal_image</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_001.png" srcset="../../_images/sphx_glr_phasorpy_introduction_001.png" alt="mean, axis 0, mean" class = "sphx-glr-single-img"/></section>
+<section id="calculate-phasor-coordinates">
+<h2>Calculate phasor coordinates<a class="headerlink" href="#calculate-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../../api/phasor/#module-phasorpy.phasor" title="phasorpy.phasor"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.phasor</span></code></a> module provides functions to calculate,
+calibrate, filter, and convert phasor coordinates.</p>
+<p>Phasor coordinates are the real and imaginary components of the complex
+numbers returned by a real forward Digital Fourier Transform (DFT)
+of a signal at certain harmonics (multiples of the fundamental frequency),
+normalized by the mean intensity (the zeroth harmonic).
+Phasor coordinates are named <code class="docutils literal notranslate"><span class="pre">real</span></code> and <code class="docutils literal notranslate"><span class="pre">imag</span></code> in the PhasorPy library.
+In literature and other software, they are also known as
+<span class="math notranslate nohighlight">\(G\)</span> and <span class="math notranslate nohighlight">\(S\)</span> or <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> (as in <span class="math notranslate nohighlight">\(a + bi\)</span>).</p>
+<p>Phasor coordinates of the first harmonic are calculated from the signal,
+a TCSPC histogram in this case.
+The histogram samples are in the first dimension (<cite>axis=0</cite>):</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_from_signal</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The phasor coordinates are undefined if the mean intensity is zero.
+In that case, the arrays contain special <code class="docutils literal notranslate"><span class="pre">NaN</span></code> (Not a Number) values,
+which are ignored in further analysis:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">real</span><span class="p">[:</span><span class="mi">4</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[        nan         nan -0.27292411         nan]
+ [        nan         nan  0.16095963         nan]
+ [        nan         nan  0.90096887         nan]
+ [        nan  0.6234898          nan         nan]]
+</pre></div>
+</div>
+<p>Plot the calculated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">plot_phasor_image</span>
+
+<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_002.png" srcset="../../_images/sphx_glr_phasorpy_introduction_002.png" alt="Sample, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>By default, only the phasor coordinates at the first harmonic are calculated.
+However, only when the phasor coordinates at all harmonics are considered
+(including the mean intensity) is the signal completely described:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_to_signal</span>
+
+<span class="n">phasor_all_harmonics</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="n">reconstructed_signal</span> <span class="o">=</span> <span class="n">phasor_to_signal</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_all_harmonics</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">reconstructed_signal</span><span class="p">),</span> <span class="n">signal</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="calibrate-phasor-coordinates">
+<h2>Calibrate phasor coordinates<a class="headerlink" href="#calibrate-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>The signals from time-resolved measurements are convoluted with an
+instrument response function, causing the phasor-coordinates to be
+phase-shifted and modulated (scaled) by unknown amounts.
+The phasor coordinates must therefore be calibrated with coordinates
+obtained from a reference standard of known lifetime, acquired with
+the same instrument settings.</p>
+<p>In this case, a homogeneous solution of Fluorescein with a lifetime of
+4.2 ns was imaged.</p>
+<p>Read the signal of the reference measurement from a file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Calculate phasor coordinates from the measured reference signal:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
+    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the calculated reference phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span>
+    <span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Reference&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_003.png" srcset="../../_images/sphx_glr_phasorpy_introduction_003.png" alt="Reference, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>Calibrate the raw phasor coordinates with the reference coordinates of known
+lifetime (Fluorescein, 4.2 ns):</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_calibrate</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the calibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_004.png" srcset="../../_images/sphx_glr_phasorpy_introduction_004.png" alt="Calibrated, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>The phasor coordinates are now located in the first quadrant, except for
+some with low signal to noise level.</p>
+<p>If necessary, the calibration can be undone/reversed using the
+same reference:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
+    <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">),</span>
+    <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="filter-phasor-coordinates">
+<h2>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>Applying median filter to the calibrated phasor coordinates,
+often multiple times, improves contrast and reduces noise:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_filter</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pixels with low intensities are commonly excluded from analysis and
+visualization of phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_threshold</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the calibrated, filtered phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_005.png" srcset="../../_images/sphx_glr_phasorpy_introduction_005.png" alt="Calibrated, filtered phasor coordinates, mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
+<section id="store-phasor-coordinates">
+<h2>Store phasor coordinates<a class="headerlink" href="#store-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>Phasor coordinates and select metadata can be exported to
+<a class="reference external" href="https://ome-model.readthedocs.io/en/stable/ome-tiff/">OME-TIFF</a>
+formatted files, which are compatible with Bio-Formats and Fiji.</p>
+<p>Write the calibrated and filtered phasor coordinates, and frequency to an
+OME-TIFF file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.io</span> <span class="kn">import</span> <span class="n">phasor_from_ometiff</span><span class="p">,</span> <span class="n">phasor_to_ometiff</span>
+
+<span class="n">phasor_to_ometiff</span><span class="p">(</span>
+    <span class="s1">&#39;phasors.ome.tif&#39;</span><span class="p">,</span>
+    <span class="n">mean</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+        <span class="s1">&#39;Phasor coordinates of a zebrafish embryo at day 3, &#39;</span>
+        <span class="s1">&#39;calibrated, median-filtered, and thresholded.&#39;</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Read the phasor coordinates and metadata back from the OME-TIFF file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_</span><span class="p">,</span> <span class="n">real_</span><span class="p">,</span> <span class="n">imag_</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_ometiff</span><span class="p">(</span><span class="s1">&#39;phasors.ome.tif&#39;</span><span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">real_</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">real_</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
+<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
+<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Phasor coordinates of&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These functions also work transparently with multi-harmonic phasor
+coordinates.</p>
+</section>
+<section id="plot-phasor-coordinates">
+<h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../../api/plot/#module-phasorpy.plot" title="phasorpy.plot"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.plot</span></code></a> module provides functions and classes for
+plotting phasor and polar coordinates.</p>
+<p>Large number of phasor coordinates, such as obtained from imaging,
+are commonly visualized as 2D histograms:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">PhasorPlot</span>
+
+<span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
+<span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_006.png" srcset="../../_images/sphx_glr_phasorpy_introduction_006.png" alt="Calibrated, filtered phasor coordinates" class = "sphx-glr-single-img"/><p>The calibrated phasor coordinates of all pixels lie inside the universal
+semicircle (on which theoretically the phasor coordinates of all single
+exponential lifetimes are located).
+That means, all pixels contain mixtures of signals from multiple lifetime
+components.</p>
+<p>For comparison, the uncalibrated, unfiltered phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates&#39;</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_007.png" srcset="../../_images/sphx_glr_phasorpy_introduction_007.png" alt="Raw phasor coordinates" class = "sphx-glr-single-img"/></section>
+<section id="select-phasor-coordinates">
+<h2>Select phasor coordinates<a class="headerlink" href="#select-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="../../api/cursors/#module-phasorpy.cursors" title="phasorpy.cursors"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.cursors</span></code></a> module provides functions for selecting phasor
+coordinates to define and mask regions of interest within the phasor space.</p>
+<p>Mask regions of interest in the phasor space using circular cursors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.color</span> <span class="kn">import</span> <span class="n">CATEGORICAL</span>
+<span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">mask_from_circular_cursor</span>
+
+<span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.69</span><span class="p">,</span> <span class="mf">0.59</span><span class="p">]</span>
+<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.32</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="n">cursors_masks</span> <span class="o">=</span> <span class="n">mask_from_circular_cursor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cursors_real</span><span class="p">,</span> <span class="n">cursors_imag</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the cursors in distinct colors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cursors&#39;</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
+    <span class="n">phasorplot</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+        <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_008.png" srcset="../../_images/sphx_glr_phasorpy_introduction_008.png" alt="Cursors" class = "sphx-glr-single-img"/><p>Blend the cursor masks with the mean intensity image to produce a
+pseudo-colored image:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">pseudo_color</span>
+
+<span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">cursors_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_009.png" srcset="../../_images/sphx_glr_phasorpy_introduction_009.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
+<section id="component-analysis">
+<h2>Component analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
+</pre></div>
+</div>
+</section>
+<section id="spectral-phasors">
+<h2>Spectral phasors<a class="headerlink" href="#spectral-phasors" title="Link to this heading">#</a></h2>
+<p>Phasor coordinates can be calculated from hyperspectral images (acquired
+at many equidistant emission wavelengths) and processed in much the same
+way as time-resolved signals. Calibration is not necessary.</p>
+<p>Open a hyperspectral dataset acquired with a laser scanning microscope
+at 30 emission wavelengths:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.io</span> <span class="kn">import</span> <span class="n">read_lsm</span>
+
+<span class="n">hyperspectral_signal</span> <span class="o">=</span> <span class="n">read_lsm</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;paramecium.lsm&#39;</span><span class="p">))</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">hyperspectral_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hyperspectral image&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_010.png" srcset="../../_images/sphx_glr_phasorpy_introduction_010.png" alt="Hyperspectral image, mean, axis 0, mean" class = "sphx-glr-single-img"/><p>Calculate phasor coordinates at the first harmonic and filter out
+pixels with low intensities:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">hyperspectral_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the phasor coordinates as a two-dimensional histogram and select two
+clusters in the phasor plot by means of elliptical cursors:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cursors_real</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.54</span><span class="p">]</span>
+<span class="n">cursors_imag</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.72</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.74</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">]</span>
+<span class="n">radius_minor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
+
+<span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spectral phasor plot&#39;</span><span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cursors_real</span><span class="p">)):</span>
+    <span class="n">phasorplot</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span>
+        <span class="n">cursors_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">cursors_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_011.png" srcset="../../_images/sphx_glr_phasorpy_introduction_011.png" alt="Spectral phasor plot" class = "sphx-glr-single-img"/><p>Use the elliptic cursors to mask regions of interest in the phasor space:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.cursors</span> <span class="kn">import</span> <span class="n">mask_from_elliptic_cursor</span>
+
+<span class="n">elliptic_masks</span> <span class="o">=</span> <span class="n">mask_from_elliptic_cursor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">cursors_real</span><span class="p">,</span>
+    <span class="n">cursors_imag</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+    <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot a pseudo-color image, composited from the elliptic cursor masks and
+the mean intensity image:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">elliptic_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from elliptic cursors&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_phasorpy_introduction_012.png" srcset="../../_images/sphx_glr_phasorpy_introduction_012.png" alt="Pseudo-color image from elliptic cursors" class = "sphx-glr-single-img"/></section>
+<section id="appendix">
+<h2>Appendix<a class="headerlink" href="#appendix" title="Link to this heading">#</a></h2>
+<p>Print information about Python interpreter and installed packages:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">phasorpy</span><span class="o">.</span><span class="n">versions</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Python-3.12.7
+phasorpy-0.2
+numpy-2.1.3
+tifffile-2024.9.20
+imagecodecs-n/a
+lfdfiles-2024.10.24
+sdtfile-2024.11.24
+ptufile-2024.11.26
+matplotlib-3.9.2
+scipy-1.14.1
+skimage-n/a
+sklearn-n/a
+pandas-2.2.3
+xarray-2024.11.0
+click-8.1.7
+pooch-v1.8.2
+</pre></div>
+</div>
+<p>sphinx_gallery_thumbnail_number = -7
+mypy: allow-untyped-defs, allow-untyped-calls
+mypy: disable-error-code=”arg-type”</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.926 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2a87616bb17ef75a216689cb0c820281/phasorpy_introduction.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_introduction.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4f62a65332fb0c57d5e055a7e6f13389/phasorpy_introduction.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">phasorpy_introduction.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tutorials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../phasorpy_lfd_workshop/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">LFD Workshop FLIM Tutorial</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-python">Install Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-phasorpy">Install PhasorPy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-phasorpy">Import phasorpy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-signal-from-file">Read signal from file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-phasor-coordinates">Calculate phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrate-phasor-coordinates">Calibrate phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-phasor-coordinates">Filter phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#store-phasor-coordinates">Store phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-phasor-coordinates">Plot phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-phasor-coordinates">Select phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-analysis">Component analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-phasors">Spectral phasors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix">Appendix</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2024 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
