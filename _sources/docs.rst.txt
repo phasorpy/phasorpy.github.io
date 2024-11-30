@@ -4,4 +4,4 @@ Documentation versions
 ======================
 
 - `Development <dev/>`_
-- `0.1 (stable) <stable/>`_
+- `0.2 (stable) <stable/>`_
