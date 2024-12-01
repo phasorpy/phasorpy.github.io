@@ -28,14 +28,14 @@ Resources
 =========
 
 - `Source code <https://github.com/phasorpy/phasorpy>`_ is maintained on GitHub.com.
-- `Download releases <https://pypi.org/project/phasorpy/>`_ from PyPI.org.
+- `Releases <https://pypi.org/project/phasorpy/>`_ are published on PyPI.org.
 - `Data files <https://zenodo.org/communities/phasorpy>`_ are shared on Zenodo.org.
 - `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`_ on the GitHub issue tracker.
 
 News
 ====
 
-- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released.
+- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`_.
 
@@ -77,6 +77,7 @@ The PhasorPy project is presented at the following events:
   `Optica Webinar Series
   <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`_.
   November 25, 2024. Online.
+  `Recording <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__
 
 - Bruno Schüty.
   Introduction to PhasorPy.
