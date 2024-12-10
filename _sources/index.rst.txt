@@ -73,6 +73,11 @@ Events
 The PhasorPy project is presented at the following events:
 
 - Leonel Malacrida.
+  Introduction to PhasorPy.
+  Third LFD around the world meeting.
+  December 9, 2024. Online.
+
+- Leonel Malacrida.
   The PhasorPy library for FLIM and HSI phasor analysis.
   `Optica Webinar Series
   <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`_.
