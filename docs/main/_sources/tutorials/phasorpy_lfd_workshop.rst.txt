@@ -53,7 +53,7 @@ Import required modules and functions:
     from phasorpy.phasor import (
         lifetime_fraction_from_amplitude,
         lifetime_to_signal,
-        phasor_filter,
+        phasor_filter_median,
         phasor_from_fret_donor,
         phasor_from_lifetime,
         phasor_threshold,
@@ -306,7 +306,7 @@ Read the file, calculate phasor coordinates from phase and modulation,
 display the images, and plot the phasor coordinates of first and second
 harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-179
+.. GENERATED FROM PYTHON SOURCE LINES 171-177
 
 .. code-block:: Python
 
@@ -315,8 +315,6 @@ harmonics:
     mean, real, imag = phasor_from_simfcs_referenced(
         fetch('capillaries1001.ref'), harmonic=[1, 2]
     )
-    real1, real2 = real
-    imag1, imag2 = imag
 
 
 
@@ -325,7 +323,7 @@ harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 178-179
 
 .. code-block:: Python
 
@@ -342,13 +340,13 @@ harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-190
+.. GENERATED FROM PYTHON SOURCE LINES 180-188
 
 .. code-block:: Python
 
     plot_phasor(
-        real1,
-        imag1,
+        real[0],
+        imag[0],
         frequency=frequency,
         style='hist2d',
         cmin=4,
@@ -366,13 +364,13 @@ harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-200
+.. GENERATED FROM PYTHON SOURCE LINES 189-198
 
 .. code-block:: Python
 
     plot_phasor(
-        real2,
-        imag2,
+        real[1],
+        imag[1],
         frequency=frequency * 2,
         style='hist2d',
         cmin=4,
@@ -391,7 +389,7 @@ harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-212
+.. GENERATED FROM PYTHON SOURCE LINES 199-210
 
 The two phasor plots show the pixel phasor distribution for the first and
 second harmonics (for the two-photon systems these would be 80 MHz and 160
@@ -405,13 +403,12 @@ Note that this will also reduce the spatial resolution in the phasor.
 If high spatial resolution is needed, make sure to have at least 100
 photons in each pixel of the image.
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-216
+.. GENERATED FROM PYTHON SOURCE LINES 210-213
 
 .. code-block:: Python
 
 
-    real1, imag1 = phasor_filter(real1, imag1, method='median', repeat=2)
-    real2, imag2 = phasor_filter(real2, imag2, method='median', repeat=2)
+    mean, real, imag = phasor_filter_median(mean, real, imag, repeat=2)
 
 
 
@@ -420,22 +417,19 @@ photons in each pixel of the image.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 217-220
+.. GENERATED FROM PYTHON SOURCE LINES 214-217
 
 In addition, small amounts of room light will appear towards the lower
 left-hand corner of the phasor (room light is uncorrelated, so it has
 zero modulation depth). This can be eliminated by setting a threshold.
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-227
+.. GENERATED FROM PYTHON SOURCE LINES 217-221
 
 .. code-block:: Python
 
 
-    _, real1, imag1 = phasor_threshold(
-        mean, real1, imag1, mean_min=20, real_min=0, imag_min=0, open_interval=True
-    )
-    _, real2, imag2 = phasor_threshold(
-        mean, real2, imag2, mean_min=20, real_min=0, imag_min=0, open_interval=True
+    _, real, imag = phasor_threshold(
+        mean, real, imag, mean_min=20, real_min=0, imag_min=0, open_interval=True
     )
 
 
@@ -444,13 +438,13 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-236
+.. GENERATED FROM PYTHON SOURCE LINES 222-230
 
 .. code-block:: Python
 
     plot_phasor(
-        real1,
-        imag1,
+        real[0],
+        imag[0],
         frequency=frequency,
         style='hist2d',
         cmin=4,
@@ -468,13 +462,13 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-246
+.. GENERATED FROM PYTHON SOURCE LINES 231-240
 
 .. code-block:: Python
 
     plot_phasor(
-        real2,
-        imag2,
+        real[1],
+        imag[1],
         frequency=frequency * 2,
         style='hist2d',
         cmin=4,
@@ -493,7 +487,7 @@ zero modulation depth). This can be eliminated by setting a threshold.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-302
+.. GENERATED FROM PYTHON SOURCE LINES 241-296
 
 Note that if the room light is significant compared to the fluorescence
 signal, it will bias the fluorescence phasors by pulling them toward the
@@ -551,7 +545,7 @@ single exponential lifetime around 1.5 ns in phosphate buffer at pH 7.0.
 The explanations in the last two paragraphs should help answer
 the last question above, about the components in the middle channel.
 
-.. GENERATED FROM PYTHON SOURCE LINES 304-323
+.. GENERATED FROM PYTHON SOURCE LINES 298-317
 
 Quenching, FRET
 ---------------
@@ -573,7 +567,7 @@ Calculate the phasor for a fluorophore with a 4 ns lifetime.
 Then calculate its phasor under different efficiencies of energy transfer.
 How does this differ from what we saw with the two-state system?
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-333
+.. GENERATED FROM PYTHON SOURCE LINES 317-327
 
 .. code-block:: Python
 
@@ -599,7 +593,7 @@ How does this differ from what we saw with the two-state system?
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 334-343
+.. GENERATED FROM PYTHON SOURCE LINES 328-337
 
 If only the donor fluorophore is excited (no direct excitation of the
 acceptor), the acceptor fluorescence shows a very unusual phenomenon.
@@ -611,7 +605,7 @@ and the acceptor lifetime is 4 ns, the acceptor can be simulated
 by a lifetime of 0.5 ns with amplitude of -1 and a lifetime of 4 ns with
 amplitude of 1:
 
-.. GENERATED FROM PYTHON SOURCE LINES 343-359
+.. GENERATED FROM PYTHON SOURCE LINES 337-353
 
 .. code-block:: Python
 
@@ -643,7 +637,7 @@ amplitude of 1:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-365
+.. GENERATED FROM PYTHON SOURCE LINES 354-359
 
 Often in FRET experiments, only a fraction of the donor molecules experience
 FRET. The others continue to fluoresce with an unquenched lifetime.
@@ -651,7 +645,7 @@ Simulate the situation where 50% of the donors remain unquenched.
 Rationalize the results in terms of the quenching simulations done above
 and the two state experiments we did earlier.
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-375
+.. GENERATED FROM PYTHON SOURCE LINES 359-369
 
 .. code-block:: Python
 
@@ -677,7 +671,7 @@ and the two state experiments we did earlier.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-381
+.. GENERATED FROM PYTHON SOURCE LINES 370-375
 
 CFP-YFP
 .......
@@ -685,7 +679,7 @@ CFP-YFP
 Open the file ``CFPpax8651866.ref``, which contains referenced FLIM data
 for a cell transfected with a CFP paxillin construct.
 
-.. GENERATED FROM PYTHON SOURCE LINES 381-386
+.. GENERATED FROM PYTHON SOURCE LINES 375-380
 
 .. code-block:: Python
 
@@ -706,12 +700,12 @@ for a cell transfected with a CFP paxillin construct.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 387-389
+.. GENERATED FROM PYTHON SOURCE LINES 381-383
 
 Open the file ``1011rac1002.ref``, which contains referenced FLIM data
 for a cell transfected with a CFP-YFP fusion protein:
 
-.. GENERATED FROM PYTHON SOURCE LINES 389-394
+.. GENERATED FROM PYTHON SOURCE LINES 383-388
 
 .. code-block:: Python
 
@@ -732,11 +726,11 @@ for a cell transfected with a CFP-YFP fusion protein:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 395-396
+.. GENERATED FROM PYTHON SOURCE LINES 389-390
 
 Plot the phasor distributions together:
 
-.. GENERATED FROM PYTHON SOURCE LINES 396-403
+.. GENERATED FROM PYTHON SOURCE LINES 390-397
 
 .. code-block:: Python
 
@@ -759,18 +753,18 @@ Plot the phasor distributions together:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 404-406
+.. GENERATED FROM PYTHON SOURCE LINES 398-400
 
 Set the intensity threshold to 32 to remove any room light
 and smooth the phasor.
 
-.. GENERATED FROM PYTHON SOURCE LINES 406-425
+.. GENERATED FROM PYTHON SOURCE LINES 400-419
 
 .. code-block:: Python
 
 
-    real1, imag1 = phasor_filter(real1, imag1, method='median', repeat=2)
-    real2, imag2 = phasor_filter(real2, imag2, method='median', repeat=2)
+    _, real1, imag1 = phasor_filter_median(mean1, real1, imag1, repeat=2)
+    _, real2, imag2 = phasor_filter_median(mean2, real2, imag2, repeat=2)
 
     _, real1, imag1 = phasor_threshold(
         mean, real1, imag1, mean_min=32, real_min=0, imag_min=0, open_interval=True
@@ -799,7 +793,7 @@ and smooth the phasor.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-433
+.. GENERATED FROM PYTHON SOURCE LINES 420-427
 
 Load ``CFP and CFP-YFP.ref`` and ``CFP-YFP many cells with background.ref``.
 These files were acquired using the Lambert frequency domain FLIM instrument
@@ -809,7 +803,7 @@ various amounts of background.
 Set the intensity threshold to 6202 counts, such that the background phasor
 is visible.
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-441
+.. GENERATED FROM PYTHON SOURCE LINES 427-435
 
 .. code-block:: Python
 
@@ -833,7 +827,7 @@ is visible.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 442-451
+.. GENERATED FROM PYTHON SOURCE LINES 436-445
 
 .. code-block:: Python
 
@@ -858,7 +852,7 @@ is visible.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 452-470
+.. GENERATED FROM PYTHON SOURCE LINES 446-464
 
 .. code-block:: Python
 
@@ -867,7 +861,7 @@ is visible.
     real = numpy.vstack((real1, real2))
     imag = numpy.vstack((imag1, imag2))
 
-    real, imag = phasor_filter(real, imag, method='median', repeat=2)
+    mean, real, imag = phasor_filter_median(mean, real, imag, repeat=2)
 
     _, real, imag = phasor_threshold(
         mean, real, imag, mean_min=6202, real_min=0, imag_min=0, open_interval=True
@@ -892,7 +886,7 @@ is visible.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 471-477
+.. GENERATED FROM PYTHON SOURCE LINES 465-471
 
 Before starting the analysis of the FRET trajectory, identify the phasor
 of the donor without the acceptor and the phasor of the background or
@@ -901,7 +895,7 @@ autofluorescence.
 Set two cursors of size 0.03 at the phasor coordinates of
 the unquenched donor (0.72, 0.45) and the background (0.62, 0.41):
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-495
+.. GENERATED FROM PYTHON SOURCE LINES 471-489
 
 .. code-block:: Python
 
@@ -935,7 +929,7 @@ the unquenched donor (0.72, 0.45) and the background (0.62, 0.41):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 496-502
+.. GENERATED FROM PYTHON SOURCE LINES 490-496
 
 Calculate two trajectories, one for the quenching due to FRET and the other
 for the superposition of the FRETing population with the background.
@@ -944,7 +938,7 @@ The FRET efficiency for the file with very little background is about 0.23.
 Instead, the best agreement for the file with large background is obtained
 with the combination shown below, that results in about 0.32 FRET efficiency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 502-545
+.. GENERATED FROM PYTHON SOURCE LINES 496-539
 
 .. code-block:: Python
 
@@ -1003,13 +997,13 @@ with the combination shown below, that results in about 0.32 FRET efficiency.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 546-549
+.. GENERATED FROM PYTHON SOURCE LINES 540-543
 
 For this sample, it seems that all the cells are FRETing and that
 the change of lifetime between the cells is due to combination with
 the background fluorescence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 551-558
+.. GENERATED FROM PYTHON SOURCE LINES 545-552
 
 .. todo::
 
@@ -1019,7 +1013,7 @@ the background fluorescence.
     Assign component 1 and component 2 to the extremes of the lines of the
     linear combination.
 
-.. GENERATED FROM PYTHON SOURCE LINES 560-572
+.. GENERATED FROM PYTHON SOURCE LINES 554-566
 
 Comments and questions
 ----------------------
@@ -1034,7 +1028,7 @@ expresses one protein of the other.
 - What percentage of the species is FRETing in the CFP-YFP image?
 - Is the FRET efficiency high or low?
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-577
+.. GENERATED FROM PYTHON SOURCE LINES 568-571
 
 sphinx_gallery_thumbnail_number = -1
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1043,7 +1037,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.742 seconds)
+   **Total running time of the script:** (0 minutes 5.067 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_lfd_workshop.py:

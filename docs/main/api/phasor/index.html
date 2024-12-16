@@ -585,6 +585,7 @@ fluorescence lifetimes:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_transform" title="phasorpy.phasor.phasor_transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_transform()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_multiply" title="phasorpy.phasor.phasor_multiply"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_multiply()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_divide" title="phasorpy.phasor.phasor_divide"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_divide()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_normalize" title="phasorpy.phasor.phasor_normalize"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_normalize()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>calibrate phasor coordinates with reference of known fluorescence
@@ -626,7 +627,7 @@ lifetime:</p>
 </li>
 <li><p>filter phasor coordinates:</p>
 <ul>
-<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_filter" title="phasorpy.phasor.phasor_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_filter_median" title="phasorpy.phasor.phasor_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter_median()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a></p></li>
 </ul>
 </li>
@@ -911,7 +912,7 @@ is calculated from the real part of the phasor coordinates
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_calibrate">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_calibrate" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_calibrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_safe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_calibrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_calibrate" title="Link to this definition">#</a></dt>
 <dd><p>Return calibrated/referenced phasor coordinates.</p>
 <p>Calibration of phasor coordinates from time-resolved measurements is
 necessary to account for the instrument response function (IRF) and delays
@@ -921,9 +922,11 @@ in the electronics.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to be calibrated.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to be calibrated.</p></li>
+<li><p><strong>reference_mean</strong> (<em>array_like</em><em> or </em><em>None</em>) – Intensity of phasor coordinates from reference of known lifetime.
+Used to re-normalize averaged phasor coordinates.</p></li>
 <li><p><strong>reference_real</strong> (<em>array_like</em>) – Real component of phasor coordinates from reference of known lifetime.
 Must be measured with the same instrument setting as the phasor
-coordinates to be calibrated.</p></li>
+coordinates to be calibrated. Dimensions must be the same as <cite>real</cite>.</p></li>
 <li><p><strong>reference_imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates from reference of known
 lifetime.
 Must be measured with the same instrument setting as the phasor
@@ -938,9 +941,8 @@ If a sequence, the harmonics included in the first axis of <cite>real</cite> and
 If <cite>‘all’</cite>, the first axis of <cite>real</cite> and <cite>imag</cite> contains lower
 harmonics.
 The default is the first harmonic (fundamental frequency).</p></li>
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to be excluded during center calculation. If None, all
-axes are considered, except for the first axis if multiple harmonics
-are specified.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>reference_mean</cite> to exclude from reference center calculation.
+By default, all axes except harmonics are included.</p></li>
 <li><p><strong>fraction</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Fractional intensities or pre-exponential amplitudes of the lifetime
 components. Fractions are normalized to sum to 1.
 Must be same size as <cite>lifetime</cite>.</p></li>
@@ -949,14 +951,16 @@ else fractional intensities (default).</p></li>
 <li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
 The default is 1e-3 for MHz and ns, or Hz and ms.
 Use 1.0 for Hz and s.</p></li>
-<li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reverse calibration.</p></li>
-<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for calculating center of <cite>reference_real</cite> and
-<cite>reference_imag</cite>:</p>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for calculating center of reference phasor coordinates:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'mean'</span></code>: Arithmetic mean of phasor coordinates.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mean'</span></code>: Arithmetic mean.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median.</p></li>
 </ul>
 </p></li>
+<li><p><strong>nan_safe</strong> (<em>bool</em><em>, </em><em>optional</em>) – Ensure <cite>method</cite> is applied to same elements of reference arrays.
+By default, distribute NaNs among reference arrays before applying
+<cite>method</cite>.</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reverse calibration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -983,11 +987,13 @@ Use 1.0 for Hz and s.</p></li>
     <span class="n">imag</span><span class="p">,</span>
     <span class="o">*</span><span class="n">polar_from_reference_phasor</span><span class="p">(</span>
         <span class="o">*</span><span class="n">phasor_center</span><span class="p">(</span>
+            <span class="n">reference_mean</span><span class="p">,</span>
             <span class="n">reference_real</span><span class="p">,</span>
             <span class="n">reference_imag</span><span class="p">,</span>
             <span class="n">skip_axis</span><span class="p">,</span>
             <span class="n">method</span><span class="p">,</span>
-        <span class="p">),</span>
+            <span class="n">nan_safe</span><span class="p">,</span>
+        <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
         <span class="o">*</span><span class="n">phasor_from_lifetime</span><span class="p">(</span>
             <span class="n">frequency</span><span class="p">,</span>
             <span class="n">lifetime</span><span class="p">,</span>
@@ -1012,6 +1018,7 @@ Use 1.0 for Hz and s.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_calibrate</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
@@ -1024,6 +1031,7 @@ Use 1.0 for Hz and s.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_calibrate</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0658</span><span class="p">,</span> <span class="mf">0.132</span><span class="p">,</span> <span class="mf">0.198</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2657</span><span class="p">,</span> <span class="mf">0.332</span><span class="p">,</span> <span class="mf">0.399</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
@@ -1037,46 +1045,56 @@ Use 1.0 for Hz and s.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_center">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_center" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_safe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_center"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_center" title="Link to this definition">#</a></dt>
 <dd><p>Return center of phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to be excluded during center calculation. If None, all
-axes are considered.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>mean</cite> to excluded from center calculation.
+By default, all axes except harmonics are included.</p></li>
 <li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for center calculation:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'mean'</span></code>: Arithmetic mean of phasor coordinates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
 </ul>
 </p></li>
+<li><p><strong>nan_safe</strong> (<em>bool</em><em>, </em><em>optional</em>) – Ensure <cite>method</cite> is applied to same elements of input arrays.
+By default, distribute NaNs among input arrays before applying
+<cite>method</cite>. May be disabled if phasor coordinates were filtered by
+<a class="reference internal" href="#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a>.</p></li>
 <li><p><strong>**kwargs</strong> – Optional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nanmean()</span></code> or
 <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nanmedian()</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>real_center</strong> (<em>ndarray</em>) – Real center coordinates calculated based on the specified method.</p></li>
-<li><p><strong>imag_center</strong> (<em>ndarray</em>) – Imaginary center coordinates calculated based on the specified method.</p></li>
+<li><p><strong>mean_center</strong> (<em>ndarray</em>) – Intensity center coordinates.</p></li>
+<li><p><strong>real_center</strong> (<em>ndarray</em>) – Real center coordinates.</p></li>
+<li><p><strong>imag_center</strong> (<em>ndarray</em>) – Imaginary center coordinates.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ValueError</strong> – If the specified method is not supported.
-    If the shapes of the <cite>real</cite> and <cite>imag</cite> do not match.</p>
+    If the shapes of <cite>mean</cite>, <cite>real</cite>, and <cite>imag</cite> do not match.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Compute center coordinates with the ‘mean’ method:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_center</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
-<span class="go">(2.0, 5.0)</span>
+<p>Compute center coordinates with the default ‘mean’ method:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_center</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>  
+<span class="go">(1.67, 0.2, 0.5)</span>
 </pre></div>
 </div>
 <p>Compute center coordinates with the ‘median’ method:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_center</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span>
-<span class="go">(2.0, 5.0)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_center</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(2.0, 0.2, 0.5)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1121,29 +1139,29 @@ and <cite>divisor_imag</cite> (<span class="math notranslate nohighlight">\(s\)<
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.phasor.phasor_filter">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'median'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter" title="Link to this definition">#</a></dt>
-<dd><p>Return filtered phasor coordinates.</p>
-<p>By default, a median filter is applied independently to the real and
-imaginary components of phasor coordinates once with a kernel size of 3
-multiplied by the number of dimensions of the input arrays.</p>
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_filter_median">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter_median</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_scipy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_filter_median"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter_median" title="Link to this definition">#</a></dt>
+<dd><p>Return median-filtered phasor coordinates.</p>
+<p>By default, apply a NaN-aware median filter independently to the real
+and imaginary components of phasor coordinates once with a kernel size of 3
+multiplied by the number of dimensions of the input arrays. Return the
+intensity unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to be filtered.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to be filtered.</p></li>
-<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for filtering:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'median_scipy'</span></code>: Spatial median of phasor coordinates
-based on <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.</p></li>
-</ul>
-</p></li>
-<li><p><strong>repeat</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to apply filter. The default is 1.</p></li>
-<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of filter kernel. The default is 3.</p></li>
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axis or axes to skip filtering. By default all axes are filtered.</p></li>
+<li><p><strong>repeat</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of times to apply median filter. The default is 1.</p></li>
+<li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of median filter kernel. The default is 3.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>mean</cite> to exclude from filter.
+By default, all axes except harmonics are included.</p></li>
+<li><p><strong>use_scipy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.
+This function has undefined behavior if the input arrays contain
+<cite>NaN</cite> values but is faster when filtering more than 2 dimensions.
+See <a class="reference external" href="https://github.com/phasorpy/phasorpy/issues/87">issue #87</a>.</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
-Applies to filtering in two dimensions with the <cite>median</cite> method only.
+Applies to filtering in two dimensions when not using scipy.
 By default, multi-threading is disabled.
 If zero, up to half of logical CPUs are used.
 OpenMP may not be available on all platforms.</p></li>
@@ -1152,43 +1170,39 @@ OpenMP may not be available on all platforms.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Unchanged intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>ndarray</em>) – Filtered real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>ndarray</em>) – Filtered imaginary component of phasor coordinates.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – If the specified method is not supported.
-    If <cite>repeat</cite> is less than 0.
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>repeat</cite> is less than 0.
     If <cite>size</cite> is less than 1.
-    The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.</p>
+    The array shapes of <cite>mean</cite>, <cite>real</cite>, and <cite>imag</cite> do not match.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>Additional filtering methods may be added in the future.</p>
-<p>The <cite>median</cite> method ignores <cite>NaN</cite> values. If the kernel contains an even
-number of elements, the median is the average of the two middle elements.</p>
-<p>The implementation of the <cite>median_scipy</cite> method is based on
-<code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>,
-which has undefined behavior if the input arrays contain <cite>NaN</cite> values.
-See <a class="reference external" href="https://github.com/phasorpy/phasorpy/issues/87">issue #87</a>.</p>
-<p>When filtering in more than two dimensions, the <cite>median</cite> method is
-slower than the <cite>median_scipy</cite> method. When filtering in two
-dimensions, both methods have similar performance.</p>
 <p class="rubric">Examples</p>
 <p>Apply three times a median filter with a kernel size of three:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_filter</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
-<span class="gp">... </span>    <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]],</span>
 <span class="gp">... </span>    <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">(array([[0, 0, 0],</span>
-<span class="go">        [2, 2, 2],</span>
-<span class="go">        [2, 2, 2]]),</span>
-<span class="go">array([[3, 3, 3],</span>
-<span class="go">        [4, nan, 4],</span>
-<span class="go">        [4, 4, 4]]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span>
+<span class="go">array([[1, 2, 3],</span>
+<span class="go">       [4, 5, 6],</span>
+<span class="go">       [7, 8, 9]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">real</span>
+<span class="go">array([[0, 0, 0],</span>
+<span class="go">       [0.2, 0.2, 0.2],</span>
+<span class="go">       [0.2, 0.2, 0.2]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imag</span>
+<span class="go">array([[0.3, 0.3, 0.3],</span>
+<span class="go">       [0.4, nan, 0.4],</span>
+<span class="go">       [0.4, 0.4, 0.4]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1561,7 +1575,7 @@ are converted to phasor coordinates <cite>real</cite> (<span class="math notrans
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_signal">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_from_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_from_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1593,6 +1607,13 @@ For example, <code class="docutils literal notranslate"><span class="pre">scipy.
 Used to calculate the real forward FFT.</p></li>
 <li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
 The default is float64 unless the <cite>signal</cite> is float32.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return normalized phasor coordinates.
+If true (default), return average of <cite>signal</cite> along <cite>axis</cite> and
+Fourier coefficients divided by sum of <cite>signal</cite> along <cite>axis</cite>.
+Else, return sum of <cite>signal</cite> along <cite>axis</cite> and unscaled Fourier
+coefficients.
+Un-normalized phasor coordinates cannot be used with most of PhasorPy’s
+functions but may be required for intermediate processing.</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization when not using FFT.
 By default, multi-threading is disabled.
 If zero, up to half of logical CPUs are used.
@@ -1620,12 +1641,13 @@ OpenMP may not be available on all platforms.</p></li>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_to_signal</span></code></a>, <a class="reference internal" href="../../tutorials/benchmarks/phasorpy_phasor_from_signal/#sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"><span class="std std-ref">Benchmark phasor_from_signal</span></a></p>
+<p><a class="reference internal" href="#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_to_signal</span></code></a>, <a class="reference internal" href="#phasorpy.phasor.phasor_normalize" title="phasorpy.phasor.phasor_normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_normalize</span></code></a>, <a class="reference internal" href="../../tutorials/benchmarks/phasorpy_phasor_from_signal/#sphx-glr-tutorials-benchmarks-phasorpy-phasor-from-signal-py"><span class="std std-ref">Benchmark phasor_from_signal</span></a></p>
 </div>
 <p class="rubric">Notes</p>
-<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>), <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>), and
-<cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) are calculated from <span class="math notranslate nohighlight">\(K\ge3\)</span> samples of the
-signal <span class="math notranslate nohighlight">\(F\)</span> af <cite>harmonic</cite> <span class="math notranslate nohighlight">\(h\)</span> according to:</p>
+<p>The normalized phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>), <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>),
+and average intensity <cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) are calculated from
+<span class="math notranslate nohighlight">\(K\ge3\)</span> samples of the signal <span class="math notranslate nohighlight">\(F\)</span> af <cite>harmonic</cite> <span class="math notranslate nohighlight">\(h\)</span>
+according to:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}F_{DC} &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}\\G &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
 \cos{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\\S &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
@@ -1691,6 +1713,55 @@ and <cite>factor_imag</cite> (<span class="math notranslate nohighlight">\(s\)</
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_normalize">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_unnormalized</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_normalize" title="Link to this definition">#</a></dt>
+<dd><p>Return normalized phasor coordinates.</p>
+<p>Use to normalize the phasor coordinates returned by
+<code class="docutils literal notranslate"><span class="pre">phasor_from_signal(...,</span> <span class="pre">normalize=False)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean_unnormalized</strong> (<em>array_like</em>) – Unnormalized intensity of phasor coordinates.</p></li>
+<li><p><strong>real_unnormalized</strong> (<em>array_like</em>) – Unnormalized real component of phasor coordinates.</p></li>
+<li><p><strong>imag_unnormalized</strong> (<em>array_like</em>) – Unnormalized imaginary component of phasor coordinates.</p></li>
+<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>default: 1</em>) – Number of signal samples over which <cite>mean</cite> was integrated.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
+The default is float64 unless the <cite>real</cite> is float32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Normalized intensity.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Normalized real component.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Normalized imaginary component.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The average intensity <cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) and normalized phasor
+coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>) are calculated from
+the signal <cite>intensity</cite> (<span class="math notranslate nohighlight">\(F\)</span>), the  number of <cite>samples</cite> (<span class="math notranslate nohighlight">\(K\)</span>),
+<cite>real_unnormalized</cite> (<span class="math notranslate nohighlight">\(G'\)</span>), and <cite>imag_unnormalized</cite> (<span class="math notranslate nohighlight">\(S'\)</span>)
+according to:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}F_{DC} &amp;= F / K\\G &amp;= G' / F\\S &amp;= S' / F\end{aligned}\end{align} \]</div>
+<p>If <span class="math notranslate nohighlight">\(F = 0\)</span>, the normalized phasor coordinates (<span class="math notranslate nohighlight">\(G\)</span>)
+and (<span class="math notranslate nohighlight">\(S\)</span>) are undefined (<span class="math notranslate nohighlight">\(NaN\)</span> or <span class="math notranslate nohighlight">\(\infty\)</span>).</p>
+<p class="rubric">Examples</p>
+<p>Normalize phasor coordinates with intensity integrated over 10 samples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_normalize</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">(array([0, 0.01]), array([nan, 3]), array([inf, 5]))</span>
+</pre></div>
+</div>
+<p>Normalize multi-harmonic phasor coordinates:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_normalize</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="go">(array(0.01), array([0, 3]), array([4, 5]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_semicircle">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_semicircle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">101</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_semicircle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_semicircle" title="Link to this definition">#</a></dt>
 <dd><p>Return equally spaced phasor coordinates on universal semicircle.</p>
@@ -1728,17 +1799,19 @@ single lifetime components, where the relation of polar coordinates
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_threshold">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">open_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_threshold" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">open_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detect_harmonics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_threshold" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates with values out of interval replaced by NaN.</p>
 <p>Interval thresholds can be set for mean intensity, real and imaginary
 coordinates, and phase and modulation.
 Phasor coordinates smaller than minimum thresholds or larger than maximum
 thresholds are replaced NaN.
-No threshold is applied by default.</p>
+No threshold is applied by default.
+NaNs in <cite>mean</cite> or any <cite>real</cite> and <cite>imag</cite> harmonic are propagated to
+<cite>mean</cite> and all harmonics in <cite>real</cite> and <cite>imag</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mean</strong> (<em>array_like</em>) – Mean intensity of phasor coordinates.</p></li>
+<li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
 <li><p><strong>mean_min</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Lower threshold for mean intensity.</p></li>
@@ -1753,15 +1826,18 @@ No threshold is applied by default.</p>
 <li><p><strong>modulation_max</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Upper threshold for modulation.</p></li>
 <li><p><strong>open_interval</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, the interval is open, and the threshold values are
 not included in the interval.
-If False, the interval is closed, and the threshold values are
-included in the interval. The default is False.</p></li>
+If false (default), the interval is closed, and the threshold values
+are included in the interval.</p></li>
+<li><p><strong>detect_harmonics</strong> (<em>bool</em><em>, </em><em>optional</em>) – By default, detect presence of multiple harmonics from array shapes.
+If false, no harmonics are assumed to be present, and the function
+behaves like a numpy universal function.</p></li>
 <li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>mean</strong> (<em>ndarray</em>) – Thresholded mean intensity of phasor coordinates.</p></li>
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Thresholded intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>ndarray</em>) – Thresholded real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>ndarray</em>) – Thresholded imaginary component of phasor coordinates.</p></li>
 </ul>
@@ -2016,7 +2092,7 @@ projection on the principal plane:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mean</strong> (<em>array_like</em>) – Average signal intensity (DC).
-If not scalar, shape must match the last two dimensions of <cite>real</cite>.</p></li>
+If not scalar, shape must match the last dimensions of <cite>real</cite>.</p></li>
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.
 Multiple harmonics, if any, must be in the first axis.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.
@@ -2361,7 +2437,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_calibrate"><code class="docutils literal notranslate"><span class="pre">phasor_calibrate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_divide"><code class="docutils literal notranslate"><span class="pre">phasor_divide()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_filter"><code class="docutils literal notranslate"><span class="pre">phasor_filter()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_filter_median"><code class="docutils literal notranslate"><span class="pre">phasor_filter_median()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_acceptor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_donor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_donor()</span></code></a></li>
@@ -2369,6 +2445,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_polar"><code class="docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_signal"><code class="docutils literal notranslate"><span class="pre">phasor_from_signal()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_multiply"><code class="docutils literal notranslate"><span class="pre">phasor_multiply()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_normalize"><code class="docutils literal notranslate"><span class="pre">phasor_normalize()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_semicircle"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_threshold"><code class="docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></li>

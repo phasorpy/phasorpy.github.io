@@ -579,7 +579,7 @@ available in the PhasorPy library yet.</p>
 <span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">lifetime_fraction_from_amplitude</span><span class="p">,</span>
     <span class="n">lifetime_to_signal</span><span class="p">,</span>
-    <span class="n">phasor_filter</span><span class="p">,</span>
+    <span class="n">phasor_filter_median</span><span class="p">,</span>
     <span class="n">phasor_from_fret_donor</span><span class="p">,</span>
     <span class="n">phasor_from_lifetime</span><span class="p">,</span>
     <span class="n">phasor_threshold</span><span class="p">,</span>
@@ -719,16 +719,14 @@ harmonics:</p>
 <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_simfcs_referenced</span><span class="p">(</span>
     <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;capillaries1001.ref&#39;</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="p">)</span>
-<span class="n">real1</span><span class="p">,</span> <span class="n">real2</span> <span class="o">=</span> <span class="n">real</span>
-<span class="n">imag1</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">imag</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;capillaries1001.ref&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_lfd_workshop_005.png" srcset="../../_images/sphx_glr_phasorpy_lfd_workshop_005.png" alt="capillaries1001.ref, mean, G, real, S, imag" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">real1</span><span class="p">,</span>
-    <span class="n">imag1</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s1">&#39;hist2d&#39;</span><span class="p">,</span>
     <span class="n">cmin</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
@@ -737,8 +735,8 @@ harmonics:</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_lfd_workshop_006.png" srcset="../../_images/sphx_glr_phasorpy_lfd_workshop_006.png" alt="1st Harmonics (80.0 MHz)" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">real2</span><span class="p">,</span>
-    <span class="n">imag2</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s1">&#39;hist2d&#39;</span><span class="p">,</span>
     <span class="n">cmin</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
@@ -755,24 +753,20 @@ Therefore, it is a good idea to smooth noisy data by a moving average.
 Note that this will also reduce the spatial resolution in the phasor.</p>
 <p>If high spatial resolution is needed, make sure to have at least 100
 photons in each pixel of the image.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In addition, small amounts of room light will appear towards the lower
 left-hand corner of the phasor (room light is uncorrelated, so it has
 zero modulation depth). This can be eliminated by setting a threshold.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
-    <span class="n">mean</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-<span class="n">_</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
-    <span class="n">mean</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">real1</span><span class="p">,</span>
-    <span class="n">imag1</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s1">&#39;hist2d&#39;</span><span class="p">,</span>
     <span class="n">cmin</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
@@ -781,8 +775,8 @@ zero modulation depth). This can be eliminated by setting a threshold.</p>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_lfd_workshop_008.png" srcset="../../_images/sphx_glr_phasorpy_lfd_workshop_008.png" alt="1st Harmonics (80.0 MHz) filtered" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">real2</span><span class="p">,</span>
-    <span class="n">imag2</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">style</span><span class="o">=</span><span class="s1">&#39;hist2d&#39;</span><span class="p">,</span>
     <span class="n">cmin</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
@@ -935,8 +929,8 @@ for a cell transfected with a CFP-YFP fusion protein:</p>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_lfd_workshop_015.png" srcset="../../_images/sphx_glr_phasorpy_lfd_workshop_015.png" alt="CFPpax8651866 and 1011rac1002" class = "sphx-glr-single-img"/><p>Set the intensity threshold to 32 to remove any room light
 and smooth the phasor.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean1</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean2</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">_</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
@@ -982,7 +976,7 @@ is visible.</p>
 <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">real1</span><span class="p">,</span> <span class="n">real2</span><span class="p">))</span>
 <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">imag1</span><span class="p">,</span> <span class="n">imag2</span><span class="p">))</span>
 
-<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
 <span class="n">_</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">6202</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
@@ -1094,7 +1088,7 @@ expresses one protein of the other.</p>
 <p>sphinx_gallery_thumbnail_number = -1
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.742 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.067 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-lfd-workshop-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/650c4a59f7aed6a84b22804f5cd988b5/phasorpy_lfd_workshop.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_lfd_workshop.ipynb</span></code></a></p>

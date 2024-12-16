@@ -733,6 +733,7 @@ lifetime (Fluorescein, 4.2 ns):</p>
 <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
@@ -751,6 +752,7 @@ same reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
@@ -769,10 +771,12 @@ same reference:</p>
 <section id="filter-phasor-coordinates">
 <h2>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Applying median filter to the calibrated phasor coordinates,
-often multiple times, improves contrast and reduces noise:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_filter</span>
+often multiple times, improves contrast and reduces noise.
+The filter is applied independently to the real and imaginary components,
+but not to the signal average:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_filter_median</span>
 
-<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Pixels with low intensities are commonly excluded from analysis and
@@ -993,7 +997,7 @@ pooch-v1.8.2
 <p>sphinx_gallery_thumbnail_number = -7
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 51.976 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 54.873 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>

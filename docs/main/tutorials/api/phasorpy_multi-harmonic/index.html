@@ -573,11 +573,11 @@ of multi-harmonic phasor coordinates.</p>
 <span class="kn">from</span> <span class="nn">phasorpy.io</span> <span class="kn">import</span> <span class="n">phasor_from_ometiff</span><span class="p">,</span> <span class="n">phasor_to_ometiff</span>
 <span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">phasor_calibrate</span><span class="p">,</span>
-    <span class="n">phasor_filter</span><span class="p">,</span>
+    <span class="n">phasor_filter_median</span><span class="p">,</span>
     <span class="n">phasor_from_signal</span><span class="p">,</span>
     <span class="n">phasor_threshold</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">PhasorPlot</span>
+<span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">plot_phasor</span>
 </pre></div>
 </div>
 <section id="read-signal-from-file">
@@ -606,7 +606,13 @@ The first and second harmonics are calculated in this example:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(512, 512) (2, 512, 512) (2, 512, 512)
 </pre></div>
 </div>
-<p>To calculate all harmonics, use <code class="docutils literal notranslate"><span class="pre">harmonic='all'</span></code>:</p>
+<p>Plot the calculated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.plot</span> <span class="kn">import</span> <span class="n">plot_phasor_image</span>
+
+<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" alt="Sample, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>To calculate all harmonics, use <code class="docutils literal notranslate"><span class="pre">harmonic='all'</span></code>:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -631,12 +637,12 @@ raw phasor coordinates with the reference coordinates of known lifetime
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
-    <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -645,13 +651,13 @@ same reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
     <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
@@ -666,23 +672,23 @@ same reference:</p>
 <h2>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Applying median filter to the calibrated phasor coordinates,
 often multiple times, improves contrast and reduces noise.
-This is done at multiple harmonics simultaneously by excluding the
-harmonic axis from the filter:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">)</span>
+The filter is applied independently to the real and imaginary components
+of the harmonics, but not to the average signal:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Pixels with low intensities are commonly excluded from analysis and
-visualization of phasor coordinates. For now, harmonics must be treated
-separately when thresholding:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real1</span><span class="p">,</span> <span class="n">real2</span> <span class="o">=</span> <span class="n">real</span>
-<span class="n">imag1</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">imag</span>
-<span class="n">mean</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">mean</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+visualization of phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
+<p>Show the calibrated, filtered phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" alt="Calibrated, filtered phasor coordinates, mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
 <section id="store-phasor-coordinates">
 <h2>Store phasor coordinates<a class="headerlink" href="#store-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Write the calibrated and filtered phasor coordinates at multiple harmonics,
@@ -711,7 +717,7 @@ and the fundamental frequency to an OME-TIFF file:</p>
 <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
 <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
-    <span class="s1">&#39;Phasor coordinates at first and second&#39;</span>
+    <span class="s1">&#39;Phasor coordinates at first and second harmonics&#39;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -720,24 +726,26 @@ and the fundamental frequency to an OME-TIFF file:</p>
 <h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Visualize the 2D histogram of the calibrated and filtered phasor coordinates
 at the second harmonic:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates at second harmonic&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span><span class="p">)</span>
-<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" alt="Calibrated, filtered phasor coordinates at second harmonic" class = "sphx-glr-single-img"/><p>For comparison, the uncalibrated, unfiltered phasor coordinates at the
+<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_003.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_003.png" alt="Calibrated, filtered phasor coordinates at second harmonic" class = "sphx-glr-single-img"/><p>For comparison, the uncalibrated, unfiltered phasor coordinates at the
 second harmonic:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasorplot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
-    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates at second harmonic&#39;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">uncalibrated_real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">uncalibrated_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates at second harmonic&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">phasorplot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">uncalibrated_real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">uncalibrated_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">phasorplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" alt="Raw phasor coordinates at second harmonic" class = "sphx-glr-single-img"/></section>
+<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_004.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_004.png" alt="Raw phasor coordinates at second harmonic" class = "sphx-glr-single-img"/></section>
 <section id="component-analysis">
 <h2>Component analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h2>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
@@ -746,7 +754,7 @@ second harmonic:</p>
 <p>sphinx_gallery_thumbnail_number = -1
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.004 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.752 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-multi-harmonic-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/9476a4fbc2f7b999fbd87a3ba58e06a3/phasorpy_multi-harmonic.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_multi-harmonic.ipynb</span></code></a></p>

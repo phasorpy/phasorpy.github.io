@@ -552,6 +552,7 @@
 <span class="sd">  - :py:func:`phasor_transform`</span>
 <span class="sd">  - :py:func:`phasor_multiply`</span>
 <span class="sd">  - :py:func:`phasor_divide`</span>
+<span class="sd">  - :py:func:`phasor_normalize`</span>
 
 <span class="sd">- calibrate phasor coordinates with reference of known fluorescence</span>
 <span class="sd">  lifetime:</span>
@@ -586,7 +587,7 @@
 
 <span class="sd">- filter phasor coordinates:</span>
 
-<span class="sd">  - :py:func:`phasor_filter`</span>
+<span class="sd">  - :py:func:`phasor_filter_median`</span>
 <span class="sd">  - :py:func:`phasor_threshold`</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -603,7 +604,7 @@
     <span class="s1">&#39;phasor_calibrate&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_divide&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;phasor_filter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_filter_median&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_apparent_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_fret_acceptor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_fret_donor&#39;</span><span class="p">,</span>
@@ -611,6 +612,7 @@
     <span class="s1">&#39;phasor_from_polar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_signal&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_multiply&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_normalize&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_threshold&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_apparent_lifetime&#39;</span><span class="p">,</span>
@@ -685,6 +687,7 @@
     <span class="n">use_fft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">rfft</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="n">DTypeLike</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return phasor coordinates from signal.</span>
@@ -725,6 +728,14 @@
 <span class="sd">    dtype : dtype_like, optional</span>
 <span class="sd">        Data type of output arrays. Either float32 or float64.</span>
 <span class="sd">        The default is float64 unless the `signal` is float32.</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        Return normalized phasor coordinates.</span>
+<span class="sd">        If true (default), return average of `signal` along `axis` and</span>
+<span class="sd">        Fourier coefficients divided by sum of `signal` along `axis`.</span>
+<span class="sd">        Else, return sum of `signal` along `axis` and unscaled Fourier</span>
+<span class="sd">        coefficients.</span>
+<span class="sd">        Un-normalized phasor coordinates cannot be used with most of PhasorPy&#39;s</span>
+<span class="sd">        functions but may be required for intermediate processing.</span>
 <span class="sd">    num_threads : int, optional</span>
 <span class="sd">        Number of OpenMP threads to use for parallelization when not using FFT.</span>
 <span class="sd">        By default, multi-threading is disabled.</span>
@@ -755,13 +766,15 @@
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    phasorpy.phasor.phasor_to_signal</span>
+<span class="sd">    phasorpy.phasor.phasor_normalize</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_benchmarks_phasorpy_phasor_from_signal.py`</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The phasor coordinates `real` (:math:`G`), `imag` (:math:`S`), and</span>
-<span class="sd">    `mean` (:math:`F_{DC}`) are calculated from :math:`K\ge3` samples of the</span>
-<span class="sd">    signal :math:`F` af `harmonic` :math:`h` according to:</span>
+<span class="sd">    The normalized phasor coordinates `real` (:math:`G`), `imag` (:math:`S`),</span>
+<span class="sd">    and average intensity `mean` (:math:`F_{DC}`) are calculated from</span>
+<span class="sd">    :math:`K\ge3` samples of the signal :math:`F` af `harmonic` :math:`h`</span>
+<span class="sd">    according to:</span>
 
 <span class="sd">    .. math::</span>
 
@@ -836,7 +849,9 @@
         <span class="k">if</span> <span class="n">rfft</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">rfft</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span>
 
-        <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">)</span>
+        <span class="n">fft</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span>
+            <span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span> <span class="k">if</span> <span class="n">normalize</span> <span class="k">else</span> <span class="s1">&#39;backward&#39;</span>
+        <span class="p">)</span>
 
         <span class="n">mean</span> <span class="o">=</span> <span class="n">fft</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -856,10 +871,10 @@
             <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="c1"># complex division by mean signal</span>
-        <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
-            <span class="n">real</span> <span class="o">/=</span> <span class="n">dc</span>
-            <span class="n">imag</span> <span class="o">/=</span> <span class="n">dc</span>
+        <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+                <span class="n">real</span> <span class="o">/=</span> <span class="n">dc</span>
+                <span class="n">imag</span> <span class="o">/=</span> <span class="n">dc</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keepdims</span> <span class="ow">and</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -893,7 +908,7 @@
     <span class="n">phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_harmonics</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size0</span><span class="p">,</span> <span class="n">size1</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">size0</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">size1</span><span class="p">))</span>
 
-    <span class="n">_phasor_from_signal</span><span class="p">(</span><span class="n">phasor</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">sincos</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
+    <span class="n">_phasor_from_signal</span><span class="p">(</span><span class="n">phasor</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">sincos</span><span class="p">,</span> <span class="n">normalize</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
 
     <span class="c1"># restore original shape</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="n">shape0</span> <span class="o">+</span> <span class="n">shape1</span>
@@ -927,7 +942,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    mean : array_like</span>
 <span class="sd">        Average signal intensity (DC).</span>
-<span class="sd">        If not scalar, shape must match the last two dimensions of `real`.</span>
+<span class="sd">        If not scalar, shape must match the last dimensions of `real`.</span>
 <span class="sd">    real : array_like</span>
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">        Multiple harmonics, if any, must be in the first axis.</span>
@@ -1034,7 +1049,6 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="c1"># complex multiplication by mean signal</span>
     <span class="n">real</span> <span class="o">*=</span> <span class="n">mean</span>
     <span class="n">imag</span> <span class="o">*=</span> <span class="n">mean</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
@@ -1495,11 +1509,108 @@
 
 
 
+<div class="viewcode-block" id="phasor_normalize">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_normalize">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_normalize</span><span class="p">(</span>
+    <span class="n">mean_unnormalized</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">real_unnormalized</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag_unnormalized</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">DTypeLike</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return normalized phasor coordinates.</span>
+
+<span class="sd">    Use to normalize the phasor coordinates returned by</span>
+<span class="sd">    ``phasor_from_signal(..., normalize=False)``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mean_unnormalized : array_like</span>
+<span class="sd">        Unnormalized intensity of phasor coordinates.</span>
+<span class="sd">    real_unnormalized : array_like</span>
+<span class="sd">        Unnormalized real component of phasor coordinates.</span>
+<span class="sd">    imag_unnormalized : array_like</span>
+<span class="sd">        Unnormalized imaginary component of phasor coordinates.</span>
+<span class="sd">    samples : int, default: 1</span>
+<span class="sd">        Number of signal samples over which `mean` was integrated.</span>
+<span class="sd">    dtype : dtype_like, optional</span>
+<span class="sd">        Data type of output arrays. Either float32 or float64.</span>
+<span class="sd">        The default is float64 unless the `real` is float32.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mean : ndarray</span>
+<span class="sd">        Normalized intensity.</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Normalized real component.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Normalized imaginary component.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The average intensity `mean` (:math:`F_{DC}`) and normalized phasor</span>
+<span class="sd">    coordinates `real` (:math:`G`) and `imag` (:math:`S`) are calculated from</span>
+<span class="sd">    the signal `intensity` (:math:`F`), the  number of `samples` (:math:`K`),</span>
+<span class="sd">    `real_unnormalized` (:math:`G&#39;`), and `imag_unnormalized` (:math:`S&#39;`)</span>
+<span class="sd">    according to:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        F_{DC} &amp;= F / K</span>
+
+<span class="sd">        G &amp;= G&#39; / F</span>
+
+<span class="sd">        S &amp;= S&#39; / F</span>
+
+<span class="sd">    If :math:`F = 0`, the normalized phasor coordinates (:math:`G`)</span>
+<span class="sd">    and (:math:`S`) are undefined (:math:`NaN` or :math:`\infty`).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Normalize phasor coordinates with intensity integrated over 10 samples:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_normalize([0.0, 0.1], [0.0, 0.3], [0.4, 0.5], samples=10)</span>
+<span class="sd">    (array([0, 0.01]), array([nan, 3]), array([inf, 5]))</span>
+
+<span class="sd">    Normalize multi-harmonic phasor coordinates:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_normalize(0.1, [0.0, 0.3], [0.4, 0.5], samples=10)</span>
+<span class="sd">    (array(0.01), array([0, 3]), array([4, 5]))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">samples</span><span class="si">=}</span><span class="s1"> &lt; 1&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">real_unnormalized</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">real_unnormalized</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
+    <span class="p">):</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">real_unnormalized</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real_unnormalized</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag_unnormalized</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="n">mean_unnormalized</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">None</span> <span class="k">if</span> <span class="n">samples</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
+
+
 <div class="viewcode-block" id="phasor_calibrate">
 <a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_calibrate">[docs]</a>
 <span class="k">def</span> <span class="nf">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
@@ -1511,11 +1622,11 @@
     <span class="n">fraction</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">preexponential</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
-    <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="n">nan_safe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return calibrated/referenced phasor coordinates.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return calibrated/referenced phasor coordinates.</span>
 
 <span class="sd">    Calibration of phasor coordinates from time-resolved measurements is</span>
 <span class="sd">    necessary to account for the instrument response function (IRF) and delays</span>
@@ -1527,10 +1638,13 @@
 <span class="sd">        Real component of phasor coordinates to be calibrated.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates to be calibrated.</span>
+<span class="sd">    reference_mean : array_like or None</span>
+<span class="sd">        Intensity of phasor coordinates from reference of known lifetime.</span>
+<span class="sd">        Used to re-normalize averaged phasor coordinates.</span>
 <span class="sd">    reference_real : array_like</span>
 <span class="sd">        Real component of phasor coordinates from reference of known lifetime.</span>
 <span class="sd">        Must be measured with the same instrument setting as the phasor</span>
-<span class="sd">        coordinates to be calibrated.</span>
+<span class="sd">        coordinates to be calibrated. Dimensions must be the same as `real`.</span>
 <span class="sd">    reference_imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates from reference of known</span>
 <span class="sd">        lifetime.</span>
@@ -1550,9 +1664,8 @@
 <span class="sd">        harmonics.</span>
 <span class="sd">        The default is the first harmonic (fundamental frequency).</span>
 <span class="sd">    skip_axis : int or sequence of int, optional</span>
-<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
-<span class="sd">        axes are considered, except for the first axis if multiple harmonics</span>
-<span class="sd">        are specified.</span>
+<span class="sd">        Axes in `reference_mean` to exclude from reference center calculation.</span>
+<span class="sd">        By default, all axes except harmonics are included.</span>
 <span class="sd">    fraction : array_like, optional</span>
 <span class="sd">        Fractional intensities or pre-exponential amplitudes of the lifetime</span>
 <span class="sd">        components. Fractions are normalized to sum to 1.</span>
@@ -1564,14 +1677,18 @@
 <span class="sd">        Product of `frequency` and `lifetime` units&#39; prefix factors.</span>
 <span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
 <span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    method : str, optional</span>
+<span class="sd">        Method used for calculating center of reference phasor coordinates:</span>
+
+<span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean.</span>
+<span class="sd">        - ``&#39;median&#39;``: Spatial median.</span>
+
+<span class="sd">    nan_safe : bool, optional</span>
+<span class="sd">        Ensure `method` is applied to same elements of reference arrays.</span>
+<span class="sd">        By default, distribute NaNs among reference arrays before applying</span>
+<span class="sd">        `method`.</span>
 <span class="sd">    reverse : bool, optional</span>
 <span class="sd">        Reverse calibration.</span>
-<span class="sd">    method : str, optional</span>
-<span class="sd">        Method used for calculating center of `reference_real` and</span>
-<span class="sd">        `reference_imag`:</span>
-
-<span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
-<span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1605,11 +1722,13 @@
 <span class="sd">            imag,</span>
 <span class="sd">            *polar_from_reference_phasor(</span>
 <span class="sd">                *phasor_center(</span>
+<span class="sd">                    reference_mean,</span>
 <span class="sd">                    reference_real,</span>
 <span class="sd">                    reference_imag,</span>
 <span class="sd">                    skip_axis,</span>
 <span class="sd">                    method,</span>
-<span class="sd">                ),</span>
+<span class="sd">                    nan_safe,</span>
+<span class="sd">                )[1:],</span>
 <span class="sd">                *phasor_from_lifetime(</span>
 <span class="sd">                    frequency,</span>
 <span class="sd">                    lifetime,</span>
@@ -1636,6 +1755,7 @@
 <span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
 <span class="sd">    ...     [0.1, 0.2, 0.3],</span>
 <span class="sd">    ...     [0.4, 0.5, 0.6],</span>
+<span class="sd">    ...     [1.0, 1.0, 1.0],</span>
 <span class="sd">    ...     [0.2, 0.3, 0.4],</span>
 <span class="sd">    ...     [0.5, 0.6, 0.7],</span>
 <span class="sd">    ...     frequency=80,</span>
@@ -1648,6 +1768,7 @@
 <span class="sd">    &gt;&gt;&gt; phasor_calibrate(</span>
 <span class="sd">    ...     [0.0658, 0.132, 0.198],</span>
 <span class="sd">    ...     [0.2657, 0.332, 0.399],</span>
+<span class="sd">    ...     [1.0, 1.0, 1.0],</span>
 <span class="sd">    ...     [0.2, 0.3, 0.4],</span>
 <span class="sd">    ...     [0.5, 0.6, 0.7],</span>
 <span class="sd">    ...     frequency=80,</span>
@@ -1657,36 +1778,52 @@
 <span class="sd">    (array([0.1, 0.2, 0.3]), array([0.4, 0.5, 0.6]))</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;real.shape=</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> != imag.shape=</span><span class="si">{</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">ref_re</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_real</span><span class="p">)</span>
-    <span class="n">ref_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_imag</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">ref_re</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;reference_real.shape=</span><span class="si">{</span><span class="n">ref_re</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1"> &#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;!= reference_imag.shape</span><span class="si">{</span><span class="n">ref_im</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">reference_mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_mean</span><span class="p">)</span>
+    <span class="n">reference_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_real</span><span class="p">)</span>
+    <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference_imag</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">harmonic</span><span class="p">,</span> <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">has_harmonic_axis</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">!=</span> <span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != real.shape[0]=</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">reference_imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">reference_imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">reference_mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span>
+        <span class="n">harmonic</span><span class="p">,</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">has_harmonic_axis</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">has_harmonic_axis</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reference_mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reference_mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="si">=}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">reference_mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reference_mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">reference_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reference_mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> does not have harmonic axis&#39;</span>
+        <span class="p">)</span>
 
     <span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
     <span class="n">frequency</span> <span class="o">=</span> <span class="n">frequency</span> <span class="o">*</span> <span class="n">harmonic</span>
 
-    <span class="n">skip_axis</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">has_harmonic_axis</span><span class="p">:</span>
-        <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">+</span> <span class="n">skip_axis</span> <span class="k">if</span> <span class="mi">0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span> <span class="k">else</span> <span class="n">skip_axis</span>
-        <span class="n">skip_axis</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
-
-    <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
-        <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span> <span class="o">=</span> <span class="n">phasor_center</span><span class="p">(</span>
+        <span class="n">reference_mean</span><span class="p">,</span>
+        <span class="n">reference_real</span><span class="p">,</span>
+        <span class="n">reference_imag</span><span class="p">,</span>
+        <span class="n">skip_axis</span><span class="o">=</span><span class="n">skip_axis</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+        <span class="n">nan_safe</span><span class="o">=</span><span class="n">nan_safe</span><span class="p">,</span>
     <span class="p">)</span>
+
     <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
         <span class="n">frequency</span><span class="p">,</span>
         <span class="n">lifetime</span><span class="p">,</span>
@@ -1694,26 +1831,26 @@
         <span class="n">preexponential</span><span class="o">=</span><span class="n">preexponential</span><span class="p">,</span>
         <span class="n">unit_conversion</span><span class="o">=</span><span class="n">unit_conversion</span><span class="p">,</span>
     <span class="p">)</span>
+
     <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">polar_from_reference_phasor</span><span class="p">(</span>
         <span class="n">measured_re</span><span class="p">,</span> <span class="n">measured_im</span><span class="p">,</span> <span class="n">known_re</span><span class="p">,</span> <span class="n">known_im</span>
     <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">phi_zero</span><span class="p">)</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">mod_zero</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">mod_zero</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span>
+            <span class="n">skip_axis</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">has_harmonic_axis</span><span class="p">),</span> <span class="n">has_harmonic_axis</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">phi_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
-                <span class="n">phi_zero</span><span class="p">,</span>
-                <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span>
-                <span class="n">mod_zero</span><span class="p">,</span>
-                <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">phi_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">phi_zero</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">mod_zero</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">mod_zero</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">reverse</span><span class="p">:</span>
         <span class="n">phi_zero</span> <span class="o">=</span> <span class="o">-</span><span class="n">phi_zero</span>
         <span class="n">mod_zero</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">mod_zero</span>
-    <span class="k">return</span> <span class="n">phasor_transform</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span><span class="p">)</span></div>
+
+    <span class="k">return</span> <span class="n">phasor_transform</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">phi_zero</span><span class="p">,</span> <span class="n">mod_zero</span><span class="p">)</span></div>
 
 
 
@@ -3268,48 +3405,51 @@
 
 
 
-<div class="viewcode-block" id="phasor_filter">
-<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_filter">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_filter</span><span class="p">(</span>
+<div class="viewcode-block" id="phasor_filter_median">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_filter_median">[docs]</a>
+<span class="k">def</span> <span class="nf">phasor_filter_median</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="s1">&#39;median_scipy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;median&#39;</span><span class="p">,</span>
     <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_scipy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return filtered phasor coordinates.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return median-filtered phasor coordinates.</span>
 
-<span class="sd">    By default, a median filter is applied independently to the real and</span>
-<span class="sd">    imaginary components of phasor coordinates once with a kernel size of 3</span>
-<span class="sd">    multiplied by the number of dimensions of the input arrays.</span>
+<span class="sd">    By default, apply a NaN-aware median filter independently to the real</span>
+<span class="sd">    and imaginary components of phasor coordinates once with a kernel size of 3</span>
+<span class="sd">    multiplied by the number of dimensions of the input arrays. Return the</span>
+<span class="sd">    intensity unchanged.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    mean : array_like</span>
+<span class="sd">        Intensity of phasor coordinates.</span>
 <span class="sd">    real : array_like</span>
 <span class="sd">        Real component of phasor coordinates to be filtered.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates to be filtered.</span>
-<span class="sd">    method : str, optional</span>
-<span class="sd">        Method used for filtering:</span>
-
-<span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
-<span class="sd">        - ``&#39;median_scipy&#39;``: Spatial median of phasor coordinates</span>
-<span class="sd">          based on :py:func:`scipy.ndimage.median_filter`.</span>
-
 <span class="sd">    repeat : int, optional</span>
-<span class="sd">        Number of times to apply filter. The default is 1.</span>
+<span class="sd">        Number of times to apply median filter. The default is 1.</span>
 <span class="sd">    size : int, optional</span>
-<span class="sd">        Size of filter kernel. The default is 3.</span>
+<span class="sd">        Size of median filter kernel. The default is 3.</span>
 <span class="sd">    skip_axis : int or sequence of int, optional</span>
-<span class="sd">        Axis or axes to skip filtering. By default all axes are filtered.</span>
+<span class="sd">        Axes in `mean` to exclude from filter.</span>
+<span class="sd">        By default, all axes except harmonics are included.</span>
+<span class="sd">    use_scipy : bool, optional</span>
+<span class="sd">        Use :py:func:`scipy.ndimage.median_filter`.</span>
+<span class="sd">        This function has undefined behavior if the input arrays contain</span>
+<span class="sd">        `NaN` values but is faster when filtering more than 2 dimensions.</span>
+<span class="sd">        See `issue #87 &lt;https://github.com/phasorpy/phasorpy/issues/87&gt;`_.</span>
 <span class="sd">    num_threads : int, optional</span>
 <span class="sd">        Number of OpenMP threads to use for parallelization.</span>
-<span class="sd">        Applies to filtering in two dimensions with the `median` method only.</span>
+<span class="sd">        Applies to filtering in two dimensions when not using scipy.</span>
 <span class="sd">        By default, multi-threading is disabled.</span>
 <span class="sd">        If zero, up to half of logical CPUs are used.</span>
 <span class="sd">        OpenMP may not be available on all platforms.</span>
@@ -3318,6 +3458,8 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
+<span class="sd">    mean : ndarray</span>
+<span class="sd">        Unchanged intensity of phasor coordinates.</span>
 <span class="sd">    real : ndarray</span>
 <span class="sd">        Filtered real component of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
@@ -3326,77 +3468,135 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the specified method is not supported.</span>
 <span class="sd">        If `repeat` is less than 0.</span>
 <span class="sd">        If `size` is less than 1.</span>
-<span class="sd">        The array shapes of `real` and `imag` do not match.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    Additional filtering methods may be added in the future.</span>
-
-<span class="sd">    The `median` method ignores `NaN` values. If the kernel contains an even</span>
-<span class="sd">    number of elements, the median is the average of the two middle elements.</span>
-
-<span class="sd">    The implementation of the `median_scipy` method is based on</span>
-<span class="sd">    :py:func:`scipy.ndimage.median_filter`,</span>
-<span class="sd">    which has undefined behavior if the input arrays contain `NaN` values.</span>
-<span class="sd">    See `issue #87 &lt;https://github.com/phasorpy/phasorpy/issues/87&gt;`_.</span>
-
-<span class="sd">    When filtering in more than two dimensions, the `median` method is</span>
-<span class="sd">    slower than the `median_scipy` method. When filtering in two</span>
-<span class="sd">    dimensions, both methods have similar performance.</span>
+<span class="sd">        The array shapes of `mean`, `real`, and `imag` do not match.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    Apply three times a median filter with a kernel size of three:</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_filter(</span>
-<span class="sd">    ...     [[0, 0, 0], [5, 5, 5], [2, 2, 2]],</span>
-<span class="sd">    ...     [[3, 3, 3], [6, math.nan, 6], [4, 4, 4]],</span>
+<span class="sd">    &gt;&gt;&gt; mean, real, imag = phasor_filter_median(</span>
+<span class="sd">    ...     [[1, 2, 3], [4, 5, 6], [7, 8, 9]],</span>
+<span class="sd">    ...     [[0.0, 0.0, 0.0], [0.5, 0.5, 0.5], [0.2, 0.2, 0.2]],</span>
+<span class="sd">    ...     [[0.3, 0.3, 0.3], [0.6, math.nan, 0.6], [0.4, 0.4, 0.4]],</span>
 <span class="sd">    ...     size=3,</span>
 <span class="sd">    ...     repeat=3,</span>
 <span class="sd">    ... )</span>
-<span class="sd">    (array([[0, 0, 0],</span>
-<span class="sd">            [2, 2, 2],</span>
-<span class="sd">            [2, 2, 2]]),</span>
-<span class="sd">    array([[3, 3, 3],</span>
-<span class="sd">            [4, nan, 4],</span>
-<span class="sd">            [4, 4, 4]]))</span>
+<span class="sd">    &gt;&gt;&gt; mean</span>
+<span class="sd">    array([[1, 2, 3],</span>
+<span class="sd">           [4, 5, 6],</span>
+<span class="sd">           [7, 8, 9]])</span>
+<span class="sd">    &gt;&gt;&gt; real</span>
+<span class="sd">    array([[0, 0, 0],</span>
+<span class="sd">           [0.2, 0.2, 0.2],</span>
+<span class="sd">           [0.2, 0.2, 0.2]])</span>
+<span class="sd">    &gt;&gt;&gt; imag</span>
+<span class="sd">    array([[0.3, 0.3, 0.3],</span>
+<span class="sd">           [0.4, nan, 0.4],</span>
+<span class="sd">           [0.4, 0.4, 0.4]])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">methods</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">_median_filter</span><span class="p">,</span>
-        <span class="s1">&#39;median_scipy&#39;</span><span class="p">:</span> <span class="n">_median_filter_scipy</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;Method not supported, supported methods are: &#39;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="n">repeat</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">repeat</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">repeat</span><span class="si">=}</span><span class="s1"> &lt; 0&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">size</span><span class="si">=}</span><span class="s1"> &lt; 1&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># no need to filter</span>
+        <span class="n">repeat</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_scipy</span> <span class="ow">or</span> <span class="n">repeat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># or using nD numpy filter</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">real</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_scipy</span> <span class="ow">or</span> <span class="n">repeat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># or using nD numpy filter</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">imag</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">prepend_axis</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">prepend_axis</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;axes&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;median_scipy&#39;</span><span class="p">:</span>
-        <span class="n">axes</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;num_threads&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_threads</span>
+    <span class="c1"># in case mean is also filtered</span>
+    <span class="c1"># if prepend_axis:</span>
+    <span class="c1">#     mean = numpy.expand_dims(mean, axis=0)</span>
+    <span class="c1"># ...</span>
+    <span class="c1"># if prepend_axis:</span>
+    <span class="c1">#     mean = numpy.asarray(mean[0])</span>
 
-    <span class="k">return</span> <span class="n">methods</span><span class="p">[</span><span class="n">method</span><span class="p">](</span>  <span class="c1"># type: ignore[no-any-return]</span>
-        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">repeat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># no need to call filter</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
+
+    <span class="k">if</span> <span class="n">use_scipy</span><span class="p">:</span>
+        <span class="c1"># use scipy NaN-unaware fallback</span>
+        <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">median_filter</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;axes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">median_filter</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">median_filter</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># n-dimensional median filter using numpy</span>
+        <span class="kn">from</span> <span class="nn">numpy.lib.stride_tricks</span> <span class="kn">import</span> <span class="n">sliding_window_view</span>
+
+        <span class="n">kernel_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">size</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">kernel_shape</span>
+        <span class="p">]</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
+
+        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
+
+    <span class="c1"># 2-dimensional median filter using optimized Cython implementation</span>
+    <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">[</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="n">index_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">index_list</span> <span class="o">=</span> <span class="n">index_list</span><span class="p">[:</span><span class="n">ax</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">index_list</span><span class="p">[</span><span class="n">ax</span><span class="p">:]</span>
+        <span class="n">full_index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">index_list</span><span class="p">)</span>
+
+        <span class="n">_median_filter_2d</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
+        <span class="n">_median_filter_2d</span><span class="p">(</span><span class="n">imag</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
 
 
 
@@ -3419,6 +3619,7 @@
     <span class="n">modulation_min</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">modulation_max</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">open_interval</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">detect_harmonics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates with values out of interval replaced by NaN.</span>
@@ -3428,11 +3629,13 @@
 <span class="sd">    Phasor coordinates smaller than minimum thresholds or larger than maximum</span>
 <span class="sd">    thresholds are replaced NaN.</span>
 <span class="sd">    No threshold is applied by default.</span>
+<span class="sd">    NaNs in `mean` or any `real` and `imag` harmonic are propagated to</span>
+<span class="sd">    `mean` and all harmonics in `real` and `imag`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    mean : array_like</span>
-<span class="sd">        Mean intensity of phasor coordinates.</span>
+<span class="sd">        Intensity of phasor coordinates.</span>
 <span class="sd">    real : array_like</span>
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
@@ -3460,8 +3663,12 @@
 <span class="sd">    open_interval : bool, optional</span>
 <span class="sd">        If true, the interval is open, and the threshold values are</span>
 <span class="sd">        not included in the interval.</span>
-<span class="sd">        If False, the interval is closed, and the threshold values are</span>
-<span class="sd">        included in the interval. The default is False.</span>
+<span class="sd">        If false (default), the interval is closed, and the threshold values</span>
+<span class="sd">        are included in the interval.</span>
+<span class="sd">    detect_harmonics : bool, optional</span>
+<span class="sd">        By default, detect presence of multiple harmonics from array shapes.</span>
+<span class="sd">        If false, no harmonics are assumed to be present, and the function</span>
+<span class="sd">        behaves like a numpy universal function.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional `arguments passed to numpy universal functions</span>
 <span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
@@ -3469,7 +3676,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    mean : ndarray</span>
-<span class="sd">        Thresholded mean intensity of phasor coordinates.</span>
+<span class="sd">        Thresholded intensity of phasor coordinates.</span>
 <span class="sd">    real : ndarray</span>
 <span class="sd">        Thresholded real component of phasor coordinates.</span>
 <span class="sd">    imag : ndarray</span>
@@ -3544,99 +3751,147 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">threshold_mean_only</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="n">threshold_mean_only</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_phasor_threshold_nan</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
-            <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">detect_harmonics</span><span class="p">:</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">threshold_mean_only</span><span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_shapes</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="c1"># detect multi-harmonic in axis 0</span>
+            <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">ndim</span>
+            <span class="ow">and</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">shape</span>
+            <span class="ow">and</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">shape</span>
+            <span class="ow">and</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">threshold_mean_only</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">_phasor_threshold_nan</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">threshold_mean_only</span><span class="p">:</span>
         <span class="n">mean_func</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">_phasor_threshold_mean_open</span>
             <span class="k">if</span> <span class="n">open_interval</span>
             <span class="k">else</span> <span class="n">_phasor_threshold_mean_closed</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">mean_func</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">mean_func</span><span class="p">(</span>
             <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="p">,</span> <span class="n">mean_max</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">)</span>
 
-    <span class="n">func</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">_phasor_threshold_open</span> <span class="k">if</span> <span class="n">open_interval</span> <span class="k">else</span> <span class="n">_phasor_threshold_closed</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">func</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
-        <span class="n">mean</span><span class="p">,</span>
-        <span class="n">real</span><span class="p">,</span>
-        <span class="n">imag</span><span class="p">,</span>
-        <span class="n">mean_min</span><span class="p">,</span>
-        <span class="n">mean_max</span><span class="p">,</span>
-        <span class="n">real_min</span><span class="p">,</span>
-        <span class="n">real_max</span><span class="p">,</span>
-        <span class="n">imag_min</span><span class="p">,</span>
-        <span class="n">imag_max</span><span class="p">,</span>
-        <span class="n">phase_min</span><span class="p">,</span>
-        <span class="n">phase_max</span><span class="p">,</span>
-        <span class="n">modulation_min</span><span class="p">,</span>
-        <span class="n">modulation_max</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-    <span class="p">)</span></div>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">_phasor_threshold_open</span>
+            <span class="k">if</span> <span class="n">open_interval</span>
+            <span class="k">else</span> <span class="n">_phasor_threshold_closed</span>
+        <span class="p">)</span>
+        <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span>
+            <span class="n">mean</span><span class="p">,</span>
+            <span class="n">real</span><span class="p">,</span>
+            <span class="n">imag</span><span class="p">,</span>
+            <span class="n">mean_min</span><span class="p">,</span>
+            <span class="n">mean_max</span><span class="p">,</span>
+            <span class="n">real_min</span><span class="p">,</span>
+            <span class="n">real_max</span><span class="p">,</span>
+            <span class="n">imag_min</span><span class="p">,</span>
+            <span class="n">imag_max</span><span class="p">,</span>
+            <span class="n">phase_min</span><span class="p">,</span>
+            <span class="n">phase_max</span><span class="p">,</span>
+            <span class="n">modulation_min</span><span class="p">,</span>
+            <span class="n">modulation_max</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_harmonic_axis</span> <span class="ow">and</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># propagate NaN to all dimensions</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mean</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">imag</span><span class="p">)</span>
+        <span class="c1"># remove harmonic dimension created by broadcasting</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
 
 
 
 <div class="viewcode-block" id="phasor_center">
 <a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_center">[docs]</a>
 <span class="k">def</span> <span class="nf">phasor_center</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;median&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+    <span class="n">nan_safe</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return center of phasor coordinates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    mean : array_like</span>
+<span class="sd">        Intensity of phasor coordinates.</span>
 <span class="sd">    real : array_like</span>
 <span class="sd">        Real component of phasor coordinates.</span>
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
 <span class="sd">    skip_axis : int or sequence of int, optional</span>
-<span class="sd">        Axes to be excluded during center calculation. If None, all</span>
-<span class="sd">        axes are considered.</span>
+<span class="sd">        Axes in `mean` to excluded from center calculation.</span>
+<span class="sd">        By default, all axes except harmonics are included.</span>
 <span class="sd">    method : str, optional</span>
 <span class="sd">        Method used for center calculation:</span>
 
 <span class="sd">        - ``&#39;mean&#39;``: Arithmetic mean of phasor coordinates.</span>
 <span class="sd">        - ``&#39;median&#39;``: Spatial median of phasor coordinates.</span>
 
+<span class="sd">    nan_safe : bool, optional</span>
+<span class="sd">        Ensure `method` is applied to same elements of input arrays.</span>
+<span class="sd">        By default, distribute NaNs among input arrays before applying</span>
+<span class="sd">        `method`. May be disabled if phasor coordinates were filtered by</span>
+<span class="sd">        :py:func:`phasor_threshold`.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Optional arguments passed to :py:func:`numpy.nanmean` or</span>
 <span class="sd">        :py:func:`numpy.nanmedian`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
+<span class="sd">    mean_center : ndarray</span>
+<span class="sd">        Intensity center coordinates.</span>
 <span class="sd">    real_center : ndarray</span>
-<span class="sd">        Real center coordinates calculated based on the specified method.</span>
+<span class="sd">        Real center coordinates.</span>
 <span class="sd">    imag_center : ndarray</span>
-<span class="sd">        Imaginary center coordinates calculated based on the specified method.</span>
+<span class="sd">        Imaginary center coordinates.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the specified method is not supported.</span>
-<span class="sd">        If the shapes of the `real` and `imag` do not match.</span>
+<span class="sd">        If the shapes of `mean`, `real`, and `imag` do not match.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Compute center coordinates with the &#39;mean&#39; method:</span>
+<span class="sd">    Compute center coordinates with the default &#39;mean&#39; method:</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_center([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], method=&#39;mean&#39;)</span>
-<span class="sd">    (2.0, 5.0)</span>
+<span class="sd">    &gt;&gt;&gt; phasor_center(</span>
+<span class="sd">    ...     [2, 1, 2], [0.1, 0.2, 0.3], [0.4, 0.5, 0.6]</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    (1.67, 0.2, 0.5)</span>
 
 <span class="sd">    Compute center coordinates with the &#39;median&#39; method:</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_center([1.0, 2.0, 3.0], [4.0, 5.0, 6.0], method=&#39;median&#39;)</span>
-<span class="sd">    (2.0, 5.0)</span>
+<span class="sd">    &gt;&gt;&gt; phasor_center(</span>
+<span class="sd">    ...     [1, 2, 3], [0.1, 0.2, 0.3], [0.4, 0.5, 0.6], method=&#39;median&#39;</span>
+<span class="sd">    ... )</span>
+<span class="sd">    (2.0, 0.2, 0.5)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">methods</span> <span class="o">=</span> <span class="p">{</span>
@@ -3648,234 +3903,68 @@
             <span class="sa">f</span><span class="s1">&#39;Method not supported, supported methods are: &#39;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
     <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
     <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">prepend_axis</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">prepend_axis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prepend_axis</span><span class="p">:</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">methods</span><span class="p">[</span><span class="n">method</span><span class="p">](</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">nan_safe</span><span class="p">:</span>
+        <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">methods</span><span class="p">[</span><span class="n">method</span><span class="p">](</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prepend_axis</span><span class="p">:</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
 
 
 
 <span class="k">def</span> <span class="nf">_mean</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mean center of phasor coordinates.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of phasor coordinates.</span>
-<span class="sd">    **kwargs</span>
-<span class="sd">        Optional arguments passed to :py:func:`numpy.nanmean`.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real_center : ndarray</span>
-<span class="sd">        Mean real center coordinates.</span>
-<span class="sd">    imag_center : ndarray</span>
-<span class="sd">        Mean imaginary center coordinates.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; _mean([1.0, 2.0, 3.0], [4.0, 5.0, 6.0])</span>
-<span class="sd">    (2.0, 5.0)</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return mean center of phasor coordinates.&quot;&quot;&quot;</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">real</span> <span class="o">*</span> <span class="n">mean</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">imag</span> <span class="o">*</span> <span class="n">mean</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">real</span> <span class="o">/=</span> <span class="n">mean</span>
+        <span class="n">imag</span> <span class="o">/=</span> <span class="n">mean</span>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
 
 
 <span class="k">def</span> <span class="nf">_median</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the spatial median center of phasor coordinates.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of phasor coordinates.</span>
-<span class="sd">    **kwargs</span>
-<span class="sd">        Optional arguments passed to :py:func:`numpy.nanmedian`.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real_center : ndarray</span>
-<span class="sd">        Spatial median center of real coordinates.</span>
-<span class="sd">    imag_center : ndarray</span>
-<span class="sd">        Spatial median center of imaginary coordinates.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; _median([1.0, 2.0, 3.0], [4.0, 5.0, 6.0])</span>
-<span class="sd">    (2.0, 5.0)</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_median_filter</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">axes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return median-filtered phasor coordinates, ignoring NaN values.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of phasor coordinates.</span>
-<span class="sd">    axes : sequence of int</span>
-<span class="sd">        Axes along which to apply median filter.</span>
-<span class="sd">    repeat : int, optional</span>
-<span class="sd">        Number of times to apply filter. The default is 1.</span>
-<span class="sd">    size : int, optional</span>
-<span class="sd">        Size of median filter kernel. The default is 3.</span>
-<span class="sd">    num_threads : int, optional</span>
-<span class="sd">        Number of OpenMP threads to use for parallelization.</span>
-<span class="sd">        By default, multi-threading is disabled.</span>
-<span class="sd">        If zero, up to half of logical CPUs are used.</span>
-<span class="sd">        OpenMP may not be available on all platforms.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Median-filtered real component of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Median-filtered imaginary component of phasor coordinates.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
-        <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">imag</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="c1"># n-dimensional median filter using numpy</span>
-        <span class="kn">from</span> <span class="nn">numpy.lib.stride_tricks</span> <span class="kn">import</span> <span class="n">sliding_window_view</span>
-
-        <span class="n">kernel_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="n">size</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">pad_width</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">s</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">kernel_shape</span>
-        <span class="p">]</span>
-        <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-
-        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
-            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
-            <span class="n">real</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
-            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-            <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
-
-        <span class="n">nan_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
-            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
-            <span class="n">imag</span> <span class="o">=</span> <span class="n">sliding_window_view</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">kernel_shape</span><span class="p">)</span>
-            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-            <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_mask</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
-
-    <span class="c1"># 2-dimensional median filter using optimized Cython implementation</span>
-    <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
-
-    <span class="n">filtered_slice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span>
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">[</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">]</span>
-    <span class="p">):</span>
-        <span class="n">index_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
-            <span class="n">index_list</span> <span class="o">=</span> <span class="n">index_list</span><span class="p">[:</span><span class="n">ax</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">index_list</span><span class="p">[</span><span class="n">ax</span><span class="p">:]</span>
-        <span class="n">full_index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">index_list</span><span class="p">)</span>
-
-        <span class="n">_median_filter_2d</span><span class="p">(</span>
-            <span class="n">real</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span>
-        <span class="p">)</span>
-
-        <span class="n">_median_filter_2d</span><span class="p">(</span>
-            <span class="n">imag</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">filtered_slice</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span>
-        <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
-
-
-<span class="k">def</span> <span class="nf">_median_filter_scipy</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">imag</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-    <span class="n">axes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-    <span class="o">/</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return median-filtered phasor coordinates.</span>
-
-<span class="sd">    Convenience wrapper around :py:func:`scipy.ndimage.median_filter`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Real components of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Imaginary components of phasor coordinates.</span>
-<span class="sd">    axes : sequence of int</span>
-<span class="sd">        Axes along which to apply median filter.</span>
-<span class="sd">    repeat : int, optional</span>
-<span class="sd">        Number of times to apply filter. The default is 1.</span>
-<span class="sd">    size : int, optional</span>
-<span class="sd">        Size of median filter kernel. The default is 3.</span>
-<span class="sd">    **kwargs</span>
-<span class="sd">        Optional arguments passed to :py:func:`scipy.ndimage.median_filter`.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    real : ndarray</span>
-<span class="sd">        Median-filtered real component of phasor coordinates.</span>
-<span class="sd">    imag : ndarray</span>
-<span class="sd">        Median-filtered imaginary component of phasor coordinates.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">median_filter</span>
-
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
-        <span class="n">real</span> <span class="o">=</span> <span class="n">median_filter</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">imag</span> <span class="o">=</span> <span class="n">median_filter</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return spatial median center of phasor coordinates.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_skip_axis</span><span class="p">(</span>
     <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="n">ndim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">prepend_axis</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return axes to skip and not to skip.</span>
 
@@ -3884,10 +3973,12 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    skip_axis : Sequence of int, or None</span>
+<span class="sd">    skip_axis : int or sequence of int, optional</span>
 <span class="sd">        Axes to skip. If None, no axes are skipped.</span>
 <span class="sd">    ndim : int</span>
 <span class="sd">        Dimensionality of array in which to skip axes.</span>
+<span class="sd">    prepend_axis : bool, optional</span>
+<span class="sd">        Prepend one dimension and include in `skip_axis`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -3906,18 +3997,26 @@
 <span class="sd">    &gt;&gt;&gt; _parse_skip_axis((1, -2), 5)</span>
 <span class="sd">    ((1, 3), (0, 2, 4))</span>
 
+<span class="sd">    &gt;&gt;&gt; _parse_skip_axis((1, -2), 5, True)</span>
+<span class="sd">    ((0, 2, 4), (1, 3, 5))</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">skip_axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prepend_axis</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">(),</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
         <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">(</span><span class="n">skip_axis</span><span class="p">,)</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">ndim</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">ndim</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;skip_axis=</span><span class="si">{</span><span class="n">skip_axis</span><span class="si">}</span><span class="s1"> out of range for </span><span class="si">{</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">skip_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">))</span>
+    <span class="n">skip_axis</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">ndim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prepend_axis</span><span class="p">:</span>
+        <span class="n">skip_axis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">]</span>
+        <span class="n">ndim</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">other_axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_axis</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">skip_axis</span><span class="p">,</span> <span class="n">other_axis</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">),</span> <span class="n">other_axis</span>
 </pre></div>
 
                 </article>
