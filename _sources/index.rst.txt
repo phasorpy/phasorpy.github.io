@@ -35,6 +35,8 @@ Resources
 News
 ====
 
+- Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+
 - Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`_.
