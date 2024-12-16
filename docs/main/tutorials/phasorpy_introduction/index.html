@@ -609,10 +609,7 @@ and print its version:</p>
 <a class="reference external" href="https://matplotlib.org/">matplotlib</a> libraries are used for
 array computing and plotting throughout this tutorial:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">tifffile</span>  <span class="c1"># TODO: from phasorpy.io import read_ometiff</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
-
-<span class="kn">from</span> <span class="nn">phasorpy.datasets</span> <span class="kn">import</span> <span class="n">fetch</span>
 </pre></div>
 </div>
 </section>
@@ -627,12 +624,15 @@ form can be used instead.
 Image stacks, which may have any number of dimensions, are referred to as
 <code class="docutils literal notranslate"><span class="pre">signal</span></code> in the PhasorPy library.</p>
 <p>The <a class="reference internal" href="../../api/datasets/#module-phasorpy.datasets" title="phasorpy.datasets"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.datasets</span></code></a> module provides access to various sample
-files. For example, an Imspector TIFF file from the
+files. For example, an ImSpector TIFF file from the
 <a class="reference external" href="https://zenodo.org/records/8046636">FLUTE</a>  project containing a
 time-correlated single photon counting (TCSPC) histogram
-of a zebrafish embryo at day 3, acquired at 80 MHz:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
-<span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.11</span>  <span class="c1"># MHz; from the XML metadata in the file</span>
+of a zebrafish embryo at day 3, acquired at 80.11 MHz:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">phasorpy.datasets</span> <span class="kn">import</span> <span class="n">fetch</span>
+<span class="kn">from</span> <span class="nn">phasorpy.io</span> <span class="kn">import</span> <span class="n">read_imspector_tiff</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">read_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 </pre></div>
@@ -711,7 +711,8 @@ the same instrument settings.</p>
 <p>In this case, a homogeneous solution of Fluorescein with a lifetime of
 4.2 ns was imaged.</p>
 <p>Read the signal of the reference measurement from a file:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">read_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">reference_signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
 </pre></div>
 </div>
 <p>Calculate phasor coordinates from the measured reference signal:</p>
@@ -996,8 +997,9 @@ pooch-v1.8.2
 </div>
 <p>sphinx_gallery_thumbnail_number = -7
 mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 54.873 seconds)</p>
+mypy: disable-error-code=”arg-type”
+isort: skip_file</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.773 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>

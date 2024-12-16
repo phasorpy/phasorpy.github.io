@@ -568,6 +568,7 @@ imported in Bio-Formats and Fiji:</p>
 <li><p>read time-resolved and hyperspectral image data and metadata (as relevant
 to phasor analysis) from many file formats used in bio-imaging:</p>
 <ul class="simple">
+<li><p><a class="reference internal" href="#phasorpy.io.read_imspector_tiff" title="phasorpy.io.read_imspector_tiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_imspector_tiff()</span></code></a> - ImSpector FLIM TIFF</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_lsm" title="phasorpy.io.read_lsm"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_lsm()</span></code></a> - Zeiss LSM</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_ifli" title="phasorpy.io.read_ifli"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_ifli()</span></code></a> - ISS IFLI</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.read_sdt" title="phasorpy.io.read_sdt"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_sdt()</span></code></a> - Becker &amp; Hickl SDT</p></li>
@@ -1094,8 +1095,8 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <span class="go">(&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array(...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-<span class="go">80.65...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
+<span class="go">80.65</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1149,12 +1150,57 @@ frequencies.</p></li>
 <span class="go">(256, 256, 4, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;Y&#39;, &#39;X&#39;, &#39;F&#39;, &#39;S&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array([8.033...])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  
+<span class="go">array([8.033e+07, 1.607e+08, 2.41e+08, 4.017e+08])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array([&#39;mean&#39;, &#39;real&#39;, &#39;imag&#39;], dtype=&#39;&lt;U4&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
 <span class="go">{&#39;ref_tau&#39;: (2.5, 0.0), &#39;ref_tau_frac&#39;: (1.0, 0.0), &#39;ref_phasor&#39;: array...}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.read_imspector_tiff">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">read_imspector_tiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/io/#read_imspector_tiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.read_imspector_tiff" title="Link to this definition">#</a></dt>
+<dd><p>Return FLIM image stack and metadata from ImSpector TIFF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of ImSpector FLIM TIFF file to read.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>TCSPC image stack.
+Usually, a 3-to-5-dimensional array of type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>tifffile.TiffFileError</strong> – File is not a TIFF file.</p></li>
+<li><p><strong>ValueError</strong> – File is not an ImSpector FLIM TIFF file.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">read_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">dtype(&#39;uint16&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(56, 512, 512)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
+<span class="go">(&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># dtime bins</span>
+<span class="go">array(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
+<span class="go">80.109</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1267,7 +1313,7 @@ in <code class="docutils literal notranslate"><span class="pre">dtype</span></co
 <span class="go">(&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;C&#39;, &#39;H&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array(...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">78.02</span>
 </pre></div>
 </div>
@@ -1316,8 +1362,8 @@ or <code class="docutils literal notranslate"><span class="pre">float32</span></
 <span class="go">(&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array(...)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-<span class="go">79...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
+<span class="go">79.99</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1416,6 +1462,7 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_fbd"><code class="docutils literal notranslate"><span class="pre">read_fbd()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_flif"><code class="docutils literal notranslate"><span class="pre">read_flif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_ifli"><code class="docutils literal notranslate"><span class="pre">read_ifli()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_imspector_tiff"><code class="docutils literal notranslate"><span class="pre">read_imspector_tiff()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_lsm"><code class="docutils literal notranslate"><span class="pre">read_lsm()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_ptu"><code class="docutils literal notranslate"><span class="pre">read_ptu()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.read_sdt"><code class="docutils literal notranslate"><span class="pre">read_sdt()</span></code></a></li>

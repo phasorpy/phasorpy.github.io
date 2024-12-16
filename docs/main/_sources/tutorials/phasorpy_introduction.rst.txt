@@ -98,16 +98,14 @@ Besides the PhasorPy library, the `numpy <https://numpy.org/>`_ and
 `matplotlib <https://matplotlib.org/>`_ libraries are used for
 array computing and plotting throughout this tutorial:
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-69
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
 
     import numpy
-    import tifffile  # TODO: from phasorpy.io import read_ometiff
     from matplotlib import pyplot
 
-    from phasorpy.datasets import fetch
 
 
 
@@ -115,8 +113,7 @@ array computing and plotting throughout this tutorial:
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 70-87
+.. GENERATED FROM PYTHON SOURCE LINES 67-84
 
 Read signal from file
 ---------------------
@@ -131,19 +128,21 @@ Image stacks, which may have any number of dimensions, are referred to as
 ``signal`` in the PhasorPy library.
 
 The :py:mod:`phasorpy.datasets` module provides access to various sample
-files. For example, an Imspector TIFF file from the
+files. For example, an ImSpector TIFF file from the
 `FLUTE <https://zenodo.org/records/8046636>`_  project containing a
 time-correlated single photon counting (TCSPC) histogram
-of a zebrafish embryo at day 3, acquired at 80 MHz:
+of a zebrafish embryo at day 3, acquired at 80.11 MHz:
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-94
+.. GENERATED FROM PYTHON SOURCE LINES 84-93
 
 .. code-block:: Python
 
 
+    from phasorpy.datasets import fetch
+    from phasorpy.io import read_imspector_tiff
 
-    signal = tifffile.imread(fetch('Embryo.tif'))
-    frequency = 80.11  # MHz; from the XML metadata in the file
+    signal = read_imspector_tiff(fetch('Embryo.tif'))
+    frequency = signal.attrs['frequency']
 
     print(signal.shape, signal.dtype)
 
@@ -160,11 +159,11 @@ of a zebrafish embryo at day 3, acquired at 80 MHz:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 Plot the spatial and histogram averages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-101
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 .. code-block:: Python
 
@@ -185,7 +184,7 @@ Plot the spatial and histogram averages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-119
+.. GENERATED FROM PYTHON SOURCE LINES 101-118
 
 Calculate phasor coordinates
 ----------------------------
@@ -205,7 +204,7 @@ Phasor coordinates of the first harmonic are calculated from the signal,
 a TCSPC histogram in this case.
 The histogram samples are in the first dimension (`axis=0`):
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-124
+.. GENERATED FROM PYTHON SOURCE LINES 118-123
 
 .. code-block:: Python
 
@@ -221,13 +220,13 @@ The histogram samples are in the first dimension (`axis=0`):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-128
+.. GENERATED FROM PYTHON SOURCE LINES 124-127
 
 The phasor coordinates are undefined if the mean intensity is zero.
 In that case, the arrays contain special ``NaN`` (Not a Number) values,
 which are ignored in further analysis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-131
+.. GENERATED FROM PYTHON SOURCE LINES 127-130
 
 .. code-block:: Python
 
@@ -250,11 +249,11 @@ which are ignored in further analysis:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-133
+.. GENERATED FROM PYTHON SOURCE LINES 131-132
 
 Plot the calculated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-138
+.. GENERATED FROM PYTHON SOURCE LINES 132-137
 
 .. code-block:: Python
 
@@ -275,13 +274,13 @@ Plot the calculated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
+.. GENERATED FROM PYTHON SOURCE LINES 138-141
 
 By default, only the phasor coordinates at the first harmonic are calculated.
 However, only when the phasor coordinates at all harmonics are considered
 (including the mean intensity) is the signal completely described:
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-154
+.. GENERATED FROM PYTHON SOURCE LINES 141-153
 
 .. code-block:: Python
 
@@ -304,7 +303,7 @@ However, only when the phasor coordinates at all harmonics are considered
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-169
+.. GENERATED FROM PYTHON SOURCE LINES 154-168
 
 Calibrate phasor coordinates
 ----------------------------
@@ -321,12 +320,13 @@ In this case, a homogeneous solution of Fluorescein with a lifetime of
 
 Read the signal of the reference measurement from a file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-172
+.. GENERATED FROM PYTHON SOURCE LINES 168-172
 
 .. code-block:: Python
 
 
-    reference_signal = tifffile.imread(fetch('Fluorescein_Embryo.tif'))
+    reference_signal = read_imspector_tiff(fetch('Fluorescein_Embryo.tif'))
+    assert reference_signal.attrs['frequency'] == frequency
 
 
 
@@ -986,16 +986,17 @@ Print information about Python interpreter and installed packages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-468
+.. GENERATED FROM PYTHON SOURCE LINES 465-469
 
 sphinx_gallery_thumbnail_number = -7
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code="arg-type"
+isort: skip_file
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 54.873 seconds)
+   **Total running time of the script:** (0 minutes 11.773 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:

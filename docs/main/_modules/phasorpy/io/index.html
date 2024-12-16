@@ -538,6 +538,7 @@
 <span class="sd">- read time-resolved and hyperspectral image data and metadata (as relevant</span>
 <span class="sd">  to phasor analysis) from many file formats used in bio-imaging:</span>
 
+<span class="sd">  - :py:func:`read_imspector_tiff` - ImSpector FLIM TIFF</span>
 <span class="sd">  - :py:func:`read_lsm` - Zeiss LSM</span>
 <span class="sd">  - :py:func:`read_ifli` - ISS IFLI</span>
 <span class="sd">  - :py:func:`read_sdt` - Becker &amp; Hickl SDT</span>
@@ -645,6 +646,7 @@
     <span class="s1">&#39;read_fbd&#39;</span><span class="p">,</span>
     <span class="s1">&#39;read_flif&#39;</span><span class="p">,</span>
     <span class="s1">&#39;read_ifli&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;read_imspector_tiff&#39;</span><span class="p">,</span>
     <span class="c1"># &#39;read_lif&#39;,</span>
     <span class="s1">&#39;read_lsm&#39;</span><span class="p">,</span>
     <span class="c1"># &#39;read_nd2&#39;,</span>
@@ -1424,6 +1426,149 @@
 
 
 
+<div class="viewcode-block" id="read_imspector_tiff">
+<a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_imspector_tiff">[docs]</a>
+<span class="k">def</span> <span class="nf">read_imspector_tiff</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="o">/</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return FLIM image stack and metadata from ImSpector TIFF file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str or Path</span>
+<span class="sd">        Name of ImSpector FLIM TIFF file to read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    xarray.DataArray</span>
+<span class="sd">        TCSPC image stack.</span>
+<span class="sd">        Usually, a 3-to-5-dimensional array of type ``uint16``.</span>
+
+<span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins.</span>
+<span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    tifffile.TiffFileError</span>
+<span class="sd">        File is not a TIFF file.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        File is not an ImSpector FLIM TIFF file.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; data = read_imspector_tiff(fetch(&#39;Embryo.tif&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; data.values</span>
+<span class="sd">    array(...)</span>
+<span class="sd">    &gt;&gt;&gt; data.dtype</span>
+<span class="sd">    dtype(&#39;uint16&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; data.shape</span>
+<span class="sd">    (56, 512, 512)</span>
+<span class="sd">    &gt;&gt;&gt; data.dims</span>
+<span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data  # dtime bins</span>
+<span class="sd">    array(...)</span>
+<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
+<span class="sd">    80.109</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
+
+    <span class="kn">import</span> <span class="nn">tifffile</span>
+
+    <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">tags</span>
+        <span class="n">omexml</span> <span class="o">=</span> <span class="n">tags</span><span class="o">.</span><span class="n">valueof</span><span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">make</span> <span class="o">=</span> <span class="n">tags</span><span class="o">.</span><span class="n">valueof</span><span class="p">(</span><span class="mi">271</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">make</span> <span class="o">!=</span> <span class="s1">&#39;ImSpector&#39;</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">omexml</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&lt;?xml version&#39;</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="n">tif</span><span class="o">.</span><span class="n">is_ome</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector TIFF file&#39;</span><span class="p">)</span>
+
+        <span class="n">series</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">axes</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">axes</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;YX&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+
+    <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">physical_size</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">ElementTree</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">omexml</span><span class="p">)</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="s1">&#39;http://www.openmicroscopy.org/Schemas/OME/2008-02&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;ca&#39;</span><span class="p">:</span> <span class="s1">&#39;http://www.openmicroscopy.org/Schemas/CA/2008-02&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Description&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">description</span><span class="o">.</span><span class="n">text</span>
+        <span class="ow">and</span> <span class="n">description</span><span class="o">.</span><span class="n">text</span> <span class="o">!=</span> <span class="s1">&#39;not_specified&#39;</span>
+    <span class="p">):</span>
+        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">text</span>
+
+    <span class="n">pixels</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Image/Pixels&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">pixels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="s1">&#39;TZYX&#39;</span><span class="p">:</span>
+        <span class="n">attrib</span> <span class="o">=</span> <span class="s1">&#39;TimeIncrement&#39;</span> <span class="k">if</span> <span class="n">ax</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;PhysicalSize</span><span class="si">{</span><span class="n">ax</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span> <span class="ow">or</span> <span class="n">attrib</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pixels</span><span class="o">.</span><span class="n">attrib</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pixels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="n">attrib</span><span class="p">])</span>
+        <span class="n">physical_size</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="n">coords</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">size</span><span class="p">,</span>
+            <span class="n">shape</span><span class="p">[</span><span class="n">axes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ax</span><span class="p">)],</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">axes_labels</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//ca:CustomAttributes/AxesLabels&#39;</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">axes_labels</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="s1">&#39;X&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span>
+        <span class="ow">or</span> <span class="s1">&#39;TCSPC&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+        <span class="ow">or</span> <span class="s1">&#39;FirstAxis&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span>
+        <span class="ow">or</span> <span class="s1">&#39;SecondAxis&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;FirstAxis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;TCSPC T&#39;</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;FirstAxis-Unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ns&#39;</span>
+    <span class="k">elif</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;SecondAxis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;TCSPC T&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;SecondAxis-Unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ns&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span><span class="p">)</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)</span>
+    <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">coords</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+
+    <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="mf">1000.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="n">axes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)]</span> <span class="o">*</span> <span class="n">physical_size</span><span class="p">[</span><span class="n">ax</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+
+    <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="read_ifli">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_ifli">[docs]</a>
 <span class="k">def</span> <span class="nf">read_ifli</span><span class="p">(</span>
@@ -1481,8 +1626,8 @@
 <span class="sd">    (256, 256, 4, 3)</span>
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;Y&#39;, &#39;X&#39;, &#39;F&#39;, &#39;S&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; data.coords[&#39;F&#39;].data</span>
-<span class="sd">    array([8.033...])</span>
+<span class="sd">    &gt;&gt;&gt; data.coords[&#39;F&#39;].data  # doctest: +NUMBER</span>
+<span class="sd">    array([8.033e+07, 1.607e+08, 2.41e+08, 4.017e+08])</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;S&#39;].data</span>
 <span class="sd">    array([&#39;mean&#39;, &#39;real&#39;, &#39;imag&#39;], dtype=&#39;&lt;U4&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs</span>
@@ -1577,8 +1722,8 @@
 <span class="sd">    (&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
 <span class="sd">    array(...)</span>
-<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]</span>
-<span class="sd">    79...</span>
+<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
+<span class="sd">    79.99</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">sdtfile</span>
@@ -1693,7 +1838,7 @@
 <span class="sd">    (&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;C&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
 <span class="sd">    array(...)</span>
-<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    78.02</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1769,8 +1914,8 @@
 <span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
 <span class="sd">    array(...)</span>
-<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]</span>
-<span class="sd">    80.65...</span>
+<span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
+<span class="sd">    80.65</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">lfdfiles</span>
