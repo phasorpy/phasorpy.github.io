@@ -15,8 +15,8 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
+  <!--
+    this give us a css class that will be invisible only if js is disabled
   -->
   <noscript>
     <style>
@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
@@ -38,10 +38,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=89bdaef6"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
@@ -51,10 +51,11 @@
     <script src="../../../_static/copybutton.js?v=30646c52"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/phasorpy/_utils';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.4';
-        DOCUMENTATION_OPTIONS.show_version_warning_banner = true;
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
         </script>
     <script src="../../../_static/custom-icons.js?v=74687d30"></script>
     <link rel="index" title="Index" href="../../../genindex/" />
@@ -173,7 +174,9 @@
 </li>
 
             <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
                     More
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
@@ -471,9 +474,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -532,6 +540,7 @@
     <span class="s1">&#39;kwargs_notnone&#39;</span><span class="p">,</span>
     <span class="s1">&#39;parse_harmonic&#39;</span><span class="p">,</span>
     <span class="s1">&#39;parse_kwargs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parse_signal_axis&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_polar_scalar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_polar_scalar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;scale_matrix&#39;</span><span class="p">,</span>
@@ -793,6 +802,75 @@
 
 
 
+<div class="viewcode-block" id="parse_signal_axis">
+<a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.parse_signal_axis">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_signal_axis</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return axis over which phasor coordinates are computed.</span>
+
+<span class="sd">    The axis parameter is not validated against the signal shape.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    signal : array_like</span>
+<span class="sd">        Image stack.</span>
+<span class="sd">    axis : int or str, optional</span>
+<span class="sd">        Axis over which phasor coordinates are computed.</span>
+<span class="sd">        By default, the &#39;H&#39; or &#39;C&#39; axes if `signal` contains such</span>
+<span class="sd">        dimension names, else the last axis (-1).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    axis : int</span>
+<span class="sd">        Axis over which phasor coordinates are computed.</span>
+<span class="sd">    axis_label: str</span>
+<span class="sd">        Axis label from `signal.dims` if any.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        Axis not found in signal.dims or invalid for signal type.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; parse_signal_axis([])</span>
+<span class="sd">    (-1, &#39;&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; parse_signal_axis([], 1)</span>
+<span class="sd">    (1, &#39;&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; class DataArray:</span>
+<span class="sd">    ...     dims = (&#39;C&#39;, &#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; parse_signal_axis(DataArray())</span>
+<span class="sd">    (1, &#39;H&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; parse_signal_axis(DataArray(), &#39;C&#39;)</span>
+<span class="sd">    (0, &#39;C&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; parse_signal_axis(DataArray(), 1)</span>
+<span class="sd">    (1, &#39;H&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="s1">&#39;dims&#39;</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="s1">&#39;HC&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ax</span><span class="p">),</span> <span class="n">ax</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">axis</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span> <span class="n">axis</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1"> not found in </span><span class="si">{</span><span class="n">signal</span><span class="o">.</span><span class="n">dims</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">axis</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s1"> not valid for </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="parse_harmonic">
 <a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.parse_harmonic">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_harmonic</span><span class="p">(</span>
@@ -1033,8 +1111,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1067,7 +1145,8 @@
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
 </p></div>
       
     </div>
