@@ -30,7 +30,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -696,7 +696,8 @@ harmonic axes.
 If a list, <cite>real</cite> and <cite>imag</cite> contain one or more harmonics in the
 first axis.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float, optional):
-Fundamental frequency of time-resolved phasor coordinates.</p></li>
+Fundamental frequency of time-resolved phasor coordinates.
+Usually in unit of MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'description'</span></code> (str, optional):
 OME dataset plain-text description.</p></li>
 </ul>
@@ -811,6 +812,7 @@ Write to image series named ‘Phasor real’.</p></li>
 Multiple harmonics, if any, must be in the first dimension.
 Write to image series named ‘Phasor imag’.</p></li>
 <li><p><strong>frequency</strong> (<em>float</em><em>, </em><em>optional</em>) – Fundamental frequency of time-resolved phasor coordinates.
+Usually in unit of MHz.
 Write to image series named ‘Phasor frequency’.</p></li>
 <li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonics present in the first dimension of <cite>real</cite> and <cite>imag</cite>, if any.
 Write to image series named ‘Phasor harmonic’.
@@ -1054,7 +1056,7 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>  
 <span class="go">(&#39;T&#39;, &#39;C&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  
-<span class="go">array(...)</span>
+<span class="go">array([0, ..., 6.185])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">40.0</span>
 </pre></div>
@@ -1079,8 +1081,8 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_phase']</span></code>: measured phase of reference.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_mod']</span></code>: measured modulation of reference.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_tauphase']</span></code>: lifetime from phase of reference.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_taumod']</span></code>: lifetime from modulation of reference.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_tauphase']</span></code>: lifetime from phase of reference in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_taumod']</span></code>: lifetime from modulation of reference in ns.</p></li>
 </ul>
 </p>
 </dd>
@@ -1102,7 +1104,7 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array(...)</span>
+<span class="go">array([0, ..., 6.087], dtype=float32)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">80.65</span>
 </pre></div>
@@ -1132,9 +1134,9 @@ An array of up to 8 dimensions with <a class="reference internal" href="#axes"><
 The last dimension contains <cite>mean</cite>, <cite>real</cite>, and <cite>imag</cite> phasor
 coordinates.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['F']</span></code>: modulation frequencies.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: emission wavelengths, if any.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_tau']</span></code>: reference lifetimes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['F']</span></code>: modulation frequencies in MHz.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: emission wavelengths in nm, if any.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_tau']</span></code>: reference lifetimes in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_tau_frac']</span></code>: reference lifetime fractions.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['ref_phasor']</span></code>: reference phasor coordinates for all
 frequencies.</p></li>
@@ -1159,7 +1161,7 @@ frequencies.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;Y&#39;, &#39;X&#39;, &#39;F&#39;, &#39;S&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  
-<span class="go">array([8.033e+07, 1.607e+08, 2.41e+08, 4.017e+08])</span>
+<span class="go">array([80.33, 160.7, 241, 401.7])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array([&#39;mean&#39;, &#39;real&#39;, &#39;imag&#39;], dtype=&#39;&lt;U4&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span>
@@ -1180,7 +1182,7 @@ frequencies.</p></li>
 <dd class="field-even"><p><p>TCSPC image stack.
 Usually, a 3-to-5-dimensional array of type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 </ul>
 </p>
@@ -1206,7 +1208,7 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># dtime bins</span>
-<span class="go">array(...)</span>
+<span class="go">array([0, ..., 12.26])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">80.109</span>
 </pre></div>
@@ -1224,8 +1226,13 @@ scanning microscopy measurements. The file format is based on TIFF.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of OME-TIFF file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Hyperspectral image data.
+<dd class="field-even"><p><p>Hyperspectral image data.
 Usually, a 3-to-5-dimensional array of type <code class="docutils literal notranslate"><span class="pre">uint8</span></code> or <code class="docutils literal notranslate"><span class="pre">uint16</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: wavelengths in nm.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['T']</span></code>: time coordinates in s, if any.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray.DataArray</p>
@@ -1248,7 +1255,7 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;C&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  <span class="c1"># wavelengths</span>
-<span class="go">array(...)</span>
+<span class="go">array([423, ..., 713])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1293,7 +1300,7 @@ Overrides <cite>selection</cite> for axis <code class="docutils literal notransl
 with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'TYXCH'</span></code> and type specified
 in <code class="docutils literal notranslate"><span class="pre">dtype</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of the histogram bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 </ul>
 </p>
@@ -1320,7 +1327,7 @@ in <code class="docutils literal notranslate"><span class="pre">dtype</span></co
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;C&#39;, &#39;H&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array(...)</span>
+<span class="go">array([0, ..., 12.7])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">78.02</span>
 </pre></div>
@@ -1345,7 +1352,7 @@ and instrumentation parameters.</p>
 <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'YXH'</span></code> and type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32</span></code>,
 or <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of the histogram bins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 </ul>
 </p>
@@ -1369,7 +1376,7 @@ or <code class="docutils literal notranslate"><span class="pre">float32</span></
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">dims</span>
 <span class="go">(&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
-<span class="go">array(...)</span>
+<span class="go">array([0, ..., 12.45])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">79.99</span>
 </pre></div>

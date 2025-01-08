@@ -30,7 +30,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
@@ -580,21 +580,21 @@ or <code class="docutils literal notranslate"><span class="pre">mkl_fft._numpy_f
 </ul>
 <p>This tutorial compares the performance of the two modes.</p>
 <p>Import required modules and functions:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">timeit</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeit</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa</span>
 
-<span class="kn">from</span> <span class="nn">phasorpy.phasor</span> <span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">phasorpy.utils</span> <span class="kn">import</span> <span class="n">number_threads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">number_threads</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">scipy.fft</span> <span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">scipy_fft</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">mkl_fft._numpy_fft</span> <span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mkl_fft._numpy_fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
@@ -618,7 +618,7 @@ and number of threads:</p>
 <span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># reference duration</span>
 
 
-<span class="k">def</span> <span class="nf">print_</span><span class="p">(</span><span class="n">descr</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_</span><span class="p">(</span><span class="n">descr</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">descr</span><span class="si">:</span><span class="s1">20s</span><span class="si">}{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">number</span><span class="si">:</span><span class="s1">&gt;6.3f</span><span class="si">}</span><span class="s1">s </span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ref</span><span class="si">:</span><span class="s1">&gt;6.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
@@ -650,35 +650,35 @@ and number of threads:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
   axis -1
     not_fft              0.057s   1.00
-    not_fft (2 threads)  0.036s   0.63
-    numpy_fft            0.215s   3.78
-    scipy_fft            0.232s   4.07
+    not_fft (2 threads)  0.029s   0.52
+    numpy_fft            0.221s   3.88
+    scipy_fft            0.235s   4.12
   axis 0
-    not_fft              0.167s   2.94
+    not_fft              0.167s   2.93
     not_fft (2 threads)  0.084s   1.47
-    numpy_fft            0.451s   7.93
-    scipy_fft            0.345s   6.07
+    numpy_fft            0.456s   8.00
+    scipy_fft            0.350s   6.14
   axis 2
     not_fft              0.057s   1.00
     not_fft (2 threads)  0.029s   0.51
-    numpy_fft            0.218s   3.82
-    scipy_fft            0.236s   4.15
+    numpy_fft            0.218s   3.83
+    scipy_fft            0.235s   4.12
 harmonics 8
   axis -1
-    not_fft              0.468s   8.22
-    not_fft (2 threads)  0.233s   4.09
-    numpy_fft            0.224s   3.94
-    scipy_fft            0.242s   4.25
+    not_fft              0.456s   8.00
+    not_fft (2 threads)  0.235s   4.13
+    numpy_fft            0.231s   4.06
+    scipy_fft            0.248s   4.34
   axis 0
-    not_fft              1.331s  23.38
-    not_fft (2 threads)  0.686s  12.05
+    not_fft              1.337s  23.47
+    not_fft (2 threads)  0.685s  12.02
     numpy_fft            0.461s   8.09
-    scipy_fft            0.354s   6.21
+    scipy_fft            0.353s   6.20
   axis 2
-    not_fft              0.453s   7.96
-    not_fft (2 threads)  0.233s   4.09
-    numpy_fft            0.231s   4.05
-    scipy_fft            0.243s   4.26
+    not_fft              0.453s   7.95
+    not_fft (2 threads)  0.232s   4.07
+    numpy_fft            0.232s   4.08
+    scipy_fft            0.248s   4.35
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU, Windows 11:</p>
@@ -748,7 +748,7 @@ of harmonics, especially with an optimized FFT function.</p>
 <span class="c1"># mypy: disable-error-code=&quot;arg-type&quot;</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.762 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.842 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-benchmarks-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/9d07845b628b555914639d30910d46da/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>

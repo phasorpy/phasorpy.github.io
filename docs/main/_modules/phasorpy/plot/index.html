@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
@@ -536,7 +536,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;PhasorPlot&#39;</span><span class="p">,</span>
@@ -547,30 +547,30 @@
     <span class="s1">&#39;plot_polar_frequency&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">IO</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">IO</span>
 
-    <span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.image</span> <span class="kn">import</span> <span class="n">AxesImage</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.image</span><span class="w"> </span><span class="kn">import</span> <span class="n">AxesImage</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
-<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">FontProperties</span>
-<span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span>
-<span class="kn">from</span> <span class="nn">matplotlib.lines</span> <span class="kn">import</span> <span class="n">Line2D</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span>
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patheffects</span> <span class="kn">import</span> <span class="n">AbstractPathEffect</span>
-<span class="kn">from</span> <span class="nn">matplotlib.widgets</span> <span class="kn">import</span> <span class="n">Slider</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.font_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">FontProperties</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.gridspec</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractPathEffect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.widgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">Slider</span>
 
-<span class="kn">from</span> <span class="nn">._phasorpy</span> <span class="kn">import</span> <span class="n">_intersection_circle_circle</span><span class="p">,</span> <span class="n">_intersection_circle_line</span>
-<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._phasorpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">_intersection_circle_circle</span><span class="p">,</span> <span class="n">_intersection_circle_line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">dilate_coordinates</span><span class="p">,</span>
     <span class="n">parse_kwargs</span><span class="p">,</span>
     <span class="n">parse_signal_axis</span><span class="p">,</span>
@@ -579,7 +579,7 @@
     <span class="n">sort_coordinates</span><span class="p">,</span>
     <span class="n">update_kwargs</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.phasor</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">phasor_from_fret_acceptor</span><span class="p">,</span>
     <span class="n">phasor_from_fret_donor</span><span class="p">,</span>
     <span class="n">phasor_from_lifetime</span><span class="p">,</span>
@@ -599,7 +599,7 @@
 
 <div class="viewcode-block" id="PhasorPlot">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot">[docs]</a>
-<span class="k">class</span> <span class="nc">PhasorPlot</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PhasorPlot</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Phasor plot.</span>
 
 <span class="sd">    Create publication quality visualizations of phasor coordinates.</span>
@@ -641,7 +641,7 @@
     <span class="n">_frequency</span><span class="p">:</span> <span class="nb">float</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Laser pulse or modulation frequency in MHz.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
         <span class="n">allquadrants</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -697,12 +697,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">ax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Matplotlib :py:class:`matplotlib.axes.Axes`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">fig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fig</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Matplotlib :py:class:`matplotlib.figure.Figure`.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># matplotlib &gt;= 3.10.0</span>
@@ -711,7 +711,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>  <span class="c1"># type: ignore[return-value]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">dataunit_to_point</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dataunit_to_point</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Factor to convert data to point unit.&quot;&quot;&quot;</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span>
         <span class="k">assert</span> <span class="n">fig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -721,7 +721,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.show">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.show">[docs]</a>
-    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all open figures. Call :py:func:`matplotlib.pyplot.show`.&quot;&quot;&quot;</span>
         <span class="c1"># self.fig.show()</span>
         <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
@@ -729,7 +729,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.save">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -751,7 +751,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.plot">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -820,7 +820,7 @@
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_histogram2d</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_histogram2d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -846,7 +846,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_reset_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset axes limits.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ylim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -855,7 +855,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.hist2d">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d">[docs]</a>
-    <span class="k">def</span> <span class="nf">hist2d</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hist2d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -894,7 +894,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.contour">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.contour">[docs]</a>
-    <span class="k">def</span> <span class="nf">contour</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contour</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -928,7 +928,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.imshow">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.imshow">[docs]</a>
-    <span class="k">def</span> <span class="nf">imshow</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">imshow</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">image</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -950,7 +950,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.components">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.components">[docs]</a>
-    <span class="k">def</span> <span class="nf">components</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">components</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -1073,7 +1073,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.line">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.line">[docs]</a>
-    <span class="k">def</span> <span class="nf">line</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -1109,7 +1109,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.circle">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.circle">[docs]</a>
-    <span class="k">def</span> <span class="nf">circle</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">circle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -1144,7 +1144,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.cursor">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.cursor">[docs]</a>
-    <span class="k">def</span> <span class="nf">cursor</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cursor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">real</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">imag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -1218,7 +1218,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.polar_cursor">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.polar_cursor">[docs]</a>
-    <span class="k">def</span> <span class="nf">polar_cursor</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">polar_cursor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">modulation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1362,7 +1362,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.polar_grid">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.polar_grid">[docs]</a>
-    <span class="k">def</span> <span class="nf">polar_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">polar_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw polar coordinate system.</span>
 
 <span class="sd">        Parameters</span>
@@ -1405,7 +1405,7 @@
 
 <div class="viewcode-block" id="PhasorPlot.semicircle">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlot.semicircle">[docs]</a>
-    <span class="k">def</span> <span class="nf">semicircle</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">semicircle</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1512,7 +1512,7 @@
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_on_format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_format_coord</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function to update coordinates displayed in toolbar.&quot;&quot;&quot;</span>
         <span class="n">phi</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="p">[</span>
@@ -1528,7 +1528,7 @@
 
 <div class="viewcode-block" id="PhasorPlotFret">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.PhasorPlotFret">[docs]</a>
-<span class="k">class</span> <span class="nc">PhasorPlotFret</span><span class="p">(</span><span class="n">PhasorPlot</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PhasorPlotFret</span><span class="p">(</span><span class="n">PhasorPlot</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;FRET phasor plot.</span>
 
 <span class="sd">    Plot Förster Resonance Energy Transfer efficiency trajectories</span>
@@ -1620,7 +1620,7 @@
 
     <span class="n">_donor_semicircle_ticks</span><span class="p">:</span> <span class="n">SemicircleTicks</span> <span class="o">|</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">,</span>
@@ -1946,7 +1946,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_background_imag_slider</span><span class="o">.</span><span class="n">on_changed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_changed</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_on_semicircle_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_semicircle_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function to update semicircles.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span> <span class="o">=</span> <span class="n">frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_slider</span><span class="o">.</span><span class="n">val</span>
         <span class="n">acceptor_lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_acceptor_lifetime_slider</span><span class="o">.</span><span class="n">val</span>
@@ -1966,7 +1966,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_changed</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_on_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback function to update plot with current slider values.&quot;&quot;&quot;</span>
         <span class="n">frequency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_slider</span><span class="o">.</span><span class="n">val</span>
         <span class="n">donor_lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_donor_lifetime_slider</span><span class="o">.</span><span class="n">val</span>
@@ -2060,7 +2060,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">SemicircleTicks</span><span class="p">(</span><span class="n">AbstractPathEffect</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SemicircleTicks</span><span class="p">(</span><span class="n">AbstractPathEffect</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw ticks on universal semicircle.</span>
 
 <span class="sd">    Parameters</span>
@@ -2080,7 +2080,7 @@
     <span class="n">_labels</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># tick labels</span>
     <span class="n">_gc</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>  <span class="c1"># keywords passed to _update_gc</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2099,18 +2099,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_gc</span> <span class="o">=</span> <span class="n">kwargs</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tick labels.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span>
 
     <span class="nd">@labels</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">draw_path</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_path</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">renderer</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
         <span class="n">gc</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
@@ -2178,7 +2178,7 @@
 
 <div class="viewcode-block" id="plot_phasor">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.plot_phasor">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_phasor</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_phasor</span><span class="p">(</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
@@ -2260,7 +2260,7 @@
 
 <div class="viewcode-block" id="plot_phasor_image">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.plot_phasor_image">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_phasor_image</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_phasor_image</span><span class="p">(</span>
     <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -2438,7 +2438,7 @@
 
 <div class="viewcode-block" id="plot_signal_image">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.plot_signal_image">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_signal_image</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_signal_image</span><span class="p">(</span>
     <span class="n">signal</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2542,7 +2542,7 @@
 
 <div class="viewcode-block" id="plot_polar_frequency">
 <a class="viewcode-back" href="../../../api/plot/#phasorpy.plot.plot_polar_frequency">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_polar_frequency</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_polar_frequency</span><span class="p">(</span>
     <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">modulation</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -2605,7 +2605,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_imshow</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_imshow</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
@@ -2657,7 +2657,7 @@
     <span class="k">return</span> <span class="n">pos</span>
 
 
-<span class="k">def</span> <span class="nf">_semicircle_ticks</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_semicircle_ticks</span><span class="p">(</span>
     <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">lifetime</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

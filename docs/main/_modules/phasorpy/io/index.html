@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
@@ -640,7 +640,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;phasor_from_ometiff&#39;</span><span class="p">,</span>
@@ -667,18 +667,18 @@
     <span class="s1">&#39;_squeeze_axes&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">struct</span>
-<span class="kn">import</span> <span class="nn">zlib</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="n">chunk_iter</span><span class="p">,</span> <span class="n">parse_harmonic</span>
-<span class="kn">from</span> <span class="nn">.phasor</span> <span class="kn">import</span> <span class="n">phasor_from_polar</span><span class="p">,</span> <span class="n">phasor_to_polar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">chunk_iter</span><span class="p">,</span> <span class="n">parse_harmonic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_polar</span><span class="p">,</span> <span class="n">phasor_to_polar</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">._typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">Any</span><span class="p">,</span>
         <span class="n">ArrayLike</span><span class="p">,</span>
         <span class="n">DataArray</span><span class="p">,</span>
@@ -690,14 +690,14 @@
         <span class="n">Sequence</span><span class="p">,</span>
     <span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="phasor_to_ometiff">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.phasor_to_ometiff">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_to_ometiff</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_to_ometiff</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -741,6 +741,7 @@
 <span class="sd">        Write to image series named &#39;Phasor imag&#39;.</span>
 <span class="sd">    frequency : float, optional</span>
 <span class="sd">        Fundamental frequency of time-resolved phasor coordinates.</span>
+<span class="sd">        Usually in unit of MHz.</span>
 <span class="sd">        Write to image series named &#39;Phasor frequency&#39;.</span>
 <span class="sd">    harmonic : int or sequence of int, optional</span>
 <span class="sd">        Harmonics present in the first dimension of `real` and `imag`, if any.</span>
@@ -788,9 +789,9 @@
 <span class="sd">    ... )</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">tifffile</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
 
-    <span class="kn">from</span> <span class="nn">.version</span> <span class="kn">import</span> <span class="n">__version__</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
 
     <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
@@ -900,7 +901,7 @@
 
 <div class="viewcode-block" id="phasor_from_ometiff">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.phasor_from_ometiff">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_from_ometiff</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_from_ometiff</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -942,6 +943,7 @@
 <span class="sd">          first axis.</span>
 <span class="sd">        - ``&#39;frequency&#39;`` (float, optional):</span>
 <span class="sd">          Fundamental frequency of time-resolved phasor coordinates.</span>
+<span class="sd">          Usually in unit of MHz.</span>
 <span class="sd">        - ``&#39;description&#39;`` (str, optional):</span>
 <span class="sd">          OME dataset plain-text description.</span>
 
@@ -985,7 +987,7 @@
 <span class="sd">    1</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">tifffile</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -1077,7 +1079,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">index</span> <span class="o">=</span> <span class="p">[[</span><span class="n">harmonic_stored</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">harmonic</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;harmonic not found&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;harmonic not found&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
             <span class="k">if</span> <span class="n">has_harmonic_dim</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">keepdims</span><span class="p">:</span>
@@ -1109,7 +1111,7 @@
 
 <div class="viewcode-block" id="phasor_to_simfcs_referenced">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.phasor_to_simfcs_referenced">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_to_simfcs_referenced</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_to_simfcs_referenced</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
     <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
@@ -1208,7 +1210,7 @@
 
     <span class="n">chunk</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">rawdata_append</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rawdata_append</span><span class="p">(</span>
         <span class="n">rawdata</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">a</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1248,7 +1250,7 @@
 
 <div class="viewcode-block" id="phasor_from_simfcs_referenced">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced">[docs]</a>
-<span class="k">def</span> <span class="nf">phasor_from_simfcs_referenced</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_from_simfcs_referenced</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1298,7 +1300,7 @@
 <span class="sd">    array([[...]], dtype=float32)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.r64&#39;</span><span class="p">:</span>
@@ -1330,7 +1332,7 @@
 
 <div class="viewcode-block" id="read_lsm">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_lsm">[docs]</a>
-<span class="k">def</span> <span class="nf">read_lsm</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_lsm</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -1349,6 +1351,9 @@
 <span class="sd">    xarray.DataArray</span>
 <span class="sd">        Hyperspectral image data.</span>
 <span class="sd">        Usually, a 3-to-5-dimensional array of type ``uint8`` or ``uint16``.</span>
+
+<span class="sd">        - ``coords[&#39;C&#39;]``: wavelengths in nm.</span>
+<span class="sd">        - ``coords[&#39;T&#39;]``: time coordinates in s, if any.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -1369,10 +1374,10 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;C&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;C&#39;].data  # wavelengths</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([423, ..., 713])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">tifffile</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
 
     <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tif</span><span class="o">.</span><span class="n">is_lsm</span><span class="p">:</span>
@@ -1406,11 +1411,12 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
             <span class="p">)</span>
+        <span class="n">wavelengths</span> <span class="o">*=</span> <span class="mf">1e9</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">indices</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
         <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wavelengths</span>
         <span class="c1"># time stamps</span>
         <span class="k">if</span> <span class="s1">&#39;T&#39;</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">:</span>
-            <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;TimeStamps&#39;</span><span class="p">]</span>
+            <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;TimeStamps&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;TimeStamps&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dims</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> timestamps do not match time axis&#39;</span>
@@ -1428,7 +1434,7 @@
                 <span class="p">)</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">series</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -1436,7 +1442,7 @@
 
 <div class="viewcode-block" id="read_imspector_tiff">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_imspector_tiff">[docs]</a>
-<span class="k">def</span> <span class="nf">read_imspector_tiff</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_imspector_tiff</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -1453,7 +1459,7 @@
 <span class="sd">        TCSPC image stack.</span>
 <span class="sd">        Usually, a 3-to-5-dimensional array of type ``uint16``.</span>
 
-<span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins.</span>
+<span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins in ns.</span>
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
 
 <span class="sd">    Raises</span>
@@ -1475,14 +1481,14 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data  # dtime bins</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([0, ..., 12.26])</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    80.109</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">xml.etree</span> <span class="kn">import</span> <span class="n">ElementTree</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xml.etree</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementTree</span>
 
-    <span class="kn">import</span> <span class="nn">tifffile</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
 
     <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
         <span class="n">tags</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">tags</span>
@@ -1574,7 +1580,7 @@
 
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -1582,7 +1588,7 @@
 
 <div class="viewcode-block" id="read_ifli">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_ifli">[docs]</a>
-<span class="k">def</span> <span class="nf">read_ifli</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_ifli</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1614,9 +1620,9 @@
 <span class="sd">        The last dimension contains `mean`, `real`, and `imag` phasor</span>
 <span class="sd">        coordinates.</span>
 
-<span class="sd">        - ``coords[&#39;F&#39;]``: modulation frequencies.</span>
-<span class="sd">        - ``coords[&#39;C&#39;]``: emission wavelengths, if any.</span>
-<span class="sd">        - ``attrs[&#39;ref_tau&#39;]``: reference lifetimes.</span>
+<span class="sd">        - ``coords[&#39;F&#39;]``: modulation frequencies in MHz.</span>
+<span class="sd">        - ``coords[&#39;C&#39;]``: emission wavelengths in nm, if any.</span>
+<span class="sd">        - ``attrs[&#39;ref_tau&#39;]``: reference lifetimes in ns.</span>
 <span class="sd">        - ``attrs[&#39;ref_tau_frac&#39;]``: reference lifetime fractions.</span>
 <span class="sd">        - ``attrs[&#39;ref_phasor&#39;]``: reference phasor coordinates for all</span>
 <span class="sd">          frequencies.</span>
@@ -1638,14 +1644,14 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;Y&#39;, &#39;X&#39;, &#39;F&#39;, &#39;S&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;F&#39;].data  # doctest: +NUMBER</span>
-<span class="sd">    array([8.033e+07, 1.607e+08, 2.41e+08, 4.017e+08])</span>
+<span class="sd">    array([80.33, 160.7, 241, 401.7])</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;S&#39;].data</span>
 <span class="sd">    array([&#39;mean&#39;, &#39;real&#39;, &#39;imag&#39;], dtype=&#39;&lt;U4&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs</span>
 <span class="sd">    {&#39;ref_tau&#39;: (2.5, 0.0), &#39;ref_tau_frac&#39;: (1.0, 0.0), &#39;ref_phasor&#39;: array...}</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">VistaIfli</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ifli</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">ifli</span><span class="o">.</span><span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1657,7 +1663,7 @@
         <span class="n">header</span> <span class="o">=</span> <span class="n">ifli</span><span class="o">.</span><span class="n">header</span>
         <span class="n">coords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">,</span> <span class="s1">&#39;imag&#39;</span><span class="p">]</span>
-        <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ModFrequency&#39;</span><span class="p">])</span>
+        <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;ModFrequency&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e-6</span>
         <span class="c1"># TODO: how to distinguish time- from frequency-domain?</span>
         <span class="c1"># TODO: how to extract spatial coordinates?</span>
         <span class="k">if</span> <span class="s1">&#39;T&#39;</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
@@ -1678,7 +1684,7 @@
         <span class="p">)</span>
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ref_phasor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;RefDCPhasor&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">])</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -1686,7 +1692,7 @@
 
 <div class="viewcode-block" id="read_sdt">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_sdt">[docs]</a>
-<span class="k">def</span> <span class="nf">read_sdt</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_sdt</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1711,7 +1717,7 @@
 <span class="sd">        :ref:`axes codes &lt;axes&gt;` ``&#39;YXH&#39;`` and type ``uint16``, ``uint32``,</span>
 <span class="sd">        or ``float32``.</span>
 
-<span class="sd">        - ``coords[&#39;H&#39;]``: times of the histogram bins.</span>
+<span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins in ns.</span>
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
 
 <span class="sd">    Raises</span>
@@ -1732,12 +1738,12 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([0, ..., 12.45])</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    79.99</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">sdtfile</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sdtfile</span>
 
     <span class="k">with</span> <span class="n">sdtfile</span><span class="o">.</span><span class="n">SdtFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">sdt</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -1753,13 +1759,13 @@
         <span class="c1"># sdtfile.BlockType(sdt.block_headers[index].block_type).contents</span>
         <span class="c1"># == &#39;PAGE_BLOCK&#39;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-        <span class="n">times</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">sdt</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e9</span>
 
     <span class="c1"># TODO: get spatial coordinates from scanner settings?</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="s1">&#39;QYXH&#39;</span><span class="p">[</span><span class="o">-</span><span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="p">:],</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="n">times</span><span class="p">)</span>
-    <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -1767,7 +1773,7 @@
 
 <div class="viewcode-block" id="read_ptu">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_ptu">[docs]</a>
-<span class="k">def</span> <span class="nf">read_ptu</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_ptu</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="n">selection</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="n">EllipsisType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1825,7 +1831,7 @@
 <span class="sd">        with :ref:`axes codes &lt;axes&gt;` ``&#39;TYXCH&#39;`` and type specified</span>
 <span class="sd">        in ``dtype``:</span>
 
-<span class="sd">        - ``coords[&#39;H&#39;]``: times of the histogram bins.</span>
+<span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins in ns.</span>
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
 
 <span class="sd">    Raises</span>
@@ -1848,13 +1854,13 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;C&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([0, ..., 12.7])</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    78.02</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">ptufile</span>
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ptufile</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">with</span> <span class="n">ptufile</span><span class="o">.</span><span class="n">PtuFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">trimdims</span><span class="o">=</span><span class="n">trimdims</span><span class="p">)</span> <span class="k">as</span> <span class="n">ptu</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_t3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_image</span><span class="p">:</span>
@@ -1873,6 +1879,7 @@
         <span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">)</span>
         <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">frequency</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># MHz</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e9</span>
 
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -1880,7 +1887,7 @@
 
 <div class="viewcode-block" id="read_flif">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_flif">[docs]</a>
-<span class="k">def</span> <span class="nf">read_flif</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_flif</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -1904,8 +1911,8 @@
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
 <span class="sd">        - ``attrs[&#39;ref_phase&#39;]``: measured phase of reference.</span>
 <span class="sd">        - ``attrs[&#39;ref_mod&#39;]``: measured modulation of reference.</span>
-<span class="sd">        - ``attrs[&#39;ref_tauphase&#39;]``: lifetime from phase of reference.</span>
-<span class="sd">        - ``attrs[&#39;ref_taumod&#39;]``: lifetime from modulation of reference.</span>
+<span class="sd">        - ``attrs[&#39;ref_tauphase&#39;]``: lifetime from phase of reference in ns.</span>
+<span class="sd">        - ``attrs[&#39;ref_taumod&#39;]``: lifetime from modulation of reference in ns.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -1924,12 +1931,12 @@
 <span class="sd">    &gt;&gt;&gt; data.dims</span>
 <span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([0, ..., 6.087], dtype=float32)</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    80.65</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">FlimfastFlif</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">flif</span><span class="p">:</span>
         <span class="n">nphases</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">flif</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">phases</span><span class="p">)</span>
@@ -1954,7 +1961,7 @@
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ref_tauphase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">flif</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ref_tauphase</span><span class="p">)</span>
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ref_taumod&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">flif</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ref_taumod</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -1962,7 +1969,7 @@
 
 <div class="viewcode-block" id="read_fbd">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_fbd">[docs]</a>
-<span class="k">def</span> <span class="nf">read_fbd</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_fbd</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -2023,12 +2030,12 @@
 <span class="sd">    &gt;&gt;&gt; data.dims  # doctest: +SKIP</span>
 <span class="sd">    (&#39;T&#39;, &#39;C&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; data.coords[&#39;H&#39;].data  # doctest: +SKIP</span>
-<span class="sd">    array(...)</span>
+<span class="sd">    array([0, ..., 6.185])</span>
 <span class="sd">    &gt;&gt;&gt; data.attrs[&#39;frequency&#39;]  # doctest: +SKIP</span>
 <span class="sd">    40.0</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="n">integrate_frames</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">frame</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
 
@@ -2074,7 +2081,7 @@
         <span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">laser_frequency</span> <span class="o">*</span> <span class="mf">1e-6</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -2082,7 +2089,7 @@
 
 <div class="viewcode-block" id="read_b64">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_b64">[docs]</a>
-<span class="k">def</span> <span class="nf">read_b64</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_b64</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -2123,7 +2130,7 @@
 <span class="sd">    (&#39;I&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">SimfcsB64</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">b64</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">b64</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
@@ -2134,7 +2141,7 @@
             <span class="p">)</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">b64</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -2142,7 +2149,7 @@
 
 <div class="viewcode-block" id="read_z64">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_z64">[docs]</a>
-<span class="k">def</span> <span class="nf">read_z64</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_z64</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -2180,13 +2187,13 @@
 <span class="sd">    (&#39;Q&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">SimfcsZ64</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">z64</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">z64</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">z64</span><span class="o">.</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -2194,7 +2201,7 @@
 
 <div class="viewcode-block" id="read_bh">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_bh">[docs]</a>
-<span class="k">def</span> <span class="nf">read_bh</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_bh</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -2233,14 +2240,14 @@
 <span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">SimfcsBh</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">bnh</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">bnh</span><span class="o">.</span><span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">bnh</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">bnh</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
@@ -2248,7 +2255,7 @@
 
 <div class="viewcode-block" id="read_bhz">
 <a class="viewcode-back" href="../../../api/io/#phasorpy.io.read_bhz">[docs]</a>
-<span class="k">def</span> <span class="nf">read_bhz</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_bhz</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
@@ -2287,20 +2294,20 @@
 <span class="sd">    (&#39;H&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">lfdfiles</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">lfdfiles</span>
 
     <span class="k">with</span> <span class="n">lfdfiles</span><span class="o">.</span><span class="n">SimfcsBhz</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">bhz</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">bhz</span><span class="o">.</span><span class="n">axes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">bhz</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">bhz</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">),</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
 
-    <span class="kn">from</span> <span class="nn">xarray</span> <span class="kn">import</span> <span class="n">DataArray</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_metadata</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_metadata</span><span class="p">(</span>
     <span class="n">dims</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
@@ -2329,7 +2336,7 @@
     <span class="k">return</span> <span class="n">metadata</span>
 
 
-<span class="k">def</span> <span class="nf">_squeeze_axes</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_squeeze_axes</span><span class="p">(</span>
     <span class="n">shape</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
     <span class="n">axes</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
