@@ -35,6 +35,8 @@ Resources
 News
 ====
 
+- Jan 8, 2025: PhasorPy is available on `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`_.
+
 - Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
