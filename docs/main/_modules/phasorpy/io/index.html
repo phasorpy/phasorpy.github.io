@@ -1785,7 +1785,7 @@
     <span class="n">dtime</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">keepdims</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return image histogram and metadata from PicoQuant PTU T3 mode file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return TCSPC histogram and metadata from PicoQuant PTU T3 mode file.</span>
 
 <span class="sd">    PTU files contain time-correlated single photon counting measurement data</span>
 <span class="sd">    and instrumentation parameters.</span>
@@ -1795,7 +1795,7 @@
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of PTU file to read.</span>
 <span class="sd">    selection : sequence of index types, optional</span>
-<span class="sd">        Indices for all dimensions:</span>
+<span class="sd">        Indices for all dimensions of image mode files:</span>
 
 <span class="sd">        - ``None``: return all items along axis (default).</span>
 <span class="sd">        - ``Ellipsis``: return all items along multiple axes.</span>
@@ -1818,7 +1818,7 @@
 <span class="sd">    dtime : int, optional, default: 0</span>
 <span class="sd">        Specifies number of bins in image histogram.</span>
 <span class="sd">        If 0 (default), return number of bins in one period.</span>
-<span class="sd">        If &lt; 0, integrate delay time axis.</span>
+<span class="sd">        If &lt; 0, integrate delay time axis (image mode only).</span>
 <span class="sd">        If &gt; 0, return up to specified bin.</span>
 <span class="sd">        Overrides `selection` for axis ``H``.</span>
 <span class="sd">    keepdims : bool, optional, default: True</span>
@@ -1833,6 +1833,10 @@
 
 <span class="sd">        - ``coords[&#39;H&#39;]``: times of histogram bins in ns.</span>
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
+<span class="sd">        - ``attrs[&#39;ptu_tags&#39;]``: metadata read from PTU file.</span>
+
+<span class="sd">        Size-one dimensions are prepended to point mode data to make them</span>
+<span class="sd">        broadcastable to image data.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -1863,21 +1867,42 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
     <span class="k">with</span> <span class="n">ptufile</span><span class="o">.</span><span class="n">PtuFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">trimdims</span><span class="o">=</span><span class="n">trimdims</span><span class="p">)</span> <span class="k">as</span> <span class="n">ptu</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_t3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_image</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="si">!r}</span><span class="s1"> &#39;</span>
-                <span class="s1">&#39;is not a PTU file containing a T3 mode image&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_t3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ptu</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not a T3 mode PTU file&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ptu</span><span class="o">.</span><span class="n">is_image</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">decode_image</span><span class="p">(</span>
+                <span class="n">selection</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+                <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span>
+                <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
+                <span class="n">dtime</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span>
+                <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">,</span>
+                <span class="n">asxarray</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">decode_image</span><span class="p">(</span>
-            <span class="n">selection</span><span class="p">,</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-            <span class="n">frame</span><span class="o">=</span><span class="n">frame</span><span class="p">,</span>
-            <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
-            <span class="n">dtime</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span>
-            <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">,</span>
-            <span class="n">asxarray</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ptu</span><span class="o">.</span><span class="n">measurement_submode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># point mode IRF</span>
+            <span class="k">if</span> <span class="n">dtime</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dtime</span><span class="si">=}</span><span class="s1"> not supported for point mode&#39;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">decode_histogram</span><span class="p">(</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">dtime</span><span class="o">=</span><span class="n">dtime</span><span class="p">,</span> <span class="n">asxarray</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DataArray</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">keepdims</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">channel</span> <span class="p">:</span> <span class="n">channel</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span>
+            <span class="c1"># prepend dimensions as needed to appear image-like</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">keepdims</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ptu</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not a point or image mode PTU file&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ptu_tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">tags</span>
         <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ptu</span><span class="o">.</span><span class="n">frequency</span> <span class="o">*</span> <span class="mf">1e-6</span>  <span class="c1"># MHz</span>
         <span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e9</span>
 
