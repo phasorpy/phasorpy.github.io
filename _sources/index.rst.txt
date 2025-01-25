@@ -35,6 +35,8 @@ Resources
 News
 ====
 
+- Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ to read Leica LIF files is released.
+
 - Jan 8, 2025: PhasorPy is available on `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`_.
 
 - Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
