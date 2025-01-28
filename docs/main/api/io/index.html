@@ -570,6 +570,7 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_ometiff" title="phasorpy.io.phasor_from_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_ometiff()</span></code></a> - PhasorPy OME-TIFF</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_ifli" title="phasorpy.io.phasor_from_ifli"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_ifli()</span></code></a> - ISS IFLI</p></li>
+<li><p><a class="reference internal" href="#phasorpy.io.phasor_from_lif" title="phasorpy.io.phasor_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_lif()</span></code></a> - Leica LIF</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_flimlabs_json" title="phasorpy.io.phasor_from_flimlabs_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_flimlabs_json()</span></code></a> - FLIM LABS JSON</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_simfcs_referenced()</span></code></a> - SimFCS REF and R64</p></li>
 </ul>
@@ -577,6 +578,7 @@
 <li><p>read time-resolved and hyperspectral signals, as well as metadata from
 many file formats used in bio-imaging:</p>
 <ul class="simple">
+<li><p><a class="reference internal" href="#phasorpy.io.signal_from_lif" title="phasorpy.io.signal_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_lif()</span></code></a> - Leica LIF</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_lsm" title="phasorpy.io.signal_from_lsm"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_lsm()</span></code></a> - Zeiss LSM</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_ptu" title="phasorpy.io.signal_from_ptu"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_ptu()</span></code></a> - PicoQuant PTU</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_sdt" title="phasorpy.io.signal_from_sdt"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_sdt()</span></code></a> - Becker &amp; Hickl SDT</p></li>
@@ -593,7 +595,6 @@ many file formats used in bio-imaging:</p>
 <ul class="simple">
 <li><p>OME-TIFF</p></li>
 <li><p>Zeiss CZI</p></li>
-<li><p>Leica LIF</p></li>
 <li><p>Nikon ND2</p></li>
 <li><p>Olympus OIB/OIF</p></li>
 <li><p>Olympus OIR</p></li>
@@ -604,6 +605,7 @@ many file formats used in bio-imaging:</p>
 third-party file reader libraries, currently
 <a class="reference external" href="https://github.com/cgohlke/tifffile">tifffile</a>,
 <a class="reference external" href="https://github.com/cgohlke/ptufile">ptufile</a>,
+<a class="reference external" href="https://github.com/cgohlke/liffile">liffile</a>,
 <a class="reference external" href="https://github.com/cgohlke/sdtfile">sdtfile</a>, and
 <a class="reference external" href="https://github.com/cgohlke/lfdfiles">lfdfiles</a>.
 For advanced or unsupported use cases, consider using these libraries directly.</p>
@@ -795,6 +797,57 @@ Metadata from IFLI file header.</p></li>
 <span class="go">80.33</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="p">[</span><span class="s1">&#39;ifli_header&#39;</span><span class="p">]</span>
 <span class="go">{&#39;Version&#39;: 16, ... &#39;ModFrequency&#39;: (...), &#39;RefLifetime&#39;: (2.5,), ...}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.phasor_from_lif">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/io/#phasor_from_lif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_lif" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates and metadata from Leica LIF file.</p>
+<p>LIF files may contain uncalibrated phasor coordinate images and metadata
+from the analysis of fluorescence lifetime imaging measurements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of Leica LIF file to read.</p></li>
+<li><p><strong>series</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of image containing phasor coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Average intensity image.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Image of real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Image of imaginary component of phasor coordinates.</p></li>
+<li><p><strong>attrs</strong> (<em>dict</em>) – Select metadata:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'dims'</span></code> (tuple of str):
+<a class="reference internal" href="#axes"><span class="std std-ref">Axes codes</span></a> for <cite>mean</cite> image dimensions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float):
+Fundamental frequency of time-resolved phasor coordinates in MHz.
+May not be present in all LIF files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'flim_rawdata'</span></code> (dict):
+Settings from LIF SingleMoleculeDetection/RawData XML element.</p></li>
+</ul>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>liffile.LifFileError</strong> – File is not a Leica LIF file.</p></li>
+<li><p><strong>ValueError</strong> – File does not contain FLIM phasor images and metadata.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;FLIM_testdata.lif&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">real</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(1024, 1024)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;dims&#39;</span><span class="p">]</span>
+<span class="go">(&#39;Y&#39;, &#39;X&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="go">19.505</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1357,6 +1410,56 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.signal_from_lif">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/io/#signal_from_lif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
+<dd><p>Return hyperspectral image and metadata from Leica LIF file.</p>
+<p>LIF files may contain hyperspectral images and metadata from laser
+scanning microscopy measurements.
+Reading of TCSPC histograms from FLIM measurements is not supported
+because the compression scheme is patent-pending.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of Leica LIF file to read.</p></li>
+<li><p><strong>series</strong> (<em>str</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – Index or regex pattern of image series to return.
+By default, return the first series containing hyperspectral data.</p></li>
+<li><p><strong>dim</strong> (<em>str</em><em> or </em><em>None</em>) – Character code of hyperspectral dimension.
+Either <code class="docutils literal notranslate"><span class="pre">'λ'</span></code> for emission (default) or <code class="docutils literal notranslate"><span class="pre">'Λ'</span></code> for excitation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Hyperspectral image data.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: wavelengths in nm.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['T']</span></code>: time coordinates in s, if any.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>liffile.LifFileError</strong> – File is not a Leica LIF file.</p></li>
+<li><p><strong>ValueError</strong> – File is not an LSM file or does not contain hyperspectral image.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lif</span><span class="p">(</span><span class="s1">&#39;ScanModesExamples.lif&#39;</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>  
+<span class="go">array(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span>  
+<span class="go">(9, 128, 128)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">dims</span>  
+<span class="go">(&#39;C&#39;, &#39;Y&#39;, &#39;X&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>  
+<span class="go">array([560, 580, 600, ..., 680, 700, 720])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_lsm">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lsm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/io/#signal_from_lsm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lsm" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Zeiss LSM file.</p>
@@ -1610,6 +1713,7 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_flimlabs_json"><code class="docutils literal notranslate"><span class="pre">phasor_from_flimlabs_json()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_ifli"><code class="docutils literal notranslate"><span class="pre">phasor_from_ifli()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_lif"><code class="docutils literal notranslate"><span class="pre">phasor_from_lif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_ometiff"><code class="docutils literal notranslate"><span class="pre">phasor_from_ometiff()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_from_simfcs_referenced"><code class="docutils literal notranslate"><span class="pre">phasor_from_simfcs_referenced()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.phasor_to_ometiff"><code class="docutils literal notranslate"><span class="pre">phasor_to_ometiff()</span></code></a></li>
@@ -1621,6 +1725,7 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_flif"><code class="docutils literal notranslate"><span class="pre">signal_from_flif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_flimlabs_json"><code class="docutils literal notranslate"><span class="pre">signal_from_flimlabs_json()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_imspector_tiff"><code class="docutils literal notranslate"><span class="pre">signal_from_imspector_tiff()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_lif"><code class="docutils literal notranslate"><span class="pre">signal_from_lif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_lsm"><code class="docutils literal notranslate"><span class="pre">signal_from_lsm()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_ptu"><code class="docutils literal notranslate"><span class="pre">signal_from_ptu()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_sdt"><code class="docutils literal notranslate"><span class="pre">signal_from_sdt()</span></code></a></li>
