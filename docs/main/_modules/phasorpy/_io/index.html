@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>phasorpy.io &#8212; PhasorPy 0.4.dev documentation</title>
+    <title>phasorpy._io &#8212; PhasorPy 0.4.dev documentation</title>
   
   
   
@@ -49,7 +49,7 @@
     <script src="../../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=30646c52"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/phasorpy/io';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/phasorpy/_io';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
@@ -510,7 +510,7 @@
     
     <li class="breadcrumb-item"><a href="../../" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">phasorpy.io</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">phasorpy._io</span></li>
   </ul>
 </nav>
 </div>
@@ -527,7 +527,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for phasorpy.io</h1><div class="highlight"><pre>
+  <h1>Source code for phasorpy._io</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Read and write time-resolved and hyperspectral image file formats.</span>
 
 <span class="sd">The ``phasorpy.io`` module provides functions to:</span>
@@ -1612,17 +1612,33 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">phasor_from_flimlabs_json</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
+    <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates and metadata from FLIM LABS JSON phasor file.</span>
 
-<span class="sd">    Some FLIM LABS JSON files contain uncalibrated real and imaginary phasor</span>
-<span class="sd">    coordinates of a single harmonics, but no intensity image (zero harmonic).</span>
+<span class="sd">    Some FLIM LABS JSON files contain uncalibrated phasor coordinates</span>
+<span class="sd">    (possibly for multiple channels and harmonics) and metadata from</span>
+<span class="sd">    digital frequency-domain measurements.</span>
+
+<span class="sd">    The real and imaginary parts of the phasor coordinates are zero (not NaN)</span>
+<span class="sd">    if the intensity is zero.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of FLIM LABS JSON phasor file to read.</span>
 <span class="sd">        The file name usually contains the string &quot;_phasor&quot;.</span>
+<span class="sd">    channel : int, optional</span>
+<span class="sd">        If None (default), return all channels, else return specified channel.</span>
+<span class="sd">    harmonic : int, sequence of int, or &#39;all&#39;, optional</span>
+<span class="sd">        Harmonic(s) to return from file.</span>
+<span class="sd">        If None (default), return the first harmonic stored in the file.</span>
+<span class="sd">        If `&#39;all&#39;`, return all harmonics as stored in file.</span>
+<span class="sd">        If a list, the first axes of the returned `real` and `imag` arrays</span>
+<span class="sd">        contain specified harmonic(s).</span>
+<span class="sd">        If an integer, the returned `real` and `imag` arrays are single</span>
+<span class="sd">        harmonic and have the same shape as `mean`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1649,6 +1665,8 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not a FLIM LABS JSON file containing phasor coordinates.</span>
+<span class="sd">    IndexError</span>
+<span class="sd">        Harmonic or channel not found in file.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -1657,47 +1675,123 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; mean, real, imag, attrs = phasor_from_flimlabs_json(</span>
-<span class="sd">    ...     fetch(&#39;dataset_1_phasor_ch1_h1.json&#39;)</span>
+<span class="sd">    ...     fetch(&#39;convallaria_2_1737113097_phasor_ch1.json&#39;), harmonic=&#39;all&#39;</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; real.shape</span>
-<span class="sd">    (256, 256)</span>
+<span class="sd">    (4, 256, 256)</span>
 <span class="sd">    &gt;&gt;&gt; attrs[&#39;dims&#39;]</span>
 <span class="sd">    (&#39;Y&#39;, &#39;X&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;harmonic&#39;]</span>
+<span class="sd">    [1, 2, 3, 4]</span>
 <span class="sd">    &gt;&gt;&gt; attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    79.51</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;not a valid JSON file&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
-        <span class="ow">or</span> <span class="s1">&#39;header&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
+        <span class="s1">&#39;header&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
+        <span class="ow">or</span> <span class="s1">&#39;phasors_data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
         <span class="ow">or</span> <span class="s1">&#39;laser_period_ns&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
         <span class="ow">or</span> <span class="s1">&#39;file_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
-        <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">][</span><span class="s1">&#39;file_id&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">73</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">49</span><span class="p">]</span>  <span class="c1"># &#39;IPG1&#39;</span>
+        <span class="c1"># or data[&#39;header&#39;][&#39;file_id&#39;] != [73, 80, 71, 49]  # &#39;IPG1&#39;</span>
     <span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s1">&#39;not a FLIM LABS JSON file containing phasor coordinates&#39;</span>
         <span class="p">)</span>
 
-    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;g_data&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;s_data&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
+    <span class="n">phasor_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;phasors_data&#39;</span><span class="p">]</span>
+
+    <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">channel</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">channel</span> <span class="o">&gt;=</span> <span class="n">nchannels</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">channel</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">harmonics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">phasor_data</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">h</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">harmonics</span><span class="p">:</span>
+            <span class="n">harmonics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">:</span>
+            <span class="n">channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">harmonics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">harmonics</span><span class="p">)</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nchannels</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">nchannels</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">harmonic</span> <span class="o">=</span> <span class="n">harmonics</span>
+        <span class="n">keep_harmonic_axis</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">harmonic</span><span class="p">,</span> <span class="n">keep_harmonic_axis</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">harmonics</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">h</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">harmonics</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">harmonic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">harmonic</span><span class="si">=}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">harmonics</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">harmonic_index</span> <span class="o">=</span> <span class="p">{</span><span class="n">h</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)}</span>
+
+    <span class="n">nharmonics</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span>
+    <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;image_height&#39;</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;image_width&#39;</span><span class="p">]</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
+
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">nharmonics</span><span class="p">,</span> <span class="n">nchannels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span>
+    <span class="n">axes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;CYX&#39;</span>
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">phasor_data</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">h</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">harmonic_index</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">harmonic_index</span><span class="p">[</span><span class="n">h</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">channels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;channel&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">channel</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">real</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;g_data&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="p">)</span>
+        <span class="n">imag</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;s_data&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;intensities_data&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">._phasorpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">_flimlabs_mean</span>
+
+        <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">nchannels</span><span class="p">,</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
+        <span class="n">_flimlabs_mean</span><span class="p">(</span>
+            <span class="n">mean</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;intensities_data&#39;</span><span class="p">],</span>
+            <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">channel</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="n">nchannels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">keep_harmonic_axis</span><span class="p">:</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">)[</span><span class="o">-</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="p">:],</span>
-        <span class="s1">&#39;harmonic&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;harmonic&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mf">1000.0</span> <span class="o">/</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">][</span><span class="s1">&#39;laser_period_ns&#39;</span><span class="p">],</span>
-        <span class="s1">&#39;flimlabs_header&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">axes</span><span class="p">),</span>
+        <span class="s1">&#39;samples&#39;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="s1">&#39;harmonic&#39;</span><span class="p">:</span> <span class="n">harmonic</span> <span class="k">if</span> <span class="n">keep_harmonic_axis</span> <span class="k">else</span> <span class="n">harmonic</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="mf">1000.0</span> <span class="o">/</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;laser_period_ns&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;flimlabs_header&#39;</span><span class="p">:</span> <span class="n">header</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span></div>
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span></div>
 
 
 
@@ -1719,7 +1813,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of FLIM LABS JSON imaging file to read.</span>
-<span class="sd">        The file name usually contains the string &quot;_imaging&quot;.</span>
+<span class="sd">        The file name usually contains the string &quot;_imaging&quot; or &quot;_phasor&quot;.</span>
 <span class="sd">    channel : int, optional</span>
 <span class="sd">        If None (default), return all channels, else return specified channel.</span>
 <span class="sd">    dtype : dtype-like, optional, default: uint16</span>
@@ -1742,6 +1836,8 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not a FLIM LABS JSON file containing TCSPC histogram.</span>
 <span class="sd">        `dtype` is not an unsigned integer.</span>
+<span class="sd">    IndexError</span>
+<span class="sd">        Channel out of range.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -1749,13 +1845,15 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; signal = signal_from_flimlabs_json(fetch(&#39;dataset_1.json&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; signal = signal_from_flimlabs_json(</span>
+<span class="sd">    ...     fetch(&#39;convallaria_2_1737113097_phasor_ch1.json&#39;)</span>
+<span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; signal.values</span>
 <span class="sd">    array(...)</span>
 <span class="sd">    &gt;&gt;&gt; signal.shape</span>
-<span class="sd">    (1, 256, 256, 256)</span>
+<span class="sd">    (256, 256, 256)</span>
 <span class="sd">    &gt;&gt;&gt; signal.dims</span>
-<span class="sd">    (&#39;C&#39;, &#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
+<span class="sd">    (&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; signal.coords[&#39;H&#39;].data</span>
 <span class="sd">    array(...)</span>
 <span class="sd">    &gt;&gt;&gt; signal.attrs[&#39;frequency&#39;]  # doctest: +NUMBER</span>
@@ -1764,18 +1862,17 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;not a valid JSON file&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
-        <span class="ow">or</span> <span class="s1">&#39;header&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
+        <span class="s1">&#39;header&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span>
         <span class="ow">or</span> <span class="s1">&#39;laser_period_ns&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
         <span class="ow">or</span> <span class="s1">&#39;file_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
-        <span class="ow">or</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">][</span><span class="s1">&#39;file_id&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">[</span><span class="mi">73</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">49</span><span class="p">]</span>  <span class="c1"># &#39;IMG1&#39;</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="s1">&#39;intensities_data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
     <span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s1">&#39;not a FLIM LABS JSON file containing TCSPC histogram&#39;</span>
@@ -1789,53 +1886,56 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dtype</span><span class="si">=}</span><span class="s1"> is not an unsigned integer type&#39;</span><span class="p">)</span>
 
     <span class="n">header</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span>
-    <span class="n">channels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span><span class="p">])</span>
-    <span class="c1"># TODO: how to use header[&#39;frames&#39;]?</span>
+    <span class="n">nchannels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span><span class="p">])</span>
     <span class="n">height</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;image_height&#39;</span><span class="p">]</span>
     <span class="n">width</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;image_width&#39;</span><span class="p">]</span>
     <span class="n">frequency</span> <span class="o">=</span> <span class="mf">1000.0</span> <span class="o">/</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;laser_period_ns&#39;</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">histogram</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">channels</span><span class="p">,</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="o">&gt;=</span> <span class="n">nchannels</span> <span class="ow">or</span> <span class="n">channel</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">channel</span><span class="si">=}</span><span class="s1"> not in range(0, </span><span class="si">{</span><span class="n">nchannels</span><span class="si">=}</span><span class="s1">)&#39;</span><span class="p">)</span>
+        <span class="n">nchannels</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="c1"># file_id = [73, 77, 71, 49]  # &#39;IMG1&#39;</span>
+        <span class="n">intensities_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># file_id = [73, 80, 71, 49]  # &#39;IPG1&#39;</span>
+        <span class="n">intensities_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;intensities_data&#39;</span><span class="p">]</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._phasorpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">_flimlabs_signal</span>
+
+    <span class="n">signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nchannels</span><span class="p">,</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">_flimlabs_signal</span><span class="p">(</span>
+        <span class="n">signal</span><span class="p">,</span>
+        <span class="n">intensities_data</span><span class="p">,</span>
+        <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">channel</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nchannels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">nchannels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="s1">&#39;CYXH&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">histogram</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">height</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
         <span class="n">axes</span> <span class="o">=</span> <span class="s1">&#39;YXH&#39;</span>
-
-    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">channel_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]):</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">channel_</span><span class="p">):</span>
-                <span class="n">hist</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">pixel</span><span class="p">:</span>
-                    <span class="n">hist</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">]):</span>
-            <span class="n">hist</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">pixel</span><span class="p">:</span>
-                <span class="n">hist</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
-
-    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">histogram</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">histogram</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
 
     <span class="n">coords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
         <span class="mf">0.0</span><span class="p">,</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;laser_period_ns&#39;</span><span class="p">],</span> <span class="mi">256</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nchannels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
             <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;channels&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">c</span><span class="p">]</span>
         <span class="p">)</span>
 
-    <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">histogram</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
     <span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
     <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frequency</span>
     <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flimlabs_header&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
-    <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">histogram</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">DataArray</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span></div>
 
 
 
