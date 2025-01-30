@@ -1592,11 +1592,12 @@
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
         <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">}</span>
-        <span class="k">if</span> <span class="n">lif</span><span class="o">.</span><span class="n">flim_rawdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">flim_rawdata</span><span class="p">[</span><span class="s1">&#39;LaserPulseFrequency&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e-6</span>
+        <span class="n">xml</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">xml_element_smd</span>
+        <span class="k">if</span> <span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frequency</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/LaserPulseFrequency&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frequency</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span>
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span>
-        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_rawdata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">flim_rawdata</span>
-        <span class="c1"># attrs[&#39;lif_image_header&#39;] = meta</span>
 
     <span class="k">return</span> <span class="p">(</span>
         <span class="n">mean</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
