@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>phasorpy._phasorpy &#8212; PhasorPy 0.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=40ba9477"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/tabs.js?v=3ee01567"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/_phasorpy';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.4';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Command line interface" href="../cli/" />
+    <link rel="prev" title="phasorpy._utils" href="../_utils/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.4" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="PhasorPy"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorials/">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/">
+    Release notes
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../code_of_conduct/">
+    Code of conduct
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../license/">
+    MIT License
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorials/">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release/">
+    Release notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../code_of_conduct/">
+    Code of conduct
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../license/">
+    MIT License
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../phasorpy/">phasorpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../phasor/">phasorpy.phasor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cursors/">phasorpy.cursors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/">phasorpy.components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plot/">phasorpy.plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io/">phasorpy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../color/">phasorpy.color</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/">phasorpy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/">phasorpy.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_utils/">phasorpy._utils</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">phasorpy._phasorpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">Command line interface</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../" class="nav-link">API reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">phasorpy._phasorpy</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="phasorpy-phasorpy">
+<h1>phasorpy._phasorpy<a class="headerlink" href="#phasorpy-phasorpy" title="Link to this heading">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module and its functions are not part of the public interface.
+They are intended to facilitate the development of the PhasorPy library.</p>
+</div>
+<p id="module-phasorpy._phasorpy">Cython implementation of low-level functions for the PhasorPy library.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._flimlabs_mean">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_flimlabs_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._flimlabs_mean" title="Link to this definition">#</a></dt>
+<dd><p>Return mean intensity image from FLIM LABS JSON intensity data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._flimlabs_signal">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_flimlabs_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._flimlabs_signal" title="Link to this definition">#</a></dt>
+<dd><p>Return TCSPC histogram image from FLIM LABS JSON intensity data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._gaussian_signal">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_gaussian_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stdev</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._gaussian_signal" title="Link to this definition">#</a></dt>
+<dd><p>Return normal distribution, wrapped around at borders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – Writable buffer where calculated signal samples are stored.</p></li>
+<li><p><strong>mean</strong> (<em>float</em>) – Mean of normal distribution.</p></li>
+<li><p><strong>stdev</strong> (<em>float</em>) – Standard deviation of normal distribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._median_filter_2d">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_median_filter_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtered_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._median_filter_2d" title="Link to this definition">#</a></dt>
+<dd><p>Apply 2D median filter ignoring NaN.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._phasor_from_lifetime">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_phasor_from_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phasor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preexponential</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._phasor_from_lifetime" title="Link to this definition">#</a></dt>
+<dd><p>Calculate phasor coordinates from lifetime components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phasor</strong> (<em>3D memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – <p>Writable buffer of three dimensions where calculated phasor
+coordinates are stored:</p>
+<ol class="arabic simple" start="0">
+<li><p>real and imaginary components</p></li>
+<li><p>frequencies</p></li>
+<li><p>lifetimes or fractions</p></li>
+</ol>
+</p></li>
+<li><p><strong>frequency</strong> (<em>2D memoryview</em><em> of </em><em>float64</em>) – One-dimensional sequence of laser-pulse or modulation frequencies.</p></li>
+<li><p><strong>lifetime</strong> (<em>2D memoryview</em><em> of </em><em>float64</em>) – <p>Buffer of two dimensions:</p>
+<ol class="arabic simple" start="0">
+<li><p>lifetimes</p></li>
+<li><p>components of lifetimes</p></li>
+</ol>
+</p></li>
+<li><p><strong>fraction</strong> (<em>2D memoryview</em><em> of </em><em>float64</em>) – <p>Buffer of two dimensions:</p>
+<ol class="arabic simple" start="0">
+<li><p>fractions</p></li>
+<li><p>fractions of lifetime components</p></li>
+</ol>
+</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+1e-3 for MHz and ns. 1.0 for Hz and s.</p></li>
+<li><p><strong>preexponential</strong> (<em>bool</em>) – If true, fractions are pre-exponential amplitudes, else fractional
+intensities.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._phasor_from_signal">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phasor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sincos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._phasor_from_signal" title="Link to this definition">#</a></dt>
+<dd><p>Return phasor coordinates from signal along middle axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phasor</strong> (<em>3D memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – <p>Writable buffer of three dimensions where calculated phasor
+coordinates are stored:</p>
+<ol class="arabic simple" start="0">
+<li><p>mean, real, and imaginary components</p></li>
+<li><p>lower dimensions flat</p></li>
+<li><p>upper dimensions flat</p></li>
+</ol>
+</p></li>
+<li><p><strong>signal</strong> (<em>3D memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – <p>Buffer of three dimensions containing signal:</p>
+<ol class="arabic simple" start="0">
+<li><p>lower dimensions flat</p></li>
+<li><p>dimension over which to compute FFT, number samples</p></li>
+<li><p>upper dimensions flat</p></li>
+</ol>
+</p></li>
+<li><p><strong>sincos</strong> (<em>3D memoryview</em><em> of </em><em>float64</em>) – <p>Buffer of three dimensions containing sine and cosine terms to be
+multiplied with signal:</p>
+<ol class="arabic simple" start="0">
+<li><p>number harmonics</p></li>
+<li><p>number samples</p></li>
+<li><p>cos and sin</p></li>
+</ol>
+</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em>) – Normalize phasor coordinates.</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em>) – Number of OpenMP threads to use for parallelization.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This implementation requires contiguous input arrays.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._phasor_from_signal_vector">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_phasor_from_signal_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phasor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sincos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._phasor_from_signal_vector" title="Link to this definition">#</a></dt>
+<dd><p>Calculate phasor coordinate vectors from signal along last axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phasor</strong> (<em>2D memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – <p>Writable buffer of two dimensions where calculated phasor
+vectors are stored:</p>
+<ol class="arabic simple" start="0">
+<li><p>other dimensions flat</p></li>
+<li><p>real and imaginary components</p></li>
+</ol>
+</p></li>
+<li><p><strong>signal</strong> (<em>2D memoryview</em><em> of </em><em>float32</em><em> or </em><em>float64</em>) – <p>Buffer of two dimensions containing signal:</p>
+<ol class="arabic simple" start="0">
+<li><p>other dimensions flat</p></li>
+<li><p>dimension over which to compute FFT, number samples</p></li>
+</ol>
+</p></li>
+<li><p><strong>sincos</strong> (<em>3D memoryview</em><em> of </em><em>float64</em>) – <p>Buffer of three dimensions containing sine and cosine terms to be
+multiplied with signal:</p>
+<ol class="arabic simple" start="0">
+<li><p>number harmonics</p></li>
+<li><p>number samples</p></li>
+<li><p>cos and sin</p></li>
+</ol>
+</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em>) – Number of OpenMP threads to use for parallelization.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This implementation requires contiguous input arrays.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._phasorpy._signal_denoise_vector">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._phasorpy.</span></span><span class="sig-name descname"><span class="pre">_signal_denoise_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">denoised</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrated</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy._phasorpy._signal_denoise_vector" title="Link to this definition">#</a></dt>
+<dd><p>Calculate denoised signal from spectral_vector.</p>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../_utils/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">phasorpy._utils</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cli/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Command line interface</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._flimlabs_mean"><code class="docutils literal notranslate"><span class="pre">_flimlabs_mean()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._flimlabs_signal"><code class="docutils literal notranslate"><span class="pre">_flimlabs_signal()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._gaussian_signal"><code class="docutils literal notranslate"><span class="pre">_gaussian_signal()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._median_filter_2d"><code class="docutils literal notranslate"><span class="pre">_median_filter_2d()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._phasor_from_lifetime"><code class="docutils literal notranslate"><span class="pre">_phasor_from_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._phasor_from_signal"><code class="docutils literal notranslate"><span class="pre">_phasor_from_signal()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._phasor_from_signal_vector"><code class="docutils literal notranslate"><span class="pre">_phasor_from_signal_vector()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._phasorpy._signal_denoise_vector"><code class="docutils literal notranslate"><span class="pre">_signal_denoise_vector()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
