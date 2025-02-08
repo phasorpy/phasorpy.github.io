@@ -80,6 +80,12 @@ Events
 
 The PhasorPy project is presented at the following events:
 
+- Bruno Pannunzio, Bruno Schuty Teske, Michelle Digman, Christoph Gohlke, and Leonel Malacrida.
+  PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
+  `69th Annual Meeting of the Biophysical Society
+  <https://biophysics.cld.bz/BPS2025-Full-Program-Abstracts/125/>`_.
+  February 15-19, 2025. Los Angeles, California.
+
 - Leonel Malacrida.
   Introduction to PhasorPy.
   Third LFD around the world meeting.
