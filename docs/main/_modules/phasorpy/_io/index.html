@@ -1515,7 +1515,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">phasor_from_lif</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
-    <span class="n">series</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates and metadata from Leica LIF file.</span>
 
@@ -1526,7 +1526,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of Leica LIF file to read.</span>
-<span class="sd">    series : str, optional</span>
+<span class="sd">    image : str, optional</span>
 <span class="sd">        Name of image containing phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
@@ -1571,28 +1571,28 @@
     <span class="c1">#   phasor plot images</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">liffile</span>
 
-    <span class="k">if</span> <span class="n">series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">series</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">series</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.*</span><span class="si">{</span><span class="n">series</span><span class="si">}</span><span class="s1">.*/&#39;</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.*</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">.*/&#39;</span>
 
     <span class="k">with</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">lif</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">image</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="n">series</span> <span class="o">+</span> <span class="s1">&#39;Phasor Intensity$&#39;</span><span class="p">]</span>
-            <span class="n">dims</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">dims</span>
-            <span class="n">coords</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">coords</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Phasor Intensity$&#39;</span><span class="p">]</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">coords</span>
             <span class="c1"># meta = image.attrs</span>
-            <span class="n">mean</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
-            <span class="n">real</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="n">series</span> <span class="o">+</span> <span class="s1">&#39;Phasor Real$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
-            <span class="n">imag</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="n">series</span> <span class="o">+</span> <span class="s1">&#39;Phasor Imaginary$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
-            <span class="c1"># mask = lif.series[series + &#39;Phasor Mask$&#39;].asarray()</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Phasor Real$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">imag</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Phasor Imaginary$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="c1"># mask = lif.images[image + &#39;Phasor Mask$&#39;].asarray()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not contain Phasor images&#39;</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
         <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">}</span>
-        <span class="n">xml</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">xml_element_smd</span>
+        <span class="n">xml</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">xml_element_smd</span>
         <span class="k">if</span> <span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">frequency</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/LaserPulseFrequency&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frequency</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1946,7 +1946,7 @@
     <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="o">/</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">series</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">image</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">dim</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;λ&#39;</span><span class="p">,</span> <span class="s1">&#39;Λ&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;λ&#39;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return hyperspectral image and metadata from Leica LIF file.</span>
@@ -1960,9 +1960,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
 <span class="sd">        Name of Leica LIF file to read.</span>
-<span class="sd">    series : str or int, optional</span>
-<span class="sd">        Index or regex pattern of image series to return.</span>
-<span class="sd">        By default, return the first series containing hyperspectral data.</span>
+<span class="sd">    image : str or int, optional</span>
+<span class="sd">        Index or regex pattern of image to return.</span>
+<span class="sd">        By default, return the first image containing hyperspectral data.</span>
 <span class="sd">    dim : str or None</span>
 <span class="sd">        Character code of hyperspectral dimension.</span>
 <span class="sd">        Either ``&#39;λ&#39;`` for emission (default) or ``&#39;Λ&#39;`` for excitation.</span>
@@ -1998,33 +1998,33 @@
     <span class="kn">import</span><span class="w"> </span><span class="nn">liffile</span>
 
     <span class="k">with</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">lif</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">series</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># find series with excitation or emission dimension</span>
-            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">lif</span><span class="o">.</span><span class="n">series</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># find image with excitation or emission dimension</span>
+            <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="si">!r}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">image</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="n">series</span><span class="p">]</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="n">image</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">image</span><span class="si">!r}</span><span class="s1"> does not contain spectral dimension&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;C&#39;</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="n">im</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">im</span><span class="si">!r}</span><span class="s1"> does not contain spectral dimension&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;C&#39;</span> <span class="ow">in</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;hyperspectral image must not contain channel axis&#39;</span>
             <span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
         <span class="n">coords</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="p">(</span><span class="s1">&#39;C&#39;</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">dim</span> <span class="k">else</span> <span class="n">k</span><span class="p">):</span> <span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mf">1e9</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">dim</span> <span class="k">else</span> <span class="n">v</span><span class="p">)</span>
-            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">im</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span>
-        <span class="n">dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="s1">&#39;C&#39;</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="n">dim</span> <span class="k">else</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">image</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="n">dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="s1">&#39;C&#39;</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="n">dim</span> <span class="k">else</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
 
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">coords</span><span class="p">)</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
