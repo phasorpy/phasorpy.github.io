@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multi-harmonic phasor coordinates &#8212; PhasorPy 0.5.dev documentation</title>
+    <title>Filter phasor coordinates &#8212; PhasorPy 0.5.dev documentation</title>
   
   
   
@@ -50,7 +50,7 @@
     <script src="../../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=30646c52"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/api/phasorpy_multi-harmonic';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/api/phasorpy_filtering';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
@@ -61,8 +61,8 @@
     <script src="../../../_static/custom-icons.js?v=74687d30"></script>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
-    <link rel="next" title="Cursors" href="../phasorpy_cursors/" />
-    <link rel="prev" title="Principal component analysis" href="../phasorpy_pca/" />
+    <link rel="next" title="Component analysis" href="../phasorpy_components/" />
+    <link rel="prev" title="Phasor plot" href="../phasorpy_phasorplot/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.5.dev" />
@@ -490,12 +490,12 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_pca/">Principal component analysis</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Multi-harmonic phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_multi-harmonic/">Multi-harmonic phasor coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_cursors/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasorplot/">Phasor plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../phasorpy_filtering/">Filter phasor coordinates</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Filter phasor coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_components/">Component analysis</a></li>
 </ul>
 </details></li>
@@ -550,7 +550,7 @@
     
     <li class="breadcrumb-item"><a href="../" class="nav-link">Programming interface</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Multi-harmonic phasor coordinates</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Filter phasor coordinates</span></li>
   </ul>
 </nav>
 </div>
@@ -567,216 +567,201 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="sphx-glr-example-title" id="multi-harmonic-phasor-coordinates">
-<span id="sphx-glr-tutorials-api-phasorpy-multi-harmonic-py"></span><h1>Multi-harmonic phasor coordinates<a class="headerlink" href="#multi-harmonic-phasor-coordinates" title="Link to this heading">#</a></h1>
-<p>An introduction to handling multi-harmonic phasor coordinates.</p>
-<p>This tutorial is an adaptation of
-<a class="reference internal" href="../../phasorpy_introduction/#sphx-glr-tutorials-phasorpy-introduction-py"><span class="std std-ref">Introduction to PhasorPy</span></a>, focusing on the
-calculation, calibration, filtering, thresholding, storage, and visualization
-of multi-harmonic phasor coordinates.</p>
+  <section class="sphx-glr-example-title" id="filter-phasor-coordinates">
+<span id="sphx-glr-tutorials-api-phasorpy-filtering-py"></span><h1>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h1>
+<p>Functions for filtering phasor coordinates.</p>
+<p>Filtering phasor coordinates improves signal quality by reducing noise while
+preserving relevant features. Two of the most common methods for filtering
+include the median and wavelet filtering.</p>
 <p>Import required modules and functions:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">phasor_from_ometiff</span><span class="p">,</span>
-    <span class="n">phasor_to_ometiff</span><span class="p">,</span>
-    <span class="n">signal_from_imspector_tiff</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_imspector_tiff</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">phasor_calibrate</span><span class="p">,</span>
     <span class="n">phasor_filter_median</span><span class="p">,</span>
+    <span class="n">phasor_filter_pawflim</span><span class="p">,</span>
     <span class="n">phasor_from_signal</span><span class="p">,</span>
     <span class="n">phasor_threshold</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_phasor</span>
 </pre></div>
 </div>
-<section id="read-signal-from-file">
-<h2>Read signal from file<a class="headerlink" href="#read-signal-from-file" title="Link to this heading">#</a></h2>
-<p>Read a time-correlated single photon counting (TCSPC) histogram,
-acquired at 80.11 MHz, from a file:</p>
+<section id="get-calibrated-phasor-coordinates">
+<h2>Get calibrated phasor coordinates<a class="headerlink" href="#get-calibrated-phasor-coordinates" title="Link to this heading">#</a></h2>
+<p>Read a time-correlated single photon counting (TCSPC) histogram from a file.
+A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
 <span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</section>
-<section id="calculate-phasor-coordinates">
-<h2>Calculate phasor coordinates<a class="headerlink" href="#calculate-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>Phasor coordinates at multiple harmonics can be calculated at once
-from the signal. The histogram samples are in the first dimension of the
-signal (<cite>axis=0</cite>).
-The first and second harmonics are calculated in this example:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The two harmonics are in the first dimension of the phasor coordinates,
-<cite>real</cite> and <cite>imag</cite>:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(512, 512) (2, 512, 512) (2, 512, 512)
-</pre></div>
-</div>
-<p>Plot the calculated phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_phasor_image</span>
 
-<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Sample&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_001.png" alt="Sample, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>To calculate all harmonics, use <code class="docutils literal notranslate"><span class="pre">harmonic='all'</span></code>:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="calibrate-phasor-coordinates">
-<h2>Calibrate phasor coordinates<a class="headerlink" href="#calibrate-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>A homogeneous solution of Fluorescein with a fluorescence lifetime of 4.2 ns
-was imaged as a reference for calibration:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">signal_from_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
+<span class="n">reference_signal</span> <span class="o">=</span> <span class="n">signal_from_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Embryo.tif&#39;</span><span class="p">))</span>
 <span class="k">assert</span> <span class="n">reference_signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
 </pre></div>
 </div>
-<p>Calculate phasor coordinates from the measured reference signal at
-the first and second harmonics:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
-    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+<p>Calculate and calibrate phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
+    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-<p>Calibration can be performed at all harmonics simultaneously. Calibrate the
-raw phasor coordinates with the reference coordinates of known lifetime
-(4.2 ns), at the first and second harmonics:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>If necessary, the calibration can be undone/reversed using the
-same reference:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+</section>
+<section id="unfiltered">
+<h2>Unfiltered<a class="headerlink" href="#unfiltered" title="Link to this heading">#</a></h2>
+<p>Plot the unfiltered, calibrated phasor coordinates after applying a
+threshold based on the mean intensity to remove background values:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Unfiltered phasor coordinates&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filtering_001.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_001.png" alt="Unfiltered phasor coordinates" class = "sphx-glr-single-img"/></section>
+<section id="median-filter">
+<h2>Median filter<a class="headerlink" href="#median-filter" title="Link to this heading">#</a></h2>
+<p>Median filtering replaces each pixel value with the median of its
+neighboring values, reducing noise while preserving edges.
+The function <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_filter_median" title="phasorpy.phasor.phasor_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_filter_median()</span></code></a> applies a
+median filter to phasor coordinates. Typically, applying a 3×3 kernel
+one to three times is sufficient to remove noise while maintaining
+important features:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Thresholds should be applied after filtering:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
+    <span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the median-filtered and thresholded phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">imag_filtered</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Median-filtered phasor coordinates (3x3 kernel, 3 repetitions)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filtering_002.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_002.png" alt="Median-filtered phasor coordinates (3x3 kernel, 3 repetitions)" class = "sphx-glr-single-img"/><p>Increasing the number of repetitions or the filter kernel size can further
+reduce noise, but may also remove relevant features:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">imag_filtered</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Median-filtered phasor coordinates (5x5 kernel, 6 repetitions)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filtering_003.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_003.png" alt="Median-filtered phasor coordinates (5x5 kernel, 6 repetitions)" class = "sphx-glr-single-img"/><p>The smoothing effect of median-filtering is demonstrated by plotting the
+real components of the filtered and unfiltered phasor coordinates as images:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_images</span><span class="p">(</span><span class="n">im0</span><span class="p">,</span> <span class="n">im1</span><span class="p">):</span>
+    <span class="c1"># TODO: replace with future phasorpy.plot.plot_images</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">),</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xticks&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;yticks&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Real component of phasor coordinates&#39;</span><span class="p">)</span>
+    <span class="n">ax0</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im0</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">ax0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Unfiltered&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Median-filtered&#39;</span><span class="p">)</span>
+    <span class="n">pyplot</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+
+<span class="n">plot_images</span><span class="p">(</span><span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">real_filtered</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filtering_004.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_004.png" alt="Real component of phasor coordinates, Unfiltered, Median-filtered" class = "sphx-glr-single-img"/></section>
+<section id="pawflim-wavelet-filter">
+<h2>pawFLIM wavelet filter<a class="headerlink" href="#pawflim-wavelet-filter" title="Link to this heading">#</a></h2>
+<p>Filtering based on wavelet decomposition is another method to reduce noise.
+The function <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_filter_pawflim" title="phasorpy.phasor.phasor_filter_pawflim"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_filter_pawflim()</span></code></a> is based
+on the <a class="reference external" href="https://github.com/maurosilber/pawflim">pawFLIM</a> library.
+While the median filter is applicable to any type of phasor coordinates,
+the pawFLIM filter requires calibrated phasor coordinates from FLIM
+measurements and at least one harmonic and its corresponding double:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">)</span>
+<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
+    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span>
+<span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="n">reference_mean</span><span class="p">,</span>
     <span class="n">reference_real</span><span class="p">,</span>
     <span class="n">reference_imag</span><span class="p">,</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span>
-    <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_filter_pawflim</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the pawFLIM-filtered and thresholded phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">imag_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;pawFLIM-filtered phasor coordinates (sigma=2, levels=1)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filtering_005.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_005.png" alt="pawFLIM-filtered phasor coordinates (sigma=2, levels=1)" class = "sphx-glr-single-img"/><p>Increasing the significance level of the comparison between phasor
+coordinates and/or the maximum averaging area can further reduce noise:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_filter_pawflim</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+<span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
+    <span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span><span class="p">,</span> <span class="mi">1</span>
 <span class="p">)</span>
 
-<span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
-    <span class="p">(</span><span class="n">uncalibrated_real</span><span class="p">,</span> <span class="n">uncalibrated_imag</span><span class="p">),</span>
-    <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
-    <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="filter-phasor-coordinates">
-<h2>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>Applying median filter to the calibrated phasor coordinates,
-often multiple times, improves contrast and reduces noise.
-The filter is applied independently to the real and imaginary components
-of the harmonics, but not to the average signal:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Pixels with low intensities are commonly excluded from analysis and
-visualization of phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Show the calibrated, filtered phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor_image</span><span class="p">(</span>
-    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates&#39;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_002.png" alt="Calibrated, filtered phasor coordinates, mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
-<section id="store-phasor-coordinates">
-<h2>Store phasor coordinates<a class="headerlink" href="#store-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>Write the calibrated and filtered phasor coordinates at multiple harmonics,
-and the fundamental frequency to an OME-TIFF file:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasor_to_ometiff</span><span class="p">(</span>
-    <span class="s1">&#39;phasors.ome.tif&#39;</span><span class="p">,</span>
-    <span class="n">mean</span><span class="p">,</span>
-    <span class="n">real</span><span class="p">,</span>
-    <span class="n">imag</span><span class="p">,</span>
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">imag_filtered</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
-        <span class="s1">&#39;Phasor coordinates at first and second harmonics of a zebrafish &#39;</span>
-        <span class="s1">&#39;embryo at day 3, calibrated, median-filtered, and thresholded.&#39;</span>
-    <span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;pawFLIM-filtered phasor coordinates (sigma=5, levels=3)&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Read the phasor coordinates and metadata back from the OME-TIFF file:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_</span><span class="p">,</span> <span class="n">real_</span><span class="p">,</span> <span class="n">imag_</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_ometiff</span><span class="p">(</span>
-    <span class="s1">&#39;phasors.ome.tif&#39;</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
-<span class="p">)</span>
-
-<span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">real_</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">real_</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float32</span>
-<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
-<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
-    <span class="s1">&#39;Phasor coordinates at first and second harmonics&#39;</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="plot-phasor-coordinates">
-<h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
-<p>Visualize the 2D histogram of the calibrated and filtered phasor coordinates
-at the second harmonic:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated, filtered phasor coordinates at second harmonic&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_003.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_003.png" alt="Calibrated, filtered phasor coordinates at second harmonic" class = "sphx-glr-single-img"/><p>For comparison, the uncalibrated, unfiltered phasor coordinates at the
-second harmonic:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
-    <span class="n">uncalibrated_real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">uncalibrated_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Raw phasor coordinates at second harmonic&#39;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_multi-harmonic_004.png" srcset="../../../_images/sphx_glr_phasorpy_multi-harmonic_004.png" alt="Raw phasor coordinates at second harmonic" class = "sphx-glr-single-img"/></section>
-<section id="component-analysis">
-<h2>Component analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO</span>
-</pre></div>
-</div>
-<p>sphinx_gallery_thumbnail_number = -1
+<img src="../../../_images/sphx_glr_phasorpy_filtering_006.png" srcset="../../../_images/sphx_glr_phasorpy_filtering_006.png" alt="pawFLIM-filtered phasor coordinates (sigma=5, levels=3)" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = -1
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.697 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-multi-harmonic-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.165 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-filtering-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../../_downloads/9476a4fbc2f7b999fbd87a3ba58e06a3/phasorpy_multi-harmonic.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_multi-harmonic.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../../_downloads/43b6d39c97193e47997bc99535f8899f/phasorpy_filtering.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_filtering.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../../_downloads/0ea525142b40bd46c0565620b49e2992/phasorpy_multi-harmonic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_multi-harmonic.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../../_downloads/4697d1b1d3f7f956d274c2e175ff0a56/phasorpy_filtering.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_filtering.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-zip docutils container">
-<p><a class="reference download internal" download="" href="../../../_downloads/2fe1d6df6ba58c8af223006c50981d1e/phasorpy_multi-harmonic.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">phasorpy_multi-harmonic.zip</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../../_downloads/e9f1af8f7cf475c13dcf474b466c40d2/phasorpy_filtering.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">phasorpy_filtering.zip</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -794,20 +779,20 @@ mypy: disable-error-code=”arg-type”</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../phasorpy_pca/"
+       href="../phasorpy_phasorplot/"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Principal component analysis</p>
+        <p class="prev-next-title">Phasor plot</p>
       </div>
     </a>
     <a class="right-next"
-       href="../phasorpy_cursors/"
+       href="../phasorpy_components/"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Cursors</p>
+        <p class="prev-next-title">Component analysis</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -830,13 +815,10 @@ mypy: disable-error-code=”arg-type”</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-signal-from-file">Read signal from file</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-phasor-coordinates">Calculate phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrate-phasor-coordinates">Calibrate phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-phasor-coordinates">Filter phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#store-phasor-coordinates">Store phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-phasor-coordinates">Plot phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#component-analysis">Component analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-calibrated-phasor-coordinates">Get calibrated phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unfiltered">Unfiltered</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#median-filter">Median filter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pawflim-wavelet-filter">pawFLIM wavelet filter</a></li>
 </ul>
   </nav></div>
 

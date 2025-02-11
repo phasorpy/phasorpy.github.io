@@ -596,6 +596,7 @@
 <span class="sd">- filter phasor coordinates:</span>
 
 <span class="sd">  - :py:func:`phasor_filter_median`</span>
+<span class="sd">  - :py:func:`phasor_filter_pawflim`</span>
 <span class="sd">  - :py:func:`phasor_threshold`</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -613,6 +614,7 @@
     <span class="s1">&#39;phasor_center&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_divide&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_filter_median&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_filter_pawflim&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_apparent_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_fret_acceptor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_fret_donor&#39;</span><span class="p">,</span>
@@ -3635,6 +3637,212 @@
 
         <span class="n">_median_filter_2d</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
         <span class="n">_median_filter_2d</span><span class="p">(</span><span class="n">imag</span><span class="p">[</span><span class="n">full_index</span><span class="p">],</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_filter_pawflim">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_filter_pawflim">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_filter_pawflim</span><span class="p">(</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+    <span class="n">levels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return pawFLIM wavelet-filtered phasor coordinates.</span>
+
+<span class="sd">    This function must only be used with calibrated, unprocessed phasor</span>
+<span class="sd">    coordinates obtained from FLIM data. The coordinates must not be filtered,</span>
+<span class="sd">    thresholded, or otherwise pre-processed.</span>
+
+<span class="sd">    The pawFLIM wavelet filter is described in [2]_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mean : array_like</span>
+<span class="sd">        Intensity of phasor coordinates.</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates to be filtered.</span>
+<span class="sd">        Must have at least two harmonics in the first axis.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates to be filtered.</span>
+<span class="sd">        Must have at least two harmonics in the first axis.</span>
+<span class="sd">    sigma : float, optional</span>
+<span class="sd">        Significance level to test difference between two phasors.</span>
+<span class="sd">        Given in terms of the equivalent 1D standard deviations.</span>
+<span class="sd">        sigma=2 corresponds to ~95% (or 5%) significance.</span>
+<span class="sd">    levels : int, optional</span>
+<span class="sd">        Number of levels for wavelet decomposition.</span>
+<span class="sd">        Controls the maximum averaging area, which has a length of</span>
+<span class="sd">        :math:`2^level`.</span>
+<span class="sd">    harmonic : sequence of int or None, optional</span>
+<span class="sd">        Harmonics included in first axis of `real` and `imag`.</span>
+<span class="sd">        If None (default), the first axis of `real` and `imag` contains lower</span>
+<span class="sd">        harmonics starting at and increasing by one.</span>
+<span class="sd">        All harmonics must have a corresponding half or double harmonic.</span>
+<span class="sd">    skip_axis : int or sequence of int, optional</span>
+<span class="sd">        Axes in `mean` to exclude from filter.</span>
+<span class="sd">        By default, all axes except harmonics are included.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mean : ndarray</span>
+<span class="sd">        Unchanged intensity of phasor coordinates.</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Filtered real component of phasor coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Filtered imaginary component of phasor coordinates.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If `level` is less than 0.</span>
+<span class="sd">        The array shapes of `mean`, `real`, and `imag` do not match.</span>
+<span class="sd">        If `real` and `imag` have no harmonic axis.</span>
+<span class="sd">        Number of harmonics in `harmonic` is less than 2 or does not match</span>
+<span class="sd">        the first axis of `real` and `imag`.</span>
+<span class="sd">        Not all harmonics in `harmonic` have a corresponding half</span>
+<span class="sd">        or double harmonic.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [2] Silberberg M &amp; Grecco H. `pawFLIM: reducing bias and uncertainty</span>
+<span class="sd">      to enable lower photon count in FLIM experiments</span>
+<span class="sd">      &lt;https://doi.org/10.1088/2050-6120/aa72ab&gt;`_.</span>
+<span class="sd">      *Methods Appl Fluoresc*, 5(2): 024016 (2017)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Apply a pawFLIM wavelet filter with four significance levels (sigma)</span>
+<span class="sd">    and three decomposition levels:</span>
+
+<span class="sd">    &gt;&gt;&gt; mean, real, imag = phasor_filter_pawflim(</span>
+<span class="sd">    ...     [[1, 1], [1, 1]],</span>
+<span class="sd">    ...     [[[0.5, 0.8], [0.5, 0.8]], [[0.2, 0.4], [0.2, 0.4]]],</span>
+<span class="sd">    ...     [[[0.5, 0.4], [0.5, 0.4]], [[0.4, 0.5], [0.4, 0.5]]],</span>
+<span class="sd">    ...     sigma=4,</span>
+<span class="sd">    ...     levels=3,</span>
+<span class="sd">    ...     harmonic=[1, 2],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; mean</span>
+<span class="sd">    array([[1, 1],</span>
+<span class="sd">           [1, 1]])</span>
+<span class="sd">    &gt;&gt;&gt; real</span>
+<span class="sd">    array([[[0.65, 0.65],</span>
+<span class="sd">            [0.65, 0.65]],</span>
+<span class="sd">           [[0.3, 0.3],</span>
+<span class="sd">            [0.3, 0.3]]])</span>
+<span class="sd">    &gt;&gt;&gt; imag</span>
+<span class="sd">    array([[[0.45, 0.45],</span>
+<span class="sd">            [0.45, 0.45]],</span>
+<span class="sd">           [[0.45, 0.45],</span>
+<span class="sd">            [0.45, 0.45]]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pawflim</span><span class="w"> </span><span class="kn">import</span> <span class="n">pawflim</span>  <span class="c1"># type: ignore[import-untyped]</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">levels</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">levels</span><span class="si">=}</span><span class="s1"> &lt; 0&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">levels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span>
+
+    <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">if</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">has_harmonic_axis</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">has_harmonic_axis</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;no harmonic axis&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">harmonics</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">harmonics</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonics</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;at least two harmonics required, &#39;</span> <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonics</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">harmonics</span><span class="p">)</span> <span class="o">!=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;number of harmonics does not match first axis of real and imag&#39;</span>
+        <span class="p">)</span>
+
+    <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">mean</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">real</span> <span class="o">*</span> <span class="n">mean</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">imag</span> <span class="o">*</span> <span class="n">mean</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">mean_expanded</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">original_mean_expanded</span> <span class="o">=</span> <span class="n">mean_expanded</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">real_filtered</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">imag_filtered</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">_parse_skip_axis</span><span class="p">(</span><span class="n">skip_axis</span><span class="p">,</span> <span class="n">mean</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">(</span>
+            <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">real</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ax</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes</span> <span class="ow">and</span> <span class="n">ax</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">index_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+            <span class="n">index_list</span> <span class="o">=</span> <span class="n">index_list</span><span class="p">[:</span><span class="n">ax</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">index_list</span><span class="p">[</span><span class="n">ax</span><span class="p">:]</span>
+        <span class="n">full_index</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">index_list</span><span class="p">)</span>
+
+        <span class="n">processed_harmonics</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">harmonics</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">processed_harmonics</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">h</span> <span class="o">*</span> <span class="mi">4</span> <span class="ow">in</span> <span class="n">harmonics</span> <span class="ow">or</span> <span class="n">h</span> <span class="o">*</span> <span class="mi">2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">harmonics</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">*</span> <span class="mi">2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">harmonics</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;harmonic </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s1"> does not have a corresponding half &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;or double harmonic in </span><span class="si">{</span><span class="n">harmonics</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">harmonics</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="n">n2</span> <span class="o">=</span> <span class="n">harmonics</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">complex_phasor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+                <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">*</span><span class="n">original_mean_expanded</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">complex_phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_mean_expanded</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span>
+            <span class="n">complex_phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">real</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imag</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span>
+            <span class="n">complex_phasor</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">real</span><span class="p">[</span><span class="n">n2</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imag</span><span class="p">[</span><span class="n">n2</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">complex_phasor</span> <span class="o">=</span> <span class="n">pawflim</span><span class="p">(</span>
+                <span class="n">complex_phasor</span><span class="p">,</span> <span class="n">n_sigmas</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="n">n2</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">harmonics</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="ow">in</span> <span class="n">processed_harmonics</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">mean_expanded</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">complex_phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+                <span class="n">real_filtered</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">complex_phasor</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+                <span class="n">imag_filtered</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">full_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">complex_phasor</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
+
+            <span class="n">processed_harmonics</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+            <span class="n">processed_harmonics</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">numpy</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">real_filtered</span><span class="p">,</span> <span class="n">mean_expanded</span><span class="p">))</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">imag_filtered</span><span class="p">,</span> <span class="n">mean_expanded</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
 

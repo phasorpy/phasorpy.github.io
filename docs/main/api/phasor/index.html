@@ -636,6 +636,7 @@ lifetime:</p>
 <li><p>filter phasor coordinates:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_filter_median" title="phasorpy.phasor.phasor_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter_median()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_filter_pawflim" title="phasorpy.phasor.phasor_filter_pawflim"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter_pawflim()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a></p></li>
 </ul>
 </li>
@@ -1212,6 +1213,91 @@ OpenMP may not be available on all platforms.</p></li>
 <span class="go">array([[0.3, 0.3, 0.3],</span>
 <span class="go">       [0.4, nan, 0.4],</span>
 <span class="go">       [0.4, 0.4, 0.4]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_filter_pawflim">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_filter_pawflim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_filter_pawflim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_filter_pawflim" title="Link to this definition">#</a></dt>
+<dd><p>Return pawFLIM wavelet-filtered phasor coordinates.</p>
+<p>This function must only be used with calibrated, unprocessed phasor
+coordinates obtained from FLIM data. The coordinates must not be filtered,
+thresholded, or otherwise pre-processed.</p>
+<p>The pawFLIM wavelet filter is described in <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to be filtered.
+Must have at least two harmonics in the first axis.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to be filtered.
+Must have at least two harmonics in the first axis.</p></li>
+<li><p><strong>sigma</strong> (<em>float</em><em>, </em><em>optional</em>) – Significance level to test difference between two phasors.
+Given in terms of the equivalent 1D standard deviations.
+sigma=2 corresponds to ~95% (or 5%) significance.</p></li>
+<li><p><strong>levels</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of levels for wavelet decomposition.
+Controls the maximum averaging area, which has a length of
+<span class="math notranslate nohighlight">\(2^level\)</span>.</p></li>
+<li><p><strong>harmonic</strong> (<em>sequence</em><em> of </em><em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Harmonics included in first axis of <cite>real</cite> and <cite>imag</cite>.
+If None (default), the first axis of <cite>real</cite> and <cite>imag</cite> contains lower
+harmonics starting at and increasing by one.
+All harmonics must have a corresponding half or double harmonic.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>mean</cite> to exclude from filter.
+By default, all axes except harmonics are included.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>ndarray</em>) – Unchanged intensity of phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Filtered real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Filtered imaginary component of phasor coordinates.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>level</cite> is less than 0.
+    The array shapes of <cite>mean</cite>, <cite>real</cite>, and <cite>imag</cite> do not match.
+    If <cite>real</cite> and <cite>imag</cite> have no harmonic axis.
+    Number of harmonics in <cite>harmonic</cite> is less than 2 or does not match
+    the first axis of <cite>real</cite> and <cite>imag</cite>.
+    Not all harmonics in <cite>harmonic</cite> have a corresponding half
+    or double harmonic.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Silberberg M &amp; Grecco H. <a class="reference external" href="https://doi.org/10.1088/2050-6120/aa72ab">pawFLIM: reducing bias and uncertainty
+to enable lower photon count in FLIM experiments</a>.
+<em>Methods Appl Fluoresc</em>, 5(2): 024016 (2017)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<p>Apply a pawFLIM wavelet filter with four significance levels (sigma)
+and three decomposition levels:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_pawflim</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+<span class="gp">... </span>    <span class="p">[[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]]],</span>
+<span class="gp">... </span>    <span class="p">[[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]]],</span>
+<span class="gp">... </span>    <span class="n">sigma</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">levels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span>
+<span class="go">array([[1, 1],</span>
+<span class="go">       [1, 1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">real</span>
+<span class="go">array([[[0.65, 0.65],</span>
+<span class="go">        [0.65, 0.65]],</span>
+<span class="go">       [[0.3, 0.3],</span>
+<span class="go">        [0.3, 0.3]]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">imag</span>
+<span class="go">array([[[0.45, 0.45],</span>
+<span class="go">        [0.45, 0.45]],</span>
+<span class="go">       [[0.45, 0.45],</span>
+<span class="go">        [0.45, 0.45]]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -2068,11 +2154,11 @@ coordinates, where the first axis is the frequency:</p>
 </pre></div>
 </div>
 <p>An application of PCA to full-harmonic phasor coordinates from MRI signals
-can be found in <a class="footnote-reference brackets" href="#id11" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+can be found in <a class="footnote-reference brackets" href="#id13" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id11" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id13" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">1</a><span class="fn-bracket">]</span></span>
 <p>Franssen WMJ, Vergeldt FJ, Bader AN, van Amerongen H, &amp; Terenzi C.
 <a class="reference external" href="https://doi.org/10.1021/acs.jpclett.0c02319">Full-harmonics phasor analysis: unravelling multiexponential trends
 in magnetic resonance imaging data</a>.
@@ -2448,6 +2534,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_center"><code class="docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_divide"><code class="docutils literal notranslate"><span class="pre">phasor_divide()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_filter_median"><code class="docutils literal notranslate"><span class="pre">phasor_filter_median()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_filter_pawflim"><code class="docutils literal notranslate"><span class="pre">phasor_filter_pawflim()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_acceptor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_acceptor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_from_fret_donor"><code class="docutils literal notranslate"><span class="pre">phasor_from_fret_donor()</span></code></a></li>
