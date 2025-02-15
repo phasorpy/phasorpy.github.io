@@ -532,23 +532,10 @@
 
 <span class="sd">The ``phasorpy.io`` module provides functions to:</span>
 
-<span class="sd">- write phasor coordinate images to OME-TIFF and SimFCS file formats:</span>
-
-<span class="sd">  - :py:func:`phasor_to_ometiff`</span>
-<span class="sd">  - :py:func:`phasor_to_simfcs_referenced`</span>
-
-<span class="sd">- read phasor coordinates and metadata from specialized file formats:</span>
-
-<span class="sd">  - :py:func:`phasor_from_ometiff` - PhasorPy OME-TIFF</span>
-<span class="sd">  - :py:func:`phasor_from_ifli` - ISS IFLI</span>
-<span class="sd">  - :py:func:`phasor_from_lif` - Leica LIF</span>
-<span class="sd">  - :py:func:`phasor_from_flimlabs_json` - FLIM LABS JSON</span>
-<span class="sd">  - :py:func:`phasor_from_simfcs_referenced` - SimFCS REF and R64</span>
-
 <span class="sd">- read time-resolved and hyperspectral signals, as well as metadata from</span>
 <span class="sd">  many file formats used in bio-imaging:</span>
 
-<span class="sd">  - :py:func:`signal_from_lif` - Leica LIF</span>
+<span class="sd">  - :py:func:`signal_from_lif` - Leica LIF and XLEF</span>
 <span class="sd">  - :py:func:`signal_from_lsm` - Zeiss LSM</span>
 <span class="sd">  - :py:func:`signal_from_ptu` - PicoQuant PTU</span>
 <span class="sd">  - :py:func:`signal_from_sdt` - Becker &amp; Hickl SDT</span>
@@ -560,6 +547,21 @@
 <span class="sd">  - :py:func:`signal_from_z64` - SimFCS Z64</span>
 <span class="sd">  - :py:func:`signal_from_bhz` - SimFCS BHZ</span>
 <span class="sd">  - :py:func:`signal_from_bh` - SimFCS B&amp;H</span>
+
+<span class="sd">- read phasor coordinates and lifetime images, as well as metadata from</span>
+<span class="sd">  specialized file formats:</span>
+
+<span class="sd">  - :py:func:`phasor_from_ometiff` - PhasorPy OME-TIFF</span>
+<span class="sd">  - :py:func:`phasor_from_ifli` - ISS IFLI</span>
+<span class="sd">  - :py:func:`phasor_from_lif` - Leica LIF and XLEF</span>
+<span class="sd">  - :py:func:`phasor_from_flimlabs_json` - FLIM LABS JSON</span>
+<span class="sd">  - :py:func:`phasor_from_simfcs_referenced` - SimFCS REF and R64</span>
+<span class="sd">  - :py:func:`lifetime_from_lif` - Leica LIF and XLEF</span>
+
+<span class="sd">- write phasor coordinate images to OME-TIFF and SimFCS file formats:</span>
+
+<span class="sd">  - :py:func:`phasor_to_ometiff`</span>
+<span class="sd">  - :py:func:`phasor_to_simfcs_referenced`</span>
 
 <span class="sd">  Support for other file formats is being considered:</span>
 
@@ -646,6 +648,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;lifetime_from_lif&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_flimlabs_json&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_ifli&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_lif&#39;</span><span class="p">,</span>
@@ -1517,17 +1520,17 @@
     <span class="o">/</span><span class="p">,</span>
     <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates and metadata from Leica LIF file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor coordinates and metadata from Leica image file.</span>
 
-<span class="sd">    LIF files may contain uncalibrated phasor coordinate images and metadata</span>
-<span class="sd">    from the analysis of fluorescence lifetime imaging measurements.</span>
+<span class="sd">    Leica image files may contain uncalibrated phasor coordinate images and</span>
+<span class="sd">    metadata from the analysis of FLIM measurements.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
-<span class="sd">        Name of Leica LIF file to read.</span>
+<span class="sd">        Name of Leica image file to read.</span>
 <span class="sd">    image : str, optional</span>
-<span class="sd">        Name of image containing phasor coordinates.</span>
+<span class="sd">        Name of parent image containing phasor coordinates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1544,16 +1547,19 @@
 <span class="sd">          :ref:`Axes codes &lt;axes&gt;` for `mean` image dimensions.</span>
 <span class="sd">        - ``&#39;frequency&#39;`` (float):</span>
 <span class="sd">          Fundamental frequency of time-resolved phasor coordinates in MHz.</span>
-<span class="sd">          May not be present in all LIF files.</span>
+<span class="sd">          May not be present in all files.</span>
 <span class="sd">        - ``&#39;flim_rawdata&#39;`` (dict):</span>
-<span class="sd">          Settings from LIF SingleMoleculeDetection/RawData XML element.</span>
+<span class="sd">          Settings from SingleMoleculeDetection/RawData XML element.</span>
+<span class="sd">        - ``&#39;flim_phasor_channels&#39;`` (list of dict):</span>
+<span class="sd">          Settings from SingleMoleculeDetection/.../PhasorData/Channels XML</span>
+<span class="sd">          elements.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    liffile.LifFileError</span>
-<span class="sd">        File is not a Leica LIF file.</span>
+<span class="sd">        File is not a Leica image file.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        File does not contain FLIM phasor images and metadata.</span>
+<span class="sd">        File or `image` do not contain phasor coordinates and metadata.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1571,10 +1577,8 @@
     <span class="c1">#   phasor plot images</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">liffile</span>
 
-    <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.*</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">.*/&#39;</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;.*</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">.*/&#39;</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">with</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">lif</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1582,27 +1586,144 @@
             <span class="n">dims</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span>
             <span class="n">coords</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">coords</span>
             <span class="c1"># meta = image.attrs</span>
-            <span class="n">mean</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">mean</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
             <span class="n">real</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Phasor Real$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
             <span class="n">imag</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Phasor Imaginary$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
             <span class="c1"># mask = lif.images[image + &#39;Phasor Mask$&#39;].asarray()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not contain Phasor images&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> does not contain Phasor images&#39;</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
-        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">}</span>
-        <span class="n">xml</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">xml_element_smd</span>
-        <span class="k">if</span> <span class="n">xml</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">,</span> <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="n">coords</span><span class="p">}</span>
+        <span class="n">flim</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">parent_image</span>
+        <span class="k">if</span> <span class="n">flim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flim</span><span class="p">,</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFlimImage</span><span class="p">):</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="n">flim</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">xml_element</span>
             <span class="n">frequency</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/LaserPulseFrequency&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frequency</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span>
-        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span>
+                <span class="n">clock_period</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/ClockPeriod&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">clock_period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">clock_period</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">clock_period</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">tmp</span><span class="p">))</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samples</span>
+            <span class="n">channels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">xml</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+                <span class="s1">&#39;.//Dataset/FlimData/PhasorData/Channels&#39;</span>
+            <span class="p">):</span>
+                <span class="n">ch</span> <span class="o">=</span> <span class="n">liffile</span><span class="o">.</span><span class="n">xml2dict</span><span class="p">(</span><span class="n">channel</span><span class="p">)[</span><span class="s1">&#39;Channels&#39;</span><span class="p">]</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;PhasorPlotShapes&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">channels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_phasor_channels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">channels</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_rawdata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flim</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;RawData&#39;</span><span class="p">,</span> <span class="p">{})</span>
 
+    <span class="k">if</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">mean</span> <span class="o">/=</span> <span class="n">samples</span>
     <span class="k">return</span> <span class="p">(</span>
-        <span class="n">mean</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+        <span class="n">mean</span><span class="p">,</span>
         <span class="n">real</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
         <span class="n">imag</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+        <span class="n">attrs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lifetime_from_lif">
+<a class="viewcode-back" href="../../../api/io/#phasorpy.io.lifetime_from_lif">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lifetime_from_lif</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">image</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return fluorescence lifetime image and metadata from Leica image file.</span>
+
+<span class="sd">    Leica image files may contain fluorescence lifetime images and metadata</span>
+<span class="sd">    from the analysis of FLIM measurements.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str or Path</span>
+<span class="sd">        Name of Leica image file to read.</span>
+<span class="sd">    image : str, optional</span>
+<span class="sd">        Name of parent image containing lifetime image.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lifetime : ndarray</span>
+<span class="sd">        Fluorescence lifetime image in ns.</span>
+<span class="sd">    intensity : ndarray</span>
+<span class="sd">        Fluorescence intensity image.</span>
+<span class="sd">    stddev : ndarray</span>
+<span class="sd">        Standard deviation of fluorescence lifetimes in ns.</span>
+<span class="sd">    attrs : dict</span>
+<span class="sd">        Select metadata:</span>
+
+<span class="sd">        - ``&#39;dims&#39;`` (tuple of str):</span>
+<span class="sd">          :ref:`Axes codes &lt;axes&gt;` for `intensity` image dimensions.</span>
+<span class="sd">        - ``&#39;frequency&#39;`` (float):</span>
+<span class="sd">          Fundamental frequency of lifetimes in MHz.</span>
+<span class="sd">          May not be present in all files.</span>
+<span class="sd">        - ``&#39;samples&#39;`` (int):</span>
+<span class="sd">          Number of bins in TCSPC histogram. May not be present in all files.</span>
+<span class="sd">        - ``&#39;flim_rawdata&#39;`` (dict):</span>
+<span class="sd">          Settings from SingleMoleculeDetection/RawData XML element.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    liffile.LifFileError</span>
+<span class="sd">        File is not a Leica image file.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        File or `image` does not contain lifetime coordinates and metadata.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; lifetime, intensity, stddev, attrs = lifetime_from_lif(</span>
+<span class="sd">    ...     fetch(&#39;FLIM_testdata.lif&#39;)</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; lifetime.shape</span>
+<span class="sd">    (1024, 1024)</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;dims&#39;]</span>
+<span class="sd">    (&#39;Y&#39;, &#39;X&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; attrs[&#39;frequency&#39;]</span>
+<span class="sd">    19.505</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">liffile</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;.*</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s1">.*/&#39;</span>
+
+    <span class="k">with</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">lif</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Intensity$&#39;</span><span class="p">]</span>
+            <span class="n">dims</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">dims</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">coords</span>
+            <span class="c1"># meta = im.attrs</span>
+            <span class="n">intensity</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">lifetime</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Fast Flim$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+            <span class="n">stddev</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span> <span class="o">+</span> <span class="s1">&#39;Standard Deviation$&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> does not contain lifetime images&#39;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">,</span> <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="n">coords</span><span class="p">}</span>
+        <span class="n">flim</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">parent_image</span>
+        <span class="k">if</span> <span class="n">flim</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flim</span><span class="p">,</span> <span class="n">liffile</span><span class="o">.</span><span class="n">LifFlimImage</span><span class="p">):</span>
+            <span class="n">xml</span> <span class="o">=</span> <span class="n">flim</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">xml_element</span>
+            <span class="n">frequency</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/LaserPulseFrequency&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frequency</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e-6</span>
+                <span class="n">clock_period</span> <span class="o">=</span> <span class="n">xml</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.//Dataset/RawData/ClockPeriod&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">clock_period</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">clock_period</span><span class="o">.</span><span class="n">text</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">clock_period</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="n">samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">tmp</span><span class="p">))</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samples</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_rawdata&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flim</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;RawData&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">lifetime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+        <span class="n">intensity</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+        <span class="n">stddev</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
         <span class="n">attrs</span><span class="p">,</span>
     <span class="p">)</span></div>
 
@@ -1949,9 +2070,9 @@
     <span class="n">image</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">dim</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;λ&#39;</span><span class="p">,</span> <span class="s1">&#39;Λ&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;λ&#39;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return hyperspectral image and metadata from Leica LIF file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return hyperspectral image and metadata from Leica image file.</span>
 
-<span class="sd">    LIF files may contain hyperspectral images and metadata from laser</span>
+<span class="sd">    Leica image files may contain hyperspectral images and metadata from laser</span>
 <span class="sd">    scanning microscopy measurements.</span>
 <span class="sd">    Reading of TCSPC histograms from FLIM measurements is not supported</span>
 <span class="sd">    because the compression scheme is patent-pending.</span>
@@ -1959,7 +2080,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    filename : str or Path</span>
-<span class="sd">        Name of Leica LIF file to read.</span>
+<span class="sd">        Name of Leica image file to read.</span>
 <span class="sd">    image : str or int, optional</span>
 <span class="sd">        Index or regex pattern of image to return.</span>
 <span class="sd">        By default, return the first image containing hyperspectral data.</span>
@@ -1978,9 +2099,9 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    liffile.LifFileError</span>
-<span class="sd">        File is not a Leica LIF file.</span>
+<span class="sd">        File is not a Leica image file.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        File is not an LSM file or does not contain hyperspectral image.</span>
+<span class="sd">        File is not a Leica image file or does not contain hyperspectral image.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2005,7 +2126,7 @@
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="si">!r}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">im</span> <span class="o">=</span> <span class="n">lif</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">image</span><span class="p">]</span>
@@ -2083,7 +2204,7 @@
 
     <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tif</span><span class="o">.</span><span class="n">is_lsm</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an LSM file&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not an LSM file&#39;</span><span class="p">)</span>
 
         <span class="n">page</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">first</span>
         <span class="n">lsminfo</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">lsm_metadata</span>
@@ -2091,7 +2212,7 @@
 
         <span class="k">if</span> <span class="n">channels</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="ow">or</span> <span class="n">lsminfo</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;SpectralScan&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
             <span class="p">)</span>
 
         <span class="c1"># TODO: contribute this to tifffile</span>
@@ -2104,14 +2225,14 @@
         <span class="n">wavelengths</span> <span class="o">=</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;ChannelWavelength&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">wavelengths</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> wavelengths do not match channel axis&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> wavelengths do not match channel axis&#39;</span>
             <span class="p">)</span>
         <span class="c1"># stack may contain non-wavelength frame</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">wavelengths</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">wavelengths</span> <span class="o">=</span> <span class="n">wavelengths</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">wavelengths</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> does not contain hyperspectral image&#39;</span>
             <span class="p">)</span>
         <span class="n">wavelengths</span> <span class="o">*=</span> <span class="mf">1e9</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">indices</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
@@ -2121,7 +2242,7 @@
             <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;TimeStamps&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">lsminfo</span><span class="p">[</span><span class="s1">&#39;TimeStamps&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">dims</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> timestamps do not match time axis&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> timestamps do not match time axis&#39;</span>
                 <span class="p">)</span>
         <span class="c1"># spatial coordinates</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="s1">&#39;ZYX&#39;</span><span class="p">:</span>
@@ -2203,7 +2324,7 @@
             <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span>
             <span class="ow">or</span> <span class="ow">not</span> <span class="n">tif</span><span class="o">.</span><span class="n">is_ome</span>
         <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector TIFF file&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not an ImSpector TIFF file&#39;</span><span class="p">)</span>
 
         <span class="n">series</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">series</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">ndim</span>
@@ -2212,7 +2333,7 @@
 
         <span class="k">if</span> <span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">axes</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;YX&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span>
             <span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
@@ -2259,7 +2380,9 @@
         <span class="ow">or</span> <span class="s1">&#39;FirstAxis&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span>
         <span class="ow">or</span> <span class="s1">&#39;SecondAxis&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span>
     <span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;FirstAxis&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lifetime&#39;</span> <span class="ow">or</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span>
         <span class="s1">&#39;FirstAxis&#39;</span>
@@ -2273,7 +2396,9 @@
         <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">axes_labels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;SecondAxis-Unit&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ns&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tif</span><span class="o">.</span><span class="n">filename</span><span class="si">!r}</span><span class="s1"> is not an ImSpector FLIM TIFF file&#39;</span>
+        <span class="p">)</span>
     <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">)</span>
     <span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
     <span class="k">del</span> <span class="n">coords</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
@@ -2310,7 +2435,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    xarray.DataArray</span>
-<span class="sd">        Time correlated single photon counting image data with</span>
+<span class="sd">        Time-correlated single-photon counting image data with</span>
 <span class="sd">        :ref:`axes codes &lt;axes&gt;` ``&#39;YXH&#39;`` and type ``uint16``, ``uint32``,</span>
 <span class="sd">        or ``float32``.</span>
 
@@ -2383,7 +2508,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataArray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return TCSPC histogram and metadata from PicoQuant PTU T3 mode file.</span>
 
-<span class="sd">    PTU files contain time-correlated single photon counting measurement data</span>
+<span class="sd">    PTU files contain time-correlated single-photon counting measurement data</span>
 <span class="sd">    and instrumentation parameters.</span>
 
 <span class="sd">    Parameters</span>
