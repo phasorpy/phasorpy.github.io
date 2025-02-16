@@ -40,7 +40,7 @@ and SimFCS referenced files.
 Import required modules and functions.
 Define a helper function to compare image histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-55
+.. GENERATED FROM PYTHON SOURCE LINES 23-41
 
 .. code-block:: Python
 
@@ -48,7 +48,6 @@ Define a helper function to compare image histograms:
     import math
 
     import numpy
-    from matplotlib import pyplot
 
     from phasorpy.phasor import (
         phasor_from_signal,
@@ -56,24 +55,12 @@ Define a helper function to compare image histograms:
         phasor_to_apparent_lifetime,
         phasor_transform,
     )
-    from phasorpy.plot import plot_phasor, plot_phasor_image, plot_signal_image
-
-
-    def plot_histograms(
-        *images, title=None, xlabel=None, ylabel=None, labels=None, **kwargs
-    ):
-        # TODO: replace by future phasorpy.plot.plot_histograms
-        if labels is None:
-            labels = [None] * len(images)
-        fig, ax = pyplot.subplots()
-        for image, label in zip(images, labels):
-            ax.hist(image.flatten(), label=label, **kwargs)
-        ax.set_title(title)
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-        ax.legend()
-        pyplot.tight_layout()
-        pyplot.show()
+    from phasorpy.plot import (
+        plot_histograms,
+        plot_phasor,
+        plot_phasor_image,
+        plot_signal_image,
+    )
 
 
 
@@ -82,8 +69,7 @@ Define a helper function to compare image histograms:
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 56-65
+.. GENERATED FROM PYTHON SOURCE LINES 42-51
 
 Sample files
 ------------
@@ -95,12 +81,12 @@ The files in these repositories are accessed using the
 files if they were not already downloaded before. The function returns
 the path to the downloaded file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-71
+.. GENERATED FROM PYTHON SOURCE LINES 51-57
 
 .. code-block:: Python
 
 
-    from phasorpy.datasets import fetch
+    from phasorpy.datasets import fetch  # isort: skip
 
     filename = fetch('FLIM_testdata.lif')
     print(filename)
@@ -118,12 +104,12 @@ the path to the downloaded file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-74
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Consider sharing datasets with the `PhasorPy community on Zenodo
 <https://zenodo.org/communities/phasorpy/>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-93
+.. GENERATED FROM PYTHON SOURCE LINES 62-79
 
 Leica LIF and XLEF
 ------------------
@@ -143,7 +129,7 @@ The :py:func:`phasorpy.io.phasor_from_lif` and
 data from the `FLIM_testdata
 <https://dx.doi.org/10.6084/m9.figshare.22336594.v1>`_ dataset:
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-101
+.. GENERATED FROM PYTHON SOURCE LINES 79-87
 
 .. code-block:: Python
 
@@ -167,14 +153,14 @@ data from the `FLIM_testdata
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-106
+.. GENERATED FROM PYTHON SOURCE LINES 88-92
 
 The returned mean intensity and uncalibrated phasor coordinates are
 numpy arrays. ``attrs`` is a dictionary containing metadata, including the
 auto-reference phase (in degrees) and modulation for all image channels,
 as well as the fundamental laser frequency (in MHz):
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-113
+.. GENERATED FROM PYTHON SOURCE LINES 92-99
 
 .. code-block:: Python
 
@@ -192,11 +178,11 @@ as well as the fundamental laser frequency (in MHz):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-115
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
 These metadata are used to calibrate and threshold the phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-130
+.. GENERATED FROM PYTHON SOURCE LINES 101-116
 
 .. code-block:: Python
 
@@ -227,12 +213,12 @@ These metadata are used to calibrate and threshold the phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-133
+.. GENERATED FROM PYTHON SOURCE LINES 117-119
 
 Apparent single lifetimes are calculated from the calibrated phasor
 coordinates and compared to the lifetimes calculated by LAS X software:
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-158
+.. GENERATED FROM PYTHON SOURCE LINES 119-144
 
 .. code-block:: Python
 
@@ -273,14 +259,14 @@ coordinates and compared to the lifetimes calculated by LAS X software:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-163
+.. GENERATED FROM PYTHON SOURCE LINES 145-149
 
 The apparent single lifetimes from phase and modulation do not exactly match.
 Most likely there is more than one lifetime component in the sample.
 This could also explain the difference from the lifetimes fitted by the
 LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-170
+.. GENERATED FROM PYTHON SOURCE LINES 151-156
 
 .. note::
   FLIM/TCSPC histograms cannot currently be read directly from
@@ -288,13 +274,13 @@ LAS X software.
   or patent-pending. However, TTTR records can be exported from LIF-FLIM
   files to PicoQuant PTU format by the LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-175
+.. GENERATED FROM PYTHON SOURCE LINES 158-161
 
 .. todo::
   No public, hyperspectral dataset in LIF format is currently available
   for demonstrating the :py:func:`phasorpy.io.signal_from_lif` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-192
+.. GENERATED FROM PYTHON SOURCE LINES 163-178
 
 PicoQuant PTU
 -------------
@@ -312,7 +298,7 @@ the TCSPC histogram from a PTU file exported from the `FLIM_testdata
 The function by default returns a 5-dimensional image with dimension order
 TYXCH. Channel and frames are specified to reduce the dimensionality:
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-200
+.. GENERATED FROM PYTHON SOURCE LINES 178-186
 
 .. code-block:: Python
 
@@ -336,7 +322,7 @@ TYXCH. Channel and frames are specified to reduce the dimensionality:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-214
+.. GENERATED FROM PYTHON SOURCE LINES 187-200
 
 The TCSPC histogram contains more photons than the phasor intensity image
 stored in the LIF-FLIM file. The LAS X software likely applies a filter to
@@ -352,7 +338,7 @@ The reference phase and modulation previously loaded from the LIF-FLIM file
 is again used to calibrate the phasor coordinates. The same intensity
 threshold is applied:
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-234
+.. GENERATED FROM PYTHON SOURCE LINES 200-220
 
 .. code-block:: Python
 
@@ -388,12 +374,12 @@ threshold is applied:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-237
+.. GENERATED FROM PYTHON SOURCE LINES 221-223
 
 Compare the apparent single lifetimes calculated from the PTU with the
 lifetimes previously read from the LIF-FLIM file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-250
+.. GENERATED FROM PYTHON SOURCE LINES 223-236
 
 .. code-block:: Python
 
@@ -422,7 +408,7 @@ lifetimes previously read from the LIF-FLIM file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-261
+.. GENERATED FROM PYTHON SOURCE LINES 237-247
 
 Zeiss CZI
 ---------
@@ -435,7 +421,7 @@ However, hyperspectral images can be read from CZI files using, for example,
 the `pylibCZIrw  <https://github.com/ZEISS/pylibczirw/>`_ or
 `BioIO <https://github.com/bioio-devs/bioio>`_ libraries.
 
-.. GENERATED FROM PYTHON SOURCE LINES 263-268
+.. GENERATED FROM PYTHON SOURCE LINES 249-254
 
 Zeiss LSM
 ---------
@@ -443,7 +429,7 @@ Zeiss LSM
 .. todo::
   Read hyperspectral image stack from Zeiss LSM file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-275
+.. GENERATED FROM PYTHON SOURCE LINES 256-261
 
 Becker & Hickl SDT
 ------------------
@@ -451,7 +437,7 @@ Becker & Hickl SDT
 .. todo::
   Read TCSPC histogram from Becker & Hickl SDT file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 277-282
+.. GENERATED FROM PYTHON SOURCE LINES 263-268
 
 FLIMbox FBD
 -----------
@@ -459,7 +445,7 @@ FLIMbox FBD
 .. todo::
   Read TCSPC histogram from FLIMbox FBD file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-289
+.. GENERATED FROM PYTHON SOURCE LINES 270-275
 
 FLIM LABS JSON
 --------------
@@ -467,7 +453,7 @@ FLIM LABS JSON
 .. todo::
   Read TCSPC histogram from FLIM LABS JSON file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-296
+.. GENERATED FROM PYTHON SOURCE LINES 277-282
 
 ISS VistaVision IFLI
 --------------------
@@ -475,7 +461,7 @@ ISS VistaVision IFLI
 .. todo::
   Read phasor coordinates from ISS VistaVision IFLI file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 298-303
+.. GENERATED FROM PYTHON SOURCE LINES 284-289
 
 SimFCS REF and R64
 ------------------
@@ -483,7 +469,7 @@ SimFCS REF and R64
 .. todo::
   Read and write phasor coordinates from and to SimFCS referenced files.
 
-.. GENERATED FROM PYTHON SOURCE LINES 305-310
+.. GENERATED FROM PYTHON SOURCE LINES 291-296
 
 PhasorPy OME-TIFF
 -----------------
@@ -491,7 +477,7 @@ PhasorPy OME-TIFF
 .. todo::
  Read and write phasor coordinates from and to PhasorPy OME-TIFF files.
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-315
+.. GENERATED FROM PYTHON SOURCE LINES 298-301
 
 sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -500,7 +486,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.893 seconds)
+   **Total running time of the script:** (0 minutes 4.580 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_io.py:

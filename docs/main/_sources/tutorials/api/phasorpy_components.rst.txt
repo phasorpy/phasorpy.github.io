@@ -43,7 +43,7 @@ Import required modules, functions, and classes:
         two_fractions_from_phasor,
     )
     from phasorpy.phasor import phasor_from_lifetime
-    from phasorpy.plot import PhasorPlot
+    from phasorpy.plot import PhasorPlot, plot_histograms
 
     numpy.random.seed(42)
     component_style = {
@@ -179,7 +179,7 @@ phasor coordinates are known, their fractional contributions to each phasor
 coordinate can be calculated by projecting the phasor coordinate onto
 the line between the components. The fractions are plotted as histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-128
+.. GENERATED FROM PYTHON SOURCE LINES 101-118
 
 .. code-block:: Python
 
@@ -188,27 +188,17 @@ the line between the components. The fractions are plotted as histograms:
         real, imag, components_real, components_imag
     )
 
-    fig, ax = plt.subplots()
-    ax.hist(
-        fraction_of_first_component.flatten(),
+    plot_histograms(
+        fraction_of_first_component,
+        1.0 - fraction_of_first_component,
         range=(0, 1),
         bins=100,
-        alpha=0.75,
-        label='A',
+        alpha=0.66,
+        title='Histograms of fractions of two components',
+        xlabel='Fraction',
+        ylabel='Counts',
+        labels=['A', 'B'],
     )
-    ax.hist(
-        1.0 - fraction_of_first_component.flatten(),
-        range=(0, 1),
-        bins=100,
-        alpha=0.75,
-        label='B',
-    )
-    ax.set_title('Histograms of fractions of two components')
-    ax.set_xlabel('Fraction')
-    ax.set_ylabel('Counts')
-    ax.legend()
-    plt.tight_layout()
-    plt.show()
 
 
 
@@ -222,7 +212,7 @@ the line between the components. The fractions are plotted as histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-137
+.. GENERATED FROM PYTHON SOURCE LINES 119-127
 
 Graphical solution for contributions of two components
 ------------------------------------------------------
@@ -233,7 +223,7 @@ that fall within a radius at given fractions along the line between
 the components.
 Compare the plot of counts vs fraction to the previous histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-158
+.. GENERATED FROM PYTHON SOURCE LINES 127-148
 
 .. code-block:: Python
 
@@ -270,7 +260,7 @@ Compare the plot of counts vs fraction to the previous histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 149-154
 
 Graphical solution for contributions of three components
 --------------------------------------------------------
@@ -278,7 +268,7 @@ Graphical solution for contributions of three components
 The graphical solution can similarly be applied to the contributions of
 three components.
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-180
+.. GENERATED FROM PYTHON SOURCE LINES 154-170
 
 .. code-block:: Python
 
@@ -310,12 +300,12 @@ three components.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-183
+.. GENERATED FROM PYTHON SOURCE LINES 171-173
 
 The results of the graphical component analysis are plotted as
 histograms for each component pair:
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-203
+.. GENERATED FROM PYTHON SOURCE LINES 173-193
 
 .. code-block:: Python
 
@@ -351,7 +341,7 @@ histograms for each component pair:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 204-210
+.. GENERATED FROM PYTHON SOURCE LINES 194-200
 
 The graphical method for resolving the contribution of three components
 (pairwise) to a phasor coordinate is based on the quantification of moving
@@ -360,7 +350,7 @@ following animation for component A vs B.
 For the full analysis, the process is repeated for the other combinations
 of components, A vs C and B vs C:
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-258
+.. GENERATED FROM PYTHON SOURCE LINES 200-248
 
 .. code-block:: Python
 
@@ -604,42 +594,42 @@ of components, A vs C and B vs C:
      </style>
 
      <div class="animation">
-       <img id="_anim_imga1cea14df0754e2e8b7a042d94b6685e">
+       <img id="_anim_img61297ba2e343482183e0f5e581c65d11">
        <div class="anim-controls">
-         <input id="_anim_slidera1cea14df0754e2e8b7a042d94b6685e" type="range" class="anim-slider"
+         <input id="_anim_slider61297ba2e343482183e0f5e581c65d11" type="range" class="anim-slider"
                 name="points" min="0" max="1" step="1" value="0"
-                oninput="anima1cea14df0754e2e8b7a042d94b6685e.set_frame(parseInt(this.value));">
+                oninput="anim61297ba2e343482183e0f5e581c65d11.set_frame(parseInt(this.value));">
          <div class="anim-buttons">
-           <button title="Decrease speed" aria-label="Decrease speed" onclick="anima1cea14df0754e2e8b7a042d94b6685e.slower()">
+           <button title="Decrease speed" aria-label="Decrease speed" onclick="anim61297ba2e343482183e0f5e581c65d11.slower()">
                <i class="fa fa-minus"></i></button>
-           <button title="First frame" aria-label="First frame" onclick="anima1cea14df0754e2e8b7a042d94b6685e.first_frame()">
+           <button title="First frame" aria-label="First frame" onclick="anim61297ba2e343482183e0f5e581c65d11.first_frame()">
              <i class="fa fa-fast-backward"></i></button>
-           <button title="Previous frame" aria-label="Previous frame" onclick="anima1cea14df0754e2e8b7a042d94b6685e.previous_frame()">
+           <button title="Previous frame" aria-label="Previous frame" onclick="anim61297ba2e343482183e0f5e581c65d11.previous_frame()">
                <i class="fa fa-step-backward"></i></button>
-           <button title="Play backwards" aria-label="Play backwards" onclick="anima1cea14df0754e2e8b7a042d94b6685e.reverse_animation()">
+           <button title="Play backwards" aria-label="Play backwards" onclick="anim61297ba2e343482183e0f5e581c65d11.reverse_animation()">
                <i class="fa fa-play fa-flip-horizontal"></i></button>
-           <button title="Pause" aria-label="Pause" onclick="anima1cea14df0754e2e8b7a042d94b6685e.pause_animation()">
+           <button title="Pause" aria-label="Pause" onclick="anim61297ba2e343482183e0f5e581c65d11.pause_animation()">
                <i class="fa fa-pause"></i></button>
-           <button title="Play" aria-label="Play" onclick="anima1cea14df0754e2e8b7a042d94b6685e.play_animation()">
+           <button title="Play" aria-label="Play" onclick="anim61297ba2e343482183e0f5e581c65d11.play_animation()">
                <i class="fa fa-play"></i></button>
-           <button title="Next frame" aria-label="Next frame" onclick="anima1cea14df0754e2e8b7a042d94b6685e.next_frame()">
+           <button title="Next frame" aria-label="Next frame" onclick="anim61297ba2e343482183e0f5e581c65d11.next_frame()">
                <i class="fa fa-step-forward"></i></button>
-           <button title="Last frame" aria-label="Last frame" onclick="anima1cea14df0754e2e8b7a042d94b6685e.last_frame()">
+           <button title="Last frame" aria-label="Last frame" onclick="anim61297ba2e343482183e0f5e581c65d11.last_frame()">
                <i class="fa fa-fast-forward"></i></button>
-           <button title="Increase speed" aria-label="Increase speed" onclick="anima1cea14df0754e2e8b7a042d94b6685e.faster()">
+           <button title="Increase speed" aria-label="Increase speed" onclick="anim61297ba2e343482183e0f5e581c65d11.faster()">
                <i class="fa fa-plus"></i></button>
          </div>
-         <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selecta1cea14df0754e2e8b7a042d94b6685e"
+         <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_select61297ba2e343482183e0f5e581c65d11"
                class="anim-state">
-           <input type="radio" name="state" value="once" id="_anim_radio1_a1cea14df0754e2e8b7a042d94b6685e"
+           <input type="radio" name="state" value="once" id="_anim_radio1_61297ba2e343482183e0f5e581c65d11"
                   >
-           <label for="_anim_radio1_a1cea14df0754e2e8b7a042d94b6685e">Once</label>
-           <input type="radio" name="state" value="loop" id="_anim_radio2_a1cea14df0754e2e8b7a042d94b6685e"
+           <label for="_anim_radio1_61297ba2e343482183e0f5e581c65d11">Once</label>
+           <input type="radio" name="state" value="loop" id="_anim_radio2_61297ba2e343482183e0f5e581c65d11"
                   checked>
-           <label for="_anim_radio2_a1cea14df0754e2e8b7a042d94b6685e">Loop</label>
-           <input type="radio" name="state" value="reflect" id="_anim_radio3_a1cea14df0754e2e8b7a042d94b6685e"
+           <label for="_anim_radio2_61297ba2e343482183e0f5e581c65d11">Loop</label>
+           <input type="radio" name="state" value="reflect" id="_anim_radio3_61297ba2e343482183e0f5e581c65d11"
                   >
-           <label for="_anim_radio3_a1cea14df0754e2e8b7a042d94b6685e">Reflect</label>
+           <label for="_anim_radio3_61297ba2e343482183e0f5e581c65d11">Reflect</label>
          </form>
        </div>
      </div>
@@ -649,9 +639,9 @@ of components, A vs C and B vs C:
        /* Instantiate the Animation class. */
        /* The IDs given should match those used in the template above. */
        (function() {
-         var img_id = "_anim_imga1cea14df0754e2e8b7a042d94b6685e";
-         var slider_id = "_anim_slidera1cea14df0754e2e8b7a042d94b6685e";
-         var loop_select_id = "_anim_loop_selecta1cea14df0754e2e8b7a042d94b6685e";
+         var img_id = "_anim_img61297ba2e343482183e0f5e581c65d11";
+         var slider_id = "_anim_slider61297ba2e343482183e0f5e581c65d11";
+         var loop_select_id = "_anim_loop_select61297ba2e343482183e0f5e581c65d11";
          var frames = new Array(20);
     
        frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiYAAAMgCAYAAAAX4KnvAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -16511,7 +16501,7 @@ of components, A vs C and B vs C:
          /* set a timeout to make sure all the above elements are created before
             the object is initialized. */
          setTimeout(function() {
-             anima1cea14df0754e2e8b7a042d94b6685e = new Animation(frames, img_id, slider_id, 100.0,
+             anim61297ba2e343482183e0f5e581c65d11 = new Animation(frames, img_id, slider_id, 100.0,
                                       loop_select_id);
          }, 0);
        })()
@@ -16522,7 +16512,7 @@ of components, A vs C and B vs C:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-262
+.. GENERATED FROM PYTHON SOURCE LINES 249-252
 
 sphinx_gallery_thumbnail_number = 5
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -16531,7 +16521,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.423 seconds)
+   **Total running time of the script:** (0 minutes 5.433 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_components.py:
