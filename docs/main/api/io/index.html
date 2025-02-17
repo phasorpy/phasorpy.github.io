@@ -709,6 +709,9 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lifetime</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">lifetime_from_lif</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;FLIM_testdata.lif&#39;</span><span class="p">)</span>
@@ -842,6 +845,11 @@ If a list, <cite>real</cite> and <cite>imag</cite> contain one or more harmonics
 first axis.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float):
 Fundamental frequency of time-resolved phasor coordinates in MHz.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'samples'</span></code> (int):</dt><dd><p>Number of samples per frequency.</p>
+</dd>
+</dl>
+</li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'ifli_header'</span></code> (dict):
 Metadata from IFLI file header.</p></li>
 </ul>
@@ -856,6 +864,9 @@ Metadata from IFLI file header.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">phasor_from_ifli</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;frequency_domain.ifli&#39;</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
@@ -870,6 +881,8 @@ Metadata from IFLI file header.</p></li>
 <span class="go">[1, 2, 3, 5]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  
 <span class="go">80.33</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span>
+<span class="go">64</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attr</span><span class="p">[</span><span class="s1">&#39;ifli_header&#39;</span><span class="p">]</span>
 <span class="go">{&#39;Version&#39;: 16, ... &#39;ModFrequency&#39;: (...), &#39;RefLifetime&#39;: (2.5,), ...}</span>
 </pre></div>
@@ -918,6 +931,9 @@ elements.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;FLIM_testdata.lif&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">real</span><span class="o">.</span><span class="n">shape</span>
@@ -988,6 +1004,8 @@ OME dataset plain-text description.</p></li>
 <p>Scalar or one-dimensional phasor coordinates stored in the file are
 returned as two-dimensional images (three-dimensional if multiple
 harmonics are present).</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_ometiff</span><span class="p">(</span>
@@ -1049,6 +1067,9 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#phasorpy.io.phasor_to_simfcs_referenced" title="phasorpy.io.phasor_to_simfcs_referenced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.io.phasor_to_simfcs_referenced</span></code></a></p>
 </div>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_simfcs_referenced</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="s1">&#39;_phasorpy.r64&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
@@ -1117,6 +1138,8 @@ For example, <code class="docutils literal notranslate"><span class="pre">compre
 <p>The <a class="reference external" href="https://ome-model.readthedocs.io/en/latest/developers/6d-7d-and-8d-storage.html">6D, 7D and 8D storage</a>
 extension is used to store multi-harmonic phasor coordinates.
 The modulo type for the first, harmonic dimension is “other”.</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_ometiff</span><span class="p">(</span>
@@ -1192,6 +1215,9 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_b64</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.b64&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1230,6 +1256,9 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS B&amp;H file.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_bh</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.b&amp;h&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1266,6 +1295,9 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS BHZ file.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_bhz</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.bhz&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1309,6 +1341,10 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: phases in radians.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['harmonic']</span></code>: harmonic contained in histogram.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_header']</span></code>: FBD binary header, if any.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_firmware']</span></code>: FLIMbox firmware settings, if any.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_settings']</span></code>: Settings from FBS XML, if any.</p></li>
 </ul>
 </p>
 </dd>
@@ -1319,6 +1355,9 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 <dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a FLIMbox FBD file.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_fbd</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;convallaria_000$EI0S.fbd&#39;</span><span class="p">)</span>
@@ -1369,6 +1408,9 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a FlimFast FLIF file.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_flif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;flimfast.flif&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1474,6 +1516,9 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_imspector_tiff</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1528,6 +1573,9 @@ Either <code class="docutils literal notranslate"><span class="pre">'λ'</span><
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lif</span><span class="p">(</span><span class="s1">&#39;ScanModesExamples.lif&#39;</span><span class="p">)</span>  
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>  
@@ -1571,6 +1619,9 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lsm</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;paramecium.lsm&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1645,6 +1696,9 @@ broadcastable to image data.</p>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/ptufile/">ptufile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_ptu</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;hazelnut_FLIM_single_image.ptu&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1692,6 +1746,9 @@ or <code class="docutils literal notranslate"><span class="pre">float32</span></
 <dd class="field-even"><p><strong>ValueError</strong> – File is not a SDT file containing TCSPC histogram.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/sdtfile/">sdtfile</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_sdt</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;tcspc.sdt&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1731,6 +1788,9 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
 <dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS Z64 file.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_z64</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;simfcs.z64&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>

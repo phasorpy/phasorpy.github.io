@@ -792,6 +792,9 @@
 <span class="sd">    extension is used to store multi-harmonic phasor coordinates.</span>
 <span class="sd">    The modulo type for the first, harmonic dimension is &quot;other&quot;.</span>
 
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `tifffile &lt;https://github.com/cgohlke/tifffile/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; mean, real, imag = numpy.random.rand(3, 32, 32, 32)</span>
@@ -973,6 +976,9 @@
 <span class="sd">    Scalar or one-dimensional phasor coordinates stored in the file are</span>
 <span class="sd">    returned as two-dimensional images (three-dimensional if multiple</span>
 <span class="sd">    harmonics are present).</span>
+
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `tifffile &lt;https://github.com/cgohlke/tifffile/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1305,6 +1311,11 @@
 <span class="sd">    --------</span>
 <span class="sd">    phasorpy.io.phasor_to_simfcs_referenced</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; phasor_to_simfcs_referenced(</span>
@@ -1407,6 +1418,8 @@
 <span class="sd">          first axis.</span>
 <span class="sd">        - ``&#39;frequency&#39;`` (float):</span>
 <span class="sd">          Fundamental frequency of time-resolved phasor coordinates in MHz.</span>
+<span class="sd">        - ``&#39;samples&#39;`` (int):</span>
+<span class="sd">            Number of samples per frequency.</span>
 <span class="sd">        - ``&#39;ifli_header&#39;`` (dict):</span>
 <span class="sd">          Metadata from IFLI file header.</span>
 
@@ -1416,6 +1429,11 @@
 <span class="sd">        File is not an ISS IFLI file.</span>
 <span class="sd">    IndexError</span>
 <span class="sd">        Harmonic is not found in file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1432,6 +1450,8 @@
 <span class="sd">    [1, 2, 3, 5]</span>
 <span class="sd">    &gt;&gt;&gt; attr[&#39;frequency&#39;]  # doctest: +NUMBER</span>
 <span class="sd">    80.33</span>
+<span class="sd">    &gt;&gt;&gt; attr[&#39;samples&#39;]</span>
+<span class="sd">    64</span>
 <span class="sd">    &gt;&gt;&gt; attr[&#39;ifli_header&#39;]</span>
 <span class="sd">    {&#39;Version&#39;: 16, ... &#39;ModFrequency&#39;: (...), &#39;RefLifetime&#39;: (2.5,), ...}</span>
 
@@ -1457,6 +1477,7 @@
     <span class="n">dims</span> <span class="o">=</span> <span class="n">dims</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">del</span> <span class="n">data</span>
 
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;HistogramResolution&#39;</span><span class="p">]</span>
     <span class="n">frequencies</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;ModFrequency&#39;</span><span class="p">]</span>
     <span class="n">frequency</span> <span class="o">=</span> <span class="n">frequencies</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">harmonic_stored</span> <span class="o">=</span> <span class="p">[</span>
@@ -1507,6 +1528,7 @@
         <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dims</span><span class="p">),</span>
         <span class="s1">&#39;harmonic&#39;</span><span class="p">:</span> <span class="n">harmonic</span><span class="p">,</span>
         <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="n">frequency</span> <span class="o">*</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="s1">&#39;samples&#39;</span><span class="p">:</span> <span class="n">samples</span><span class="p">,</span>
         <span class="s1">&#39;ifli_header&#39;</span><span class="p">:</span> <span class="n">header</span><span class="p">,</span>
     <span class="p">}</span>
 
@@ -1561,6 +1583,11 @@
 <span class="sd">        File is not a Leica image file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File or `image` do not contain phasor coordinates and metadata.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `liffile &lt;https://github.com/cgohlke/liffile/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1675,6 +1702,11 @@
 <span class="sd">        File is not a Leica image file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File or `image` does not contain lifetime coordinates and metadata.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `liffile &lt;https://github.com/cgohlke/liffile/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2104,6 +2136,11 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not a Leica image file or does not contain hyperspectral image.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `liffile &lt;https://github.com/cgohlke/liffile/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; signal = signal_from_lif(&#39;ScanModesExamples.lif&#39;)  # doctest: +SKIP</span>
@@ -2185,6 +2222,11 @@
 <span class="sd">        File is not a TIFF file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not an LSM file or does not contain hyperspectral image.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `tifffile &lt;https://github.com/cgohlke/tifffile/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2292,6 +2334,11 @@
 <span class="sd">        File is not a TIFF file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not an ImSpector FLIM TIFF file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `tifffile &lt;https://github.com/cgohlke/tifffile/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2448,6 +2495,11 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not a SDT file containing TCSPC histogram.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `sdtfile &lt;https://github.com/cgohlke/sdtfile/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; signal = signal_from_sdt(fetch(&#39;tcspc.sdt&#39;))</span>
@@ -2567,6 +2619,11 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        File is not a PicoQuant PTU T3 mode file containing TCSPC data.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `ptufile &lt;https://github.com/cgohlke/ptufile/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; signal = signal_from_ptu(fetch(&#39;hazelnut_FLIM_single_image.ptu&#39;))</span>
@@ -2665,6 +2722,11 @@
 <span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a FlimFast FLIF file.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; signal = signal_from_flif(fetch(&#39;flimfast.flif&#39;))</span>
@@ -2758,11 +2820,20 @@
 
 <span class="sd">        - ``coords[&#39;H&#39;]``: phases in radians.</span>
 <span class="sd">        - ``attrs[&#39;frequency&#39;]``: repetition frequency in MHz.</span>
+<span class="sd">        - ``attrs[&#39;harmonic&#39;]``: harmonic contained in histogram.</span>
+<span class="sd">        - ``attrs[&#39;flimbox_header&#39;]``: FBD binary header, if any.</span>
+<span class="sd">        - ``attrs[&#39;flimbox_firmware&#39;]``: FLIMbox firmware settings, if any.</span>
+<span class="sd">        - ``attrs[&#39;flimbox_settings&#39;]``: Settings from FBS XML, if any.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a FLIMbox FBD file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2811,7 +2882,7 @@
                 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">frame</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">frame</span> <span class="o">&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">frame</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">frame</span> <span class="o">&gt;=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">frame</span><span class="si">=}</span><span class="s1"> out of bounds&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">keepdims</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">frame</span> <span class="p">:</span> <span class="n">frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
@@ -2828,6 +2899,13 @@
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">_metadata</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">H</span><span class="o">=</span><span class="n">phases</span><span class="p">)</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span>
         <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">laser_frequency</span> <span class="o">*</span> <span class="mf">1e-6</span>
+        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">harmonics</span>
+        <span class="k">if</span> <span class="n">fbd</span><span class="o">.</span><span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flimbox_header&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">header</span>
+        <span class="k">if</span> <span class="n">fbd</span><span class="o">.</span><span class="n">fbf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flimbox_firmware&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">fbf</span>
+        <span class="k">if</span> <span class="n">fbd</span><span class="o">.</span><span class="n">fbs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flimbox_settings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fbd</span><span class="o">.</span><span class="n">fbs</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataArray</span>
 
@@ -2862,6 +2940,11 @@
 <span class="sd">        File is not a SimFCS B64 file.</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        File does not contain an image stack.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -2922,6 +3005,11 @@
 <span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS Z64 file.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; signal = signal_from_z64(fetch(&#39;simfcs.z64&#39;))</span>
@@ -2974,6 +3062,11 @@
 <span class="sd">    ------</span>
 <span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS B&amp;H file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -3028,6 +3121,11 @@
 <span class="sd">    ------</span>
 <span class="sd">    lfdfiles.LfdFileError</span>
 <span class="sd">        File is not a SimFCS BHZ file.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The implementation is based on the</span>
+<span class="sd">    `lfdfiles &lt;https://github.com/cgohlke/lfdfiles/&gt;`__ library.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
