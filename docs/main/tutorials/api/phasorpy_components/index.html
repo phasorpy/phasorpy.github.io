@@ -61,7 +61,7 @@
     <script src="../../../_static/custom-icons.js?v=74687d30"></script>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
-    <link rel="next" title="Applications" href="../../applications/" />
+    <link rel="next" title="File input/output" href="../phasorpy_io/" />
     <link rel="prev" title="Filter phasor coordinates" href="../phasorpy_filtering/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -490,7 +490,6 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_pca/">Principal component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../phasorpy_io/">File input/output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_multi-harmonic/">Multi-harmonic phasor coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_cursors/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
@@ -498,6 +497,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_filtering/">Filter phasor coordinates</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_io/">File input/output</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications/">Applications</a></li>
@@ -575,8 +575,8 @@
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">animation</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.components</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">graphical_component_analysis</span><span class="p">,</span>
@@ -694,13 +694,13 @@ Compare the plot of counts vs fraction to the previous histogram:</p>
     <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;A vs B&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Graphical solution for contributions of two components&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fraction&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Counts&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_components_004.png" srcset="../../../_images/sphx_glr_phasorpy_components_004.png" alt="Graphical solution for contributions of two components" class = "sphx-glr-single-img"/></section>
@@ -735,7 +735,7 @@ histograms for each component pair:</p>
     <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;A vs B&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;A vs C&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;B vs C&#39;</span><span class="p">)</span>
@@ -743,7 +743,7 @@ histograms for each component pair:</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fraction&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Counts&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_components_006.png" srcset="../../../_images/sphx_glr_phasorpy_components_006.png" alt="Graphical solution for contributions of three components" class = "sphx-glr-single-img"/><p>The graphical method for resolving the contribution of three components
@@ -752,7 +752,7 @@ circular cursors along the line between the components, demonstrated in the
 following animation for component A vs B.
 For the full analysis, the process is repeated for the other combinations
 of components, A vs C and B vs C:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">hist</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">hist</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
 <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
@@ -790,14 +790,14 @@ of components, A vs C and B vs C:</p>
         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
         <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">hist_artists</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">hist_artists</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">fractions</span><span class="p">[:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span>
     <span class="p">)</span>
     <span class="n">plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot_lines</span> <span class="o">+</span> <span class="n">hist_artists</span><span class="p">)</span>
 
 <span class="n">_</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">ArtistAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">plots</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="sphx-glr-animation docutils container">
@@ -985,42 +985,42 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img30466023da5342a79e3fcb06269d569d">
+  <img id="_anim_imgac500e36f8fa4a8bb6830fecf9398ea8">
   <div class="anim-controls">
-    <input id="_anim_slider30466023da5342a79e3fcb06269d569d" type="range" class="anim-slider"
+    <input id="_anim_sliderac500e36f8fa4a8bb6830fecf9398ea8" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim30466023da5342a79e3fcb06269d569d.set_frame(parseInt(this.value));">
+           oninput="animac500e36f8fa4a8bb6830fecf9398ea8.set_frame(parseInt(this.value));">
     <div class="anim-buttons">
-      <button title="Decrease speed" aria-label="Decrease speed" onclick="anim30466023da5342a79e3fcb06269d569d.slower()">
+      <button title="Decrease speed" aria-label="Decrease speed" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.slower()">
           <i class="fa fa-minus"></i></button>
-      <button title="First frame" aria-label="First frame" onclick="anim30466023da5342a79e3fcb06269d569d.first_frame()">
+      <button title="First frame" aria-label="First frame" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.first_frame()">
         <i class="fa fa-fast-backward"></i></button>
-      <button title="Previous frame" aria-label="Previous frame" onclick="anim30466023da5342a79e3fcb06269d569d.previous_frame()">
+      <button title="Previous frame" aria-label="Previous frame" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button title="Play backwards" aria-label="Play backwards" onclick="anim30466023da5342a79e3fcb06269d569d.reverse_animation()">
+      <button title="Play backwards" aria-label="Play backwards" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button title="Pause" aria-label="Pause" onclick="anim30466023da5342a79e3fcb06269d569d.pause_animation()">
+      <button title="Pause" aria-label="Pause" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.pause_animation()">
           <i class="fa fa-pause"></i></button>
-      <button title="Play" aria-label="Play" onclick="anim30466023da5342a79e3fcb06269d569d.play_animation()">
+      <button title="Play" aria-label="Play" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.play_animation()">
           <i class="fa fa-play"></i></button>
-      <button title="Next frame" aria-label="Next frame" onclick="anim30466023da5342a79e3fcb06269d569d.next_frame()">
+      <button title="Next frame" aria-label="Next frame" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.next_frame()">
           <i class="fa fa-step-forward"></i></button>
-      <button title="Last frame" aria-label="Last frame" onclick="anim30466023da5342a79e3fcb06269d569d.last_frame()">
+      <button title="Last frame" aria-label="Last frame" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.last_frame()">
           <i class="fa fa-fast-forward"></i></button>
-      <button title="Increase speed" aria-label="Increase speed" onclick="anim30466023da5342a79e3fcb06269d569d.faster()">
+      <button title="Increase speed" aria-label="Increase speed" onclick="animac500e36f8fa4a8bb6830fecf9398ea8.faster()">
           <i class="fa fa-plus"></i></button>
     </div>
-    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_select30466023da5342a79e3fcb06269d569d"
+    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selectac500e36f8fa4a8bb6830fecf9398ea8"
           class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_30466023da5342a79e3fcb06269d569d"
+      <input type="radio" name="state" value="once" id="_anim_radio1_ac500e36f8fa4a8bb6830fecf9398ea8"
              >
-      <label for="_anim_radio1_30466023da5342a79e3fcb06269d569d">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_30466023da5342a79e3fcb06269d569d"
+      <label for="_anim_radio1_ac500e36f8fa4a8bb6830fecf9398ea8">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_ac500e36f8fa4a8bb6830fecf9398ea8"
              checked>
-      <label for="_anim_radio2_30466023da5342a79e3fcb06269d569d">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_30466023da5342a79e3fcb06269d569d"
+      <label for="_anim_radio2_ac500e36f8fa4a8bb6830fecf9398ea8">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_ac500e36f8fa4a8bb6830fecf9398ea8"
              >
-      <label for="_anim_radio3_30466023da5342a79e3fcb06269d569d">Reflect</label>
+      <label for="_anim_radio3_ac500e36f8fa4a8bb6830fecf9398ea8">Reflect</label>
     </form>
   </div>
 </div>
@@ -1030,9 +1030,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img30466023da5342a79e3fcb06269d569d";
-    var slider_id = "_anim_slider30466023da5342a79e3fcb06269d569d";
-    var loop_select_id = "_anim_loop_select30466023da5342a79e3fcb06269d569d";
+    var img_id = "_anim_imgac500e36f8fa4a8bb6830fecf9398ea8";
+    var slider_id = "_anim_sliderac500e36f8fa4a8bb6830fecf9398ea8";
+    var loop_select_id = "_anim_loop_selectac500e36f8fa4a8bb6830fecf9398ea8";
     var frames = new Array(20);
 
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiYAAAMgCAYAAAAX4KnvAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -16892,7 +16892,7 @@ REQkGwwmREREJBsMJkRERCQbDCZEREQkGwwmREREJBsMJkRERCQbDCZEREQkGwwmREREJBv/H/1J\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim30466023da5342a79e3fcb06269d569d = new Animation(frames, img_id, slider_id, 100.0,
+        animac500e36f8fa4a8bb6830fecf9398ea8 = new Animation(frames, img_id, slider_id, 100.0,
                                  loop_select_id);
     }, 0);
   })()
@@ -16900,7 +16900,7 @@ REQkGwwmREREJBsMJkRERCQbDCZEREQkGwwmREREJBsMJkRERCQbDCZEREQkGwwmREREJBv/H/1J\
 <p>sphinx_gallery_thumbnail_number = 5
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.417 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.437 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-components-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/15b8b3be152b5ccd1ea235f208641df7/phasorpy_components.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_components.ipynb</span></code></a></p>
@@ -16936,11 +16936,11 @@ mypy: disable-error-code=”arg-type”</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../applications/"
+       href="../phasorpy_io/"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Applications</p>
+        <p class="prev-next-title">File input/output</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -17004,7 +17004,7 @@ mypy: disable-error-code=”arg-type”</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.0.
     <br/>
   </p>
 </div>
