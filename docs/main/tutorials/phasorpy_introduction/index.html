@@ -495,8 +495,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_cursors/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_filtering/">Filter phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_components/">Component analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_io/">File input/output</a></li>
 </ul>
@@ -621,11 +621,9 @@ and print its version:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0.5.dev
 </pre></div>
 </div>
-<p>Besides the PhasorPy library, the <a class="reference external" href="https://numpy.org/">numpy</a> and
-<a class="reference external" href="https://matplotlib.org/">matplotlib</a> libraries are used for
-array computing and plotting throughout this tutorial:</p>
+<p>Besides the PhasorPy library, the <a class="reference external" href="https://numpy.org/">numpy</a> library
+is used for array computing throughout this tutorial:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 </pre></div>
 </div>
 </section>
@@ -906,13 +904,13 @@ coordinates to define and mask regions of interest within the phasor space.</p>
 <img src="../../_images/sphx_glr_phasorpy_introduction_008.png" srcset="../../_images/sphx_glr_phasorpy_introduction_008.png" alt="Cursors" class = "sphx-glr-single-img"/><p>Blend the cursor masks with the mean intensity image to produce a
 pseudo-colored image:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.cursors</span><span class="w"> </span><span class="kn">import</span> <span class="n">pseudo_color</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_image</span>
 
 <span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">cursors_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plot_image</span><span class="p">(</span>
+    <span class="n">pseudo_color_image</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Pseudo-color image from circular cursors&#39;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_introduction_009.png" srcset="../../_images/sphx_glr_phasorpy_introduction_009.png" alt="Pseudo-color image from circular cursors" class = "sphx-glr-single-img"/></section>
@@ -980,10 +978,9 @@ clusters in the phasor plot by means of elliptical cursors:</p>
 the mean intensity image:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">pseudo_color_image</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">elliptic_masks</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="n">mean</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Pseudo-color image from elliptic cursors&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pseudo_color_image</span><span class="p">)</span>
-<span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plot_image</span><span class="p">(</span>
+    <span class="n">pseudo_color_image</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Pseudo-color image from elliptic cursors&#39;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_introduction_012.png" srcset="../../_images/sphx_glr_phasorpy_introduction_012.png" alt="Pseudo-color image from elliptic cursors" class = "sphx-glr-single-img"/></section>
@@ -1002,7 +999,7 @@ lfdfiles-2024.10.24
 sdtfile-2024.12.6
 ptufile-2025.2.20
 liffile-2025.2.20
-matplotlib-3.10.0
+matplotlib-3.10.1
 scipy-1.15.2
 skimage-n/a
 sklearn-n/a
@@ -1016,7 +1013,7 @@ pooch-v1.8.2
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”
 isort: skip_file</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.504 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.180 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-introduction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/519fde79147cf545361411cda356f9f9/phasorpy_introduction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_introduction.ipynb</span></code></a></p>

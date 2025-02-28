@@ -27,12 +27,10 @@ An introduction to selecting phasor coordinates using cursors.
 
 Import required modules, functions, and classes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-26
+.. GENERATED FROM PYTHON SOURCE LINES 11-24
 
 .. code-block:: Python
 
-
-    from matplotlib import pyplot
 
     from phasorpy.color import CATEGORICAL
     from phasorpy.cursors import (
@@ -44,7 +42,7 @@ Import required modules, functions, and classes:
     from phasorpy.datasets import fetch
     from phasorpy.io import signal_from_lsm
     from phasorpy.phasor import phasor_from_signal, phasor_threshold
-    from phasorpy.plot import PhasorPlot
+    from phasorpy.plot import PhasorPlot, plot_image
 
 
 
@@ -53,11 +51,11 @@ Import required modules, functions, and classes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Open a hyperspectral dataset used throughout this tutorial:
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-35
+.. GENERATED FROM PYTHON SOURCE LINES 26-33
 
 .. code-block:: Python
 
@@ -75,14 +73,14 @@ Open a hyperspectral dataset used throughout this tutorial:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-40
+.. GENERATED FROM PYTHON SOURCE LINES 34-38
 
 Circular cursors
 ----------------
 
 Use circular cursors to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-49
+.. GENERATED FROM PYTHON SOURCE LINES 38-47
 
 .. code-block:: Python
 
@@ -102,11 +100,11 @@ Use circular cursors to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Show the circular cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-64
+.. GENERATED FROM PYTHON SOURCE LINES 49-62
 
 .. code-block:: Python
 
@@ -135,21 +133,20 @@ Show the circular cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 The cursor masks can be blended to produce a pseudo-colored image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-75
+.. GENERATED FROM PYTHON SOURCE LINES 65-72
 
 .. code-block:: Python
 
 
     pseudo_color_image = pseudo_color(*circular_mask)
 
-    fig, ax = pyplot.subplots()
-    ax.set_title('Pseudo-color image from circular cursors')
-    ax.imshow(pseudo_color_image)
-    pyplot.show()
+    plot_image(
+        pseudo_color_image, title='Pseudo-color image from circular cursors'
+    )
 
 
 
@@ -163,7 +160,7 @@ The cursor masks can be blended to produce a pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 73-78
 
 Elliptic cursors
 ----------------
@@ -171,7 +168,7 @@ Elliptic cursors
 Use elliptic cursors to mask more defined regions of interest in the
 phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-94
+.. GENERATED FROM PYTHON SOURCE LINES 78-91
 
 .. code-block:: Python
 
@@ -195,11 +192,11 @@ phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
 
 Show the elliptic cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-110
+.. GENERATED FROM PYTHON SOURCE LINES 93-107
 
 .. code-block:: Python
 
@@ -229,22 +226,22 @@ Show the elliptic cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-113
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 The mean intensity image can be used as a base layer to overlay
 the masks from the elliptic cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-122
+.. GENERATED FROM PYTHON SOURCE LINES 111-119
 
 .. code-block:: Python
 
 
     pseudo_color_image = pseudo_color(*elliptic_mask, intensity=mean)
 
-    fig, ax = pyplot.subplots()
-    ax.set_title('Pseudo-color image from elliptic cursors and intensity')
-    ax.imshow(pseudo_color_image)
-    pyplot.show()
+    plot_image(
+        pseudo_color_image,
+        title='Pseudo-color image from elliptic cursors and intensity',
+    )
 
 
 
@@ -258,14 +255,14 @@ the masks from the elliptic cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-127
+.. GENERATED FROM PYTHON SOURCE LINES 120-124
 
 Polar cursors
 -------------
 
 Create a mask with two ranges of phase and modulation values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-137
+.. GENERATED FROM PYTHON SOURCE LINES 124-134
 
 .. code-block:: Python
 
@@ -286,11 +283,11 @@ Create a mask with two ranges of phase and modulation values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-139
+.. GENERATED FROM PYTHON SOURCE LINES 135-136
 
 Show the polar cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-153
+.. GENERATED FROM PYTHON SOURCE LINES 136-150
 
 .. code-block:: Python
 
@@ -320,13 +317,13 @@ Show the polar cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-157
+.. GENERATED FROM PYTHON SOURCE LINES 151-154
 
 The thresholded mean intensity image can be used as a base layer to
 overlay the masks from the polar cursors. Values below the threshold are
 transparent (white):
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-169
+.. GENERATED FROM PYTHON SOURCE LINES 154-164
 
 .. code-block:: Python
 
@@ -335,12 +332,10 @@ transparent (white):
         *polar_mask, intensity=mean_thresholded, colors=CATEGORICAL[2:]
     )
 
-    fig, ax = pyplot.subplots()
-    ax.set_title(
-        'Pseudo-color image from\npolar cursors and thresholded intensity'
+    plot_image(
+        pseudo_color_image,
+        title='Pseudo-color image from\npolar cursors and thresholded intensity',
     )
-    ax.imshow(pseudo_color_image)
-    pyplot.show()
 
 
 
@@ -354,7 +349,7 @@ transparent (white):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-173
+.. GENERATED FROM PYTHON SOURCE LINES 165-168
 
 sphinx_gallery_thumbnail_number = 1
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -363,7 +358,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.574 seconds)
+   **Total running time of the script:** (0 minutes 0.679 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_cursors.py:
