@@ -464,7 +464,7 @@ a hyperspectral dataset with 30 emission wavelengths:
 
 .. GENERATED FROM PYTHON SOURCE LINES 273-279
 
-Note that the signal is not well sampled and shows a discontinuity.
+Note that the signal is not well sampled and shows discontinuity.
 It may not be accurately represented by the phasor coordinates calculated
 via DFT.
 
@@ -1047,7 +1047,93 @@ read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-591
+.. GENERATED FROM PYTHON SOURCE LINES 588-602
+
+Other means
+-----------
+
+While PhasorPy provides many functions to read phasor related data and
+metadata from file formats commonly used in the field, it is by no means
+required to use those functions.
+Instead, any other means that yields image stacks in numpy-array compatible
+form can be used (for example) for advanced use cases, or when a file
+format is not supported by PhasorPy.
+
+For example, most imaging software can export image data to generic
+TIFF files.
+The `tifffile <https://github.com/cgohlke/tifffile/>`_ library is used to
+read a TCSPC histogram exported to a TIFF file by ImSpector software:
+
+.. GENERATED FROM PYTHON SOURCE LINES 602-609
+
+.. code-block:: Python
+
+
+    from tifffile import imread
+
+    filename = 'Embryo.tif'
+
+    image_stack = imread(fetch(filename))
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 610-614
+
+Since the image stack array contains no domain-specific metadata, the
+fundamental frequency and the axis over which to calculate phasor
+coordinates must be known. In this case, the TCSPC histogram bins are in
+the first array dimension:
+
+.. GENERATED FROM PYTHON SOURCE LINES 614-619
+
+.. code-block:: Python
+
+
+    plot_signal_image(image_stack, axis=0, title=filename)
+
+    mean, real, imag = phasor_from_signal(image_stack, axis=0)
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
+   :alt: Embryo.tif, axis=0, mean
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 620-621
+
+Plot the uncalibrated phasor coordinates:
+
+.. GENERATED FROM PYTHON SOURCE LINES 621-624
+
+.. code-block:: Python
+
+
+    plot_phasor(real, imag, frequency=80.0, allquadrants=True, title=filename)
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
+   :alt: Embryo.tif
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 625-628
 
 sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1056,7 +1142,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.817 seconds)
+   **Total running time of the script:** (0 minutes 14.116 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_io.py:

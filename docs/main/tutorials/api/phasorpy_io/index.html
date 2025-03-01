@@ -807,7 +807,7 @@ a hyperspectral dataset with 30 emission wavelengths:</p>
 <span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_io_007.png" srcset="../../../_images/sphx_glr_phasorpy_io_007.png" alt="paramecium.lsm, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Note that the signal is not well sampled and shows a discontinuity.
+<img src="../../../_images/sphx_glr_phasorpy_io_007.png" srcset="../../../_images/sphx_glr_phasorpy_io_007.png" alt="paramecium.lsm, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Note that the signal is not well sampled and shows discontinuity.
 It may not be accurately represented by the phasor coordinates calculated
 via DFT.</p>
 <p>Emission wavelengths (in nm) are available in the coordinates of the
@@ -1105,10 +1105,43 @@ read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:</p>
     <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Written by PhasorPy&#39;</span>
 </pre></div>
 </div>
-<p>sphinx_gallery_thumbnail_number = 3
+</section>
+<section id="other-means">
+<h2>Other means<a class="headerlink" href="#other-means" title="Link to this heading">#</a></h2>
+<p>While PhasorPy provides many functions to read phasor related data and
+metadata from file formats commonly used in the field, it is by no means
+required to use those functions.
+Instead, any other means that yields image stacks in numpy-array compatible
+form can be used (for example) for advanced use cases, or when a file
+format is not supported by PhasorPy.</p>
+<p>For example, most imaging software can export image data to generic
+TIFF files.
+The <a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library is used to
+read a TCSPC histogram exported to a TIFF file by ImSpector software:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tifffile</span><span class="w"> </span><span class="kn">import</span> <span class="n">imread</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Embryo.tif&#39;</span>
+
+<span class="n">image_stack</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Since the image stack array contains no domain-specific metadata, the
+fundamental frequency and the axis over which to calculate phasor
+coordinates must be known. In this case, the TCSPC histogram bins are in
+the first array dimension:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_signal_image</span><span class="p">(</span><span class="n">image_stack</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">image_stack</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_018.png" srcset="../../../_images/sphx_glr_phasorpy_io_018.png" alt="Embryo.tif, axis=0, mean" class = "sphx-glr-single-img"/><p>Plot the uncalibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_019.png" srcset="../../../_images/sphx_glr_phasorpy_io_019.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.817 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.116 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>
@@ -1182,6 +1215,7 @@ mypy: disable-error-code=”arg-type”</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iss-ifli">ISS IFLI</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simfcs-ref-and-r64">SimFCS REF and R64</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy-ome-tiff">PhasorPy OME-TIFF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-means">Other means</a></li>
 </ul>
   </nav></div>
 
