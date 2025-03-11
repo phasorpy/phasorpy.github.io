@@ -577,7 +577,7 @@ many file formats used in bio-imaging:</p>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_bh" title="phasorpy.io.signal_from_bh"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_bh()</span></code></a> - SimFCS B&amp;H</p></li>
 </ul>
 </li>
-<li><p>read phasor coordinates and lifetime images, as well as metadata from
+<li><p>read phasor coordinates, lifetime images, and metadata from
 specialized file formats:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#phasorpy.io.phasor_from_ometiff" title="phasorpy.io.phasor_from_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_ometiff()</span></code></a> - PhasorPy OME-TIFF</p></li>
@@ -622,7 +622,7 @@ For advanced or unsupported use cases, consider using these libraries directly.<
 <p>where <code class="docutils literal notranslate"><span class="pre">ext</span></code> indicates the file format and <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> are optional arguments
 passed to the underlying file reader library or used to select which data is
 returned. The returned <a class="reference external" href="https://docs.xarray.dev/en/stable/user-guide/data-structures.html">xarray.DataArray</a>
-contains an n-dimensional array with labeled coordinates, dimensions, and
+contains an N-dimensional array with labeled coordinates, dimensions, and
 attributes:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> or <code class="docutils literal notranslate"><span class="pre">values</span></code> (<em>array_like</em>)</p>
@@ -653,7 +653,7 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'Z'</span></code> : depth (OME)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'S'</span></code> : sample (color components or phasor coordinates)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'I'</span></code> : sequence (of images, frames, or planes)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'T'</span></code> : time  (OME)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'T'</span></code> : time (OME)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'C'</span></code> : channel (OME. Acquisition path or emission wavelength)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'A'</span></code> : angle (OME)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'P'</span></code> : phase (OME. In LSM, <code class="docutils literal notranslate"><span class="pre">'P'</span></code> maps to position)</p></li>
@@ -671,7 +671,7 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.lifetime_from_lif">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">lifetime_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.lifetime_from_lif" title="Link to this definition">#</a></dt>
-<dd><p>Return fluorescence lifetime image and metadata from Leica image file.</p>
+<dd><p>Return lifetime image and metadata from Leica image file.</p>
 <p>Leica image files may contain fluorescence lifetime images and metadata
 from the analysis of FLIM measurements.</p>
 <dl class="field-list simple">
@@ -730,11 +730,9 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_flimlabs_json">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.phasor_from_flimlabs_json" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates and metadata from FLIM LABS JSON phasor file.</p>
-<p>Some FLIM LABS JSON files contain uncalibrated phasor coordinates
+<p>FLIM LABS JSON files may contain calibrated phasor coordinates
 (possibly for multiple channels and harmonics) and metadata from
 digital frequency-domain measurements.</p>
-<p>The real and imaginary parts of the phasor coordinates are zero (not NaN)
-if the intensity is zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -784,16 +782,16 @@ FLIM LABS file header.</p></li>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_flimlabs_json</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;convallaria_2_1737113097_phasor_ch1.json&#39;</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
+<span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Convallaria_m2_1740751781_phasor_ch1.json&#39;</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">real</span><span class="o">.</span><span class="n">shape</span>
-<span class="go">(4, 256, 256)</span>
+<span class="go">(3, 256, 256)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;dims&#39;</span><span class="p">]</span>
 <span class="go">(&#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
-<span class="go">[1, 2, 3, 4]</span>
+<span class="go">[1, 2, 3]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-<span class="go">79.51</span>
+<span class="go">40.00</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -949,7 +947,9 @@ elements.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_ometiff">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.phasor_from_ometiff" title="Link to this definition">#</a></dt>
-<dd><p>Return phasor coordinates and metadata from PhasorPy OME-TIFF.</p>
+<dd><p>Return phasor coordinates and metadata from PhasorPy OME-TIFF file.</p>
+<p>PhasorPy OME-TIFF files contain phasor mean intensity, real and imaginary
+components, along with frequency and harmonic information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1088,8 +1088,9 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 <p>The OME-TIFF format is compatible with Bio-Formats and Fiji.</p>
 <p>By default, write phasor coordinates as single precision floating point
 values to separate image series.
-Write images larger than (1024, 1024) as (256, 256) tiles, datasets
-larger than 2 GB as BigTIFF, and datasets larger than 8 KB zlib-compressed.</p>
+Write images larger than (1024, 1024) pixels as (256, 256) tiles, datasets
+larger than 2 GB as BigTIFF, and datasets larger than 8 KB using
+zlib compression.</p>
 <p>This file format is experimental and might be incompatible with future
 versions of this library. It is intended for temporarily exchanging
 phasor coordinates with other software, not as a long-term storage
@@ -1203,7 +1204,7 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS B64 file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Stack of square-sized intensity images of type <code class="docutils literal notranslate"><span class="pre">int16</span></code>.</p>
+<dd class="field-even"><p>Intensity image of type <code class="docutils literal notranslate"><span class="pre">int16</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray.DataArray</p>
@@ -1237,16 +1238,15 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_bh">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_bh" title="Link to this definition">#</a></dt>
-<dd><p>Return image and metadata from SimFCS B&amp;H file.</p>
-<p>B&amp;H files contain time-domain fluorescence lifetime histogram data,
-acquired from Becker &amp; Hickl(r) TCSPC cards, or converted from other
-data sources. B&amp;H files contain no metadata.</p>
+<dd><p>Return TCSPC histogram and metadata from SimFCS B&amp;H file.</p>
+<p>B&amp;H files contain TCSPC histograms acquired from Becker &amp; Hickl
+cards, or converted from other data sources. B&amp;H files contain no metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS B&amp;H file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Time-domain fluorescence lifetime histogram with axes <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
+<dd class="field-even"><p>TCSPC histogram with ref:<cite>axes codes &lt;axes&gt;</cite> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
 shape <code class="docutils literal notranslate"><span class="pre">(256,</span> <span class="pre">256,</span> <span class="pre">256)</span></code>, and type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1276,16 +1276,15 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_bhz">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bhz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_bhz" title="Link to this definition">#</a></dt>
-<dd><p>Return image and metadata from SimFCS BHZ file.</p>
-<p>BHZ files contain time-domain fluorescence lifetime histogram data,
-acquired from Becker &amp; Hickl(r) TCSPC cards, or converted from other
-data sources. BHZ files contain no metadata.</p>
+<dd><p>Return TCSPC histogram and metadata from SimFCS BHZ file.</p>
+<p>BHZ files contain TCSPC histograms acquired from Becker &amp; Hickl
+cards, or converted from other data sources. BHZ files contain no metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS BHZ file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Time-domain fluorescence lifetime histogram with axes <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
+<dd class="field-even"><p>TCSPC histogram with ref:<cite>axes codes &lt;axes&gt;</cite> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
 shape <code class="docutils literal notranslate"><span class="pre">(256,</span> <span class="pre">256,</span> <span class="pre">256)</span></code>, and type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1315,9 +1314,9 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_fbd">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_fbd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_fbd" title="Link to this definition">#</a></dt>
-<dd><p>Return frequency-domain image and metadata from FLIMbox FBD file.</p>
-<p>FDB files contain encoded data from the FLIMbox device, which can be
-decoded to photon arrival windows, channels, and global times.
+<dd><p>Return phase histogram and metadata from FLIMbox FBD file.</p>
+<p>FDB files contain encoded cross-correlation phase histograms from
+digital frequency-domain measurements using a FLIMbox device.
 The encoding scheme depends on the FLIMbox device’s firmware.
 The FBD file format is undocumented.</p>
 <p>This function may fail to produce expected results when files use unknown
@@ -1336,12 +1335,12 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Frequency-domain image histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a>
-<code class="docutils literal notranslate"><span class="pre">'TCYXH'</span></code> and type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>:</p>
+<dd class="field-even"><p><p>Phase histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'TCYXH'</span></code> and
+type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: phases in radians.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: cross-correlation phases in radians.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">attrs['harmonic']</span></code>: harmonic contained in histogram.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['harmonic']</span></code>: harmonic contained in phase histogram.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_header']</span></code>: FBD binary header, if any.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_firmware']</span></code>: FLIMbox firmware settings, if any.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimbox_settings']</span></code>: Settings from FBS XML, if any.</p></li>
@@ -1381,16 +1380,16 @@ If &lt; 0, integrate time axis, else return specified frame.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_flif">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_flif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_flif" title="Link to this definition">#</a></dt>
-<dd><p>Return frequency-domain image and metadata from FlimFast FLIF file.</p>
-<p>FlimFast FLIF files contain camera images and metadata from
+<dd><p>Return phase images and metadata from FlimFast FLIF file.</p>
+<p>FlimFast FLIF files contain phase images and metadata from full-field,
 frequency-domain fluorescence lifetime measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of FlimFast FLIF file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Frequency-domain phase images with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'THYX'</span></code>
-and type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>:</p>
+<dd class="field-even"><p><p>Phase images with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'THYX'</span></code> and
+type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: phases in radians.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
@@ -1434,23 +1433,22 @@ and type <code class="docutils literal notranslate"><span class="pre">uint16</sp
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_flimlabs_json" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from FLIM LABS JSON imaging file.</p>
 <p>FLIM LABS JSON imaging files contain encoded, multi-channel TCSPC
-histogram images and metadata from digital frequency-domain measurements.</p>
+histograms and metadata from digital frequency-domain measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of FLIM LABS JSON imaging file to read.
 The file name usually contains the string “_imaging” or “_phasor”.</p></li>
 <li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – If None (default), return all channels, else return specified channel.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of image histogram array.
+<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
 Increase the bit-depth for high photon counts.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>TCSPC histogram image stack.
-A 3 or 4-dimensional array of type <cite>dtype</cite> in dimension order
-<code class="docutils literal notranslate"><span class="pre">'CYXH'</span></code>.</p>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'CYXH'</span></code> and
+type specified in <code class="docutils literal notranslate"><span class="pre">dtype</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: laser repetition frequency in MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimlabs_header']</span></code>: FLIM LABS file header.</p></li>
 </ul>
@@ -1473,7 +1471,7 @@ A 3 or 4-dimensional array of type <cite>dtype</cite> in dimension order
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_flimlabs_json</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;convallaria_2_1737113097_phasor_ch1.json&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Convallaria_m2_1740751781_phasor_ch1.json&#39;</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
 <span class="go">array(...)</span>
@@ -1484,7 +1482,7 @@ A 3 or 4-dimensional array of type <cite>dtype</cite> in dimension order
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array(...)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-<span class="go">79.51</span>
+<span class="go">40.00</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1492,16 +1490,16 @@ A 3 or 4-dimensional array of type <cite>dtype</cite> in dimension order
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_imspector_tiff">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_imspector_tiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_imspector_tiff" title="Link to this definition">#</a></dt>
-<dd><p>Return FLIM image stack and metadata from ImSpector TIFF file.</p>
+<dd><p>Return TCSPC histogram and metadata from ImSpector TIFF file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of ImSpector FLIM TIFF file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>TCSPC image stack.
-Usually, a 3-to-5-dimensional array of type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>.</p>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'HTZYX'</span></code> and
+type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 </ul>
 </p>
@@ -1542,9 +1540,7 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Leica image file.</p>
 <p>Leica image files may contain hyperspectral images and metadata from laser
-scanning microscopy measurements.
-Reading of TCSPC histograms from FLIM measurements is not supported
-because the compression scheme is patent-pending.</p>
+scanning microscopy measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1576,6 +1572,8 @@ Either <code class="docutils literal notranslate"><span class="pre">'λ'</span><
 <p class="rubric">Notes</p>
 <p>The implementation is based on the
 <a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
+<p>Reading of TCSPC histograms from FLIM measurements is not supported
+because the compression scheme is patent-pending.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lif</span><span class="p">(</span><span class="s1">&#39;ScanModesExamples.lif&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
@@ -1642,8 +1640,8 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_ptu">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_ptu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trimdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_ptu" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from PicoQuant PTU T3 mode file.</p>
-<p>PTU files contain time-correlated single-photon counting measurement data
-and instrumentation parameters.</p>
+<p>PTU files contain TCSPC measurement data and instrumentation parameters,
+which are decoded to a multi-dimensional TCSPC histogram.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1659,26 +1657,25 @@ If <code class="docutils literal notranslate"><span class="pre">slice.step=-1</s
 </ul>
 </p></li>
 <li><p><strong>trimdims</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default: 'TCH'</em>) – Axes to trim.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of image histogram array.
+<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
 Increase the bit depth to avoid overflows when integrating.</p></li>
 <li><p><strong>frame</strong> (<em>int</em><em>, </em><em>optional</em>) – If &lt; 0, integrate time axis, else return specified frame.
 Overrides <cite>selection</cite> for axis <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
 <li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – If &lt; 0, integrate channel axis, else return specified channel.
 Overrides <cite>selection</cite> for axis <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p></li>
-<li><p><strong>dtime</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Specifies number of bins in image histogram.
+<li><p><strong>dtime</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Specifies number of bins in TCSPC histogram.
 If 0 (default), return the number of bins in one period.
-If &lt; 0, integrate delay time axis (image mode only).
+If &lt; 0, integrate delay-time axis (image mode only).
 If &gt; 0, return up to specified bin.
 Overrides <cite>selection</cite> for axis <code class="docutils literal notranslate"><span class="pre">H</span></code>.</p></li>
 <li><p><strong>keepdims</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – If true (default), reduced axes are left as size-one dimension.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Decoded TTTR T3 records as up to 5-dimensional image array
-with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'TYXCH'</span></code> and type specified
-in <code class="docutils literal notranslate"><span class="pre">dtype</span></code>:</p>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'TYXCH'</span></code> and
+type specified in <code class="docutils literal notranslate"><span class="pre">dtype</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['ptu_tags']</span></code>: metadata read from PTU file.</p></li>
 </ul>
@@ -1720,7 +1717,7 @@ broadcastable to image data.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_sdt">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_sdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_sdt" title="Link to this definition">#</a></dt>
-<dd><p>Return time-resolved image and metadata from Becker &amp; Hickl SDT file.</p>
+<dd><p>Return TCSPC histogram and metadata from Becker &amp; Hickl SDT file.</p>
 <p>SDT files contain TCSPC measurement data and instrumentation parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1730,11 +1727,10 @@ broadcastable to image data.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Time-correlated single-photon counting image data with
-<a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'YXH'</span></code> and type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32</span></code>,
-or <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'YXH'</span></code> and
+type <code class="docutils literal notranslate"><span class="pre">uint16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint32</span></code>, or <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.</p></li>
 </ul>
 </p>
@@ -1770,16 +1766,15 @@ or <code class="docutils literal notranslate"><span class="pre">float32</span></
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_z64">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_z64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_z64" title="Link to this definition">#</a></dt>
-<dd><p>Return image and metadata from SimFCS Z64 file.</p>
-<p>Z64 files contain stacks of square images such as intensity volumes
-or time-domain fluorescence lifetime histograms acquired from
-Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
+<dd><p>Return image stack and metadata from SimFCS Z64 file.</p>
+<p>Z64 files commonly contain stacks of square images, such as intensity
+volumes or TCSPC histograms. Z64 files contain no metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS Z64 file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Single or stack of square-sized images of type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
+<dd class="field-even"><p>Image stack of type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray.DataArray</p>
@@ -1911,7 +1906,7 @@ Becker &amp; Hickl(r) TCSPC cards. Z64 files contain no metadata.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>

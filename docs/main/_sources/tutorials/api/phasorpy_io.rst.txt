@@ -24,16 +24,17 @@ File input/output
 Read and write phasor-related data from and to various file formats.
 
 The :py:mod:`phasorpy.io` module provides functions to read phasor
-coordinates, FLIM/TCSPC histograms, hyperspectral image stacks, lifetime
-images, and relevant metadata from various file formats used in bio-imaging.
+coordinates, TCSPC time-delay histograms, cross-correlation phase histograms,
+hyperspectral image stacks, lifetime images, and relevant metadata from
+various file formats used in bio-imaging.
 The module also includes functions to write phasor coordinates to OME-TIFF
 and SimFCS Referenced files.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Import required modules and functions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-40
+.. GENERATED FROM PYTHON SOURCE LINES 18-41
 
 .. code-block:: Python
 
@@ -67,17 +68,16 @@ Import required modules and functions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-50
+.. GENERATED FROM PYTHON SOURCE LINES 42-50
 
 Sample files
 ------------
 
-PhasorPy provides access to sample files in various formats shared publicly
-on Zenodo, Figshare, or GitHub.
-The files in these repositories are accessed using the
-:py:func:`phasorpy.datasets.fetch` function, which transparently downloads
-files if they were not already downloaded before. The function returns
-the path to the downloaded file:
+PhasorPy provides access to curated sample files in various formats
+that are shared publicly on Zenodo, Figshare, and GitHub repositories.
+The files can be accessed using the :py:func:`phasorpy.datasets.fetch`
+function, which transparently downloads files and caches them locally.
+The function returns the path to the downloaded file:
 
 .. GENERATED FROM PYTHON SOURCE LINES 50-56
 
@@ -104,10 +104,10 @@ the path to the downloaded file:
 
 .. GENERATED FROM PYTHON SOURCE LINES 57-59
 
-Consider sharing datasets with the `PhasorPy community on Zenodo
+Consider contributing datasets to the `PhasorPy Community on Zenodo
 <https://zenodo.org/communities/phasorpy/>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-78
+.. GENERATED FROM PYTHON SOURCE LINES 61-81
 
 Leica LIF and XLEF
 ------------------
@@ -120,14 +120,17 @@ PhasorPy currently supports reading hyperspectral images,
 phasor coordinates, and lifetime images from Leica image files via the
 `liffile <https://github.com/cgohlke/liffile/>`_ library.
 
-LIF-FLIM files that were analyzed with the LAS X software contain
-calculated phasor coordinates, lifetime images, and relevant metadata.
-The :py:func:`phasorpy.io.phasor_from_lif` and
-:py:func:`phasorpy.io.lifetime_from_lif` functions are used to read those
-data from the `FLIM_testdata
-<https://dx.doi.org/10.6084/m9.figshare.22336594.v1>`_ dataset:
+LIF FLIM
+........
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-86
+Leica image files, acquired on a FALCON microscope and analyzed with LAS X
+software, contain calculated phasor coordinates, lifetime images, and
+relevant metadata. The :py:func:`phasorpy.io.phasor_from_lif` and
+:py:func:`phasorpy.io.lifetime_from_lif` functions are used to read those
+data from the `FLIM_testdata dataset
+<https://dx.doi.org/10.6084/m9.figshare.22336594.v1>`_:
+
+.. GENERATED FROM PYTHON SOURCE LINES 81-90
 
 .. code-block:: Python
 
@@ -135,6 +138,7 @@ data from the `FLIM_testdata
     from phasorpy.io import lifetime_from_lif, phasor_from_lif
 
     filename = 'FLIM_testdata.lif'
+
     mean, real, imag, attrs = phasor_from_lif(fetch(filename))
 
     plot_phasor_image(mean, real, imag, title=filename)
@@ -151,14 +155,14 @@ data from the `FLIM_testdata
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-91
+.. GENERATED FROM PYTHON SOURCE LINES 91-95
 
 The returned mean intensity and uncalibrated phasor coordinates are
 NumPy arrays. ``attrs`` is a dictionary holding metadata, including the
 auto-reference phase (in degrees) and modulation for all image channels,
 as well as the fundamental laser frequency (in MHz):
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-98
+.. GENERATED FROM PYTHON SOURCE LINES 95-102
 
 .. code-block:: Python
 
@@ -176,11 +180,11 @@ as well as the fundamental laser frequency (in MHz):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-100
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 These metadata are used to calibrate and threshold the phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-115
+.. GENERATED FROM PYTHON SOURCE LINES 104-119
 
 .. code-block:: Python
 
@@ -211,12 +215,12 @@ These metadata are used to calibrate and threshold the phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-118
+.. GENERATED FROM PYTHON SOURCE LINES 120-122
 
 Apparent single lifetimes are calculated from the calibrated phasor
 coordinates and compared to the lifetimes calculated by LAS X software:
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-143
+.. GENERATED FROM PYTHON SOURCE LINES 122-147
 
 .. code-block:: Python
 
@@ -237,7 +241,7 @@ coordinates and compared to the lifetimes calculated by LAS X software:
         alpha=0.66,
         title='Lifetime histograms',
         xlabel='Lifetime (ns)',
-        ylabel='Counts',
+        ylabel='Count',
         labels=[
             'Phase lifetime',
             'Modulation lifetime',
@@ -257,28 +261,110 @@ coordinates and compared to the lifetimes calculated by LAS X software:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-148
+.. GENERATED FROM PYTHON SOURCE LINES 148-152
 
 The apparent single lifetimes from phase and modulation do not exactly match.
 Most likely there is more than one lifetime component in the sample.
 This could also explain the difference from the lifetimes fitted by the
 LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-155
+.. GENERATED FROM PYTHON SOURCE LINES 154-158
 
 .. note::
-  FLIM/TCSPC histograms cannot currently be read directly from
-  LIF-FLIM files since the storage scheme for those data is undocumented
-  or patent-pending. However, TTTR records can be exported from LIF-FLIM
-  files to PicoQuant PTU format by the LAS X software.
+  Reading of FLIM/TCSPC histograms from LIF-FLIM files is currently not
+  supported because the storage scheme is undocumented or patent-pending.
+  However, TTTR records can be exported to PTU format using LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-160
+.. GENERATED FROM PYTHON SOURCE LINES 160-166
 
-.. todo::
-  No public, hyperspectral dataset in LIF format is currently available
-  for demonstrating the :py:func:`phasorpy.io.signal_from_lif` function.
+LIF hyperspectral
+.................
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-179
+The :py:func:`phasorpy.io.signal_from_lif` function is used to read an
+image stack from the `Convallaria hyperspectral dataset
+<https://zenodo.org/records/14976703>`_ acquired at 29 emission wavelengths:
+
+.. GENERATED FROM PYTHON SOURCE LINES 166-175
+
+.. code-block:: Python
+
+
+    from phasorpy.io import signal_from_lif
+
+    filename = 'Convalaria_LambdaScan.lif'
+
+    signal = signal_from_lif(fetch(filename))
+
+    plot_signal_image(signal, title=filename, vmin=0, xlabel='wavelength (nm)')
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_004.png
+   :alt: Convalaria_LambdaScan.lif, axis=0 'C', mean
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_004.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 176-178
+
+Emission wavelengths (in nm) are available in the coordinates of the
+channel axis:
+
+.. GENERATED FROM PYTHON SOURCE LINES 178-181
+
+.. code-block:: Python
+
+
+    print(signal.coords['C'].values.astype(int))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    [420 430 440 450 460 470 480 489 500 510 520 530 540 550 560 570 580 590
+     600 610 620 630 640 650 660 670 680 690 700]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 182-183
+
+Plot the first harmonic phasor coordinates after applying a median filter:
+
+.. GENERATED FROM PYTHON SOURCE LINES 183-192
+
+.. code-block:: Python
+
+
+    plot_phasor(
+        *phasor_threshold(
+            *phasor_filter_median(*phasor_from_signal(signal)), mean_min=1
+        )[1:],
+        allquadrants=True,
+        title=filename,
+    )
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_005.png
+   :alt: Convalaria_LambdaScan.lif
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_005.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 193-210
 
 PicoQuant PTU
 -------------
@@ -292,13 +378,13 @@ imaging mode via the `ptufile <https://github.com/cgohlke/ptufile/>`_
 library.
 
 The :py:func:`phasorpy.io.signal_from_ptu` function is used to read
-the TCSPC histogram from a PTU file exported from the `FLIM_testdata
-<https://dx.doi.org/10.6084/m9.figshare.22336594.v1>`_ dataset with the
+the TCSPC histogram from a PTU file exported from the `FLIM_testdata dataset
+<https://dx.doi.org/10.6084/m9.figshare.22336594.v1>`_ with the
 Leica LAS X software.
-The function by default returns a 5-dimensional image with dimension order
+By default, the function returns a 5-dimensional image with dimension order
 TYXCH. Channel and frames are specified to reduce the dimensionality:
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-187
+.. GENERATED FROM PYTHON SOURCE LINES 210-219
 
 .. code-block:: Python
 
@@ -306,23 +392,24 @@ TYXCH. Channel and frames are specified to reduce the dimensionality:
     from phasorpy.io import signal_from_ptu
 
     filename = 'FLIM_testdata.lif.ptu'
+
     signal = signal_from_ptu(fetch(filename), channel=0, frame=0, keepdims=False)
 
-    plot_signal_image(signal, title=filename)
+    plot_signal_image(signal, title=filename, xlabel='delay-time (ns)')
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_004.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_006.png
    :alt: FLIM_testdata.lif.ptu, axis=2 'H', mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_004.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-201
+.. GENERATED FROM PYTHON SOURCE LINES 220-233
 
 The TCSPC histogram contains more photons than the phasor intensity image
 stored in the LIF-FLIM file. The LAS X software likely applies a filter to
@@ -338,7 +425,7 @@ The reference phase and modulation previously loaded from the LIF-FLIM file
 are again used to calibrate the phasor coordinates. The same intensity
 threshold is applied:
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-221
+.. GENERATED FROM PYTHON SOURCE LINES 233-253
 
 .. code-block:: Python
 
@@ -365,21 +452,21 @@ threshold is applied:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_005.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_007.png
    :alt: FLIM_testdata.lif.ptu (19.505 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_005.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_007.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-224
+.. GENERATED FROM PYTHON SOURCE LINES 254-256
 
 Compare the apparent single lifetimes calculated from the PTU file with the
 lifetimes previously read from the LIF-FLIM file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-237
+.. GENERATED FROM PYTHON SOURCE LINES 256-269
 
 .. code-block:: Python
 
@@ -392,23 +479,23 @@ lifetimes previously read from the LIF-FLIM file:
         alpha=0.66,
         title='Lifetime histograms',
         xlabel='Lifetime (ns)',
-        ylabel='Counts',
+        ylabel='Count',
         labels=['Phase lifetime from PTU', 'Phase lifetime from LIF'],
     )
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_006.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_008.png
    :alt: Lifetime histograms
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_006.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_008.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 238-250
+.. GENERATED FROM PYTHON SOURCE LINES 270-282
 
 Zeiss CZI
 ---------
@@ -423,7 +510,7 @@ the `pylibCZIrw  <https://github.com/ZEISS/pylibczirw/>`_ or
 `BioIO <https://github.com/bioio-devs/bioio>`_ libraries. Another option is
 to export CZI files as LSM using the ZEN software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-264
+.. GENERATED FROM PYTHON SOURCE LINES 284-296
 
 Zeiss LSM
 ---------
@@ -438,7 +525,7 @@ via the `tifffile <https://github.com/cgohlke/tifffile/>`_ library.
 The :py:func:`phasorpy.io.signal_from_lsm` function is used to read
 a hyperspectral dataset with 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 264-272
+.. GENERATED FROM PYTHON SOURCE LINES 296-305
 
 .. code-block:: Python
 
@@ -446,32 +533,29 @@ a hyperspectral dataset with 30 emission wavelengths:
     from phasorpy.io import signal_from_lsm
 
     filename = 'paramecium.lsm'
+
     signal = signal_from_lsm(fetch('paramecium.lsm'))
 
-    plot_signal_image(signal, title=filename)
+    plot_signal_image(signal, title=filename, xlabel='wavelength (nm)')
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_007.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_009.png
    :alt: paramecium.lsm, axis=0 'C', mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_007.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_009.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-279
-
-Note that the signal is not well sampled and shows discontinuity.
-It may not be accurately represented by the phasor coordinates calculated
-via DFT.
+.. GENERATED FROM PYTHON SOURCE LINES 306-308
 
 Emission wavelengths (in nm) are available in the coordinates of the
 channel axis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 279-282
+.. GENERATED FROM PYTHON SOURCE LINES 308-311
 
 .. code-block:: Python
 
@@ -492,11 +576,11 @@ channel axis:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 312-313
 
-Plot the first harmonic phasor coordinates after applying a median filter.
+Plot the first harmonic phasor coordinates after applying a median filter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-293
+.. GENERATED FROM PYTHON SOURCE LINES 313-322
 
 .. code-block:: Python
 
@@ -512,16 +596,16 @@ Plot the first harmonic phasor coordinates after applying a median filter.
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_008.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_010.png
    :alt: paramecium.lsm
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_008.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_010.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 294-306
+.. GENERATED FROM PYTHON SOURCE LINES 323-335
 
 Becker & Hickl SDT
 ------------------
@@ -536,7 +620,7 @@ PhasorPy supports reading TCSPC histograms from FBD files via the
 The :py:func:`phasorpy.io.signal_from_sdt` function is used to read a
 TCSPC histogram from a SDT file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-314
+.. GENERATED FROM PYTHON SOURCE LINES 335-344
 
 .. code-block:: Python
 
@@ -544,27 +628,28 @@ TCSPC histogram from a SDT file:
     from phasorpy.io import signal_from_sdt
 
     filename = 'tcspc.sdt'
+
     signal = signal_from_sdt(fetch(filename))
 
-    plot_signal_image(signal, title=filename)
+    plot_signal_image(signal, title=filename, xlabel='delay-time (ns)')
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_009.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_011.png
    :alt: tcspc.sdt, axis=2 'H', mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_009.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_011.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-316
+.. GENERATED FROM PYTHON SOURCE LINES 345-346
 
 Plot the uncalibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-326
+.. GENERATED FROM PYTHON SOURCE LINES 346-356
 
 .. code-block:: Python
 
@@ -581,44 +666,46 @@ Plot the uncalibrated phasor coordinates:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_010.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_012.png
    :alt: tcspc.sdt (80.0 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_010.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_012.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 327-330
+.. GENERATED FROM PYTHON SOURCE LINES 357-360
 
 .. todo::
   No accompanying IRF dataset is available to calibrate the phasor
   coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 332-351
+.. GENERATED FROM PYTHON SOURCE LINES 362-383
 
 FLIMbox FBD
 -----------
 
 FLIMbox data files, FBD, are written by SimFCS and ISS software.
-They contain encoded TCSPC lifetime histograms from digital frequency-domain
-measurements acquired with the FLIMbox device. Newer file versions
-contain metadata. The file format is undocumented, not standardized,
-and files are frequently found corrupted. It is recommended to export
-FLIMbox data to another format from the software used to acquire the data.
+They contain encoded cross-correlation phase histograms from digital
+frequency-domain measurements acquired with a FLIMbox device.
+Newer file versions also contain metadata.
+
+The FBD file format is undocumented, not standardized, and files are
+frequently found corrupted. It is recommended to export FLIMbox data to
+another format from the software used to acquire the data.
 
 PhasorPy supports reading some FLIMbox FBD files via the
 `lfdfiles <https://github.com/cgohlke/lfdfiles/>`_ library.
 
 The :py:func:`phasorpy.io.signal_from_fbd` function is used to read
-a TCSPC lifetime histograms from the
-`Convallaria <https://zenodo.org/records/14026720>`_ dataset, which was
+a phase histograms from the
+`Convallaria FBD dataset <https://zenodo.org/records/14026720>`_, which was
 acquired at the second harmonic. The dataset is a time series of two
 channels. Since the photon count is low and the second channel empty,
 only the first channel is read and the time-axis integrated:
 
-.. GENERATED FROM PYTHON SOURCE LINES 351-362
+.. GENERATED FROM PYTHON SOURCE LINES 383-397
 
 .. code-block:: Python
 
@@ -626,19 +713,22 @@ only the first channel is read and the time-axis integrated:
     from phasorpy.io import signal_from_fbd
 
     filename = 'Convallaria_$EI0S.fbd'
+
     signal = signal_from_fbd(fetch(filename), frame=-1, channel=0)
 
     frequency = signal.attrs['frequency'] * signal.attrs['harmonic']
     print(signal.sizes)
 
-    plot_signal_image(signal, title=filename)
+    plot_signal_image(
+        signal, title=filename, xlabel='cross-correlation phase (rad)'
+    )
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_011.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_013.png
    :alt: Convallaria_$EI0S.fbd, axis=4 'H', mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_011.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_013.png
    :class: sphx-glr-single-img
 
 
@@ -651,42 +741,47 @@ only the first channel is read and the time-axis integrated:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 363-365
+.. GENERATED FROM PYTHON SOURCE LINES 398-400
 
 The measurement of a solution of Rhodamine 110 with known lifetime of 4 ns
 is used as a calibration reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 365-374
+.. GENERATED FROM PYTHON SOURCE LINES 400-414
 
 .. code-block:: Python
 
 
     reference_filename = 'Calibration_Rhodamine110_$EI0S.fbd'
+
     reference_signal = signal_from_fbd(
         fetch(reference_filename), frame=-1, channel=0
     )
     reference_lifetime = 4.0
 
-    plot_signal_image(reference_signal, title=reference_filename)
+    plot_signal_image(
+        reference_signal,
+        title=reference_filename,
+        xlabel='cross-correlation phase (rad)',
+    )
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_012.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_014.png
    :alt: Calibration_Rhodamine110_$EI0S.fbd, axis=4 'H', mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_012.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_014.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-377
+.. GENERATED FROM PYTHON SOURCE LINES 415-417
 
 Phasor coordinates are calculated from the signal and calibrated with
 the reference signal:
 
-.. GENERATED FROM PYTHON SOURCE LINES 377-396
+.. GENERATED FROM PYTHON SOURCE LINES 417-436
 
 .. code-block:: Python
 
@@ -712,31 +807,189 @@ the reference signal:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_013.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_015.png
    :alt: Convallaria_$EI0S.fbd (80.0 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_013.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_015.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-409
+.. GENERATED FROM PYTHON SOURCE LINES 437-448
 
 FLIM LABS JSON
 --------------
 
 FLIM LABS JSON files are written by FLIM Studio software.
-They contain multi-channel TCSPC histogram images, optional multi-harmonic
-calibrated phasor coordinates, and metadata from digital frequency-domain
+They contain multi-channel TCSPC histogram images, optional calibrated
+multi-harmonic phasor coordinates, and metadata from digital frequency-domain
 measurements.
 
-.. todo::
-  The FLIM LABS JSON datasets currently available are not suitable to
-  demonstrate the :py:func:`phasorpy.io.signal_from_flimlabs_json` and
-  :py:func:`phasorpy.io.phasor_from_flimlabs_json` functions.
+The :py:func:`phasorpy.io.signal_from_flimlabs_json` function is used to
+read a TCSPC histogram from the `Convallaria FLIM LABS dataset
+<https://zenodo.org/records/15007900>`_, which contains a single channel:
 
-.. GENERATED FROM PYTHON SOURCE LINES 411-427
+.. GENERATED FROM PYTHON SOURCE LINES 448-458
+
+.. code-block:: Python
+
+
+    from phasorpy.io import signal_from_flimlabs_json
+
+    channel = 0
+    filename = 'Convallaria_m2_1740751781_phasor_ch1.json'
+
+    signal = signal_from_flimlabs_json(fetch(filename), channel=channel)
+
+    plot_signal_image(signal, title=filename, xlabel='delay-time (ns)')
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_016.png
+   :alt: Convallaria_m2_1740751781_phasor_ch1.json, axis=2 'H', mean
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_016.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 459-463
+
+Phasor coordinates are calculated from the TCSPC histogram at three
+harmonics and calibrated using the metadata in ``signal.attrs`` and the
+TCSPC histogram from the measurement of a Fluorescein solution of known
+lifetime:
+
+.. GENERATED FROM PYTHON SOURCE LINES 463-489
+
+.. code-block:: Python
+
+
+    harmonic = [1, 2, 3]
+    frequency = signal.attrs['frequency']
+    reference_lifetime = signal.attrs['flimlabs_header']['tau_ns']
+
+    mean, real, imag = phasor_from_signal(signal, harmonic=harmonic)
+
+    reference_mean, reference_real, reference_imag = phasor_from_signal(
+        signal_from_flimlabs_json(
+            fetch('Fluorescein_Calibration_m2_1740751189_imaging.json'),
+            channel=channel,
+        ),
+        harmonic=harmonic,
+    )
+
+    real, imag = phasor_calibrate(
+        real,
+        imag,
+        reference_mean,
+        reference_real,
+        reference_imag,
+        frequency,
+        reference_lifetime,
+        harmonic=harmonic,
+    )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 490-491
+
+Plot the second harmonic phasor coordinates:
+
+.. GENERATED FROM PYTHON SOURCE LINES 491-500
+
+.. code-block:: Python
+
+
+    plot_phasor(
+        real[1],
+        imag[1],
+        frequency=frequency * 2,
+        title=f'{filename} ({frequency * 2:.1f} MHz)',
+        cmin=10,
+    )
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_017.png
+   :alt: Convallaria_m2_1740751781_phasor_ch1.json (80.0 MHz)
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_017.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 501-504
+
+Newer versions of the FLIM LABS JSON files may also contain calibrated
+phasor coordinates, possibly at multiple harmonics, which can be read
+using the :py:func:`phasorpy.io.phasor_from_flimlabs_json` function:
+
+.. GENERATED FROM PYTHON SOURCE LINES 504-516
+
+.. code-block:: Python
+
+
+    from phasorpy.io import phasor_from_flimlabs_json
+
+    mean_fromfile, real_fromfile, imag_fromfile, attrs = phasor_from_flimlabs_json(
+        fetch(filename), channel=channel, harmonic='all'
+    )
+
+    assert attrs['harmonic'] == [1, 2, 3]
+    assert_allclose(mean, mean_fromfile, atol=1e-3)
+    assert_allclose(real, real_fromfile, atol=1e-3, equal_nan=True)
+    assert_allclose(imag, imag_fromfile, atol=1e-3, equal_nan=True)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 517-519
+
+The reference phase, modulation, and lifetime used to calibrate the phasor
+coordinates may also be found in an accompanying JSON file:
+
+.. GENERATED FROM PYTHON SOURCE LINES 519-534
+
+.. code-block:: Python
+
+
+    import json
+
+    with open(
+        fetch('Fluorescein_Calibration_m2_1740751189_imaging_calibration.json'),
+        'rb',
+    ) as fh:
+        attrs = json.load(fh)
+
+    calibration = numpy.asarray(attrs['calibrations'][channel])
+    reference_phase = -calibration[:, 0, None, None]
+    reference_modulation = 1 / calibration[:, 1, None, None]
+    reference_lifetime = attrs['tau_ns']
+    frequency = attrs['frequency_mhz']
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 535-550
 
 ISS IFLI
 --------
@@ -752,10 +1005,9 @@ PhasorPy supports reading ISS IFLI files via the
 
 The :py:func:`phasorpy.io.phasor_from_ifli` function is used to read
 calibrated phasor coordinates from a measurement of mouse liver fed with
-Western diet. The second channel and the first three harmonics are
-selected:
+Western diet. Select the second channel and first three harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-437
+.. GENERATED FROM PYTHON SOURCE LINES 550-563
 
 .. code-block:: Python
 
@@ -763,8 +1015,11 @@ selected:
     from phasorpy.io import phasor_from_ifli
 
     filename = 'NADHandSHG.ifli'
+
     mean, real, imag, attrs = phasor_from_ifli(
-        fetch(filename), channel=1, harmonic='all'
+        fetch(filename),
+        harmonic='all',
+        channel=1,  # NADH channel
     )
 
     plot_phasor_image(mean, real, imag, title=filename)
@@ -772,27 +1027,29 @@ selected:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_014.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
    :alt: NADHandSHG.ifli, mean, G, real, S, imag
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_014.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-440
+.. GENERATED FROM PYTHON SOURCE LINES 564-566
 
 The first channel in the file contains an SHG image with phasor coordinates
 about zero:
 
-.. GENERATED FROM PYTHON SOURCE LINES 440-446
+.. GENERATED FROM PYTHON SOURCE LINES 566-574
 
 .. code-block:: Python
 
 
     assert (
-        phasor_from_ifli(fetch(filename), channel=0, harmonic='all')[1].mean()
+        phasor_from_ifli(
+            fetch(filename), harmonic='all', channel=0  # SHG channel
+        )[1].mean()
         < 1e-2
     )
 
@@ -803,13 +1060,13 @@ about zero:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 447-450
+.. GENERATED FROM PYTHON SOURCE LINES 575-578
 
 The ``attrs`` dictionary holds metadata including the fundamental laser
 frequency, the harmonics in the phasor coordinates, and the reference phasor
 coordinates used for calibration:
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-456
+.. GENERATED FROM PYTHON SOURCE LINES 578-584
 
 .. code-block:: Python
 
@@ -826,11 +1083,11 @@ coordinates used for calibration:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 457-458
+.. GENERATED FROM PYTHON SOURCE LINES 585-586
 
 Plot the first harmonic phasor coordinates after applying a median filter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 458-466
+.. GENERATED FROM PYTHON SOURCE LINES 586-594
 
 .. code-block:: Python
 
@@ -845,22 +1102,22 @@ Plot the first harmonic phasor coordinates after applying a median filter:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_015.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
    :alt: NADHandSHG.ifli (79.99 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_015.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 467-470
+.. GENERATED FROM PYTHON SOURCE LINES 595-598
 
 Three main lifetime components are expected in the sample:
 free NADH (~0.4 ns), bound NADH (3.4 ns) and a long lifetime species (~8 ns).
 It appears the calibration is off in this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-486
+.. GENERATED FROM PYTHON SOURCE LINES 600-614
 
 SimFCS REF and R64
 ------------------
@@ -875,9 +1132,9 @@ PhasorPy supports reading and writing SimFCS Referenced files via the
 
 The :py:func:`phasorpy.io.phasor_from_simfcs_referenced` function is used
 to read calibrated phasor coordinates from a REF file
-from the `LFD workshop <https://zenodo.org/records/8411056>`_ dataset:
+from the `LFD workshop dataset <https://zenodo.org/records/8411056>`_:
 
-.. GENERATED FROM PYTHON SOURCE LINES 486-496
+.. GENERATED FROM PYTHON SOURCE LINES 614-625
 
 .. code-block:: Python
 
@@ -885,6 +1142,7 @@ from the `LFD workshop <https://zenodo.org/records/8411056>`_ dataset:
     from phasorpy.io import phasor_from_simfcs_referenced
 
     filename = 'capillaries1001.ref'
+
     mean, real, imag, attrs = phasor_from_simfcs_referenced(
         fetch(filename), harmonic='all'
     )
@@ -894,22 +1152,22 @@ from the `LFD workshop <https://zenodo.org/records/8411056>`_ dataset:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_016.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_020.png
    :alt: capillaries1001.ref, mean, G, real, S, imag
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_016.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_020.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 497-500
+.. GENERATED FROM PYTHON SOURCE LINES 626-629
 
 Plot the first harmonic phasor coordinates after applying a median filter.
-SimFCS Referenced files do not contain metadata. The frequency and harmonics
-must be known by the user:
+Since SimFCS Referenced files do not contain metadata, the frequency and
+harmonics must be known by the user:
 
-.. GENERATED FROM PYTHON SOURCE LINES 500-515
+.. GENERATED FROM PYTHON SOURCE LINES 629-644
 
 .. code-block:: Python
 
@@ -931,16 +1189,16 @@ must be known by the user:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_017.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_021.png
    :alt: capillaries1001.ref (80.00 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_017.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_021.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 516-522
+.. GENERATED FROM PYTHON SOURCE LINES 645-651
 
 The :py:func:`phasorpy.io.phasor_to_simfcs_referenced` function is used
 to write calibrated phasor coordinates to R64 files in a temporary directory.
@@ -949,7 +1207,7 @@ chunked to square-sized images and saved to separate files.
 Images or chunks with less than two dimensions or smaller than square size
 are padded with NaN values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-543
+.. GENERATED FROM PYTHON SOURCE LINES 651-672
 
 .. code-block:: Python
 
@@ -958,13 +1216,13 @@ are padded with NaN values:
 
     with TemporaryDirectory() as tmpdir:
 
-        fname = os.path.join(tmpdir, 'capillaries1001.r64')
-        phasor_to_simfcs_referenced(fname, mean, real, imag, size=160)
+        filename = os.path.join(tmpdir, 'capillaries1001.r64')
+        phasor_to_simfcs_referenced(filename, mean, real, imag, size=160)
 
         # print file names
         filenames = sorted(os.listdir(tmpdir))
-        for fname in filenames:
-            print(fname)
+        for filename in filenames:
+            print(filename)
 
         # verify the first harmonic phasor coordinates in the last file
         assert_allclose(
@@ -990,7 +1248,7 @@ are padded with NaN values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 544-564
+.. GENERATED FROM PYTHON SOURCE LINES 673-693
 
 PhasorPy OME-TIFF
 -----------------
@@ -1007,13 +1265,13 @@ and select metadata.
 
 PhasorPy OME-TIFF files are intended for temporarily exchanging phasor
 coordinates with other software, not as a long-term storage solution.
-It is best practice to archive the original data files in the native format.
+Always preserve original data files in their native formats.
 
 The :py:func:`phasorpy.io.phasor_to_ometiff` and
 :py:func:`phasorpy.io.phasor_from_ometiff` functions are used to write and
 read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:
 
-.. GENERATED FROM PYTHON SOURCE LINES 564-587
+.. GENERATED FROM PYTHON SOURCE LINES 693-716
 
 .. code-block:: Python
 
@@ -1047,15 +1305,15 @@ read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 588-602
+.. GENERATED FROM PYTHON SOURCE LINES 717-731
 
-Other means
------------
+Alternative import methods
+--------------------------
 
-While PhasorPy provides many functions to read phasor related data and
+While PhasorPy provides many functions to read phasor-related data and
 metadata from file formats commonly used in the field, it is by no means
 required to use those functions.
-Instead, any other means that yields image stacks in numpy-array compatible
+Instead, any other means that yields image stacks in NumPy array compatible
 form can be used (for example) for advanced use cases, or when a file
 format is not supported by PhasorPy.
 
@@ -1064,7 +1322,7 @@ TIFF files.
 The `tifffile <https://github.com/cgohlke/tifffile/>`_ library is used to
 read a TCSPC histogram exported to a TIFF file by ImSpector software:
 
-.. GENERATED FROM PYTHON SOURCE LINES 602-609
+.. GENERATED FROM PYTHON SOURCE LINES 731-738
 
 .. code-block:: Python
 
@@ -1082,39 +1340,39 @@ read a TCSPC histogram exported to a TIFF file by ImSpector software:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 610-614
+.. GENERATED FROM PYTHON SOURCE LINES 739-743
 
 Since the image stack array contains no domain-specific metadata, the
 fundamental frequency and the axis over which to calculate phasor
 coordinates must be known. In this case, the TCSPC histogram bins are in
 the first array dimension:
 
-.. GENERATED FROM PYTHON SOURCE LINES 614-619
+.. GENERATED FROM PYTHON SOURCE LINES 743-748
 
 .. code-block:: Python
 
 
-    plot_signal_image(image_stack, axis=0, title=filename)
+    plot_signal_image(image_stack, axis=0, title=filename, xlabel='index')
 
     mean, real, imag = phasor_from_signal(image_stack, axis=0)
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_022.png
    :alt: Embryo.tif, axis=0, mean
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_018.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_022.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 620-621
+.. GENERATED FROM PYTHON SOURCE LINES 749-750
 
 Plot the uncalibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 621-624
+.. GENERATED FROM PYTHON SOURCE LINES 750-753
 
 .. code-block:: Python
 
@@ -1124,16 +1382,16 @@ Plot the uncalibrated phasor coordinates:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_io_023.png
    :alt: Embryo.tif
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_019.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_io_023.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 625-628
+.. GENERATED FROM PYTHON SOURCE LINES 754-757
 
 sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1142,7 +1400,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.439 seconds)
+   **Total running time of the script:** (0 minutes 17.389 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_io.py:
