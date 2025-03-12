@@ -739,6 +739,42 @@ dimension names, else the last axis (-1).</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy._utils.parse_skip_axis">
+<span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">parse_skip_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/_utils/#parse_skip_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.parse_skip_axis" title="Link to this definition">#</a></dt>
+<dd><p>Return axes to skip and not to skip.</p>
+<p>This helper function is used to validate and parse <cite>skip_axis</cite>
+parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes to skip. If None, no axes are skipped.</p></li>
+<li><p><strong>ndim</strong> (<em>int</em>) – Dimensionality of array in which to skip axes.</p></li>
+<li><p><strong>prepend_axis</strong> (<em>bool</em><em>, </em><em>optional</em>) – Prepend one dimension and include in <cite>skip_axis</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>skip_axis</strong> (<em>tuple of int</em>) – Ordered, positive values of <cite>skip_axis</cite>.</p></li>
+<li><p><strong>other_axis</strong> (<em>tuple of int</em>) – Axes indices not included in <cite>skip_axis</cite>.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>IndexError</strong> – If any <cite>skip_axis</cite> value is out of bounds of <cite>ndim</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_skip_axis</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">((1, 3), (0, 2, 4))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_skip_axis</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">5</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">((0, 2, 4), (1, 3, 5))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy._utils.phasor_from_polar_scalar">
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">phasor_from_polar_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/_utils/#phasor_from_polar_scalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.phasor_from_polar_scalar" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor from scalar polar coordinates.</p>
@@ -894,6 +930,7 @@ dimension names, else the last axis (-1).</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.parse_harmonic"><code class="docutils literal notranslate"><span class="pre">parse_harmonic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.parse_kwargs"><code class="docutils literal notranslate"><span class="pre">parse_kwargs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.parse_signal_axis"><code class="docutils literal notranslate"><span class="pre">parse_signal_axis()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.parse_skip_axis"><code class="docutils literal notranslate"><span class="pre">parse_skip_axis()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.phasor_from_polar_scalar"><code class="docutils literal notranslate"><span class="pre">phasor_from_polar_scalar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.phasor_to_polar_scalar"><code class="docutils literal notranslate"><span class="pre">phasor_to_polar_scalar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy._utils.scale_matrix"><code class="docutils literal notranslate"><span class="pre">scale_matrix()</span></code></a></li>
