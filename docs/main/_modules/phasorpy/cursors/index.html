@@ -829,15 +829,15 @@
 <span class="sd">    imag : array_like</span>
 <span class="sd">        Imaginary component of phasor coordinates.</span>
 <span class="sd">    phase_min : array_like, shape (n,)</span>
-<span class="sd">        Minimum of angular range of cursors in radians.</span>
-<span class="sd">        Values should be between -pi and pi.</span>
+<span class="sd">        Lower bound of angular range of cursors in radians.</span>
+<span class="sd">        Values should be in range [-pi, pi].</span>
 <span class="sd">    phase_max : array_like, shape (n,)</span>
-<span class="sd">        Maximum of angular range of cursors in radians.</span>
-<span class="sd">        Values should be between -pi and pi.</span>
+<span class="sd">        Upper bound of angular range of cursors in radians.</span>
+<span class="sd">        Values should be in range [-pi, pi].</span>
 <span class="sd">    modulation_min : array_like, shape (n,)</span>
-<span class="sd">        Minimum of radial range of cursors.</span>
+<span class="sd">        Lower bound of radial range of cursors.</span>
 <span class="sd">    modulation_max : array_like, shape (n,)</span>
-<span class="sd">        Maximum of radial range of cursors.</span>
+<span class="sd">        Upper bound of radial range of cursors.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -900,7 +900,7 @@
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_min</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">phase_max</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, &#39;</span>
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">modulation_min</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1">, or </span><span class="si">{</span><span class="n">modulation_max</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> &gt; 1&#39;</span>
         <span class="p">)</span>
-    <span class="c1"># TODO: check if angles are between -pi and pi</span>
+    <span class="c1"># TODO: check if angles are in range [-pi and pi]</span>
 
     <span class="n">moveaxis</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span>
@@ -947,7 +947,7 @@
 <span class="sd">        Maximum value to normalize `intensity`.</span>
 <span class="sd">        If None, the maximum value of `intensity` is used.</span>
 <span class="sd">    colors : array_like, optional, shape (N, 3)</span>
-<span class="sd">        Colors assigned to each cursor.</span>
+<span class="sd">        RGB colors assigned to each cursor.</span>
 <span class="sd">        The last dimension contains the normalized RGB floating point values.</span>
 <span class="sd">        The default is :py:data:`phasorpy.color.CATEGORICAL`.</span>
 
@@ -1004,7 +1004,7 @@
     <span class="n">shape</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">masks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span>
 
     <span class="k">if</span> <span class="n">intensity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># normalize intensity to range 0..1</span>
+        <span class="c1"># normalize intensity to range [0, 1]</span>
         <span class="n">intensity</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="n">intensity</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
