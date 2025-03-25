@@ -955,14 +955,117 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-472
+.. GENERATED FROM PYTHON SOURCE LINES 468-474
+
+Find clusters
+-------------
+
+Finding the clusters may be automatically done by using
+:py:func:`phasorpy.cluster.phasor_cluster_gmm` function
+with elliptical cursors and plot them in distinct colors:
+
+.. GENERATED FROM PYTHON SOURCE LINES 474-495
+
+.. code-block:: Python
+
+
+    from phasorpy.cluster import phasor_cluster_gmm
+
+    center_real, center_imag, radius, radius_minor, angles = phasor_cluster_gmm(
+        real, imag, clusters=2
+    )
+
+    plot = PhasorPlot(allquadrants=True, title='Elliptic cursors')
+    plot.hist2d(real, imag, cmap='Greys', bins=500)
+    for i in range(len(center_real)):
+        plot.cursor(
+            center_real[i],
+            center_imag[i],
+            radius=radius[i],
+            radius_minor=radius_minor[i],
+            angle=angles[i],
+            color=CATEGORICAL[i],
+            linestyle='-',
+        )
+    plot.show()
+
+
+
+
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
+   :alt: Elliptic cursors
+   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 496-497
+
+Use the elliptic clusters to mask regions of interest in the phasor space:
+
+.. GENERATED FROM PYTHON SOURCE LINES 497-510
+
+.. code-block:: Python
+
+
+    from phasorpy.cursors import mask_from_elliptic_cursor
+
+    elliptic_masks = mask_from_elliptic_cursor(
+        real,
+        imag,
+        center_real,
+        center_imag,
+        radius=radius,
+        radius_minor=radius_minor,
+        angle=angles,
+    )
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 511-513
+
+Plot a pseudo-color image, composited from the elliptic cursor masks and
+the mean intensity image:
+
+.. GENERATED FROM PYTHON SOURCE LINES 513-521
+
+.. code-block:: Python
+
+
+    pseudo_color_image = pseudo_color(*elliptic_masks, intensity=mean)
+
+    plot_image(
+        pseudo_color_image, title='Pseudo-color image from elliptic cursors'
+    )
+
+
+
+
+
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_014.png
+   :alt: Pseudo-color image from elliptic cursors
+   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_014.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 522-526
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-475
+.. GENERATED FROM PYTHON SOURCE LINES 526-529
 
 .. code-block:: Python
 
@@ -998,7 +1101,7 @@ Print information about Python interpreter and installed packages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 476-480
+.. GENERATED FROM PYTHON SOURCE LINES 530-534
 
 sphinx_gallery_thumbnail_number = -7
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1008,7 +1111,7 @@ isort: skip_file
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.372 seconds)
+   **Total running time of the script:** (0 minutes 11.980 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:
