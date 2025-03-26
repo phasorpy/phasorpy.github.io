@@ -627,18 +627,19 @@ plotting phasor and polar coordinates.
 Large number of phasor coordinates, such as obtained from imaging,
 are commonly visualized as two-dimensional histograms:
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-325
+.. GENERATED FROM PYTHON SOURCE LINES 316-326
 
 .. code-block:: Python
 
 
-    from phasorpy.plot import PhasorPlot
+    from phasorpy.plot import plot_phasor
 
-    phasorplot = PhasorPlot(
-        frequency=frequency, title='Calibrated, filtered phasor coordinates'
+    plot_phasor(
+        real,
+        imag,
+        frequency=frequency,
+        title='Calibrated, filtered phasor coordinates',
     )
-    phasorplot.hist2d(real, imag)
-    phasorplot.show()
 
 
 
@@ -652,7 +653,7 @@ are commonly visualized as two-dimensional histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-331
+.. GENERATED FROM PYTHON SOURCE LINES 327-332
 
 The calibrated phasor coordinates of all pixels lie inside the universal
 semicircle (on which theoretically the phasor coordinates of all single
@@ -660,18 +661,21 @@ exponential lifetimes are located).
 That means, all pixels contain mixtures of signals from multiple lifetime
 components.
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-334
+.. GENERATED FROM PYTHON SOURCE LINES 334-335
 
 For comparison, the uncalibrated, unfiltered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 334-339
+.. GENERATED FROM PYTHON SOURCE LINES 335-343
 
 .. code-block:: Python
 
 
-    phasorplot = PhasorPlot(allquadrants=True, title='Raw phasor coordinates')
-    phasorplot.hist2d(uncalibrated_real, uncalibrated_imag)
-    phasorplot.show()
+    plot_phasor(
+        uncalibrated_real,
+        uncalibrated_imag,
+        allquadrants=True,
+        title='Raw phasor coordinates',
+    )
 
 
 
@@ -685,7 +689,7 @@ For comparison, the uncalibrated, unfiltered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 340-347
+.. GENERATED FROM PYTHON SOURCE LINES 344-351
 
 Select phasor coordinates
 -------------------------
@@ -695,7 +699,7 @@ coordinates to define and mask regions of interest within the phasor space.
 
 Mask regions of interest in the phasor space using circular cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 347-358
+.. GENERATED FROM PYTHON SOURCE LINES 351-362
 
 .. code-block:: Python
 
@@ -703,11 +707,11 @@ Mask regions of interest in the phasor space using circular cursors:
     from phasorpy.color import CATEGORICAL
     from phasorpy.cursors import mask_from_circular_cursor
 
-    cursors_real = [0.69, 0.59]
-    cursors_imag = [0.32, 0.33]
-    radius = [0.05, 0.05]
+    cursor_real = 0.69, 0.59
+    cursor_imag = 0.32, 0.33
+    radius = 0.05, 0.05
     cursors_masks = mask_from_circular_cursor(
-        real, imag, cursors_real, cursors_imag, radius=radius
+        real, imag, cursor_real, cursor_imag, radius=radius
     )
 
 
@@ -717,21 +721,24 @@ Mask regions of interest in the phasor space using circular cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 359-360
+.. GENERATED FROM PYTHON SOURCE LINES 363-365
 
-Plot the cursors in distinct colors:
+Plot the cursors in distinct colors using the higher-level
+:py:class:`PhasorPlot` interface:
 
-.. GENERATED FROM PYTHON SOURCE LINES 360-373
+.. GENERATED FROM PYTHON SOURCE LINES 365-380
 
 .. code-block:: Python
 
 
+    from phasorpy.plot import PhasorPlot
+
     phasorplot = PhasorPlot(frequency=frequency, title='Cursors')
     phasorplot.hist2d(real, imag)
-    for i in range(len(cursors_real)):
+    for i in range(len(cursor_real)):
         phasorplot.circle(
-            cursors_real[i],
-            cursors_imag[i],
+            cursor_real[i],
+            cursor_imag[i],
             radius=radius[i],
             color=CATEGORICAL[i],
             linestyle='-',
@@ -750,12 +757,12 @@ Plot the cursors in distinct colors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 374-376
+.. GENERATED FROM PYTHON SOURCE LINES 381-383
 
 Blend the cursor masks with the mean intensity image to produce a
 pseudo-colored image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-386
+.. GENERATED FROM PYTHON SOURCE LINES 383-393
 
 .. code-block:: Python
 
@@ -781,12 +788,12 @@ pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 387-389
+.. GENERATED FROM PYTHON SOURCE LINES 394-396
 
 Component analysis
 ------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 389-392
+.. GENERATED FROM PYTHON SOURCE LINES 396-399
 
 .. code-block:: Python
 
@@ -800,7 +807,7 @@ Component analysis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 393-402
+.. GENERATED FROM PYTHON SOURCE LINES 400-409
 
 Spectral phasors
 ----------------
@@ -812,7 +819,7 @@ way as time-resolved signals. Calibration is not necessary.
 Open a hyperspectral dataset acquired with a laser scanning microscope
 at 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 402-414
+.. GENERATED FROM PYTHON SOURCE LINES 409-421
 
 .. code-block:: Python
 
@@ -840,12 +847,12 @@ at 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 415-417
+.. GENERATED FROM PYTHON SOURCE LINES 422-424
 
 Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 417-421
+.. GENERATED FROM PYTHON SOURCE LINES 424-428
 
 .. code-block:: Python
 
@@ -860,29 +867,57 @@ pixels with low intensities:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 422-424
+.. GENERATED FROM PYTHON SOURCE LINES 429-430
 
-Plot the phasor coordinates as a two-dimensional histogram and select two
-clusters in the phasor plot by means of elliptical cursors:
+Plot the phasor coordinates as a two-dimensional histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 424-443
+.. GENERATED FROM PYTHON SOURCE LINES 430-433
 
 .. code-block:: Python
 
 
-    cursors_real = [-0.33, 0.54]
-    cursors_imag = [-0.72, -0.74]
-    radius = [0.1, 0.06]
-    radius_minor = [0.3, 0.25]
+    plot_phasor(real, imag, allquadrants=True, title='Hyperspectral phasor plot')
 
-    phasorplot = PhasorPlot(allquadrants=True, title='Spectral phasor plot')
+
+
+
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_011.png
+   :alt: Hyperspectral phasor plot
+   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_011.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 434-439
+
+Find clusters
+-------------
+
+Automatically find the two elliptical clusters in the phasor space using
+a Gaussian mixture model and plot them in distinct colors:
+
+.. GENERATED FROM PYTHON SOURCE LINES 439-460
+
+.. code-block:: Python
+
+
+    from phasorpy.cluster import phasor_cluster_gmm
+
+    center_real, center_imag, radius, radius_minor, angle = phasor_cluster_gmm(
+        real, imag, clusters=2
+    )
+
+    phasorplot = PhasorPlot(allquadrants=True, title='Elliptical clusters')
     phasorplot.hist2d(real, imag, cmap='Greys')
-    for i in range(len(cursors_real)):
+    for i in range(len(center_real)):
         phasorplot.cursor(
-            cursors_real[i],
-            cursors_imag[i],
+            center_real[i],
+            center_imag[i],
             radius=radius[i],
             radius_minor=radius_minor[i],
+            angle=angle[i],
             color=CATEGORICAL[i],
             linestyle='-',
         )
@@ -891,63 +926,8 @@ clusters in the phasor plot by means of elliptical cursors:
 
 
 
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_011.png
-   :alt: Spectral phasor plot
-   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_011.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 444-445
-
-Use the elliptic cursors to mask regions of interest in the phasor space:
-
-.. GENERATED FROM PYTHON SOURCE LINES 445-457
-
-.. code-block:: Python
-
-
-    from phasorpy.cursors import mask_from_elliptic_cursor
-
-    elliptic_masks = mask_from_elliptic_cursor(
-        real,
-        imag,
-        cursors_real,
-        cursors_imag,
-        radius=radius,
-        radius_minor=radius_minor,
-    )
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 458-460
-
-Plot a pseudo-color image, composited from the elliptic cursor masks and
-the mean intensity image:
-
-.. GENERATED FROM PYTHON SOURCE LINES 460-467
-
-.. code-block:: Python
-
-
-    pseudo_color_image = pseudo_color(*elliptic_masks, intensity=mean)
-
-    plot_image(
-        pseudo_color_image, title='Pseudo-color image from elliptic cursors'
-    )
-
-
-
-
 .. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_012.png
-   :alt: Pseudo-color image from elliptic cursors
+   :alt: Elliptical clusters
    :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_012.png
    :class: sphx-glr-single-img
 
@@ -955,57 +935,11 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 468-474
-
-Find clusters
--------------
-
-Finding the clusters may be automatically done by using
-:py:func:`phasorpy.cluster.phasor_cluster_gmm` function
-with elliptical cursors and plot them in distinct colors:
-
-.. GENERATED FROM PYTHON SOURCE LINES 474-495
-
-.. code-block:: Python
-
-
-    from phasorpy.cluster import phasor_cluster_gmm
-
-    center_real, center_imag, radius, radius_minor, angles = phasor_cluster_gmm(
-        real, imag, clusters=2
-    )
-
-    plot = PhasorPlot(allquadrants=True, title='Elliptic cursors')
-    plot.hist2d(real, imag, cmap='Greys', bins=500)
-    for i in range(len(center_real)):
-        plot.cursor(
-            center_real[i],
-            center_imag[i],
-            radius=radius[i],
-            radius_minor=radius_minor[i],
-            angle=angles[i],
-            color=CATEGORICAL[i],
-            linestyle='-',
-        )
-    plot.show()
-
-
-
-
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
-   :alt: Elliptic cursors
-   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 496-497
+.. GENERATED FROM PYTHON SOURCE LINES 461-462
 
 Use the elliptic clusters to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 497-510
+.. GENERATED FROM PYTHON SOURCE LINES 462-475
 
 .. code-block:: Python
 
@@ -1019,7 +953,7 @@ Use the elliptic clusters to mask regions of interest in the phasor space:
         center_imag,
         radius=radius,
         radius_minor=radius_minor,
-        angle=angles,
+        angle=angle,
     )
 
 
@@ -1029,12 +963,12 @@ Use the elliptic clusters to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 511-513
+.. GENERATED FROM PYTHON SOURCE LINES 476-478
 
 Plot a pseudo-color image, composited from the elliptic cursor masks and
 the mean intensity image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 513-521
+.. GENERATED FROM PYTHON SOURCE LINES 478-485
 
 .. code-block:: Python
 
@@ -1048,24 +982,23 @@ the mean intensity image:
 
 
 
-
-.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_014.png
+.. image-sg:: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
    :alt: Pseudo-color image from elliptic cursors
-   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_014.png
+   :srcset: /tutorials/images/sphx_glr_phasorpy_introduction_013.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 522-526
+.. GENERATED FROM PYTHON SOURCE LINES 486-490
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 526-529
+.. GENERATED FROM PYTHON SOURCE LINES 490-493
 
 .. code-block:: Python
 
@@ -1101,17 +1034,17 @@ Print information about Python interpreter and installed packages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 530-534
+.. GENERATED FROM PYTHON SOURCE LINES 494-498
 
-sphinx_gallery_thumbnail_number = -7
+sphinx_gallery_thumbnail_number = -8
 mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
+mypy: disable-error-code="arg-type, assignment"
 isort: skip_file
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 32.325 seconds)
+   **Total running time of the script:** (0 minutes 50.121 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:

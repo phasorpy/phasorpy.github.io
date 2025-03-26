@@ -580,7 +580,7 @@ to <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>sigma</strong> (<em>float</em><em>, </em><em>default = 2.0</em>) – Scaling factor for the radii of major and minor axes.
+<li><p><strong>sigma</strong> (<em>float</em><em>, </em><em>default = 2.0</em>) – Scaling factor for radii of major and minor axes.
 Defaults to 2, which corresponds to the scaling of eigenvalues for a
 95% confidence ellipse.</p></li>
 <li><p><strong>clusters</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of Gaussian distributions to fit to phasor coordinates.
@@ -624,16 +624,18 @@ Defaults to 1.</p></li>
 <p>Recover the clusters from a synthetic distribution of phasor coordinates
 with two clusters:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]],</span> <span class="mi">100</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[[</span><span class="mf">3e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">2e-3</span><span class="p">]],</span> <span class="mi">100</span>
 <span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">real2</span><span class="p">,</span> <span class="n">imag2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[[</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]],</span> <span class="mi">100</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[[</span><span class="mf">2e-3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">3e-3</span><span class="p">]],</span> <span class="mi">100</span>
 <span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">real1</span><span class="p">,</span> <span class="n">real2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">imag1</span><span class="p">,</span> <span class="n">imag2</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="n">radius_major</span><span class="p">,</span> <span class="n">radius_minor</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="n">radius_major</span><span class="p">,</span> <span class="n">radius_minor</span><span class="p">,</span> <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="n">phasor_cluster_gmm</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">centers_real</span>
+<span class="go">(0.2, 0.4)</span>
 </pre></div>
 </div>
 </dd></dl>
