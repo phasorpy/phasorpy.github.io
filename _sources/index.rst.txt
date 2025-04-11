@@ -35,6 +35,8 @@ Resources
 News
 ====
 
+- Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+
 - Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ to read Leica LIF files is released.
@@ -84,7 +86,7 @@ The PhasorPy project is presented at the following events:
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
   `69th Annual Meeting of the Biophysical Society
   <https://biophysics.cld.bz/BPS2025-Full-Program-Abstracts/125/>`_.
-  February 15-19, 2025. Los Angeles, California.
+  February 15-19, 2025. Los Angeles, USA.
 
 - Leonel Malacrida.
   Introduction to PhasorPy.
