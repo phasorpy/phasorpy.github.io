@@ -35,6 +35,8 @@ Resources
 News
 ====
 
+- Apr 14, 2025: Funding by CZI ceases.
+
 - Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
