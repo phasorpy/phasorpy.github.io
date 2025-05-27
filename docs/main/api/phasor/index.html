@@ -579,6 +579,7 @@ fluorescence lifetimes:</p>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_lifetime" title="phasorpy.phasor.phasor_from_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_lifetime()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_apparent_lifetime" title="phasorpy.phasor.phasor_from_apparent_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_apparent_lifetime" title="phasorpy.phasor.phasor_to_apparent_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_normal_lifetime" title="phasorpy.phasor.phasor_to_normal_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_normal_lifetime()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>convert to and from polar coordinates (phase and modulation):</p>
@@ -2058,6 +2059,59 @@ else complex128.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_normal_lifetime">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_normal_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_to_normal_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_normal_lifetime" title="Link to this definition">#</a></dt>
+<dd><p>Return normal lifetimes from phasor coordinates.</p>
+<p>The normal lifetime of phasor coordinates represents the single lifetime
+equivalent corresponding to the perpendicular projection of the coordinates
+onto the universal semicircle, as defined in <a class="footnote-reference brackets" href="#id13" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>frequency</strong> (<em>array_like</em>) – Laser pulse or modulation frequency in MHz.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em>) – Product of <cite>frequency</cite> and returned <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>normal_lifetime</strong> – Normal lifetime from of phasor coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>)
+are converted to normal lifetimes <cite>normal_lifetime</cite> (<span class="math notranslate nohighlight">\(\tau_{N}\)</span>)
+at frequency <span class="math notranslate nohighlight">\(f\)</span> according to:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\G_{N} &amp;= 0.5 \cdot (1 + \cos{\arctan{\frac{S}{G - 0.5}}})\\\tau_{N} &amp;= \sqrt{\frac{1 - G_{N}}{\omega^{2} \cdot G_{N}}}\end{aligned}\end{align} \]</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id13" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">3</a><span class="fn-bracket">]</span></span>
+<p>Silberberg M, and Grecco H. <a class="reference external" href="https://doi.org/10.1088/2050-6120/aa72ab">pawFLIM: reducing bias and
+uncertainty to enable lower photon count in FLIM experiments</a>.
+<em>Methods Appl Fluoresc</em>, 5(2): 024016 (2017)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<p>The normal lifetimes of phasor coordinates with a real component of 0.5
+are independent of the imaginary component:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_normal_lifetime</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="mf">0.5</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mi">80</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">array([1.989, 1.989])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_polar">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_to_polar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_polar" title="Link to this definition">#</a></dt>
 <dd><p>Return polar coordinates from phasor coordinates.</p>
@@ -2155,11 +2209,11 @@ coordinates, where the first axis is the frequency:</p>
 </pre></div>
 </div>
 <p>An application of PCA to full-harmonic phasor coordinates from MRI signals
-can be found in <a class="footnote-reference brackets" href="#id13" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+can be found in <a class="footnote-reference brackets" href="#id17" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id13" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id17" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">1</a><span class="fn-bracket">]</span></span>
 <p>Franssen WMJ, Vergeldt FJ, Bader AN, van Amerongen H, and Terenzi C.
 <a class="reference external" href="https://doi.org/10.1021/acs.jpclett.0c02319">Full-harmonics phasor analysis: unravelling multiexponential trends
 in magnetic resonance imaging data</a>.
@@ -2548,6 +2602,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_threshold"><code class="docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_complex"><code class="docutils literal notranslate"><span class="pre">phasor_to_complex()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_normal_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_normal_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_polar"><code class="docutils literal notranslate"><span class="pre">phasor_to_polar()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_principal_plane"><code class="docutils literal notranslate"><span class="pre">phasor_to_principal_plane()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.phasor.phasor_to_signal"><code class="docutils literal notranslate"><span class="pre">phasor_to_signal()</span></code></a></li>

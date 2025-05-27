@@ -547,6 +547,7 @@
 <span class="sd">  - :py:func:`phasor_from_lifetime`</span>
 <span class="sd">  - :py:func:`phasor_from_apparent_lifetime`</span>
 <span class="sd">  - :py:func:`phasor_to_apparent_lifetime`</span>
+<span class="sd">  - :py:func:`phasor_to_normal_lifetime`</span>
 
 <span class="sd">- convert to and from polar coordinates (phase and modulation):</span>
 
@@ -627,6 +628,7 @@
     <span class="s1">&#39;phasor_threshold&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_apparent_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_complex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_to_normal_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_polar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_principal_plane&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_signal&#39;</span><span class="p">,</span>
@@ -672,6 +674,7 @@
     <span class="n">_phasor_threshold_nan</span><span class="p">,</span>
     <span class="n">_phasor_threshold_open</span><span class="p">,</span>
     <span class="n">_phasor_to_apparent_lifetime</span><span class="p">,</span>
+    <span class="n">_phasor_to_normal_lifetime</span><span class="p">,</span>
     <span class="n">_phasor_to_polar</span><span class="p">,</span>
     <span class="n">_phasor_transform</span><span class="p">,</span>
     <span class="n">_phasor_transform_const</span><span class="p">,</span>
@@ -2393,6 +2396,85 @@
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">_phasor_from_apparent_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
         <span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_to_normal_lifetime">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_to_normal_lifetime">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_to_normal_lifetime</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">unit_conversion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return normal lifetimes from phasor coordinates.</span>
+
+<span class="sd">    The normal lifetime of phasor coordinates represents the single lifetime</span>
+<span class="sd">    equivalent corresponding to the perpendicular projection of the coordinates</span>
+<span class="sd">    onto the universal semicircle, as defined in [3]_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">    frequency : array_like</span>
+<span class="sd">        Laser pulse or modulation frequency in MHz.</span>
+<span class="sd">    unit_conversion : float, optional</span>
+<span class="sd">        Product of `frequency` and returned `lifetime` units&#39; prefix factors.</span>
+<span class="sd">        The default is 1e-3 for MHz and ns, or Hz and ms.</span>
+<span class="sd">        Use 1.0 for Hz and s.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    normal_lifetime : ndarray</span>
+<span class="sd">        Normal lifetime from of phasor coordinates.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The phasor coordinates `real` (:math:`G`) and `imag` (:math:`S`)</span>
+<span class="sd">    are converted to normal lifetimes `normal_lifetime` (:math:`\tau_{N}`)</span>
+<span class="sd">    at frequency :math:`f` according to:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \omega &amp;= 2 \pi f</span>
+
+<span class="sd">        G_{N} &amp;= 0.5 \cdot (1 + \cos{\arctan{\frac{S}{G - 0.5}}})</span>
+
+<span class="sd">        \tau_{N} &amp;= \sqrt{\frac{1 - G_{N}}{\omega^{2} \cdot G_{N}}}</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    .. [3] Silberberg M, and Grecco H. `pawFLIM: reducing bias and</span>
+<span class="sd">      uncertainty to enable lower photon count in FLIM experiments</span>
+<span class="sd">      &lt;https://doi.org/10.1088/2050-6120/aa72ab&gt;`_.</span>
+<span class="sd">      *Methods Appl Fluoresc*, 5(2): 024016 (2017)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    The normal lifetimes of phasor coordinates with a real component of 0.5</span>
+<span class="sd">    are independent of the imaginary component:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_to_normal_lifetime(</span>
+<span class="sd">    ...     0.5, [0.5, 0.45], frequency=80</span>
+<span class="sd">    ... )  # doctest: +NUMBER</span>
+<span class="sd">    array([1.989, 1.989])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># makes copy</span>
+    <span class="n">omega</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">unit_conversion</span>
+    <span class="k">return</span> <span class="n">_phasor_to_normal_lifetime</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
 
