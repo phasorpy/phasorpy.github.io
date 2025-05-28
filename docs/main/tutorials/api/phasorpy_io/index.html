@@ -757,14 +757,12 @@ For phasor analysis, all photons in periods with multiple photons must
 be discarded before exporting to PTU format. In the Leica LAS X software,
 select the “FLIM” tab, click on the “Phasor” button, and under
 “Specialist Settings” select the option “Standard (High Speed)”.
-By default, the PTU reader function returns a 5-dimensional image with
-dimension order TYXCH. Channel and frames are specified to reduce the
-dimensionality:</p>
+The first channel in the first frame is read from the PTU file:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_ptu</span>
 
 <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;FLIM_testdata.lif.filtered.ptu&#39;</span>
 
-<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_ptu</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_ptu</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;delay-time (ns)&#39;</span><span class="p">)</span>
 </pre></div>
@@ -928,7 +926,7 @@ only the first channel is read and the time-axis integrated:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_io_013.png" srcset="../../../_images/sphx_glr_phasorpy_io_013.png" alt="Convallaria_$EI0S.fbd, axis=4 'H', mean" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Frozen({&#39;T&#39;: 1, &#39;C&#39;: 1, &#39;Y&#39;: 256, &#39;X&#39;: 256, &#39;H&#39;: 64})
+<img src="../../../_images/sphx_glr_phasorpy_io_013.png" srcset="../../../_images/sphx_glr_phasorpy_io_013.png" alt="Convallaria_$EI0S.fbd, axis=2 'H', mean" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Frozen({&#39;Y&#39;: 256, &#39;X&#39;: 256, &#39;H&#39;: 64})
 </pre></div>
 </div>
 <p>The measurement of a solution of Rhodamine 110 with known lifetime of 4 ns
@@ -947,7 +945,7 @@ is used as a calibration reference:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_io_014.png" srcset="../../../_images/sphx_glr_phasorpy_io_014.png" alt="Calibration_Rhodamine110_$EI0S.fbd, axis=4 'H', mean" class = "sphx-glr-single-img"/><p>Phasor coordinates are calculated from the signal and calibrated with
+<img src="../../../_images/sphx_glr_phasorpy_io_014.png" srcset="../../../_images/sphx_glr_phasorpy_io_014.png" alt="Calibration_Rhodamine110_$EI0S.fbd, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>Phasor coordinates are calculated from the signal and calibrated with
 the reference signal:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
 
@@ -1266,7 +1264,7 @@ the first array dimension:</p>
 <img src="../../../_images/sphx_glr_phasorpy_io_023.png" srcset="../../../_images/sphx_glr_phasorpy_io_023.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 23.421 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.281 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>
