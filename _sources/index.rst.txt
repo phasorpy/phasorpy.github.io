@@ -18,7 +18,6 @@ of the library, including:
 - `API reference <docs/stable/api/>`_
 - `Release notes <docs/stable/release/>`_
 - `Contributing guide <docs/stable/contributing/>`_
-- `Code of conduct <docs/stable/code_of_conduct/>`_
 - `Acknowledgments <docs/stable/acknowledgments/>`_
 - `MIT License <docs/stable/license/>`_
 
@@ -28,7 +27,7 @@ Resources
 =========
 
 - `Source code <https://github.com/phasorpy/phasorpy>`_ is maintained on GitHub.com.
-- `Releases <https://pypi.org/project/phasorpy/>`_ are published on PyPI.org.
+- `Releases <https://pypi.org/project/phasorpy/>`_ are published on PyPI.org and `conda-forge <https://anaconda.org/conda-forge/phasorpy>`_.
 - `Data files <https://zenodo.org/communities/phasorpy>`_ are shared on Zenodo.org.
 - `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`_ on the GitHub issue tracker.
 
