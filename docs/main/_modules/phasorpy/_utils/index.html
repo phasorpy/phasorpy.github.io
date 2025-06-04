@@ -521,6 +521,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;chunk_iter&#39;</span><span class="p">,</span>
     <span class="s1">&#39;dilate_coordinates&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;init_module&#39;</span><span class="p">,</span>
     <span class="s1">&#39;kwargs_notnone&#39;</span><span class="p">,</span>
     <span class="s1">&#39;parse_harmonic&#39;</span><span class="p">,</span>
     <span class="s1">&#39;parse_kwargs&#39;</span><span class="p">,</span>
@@ -529,18 +530,29 @@
     <span class="s1">&#39;phasor_from_polar_scalar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_polar_scalar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;scale_matrix&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;set_module&#39;</span><span class="p">,</span>
     <span class="s1">&#39;sort_coordinates&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;squeeze_dims&#39;</span><span class="p">,</span>
     <span class="s1">&#39;update_kwargs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;xarray_metadata&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">Iterator</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">Any</span><span class="p">,</span>
+        <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">Literal</span><span class="p">,</span>
+        <span class="n">NDArray</span><span class="p">,</span>
+        <span class="n">Iterator</span><span class="p">,</span>
+        <span class="n">Container</span><span class="p">,</span>
+        <span class="n">PathLike</span><span class="p">,</span>
+    <span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
@@ -1133,10 +1145,10 @@
 
 
 
-<div class="viewcode-block" id="set_module">
-<a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.set_module">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_module</span><span class="p">(</span><span class="n">globs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set ``__module__`` attribute for objects in ``__all__``.</span>
+<div class="viewcode-block" id="init_module">
+<a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.init_module">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_module</span><span class="p">(</span><span class="n">globs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add names in module to ``__all__`` and set ``__module__`` attributes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1145,14 +1157,120 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; set_module(globals())</span>
+<span class="sd">    &gt;&gt;&gt; init_module(globals())</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">globs</span><span class="p">[</span><span class="s1">&#39;__name__&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">globs</span><span class="p">[</span><span class="s1">&#39;__all__&#39;</span><span class="p">]:</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">globs</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">globs</span><span class="p">[</span><span class="s1">&#39;__all__&#39;</span><span class="p">]</span>
+    <span class="n">module_name</span> <span class="o">=</span> <span class="n">globs</span><span class="p">[</span><span class="s1">&#39;__name__&#39;</span><span class="p">]</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">{</span>
+            <span class="s1">&#39;annotations&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;init_module&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;utils&#39;</span><span class="p">,</span>  <span class="c1"># TODO: where does this come from?</span>
+        <span class="p">}:</span>
+            <span class="k">continue</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;__module__&#39;</span><span class="p">):</span>
-            <span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">=</span> <span class="n">name</span></div>
+            <span class="n">obj</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">=</span> <span class="n">module_name</span>
+    <span class="n">globs</span><span class="p">[</span><span class="s1">&#39;__all__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">names</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="xarray_metadata">
+<a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.xarray_metadata">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">xarray_metadata</span><span class="p">(</span>
+    <span class="n">dims</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PathLike</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">coords</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return xarray-style dims, coords, and attrs in a dict.</span>
+
+<span class="sd">    &gt;&gt;&gt; xarray_metadata(&#39;SYX&#39;, (3, 2, 1), S=[&#39;0&#39;, &#39;1&#39;, &#39;2&#39;])</span>
+<span class="sd">    {&#39;dims&#39;: (&#39;S&#39;, &#39;Y&#39;, &#39;X&#39;), &#39;coords&#39;: {&#39;S&#39;: [&#39;0&#39;, &#39;1&#39;, &#39;2&#39;]}, &#39;attrs&#39;: {}}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;dims do not match shape </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span><span class="si">}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">coords</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">dims</span> <span class="k">if</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="n">dims</span><span class="p">,</span> <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="n">coords</span><span class="p">,</span> <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="n">attrs</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">metadata</span></div>
+
+
+
+<div class="viewcode-block" id="squeeze_dims">
+<a class="viewcode-back" href="../../../api/_utils/#phasorpy._utils.squeeze_dims">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">squeeze_dims</span><span class="p">(</span>
+    <span class="n">shape</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+    <span class="n">dims</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="n">skip</span><span class="p">:</span> <span class="n">Container</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;XY&#39;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return shape and axes with length-1 dimensions removed.</span>
+
+<span class="sd">    Remove unused dimensions unless their axes are listed in the `skip`</span>
+<span class="sd">    parameter.</span>
+
+<span class="sd">    Adapted from the tifffile library.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    shape : tuple of ints</span>
+<span class="sd">        Sequence of dimension sizes.</span>
+<span class="sd">    dims : sequence of str</span>
+<span class="sd">        Character codes for dimensions in `shape`.</span>
+<span class="sd">    skip : container of str, optional</span>
+<span class="sd">        Character codes for dimensions whose length-1 dimensions are</span>
+<span class="sd">        not removed. The default is &#39;XY&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    shape : tuple of ints</span>
+<span class="sd">        Sequence of dimension sizes with length-1 dimensions removed.</span>
+<span class="sd">    dims : tuple of str</span>
+<span class="sd">        Character codes for dimensions in output `shape`.</span>
+<span class="sd">    squeezed : str</span>
+<span class="sd">        Dimensions were kept (True) or removed (False).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; squeeze_dims((5, 1, 2, 1, 1), &#39;TZYXC&#39;)</span>
+<span class="sd">    ((5, 2, 1), (&#39;T&#39;, &#39;Y&#39;, &#39;X&#39;), (True, False, True, True, False))</span>
+<span class="sd">    &gt;&gt;&gt; squeeze_dims((1,), (&#39;Q&#39;,))</span>
+<span class="sd">    ((1,), (&#39;Q&#39;,), (True,))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dims</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dims</span><span class="p">),</span> <span class="p">()</span>
+    <span class="n">squeezed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">shape_squeezed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dims_squeezed</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">size</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">skip</span><span class="p">:</span>
+            <span class="n">squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">shape_squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">dims_squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape_squeezed</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">squeezed</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">shape_squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">dims_squeezed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">shape_squeezed</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dims_squeezed</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">squeezed</span><span class="p">)</span></div>
 
 </pre></div>
 
