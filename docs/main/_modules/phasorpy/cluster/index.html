@@ -532,7 +532,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
@@ -549,6 +549,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
     <span class="n">clusters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">sort</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;polar&#39;</span><span class="p">,</span> <span class="s1">&#39;phasor&#39;</span><span class="p">,</span> <span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
     <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
@@ -576,6 +577,13 @@
 <span class="sd">    clusters : int, optional</span>
 <span class="sd">        Number of Gaussian distributions to fit to phasor coordinates.</span>
 <span class="sd">        Defaults to 1.</span>
+<span class="sd">    sort: {&#39;polar&#39;, &#39;phasor&#39;, &#39;area&#39;}, optional</span>
+<span class="sd">        Sorting method for output clusters. Defaults to &#39;polar&#39;.</span>
+
+<span class="sd">        - &#39;polar&#39;: Sort by polar coordinates (phase, then modulation).</span>
+<span class="sd">        - &#39;phasor&#39;: Sort by phasor coordinates (real, then imaginary).</span>
+<span class="sd">        - &#39;area&#39;: Sort by inverse area of ellipse (-major * minor).</span>
+
 <span class="sd">    **kwargs</span>
 <span class="sd">        Additional keyword arguments passed to</span>
 <span class="sd">        :py:class:`sklearn.mixture.GaussianMixture`.</span>
@@ -679,12 +687,40 @@
         <span class="n">radius_major</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">radius_minor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
+    <span class="k">if</span> <span class="n">clusters</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">argsort</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sort</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sort</span> <span class="o">==</span> <span class="s1">&#39;polar&#39;</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_real</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                    <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">center_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">sort</span> <span class="o">==</span> <span class="s1">&#39;phasor&#39;</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">center_imag</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">center_real</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">sort</span> <span class="o">==</span> <span class="s1">&#39;area&#39;</span><span class="p">:</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">sort_key</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+                <span class="k">return</span> <span class="o">-</span><span class="n">radius_major</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;invalid </span><span class="si">{</span><span class="n">sort</span><span class="si">=!r}</span><span class="s2"> != &#39;phasor&#39;, &#39;polar&#39;, or &#39;area&#39;&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">argsort</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">center_real</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="n">sort_key</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="p">(</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">center_real</span><span class="p">),</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">center_imag</span><span class="p">),</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">radius_major</span><span class="p">),</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">),</span>
-        <span class="nb">tuple</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">center_real</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argsort</span><span class="p">),</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">center_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argsort</span><span class="p">),</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">radius_major</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argsort</span><span class="p">),</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argsort</span><span class="p">),</span>
+        <span class="nb">tuple</span><span class="p">(</span><span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argsort</span><span class="p">),</span>
     <span class="p">)</span></div>
 
 </pre></div>
