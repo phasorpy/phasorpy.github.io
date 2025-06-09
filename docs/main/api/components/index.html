@@ -549,21 +549,13 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.components</span></code> module provides functions to:</p>
 <ul class="simple">
 <li><p>calculate fractions of two known components by projecting onto the
-line between the components:</p>
-<ul>
-<li><p><a class="reference internal" href="#phasorpy.components.two_fractions_from_phasor" title="phasorpy.components.two_fractions_from_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a></p></li>
-</ul>
-</li>
+line between the components (<a class="reference internal" href="#phasorpy.components.two_fractions_from_phasor" title="phasorpy.components.two_fractions_from_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a>)</p></li>
 <li><p>calculate phasor coordinates of second component if only one is
 known (not implemented)</p></li>
 <li><p>calculate fractions of three or four known components by using higher
-harmonic information (not implemented)</p></li>
+harmonic information (<a class="reference internal" href="#phasorpy.components.phasor_component_fit" title="phasorpy.components.phasor_component_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a>)</p></li>
 <li><p>calculate fractions of two or three known components by resolving
-graphically with histogram:</p>
-<ul>
-<li><p><a class="reference internal" href="#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></p></li>
-</ul>
-</li>
+graphically with histogram (<a class="reference internal" href="#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a>)</p></li>
 <li><p>blindly resolve fractions of <cite>n</cite> components by using harmonic
 information (not implemented)</p></li>
 </ul>
@@ -652,6 +644,80 @@ calculate changes of metabolic trajectory in biological systems</a>.
 <span class="go">(array([0, 1, 1, 1, 1, 0], dtype=uint64),</span>
 <span class="go"> array([0, 1, 0, 0, 0, 0], dtype=uint64),</span>
 <span class="go"> array([0, 1, 2, 0, 0, 0], dtype=uint64))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.components.phasor_component_fit">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">phasor_component_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/components/#phasor_component_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.phasor_component_fit" title="Link to this definition">#</a></dt>
+<dd><p>Return fractions of multiple components from phasor coordinates.</p>
+<p>Component fractions are obtained from the least-squares solution of a
+linear matrix equation that relates phasor coordinates from one or
+multiple harmonics to component fractions according to <a class="footnote-reference brackets" href="#id4" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>Up to <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">number</span> <span class="pre">harmonics</span> <span class="pre">+</span> <span class="pre">1</span></code> components can be fit to multi-harmonic
+phasor coordinates, that is up to three components for single harmonic
+phasor coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.
+Harmonics, if any, must be in the first dimension.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.
+Harmonics, if any, must be in the first dimension.</p></li>
+<li><p><strong>component_real</strong> (<em>array_like</em>) – Real coordinates of components.
+Must be one or two-dimensional with harmonics in the first dimension.</p></li>
+<li><p><strong>component_imag</strong> (<em>array_like</em>) – Imaginary coordinates of components.
+Must be one or two-dimensional with harmonics in the first dimension.</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – Additional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.linalg.lstsq()</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fractions</strong> – Component fractions, one array per component.
+Fractions may not exactly add up to 1.0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    The array shapes of <cite>component_real</cite> and <cite>component_imag</cite> do not match.
+    The number of harmonics in the components does not
+    match the ones in the phasor coordinates.
+    The system is underdetermined; the component matrix having more
+    columns than rows.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../../tutorials/api/phasorpy_components/#sphx-glr-tutorials-api-phasorpy-components-py"><span class="std std-ref">Component analysis</span></a>, <a class="reference internal" href="../../tutorials/applications/phasorpy_component_fit/#sphx-glr-tutorials-applications-phasorpy-component-fit-py"><span class="std std-ref">Multi-component fit</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>For now, calculation of fractions of components from different channels
+or frequencies is not supported. Only one set of components can be
+analyzed and is broadcast to all channels/frequencies.</p>
+<p>The method builds a linear matrix equation,
+<span class="math notranslate nohighlight">\(A\mathbf{x} = \mathbf{b}\)</span>, where <span class="math notranslate nohighlight">\(A\)</span> consists of the
+phasor coordinates of individual components, <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> are
+the unknown fractions, and <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> represents the measured
+phasor coordinates in the mixture. The least-squares solution of this
+linear matrix equation yields the fractions.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>Vallmitjana A, Lepanto P, Irigoin F, and Malacrida L.
+<a class="reference external" href="https://doi.org/10.1088/2050-6120/ac9ae9">Phasor-based multi-harmonic unmixing for in-vivo hyperspectral
+imaging</a>.
+<em>Methods Appl Fluoresc</em>, 11(1): 014001 (2022)</p>
+</aside>
+</aside>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_fit</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(array([0.4644, 0.5356, 0.6068]), array([0.5559, 0.4441, 0.3322]))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -751,6 +817,7 @@ be analyzed and will be broadcast to all channels/frequencies.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.graphical_component_analysis"><code class="docutils literal notranslate"><span class="pre">graphical_component_analysis()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_component_fit"><code class="docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.two_fractions_from_phasor"><code class="docutils literal notranslate"><span class="pre">two_fractions_from_phasor()</span></code></a></li>
 </ul>
   </nav></div>

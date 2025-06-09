@@ -487,7 +487,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_pca/">Principal component analysis</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../applications/">Applications</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../applications/">Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_component_fit/">Multi-component fit</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../benchmarks/">Benchmarks</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../benchmarks/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
 </ul>
@@ -567,6 +570,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.components</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">graphical_component_analysis</span><span class="p">,</span>
+    <span class="n">phasor_component_fit</span><span class="p">,</span>
     <span class="n">two_fractions_from_phasor</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_lifetime</span>
@@ -593,14 +597,14 @@ the line between the two components. For example, a mixture of:</p>
 <span class="n">component_lifetimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]</span>  <span class="c1"># ns</span>
 <span class="n">component_fractions</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
 
-<span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">component_lifetimes</span>
 <span class="p">)</span>
 
 <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Fractions of two components&#39;</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
-    <span class="n">components_real</span><span class="p">,</span>
-    <span class="n">components_imag</span><span class="p">,</span>
+    <span class="n">component_real</span><span class="p">,</span>
+    <span class="n">component_imag</span><span class="p">,</span>
     <span class="n">component_fractions</span><span class="p">,</span>
     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">component_style</span><span class="p">,</span>
@@ -616,7 +620,7 @@ can be calculated:</p>
 <span class="p">)</span>
 
 <span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">two_fractions_from_phasor</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span>
 <span class="p">)</span>
 
 <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">fraction_of_first_component</span><span class="p">,</span> <span class="n">component_fractions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -625,8 +629,8 @@ can be calculated:</p>
 </section>
 <section id="distribution-of-fractions-of-two-components">
 <h2>Distribution of fractions of two components<a class="headerlink" href="#distribution-of-fractions-of-two-components" title="Link to this heading">#</a></h2>
-<p>Phasor coordinates can have different contributions of two components with
-known phasor coordinates:</p>
+<p>Phasor coordinates can represent different contributions from
+two components with known phasor coordinates:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span>
     <span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span> <span class="p">[[</span><span class="mf">5e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">]],</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -636,7 +640,7 @@ known phasor coordinates:</p>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
-    <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
+    <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -644,9 +648,11 @@ known phasor coordinates:</p>
 <img src="../../../_images/sphx_glr_phasorpy_components_002.png" srcset="../../../_images/sphx_glr_phasorpy_components_002.png" alt="Distribution of fractions of two components" class = "sphx-glr-single-img"/><p>When the phasor coordinates of two contributing components are known,
 their fractional contributions to phasor coordinates can be calculated by
 projecting the phasor coordinate onto the line connecting the components.
-The fractions are plotted as histograms:</p>
+Fractions are calculated using
+<a class="reference internal" href="../../../api/components/#phasorpy.components.two_fractions_from_phasor" title="phasorpy.components.two_fractions_from_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.two_fractions_from_phasor()</span></code></a>
+and plotted as histograms:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">two_fractions_from_phasor</span><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span>
 <span class="p">)</span>
 
 <span class="n">plot_histograms</span><span class="p">(</span>
@@ -663,6 +669,35 @@ The fractions are plotted as histograms:</p>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_components_003.png" srcset="../../../_images/sphx_glr_phasorpy_components_003.png" alt="Histograms of fractions of two components" class = "sphx-glr-single-img"/></section>
+<section id="multi-component-fit">
+<h2>Multi-component fit<a class="headerlink" href="#multi-component-fit" title="Link to this heading">#</a></h2>
+<p>When the phasor coordinates of multiple contributing components are known,
+their fractional contributions to phasor coordinates can be obtained by
+solving a linear system of equations, using multiple harmonics if necessary.</p>
+<p>Fractions of 2 components are fitted using
+<a class="reference internal" href="../../../api/components/#phasorpy.components.phasor_component_fit" title="phasorpy.components.phasor_component_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.phasor_component_fit()</span></code></a>
+and plotted as histograms:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fraction1</span><span class="p">,</span> <span class="n">fraction2</span> <span class="o">=</span> <span class="n">phasor_component_fit</span><span class="p">(</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span>
+<span class="p">)</span>
+
+<span class="n">plot_histograms</span><span class="p">(</span>
+    <span class="n">fraction1</span><span class="p">,</span>
+    <span class="n">fraction2</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.66</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Histograms of fitted fractions of multiple components&#39;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Fraction&#39;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_components_004.png" srcset="../../../_images/sphx_glr_phasorpy_components_004.png" alt="Histograms of fitted fractions of multiple components" class = "sphx-glr-single-img"/><p>Up to three components can be fit to single harmonics phasor coordinates.
+The <a class="reference internal" href="../../applications/phasorpy_component_fit/#sphx-glr-tutorials-applications-phasorpy-component-fit-py"><span class="std std-ref">Multi-component fit</span></a>
+tutorial demonstrates how to fit 5 components using two-harmonics.</p>
+</section>
 <section id="graphical-analysis-of-two-components">
 <h2>Graphical analysis of two components<a class="headerlink" href="#graphical-analysis-of-two-components" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../../../api/components/#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.graphical_component_analysis()</span></code></a>
@@ -676,8 +711,8 @@ Compare the plot of counts vs fraction to the previous histogram:</p>
 <span class="n">counts</span> <span class="o">=</span> <span class="n">graphical_component_analysis</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
-    <span class="n">components_real</span><span class="p">,</span>
-    <span class="n">components_imag</span><span class="p">,</span>
+    <span class="n">component_real</span><span class="p">,</span>
+    <span class="n">component_imag</span><span class="p">,</span>
     <span class="n">fractions</span><span class="o">=</span><span class="n">fractions</span><span class="p">,</span>
     <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
 <span class="p">)</span>
@@ -691,13 +726,13 @@ Compare the plot of counts vs fraction to the previous histogram:</p>
 <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_components_004.png" srcset="../../../_images/sphx_glr_phasorpy_components_004.png" alt="Graphical analysis of two components" class = "sphx-glr-single-img"/></section>
+<img src="../../../_images/sphx_glr_phasorpy_components_005.png" srcset="../../../_images/sphx_glr_phasorpy_components_005.png" alt="Graphical analysis of two components" class = "sphx-glr-single-img"/></section>
 <section id="graphical-analysis-of-three-components">
 <h2>Graphical analysis of three components<a class="headerlink" href="#graphical-analysis-of-three-components" title="Link to this heading">#</a></h2>
 <p>The graphical method can similarly be applied to the contributions of
 three components:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">component_lifetimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">]</span>
-<span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">component_lifetimes</span>
 <span class="p">)</span>
 
@@ -706,18 +741,18 @@ three components:</p>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
-    <span class="n">components_real</span><span class="p">,</span> <span class="n">components_imag</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
+    <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_components_005.png" srcset="../../../_images/sphx_glr_phasorpy_components_005.png" alt="Graphical analysis of three components" class = "sphx-glr-single-img"/><p>The results of the graphical component analysis are plotted as
+<img src="../../../_images/sphx_glr_phasorpy_components_006.png" srcset="../../../_images/sphx_glr_phasorpy_components_006.png" alt="Graphical analysis of three components" class = "sphx-glr-single-img"/><p>The results of the graphical component analysis are plotted as
 histograms for each component pair:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">graphical_component_analysis</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
-    <span class="n">components_real</span><span class="p">,</span>
-    <span class="n">components_imag</span><span class="p">,</span>
+    <span class="n">component_real</span><span class="p">,</span>
+    <span class="n">component_imag</span><span class="p">,</span>
     <span class="n">fractions</span><span class="o">=</span><span class="n">fractions</span><span class="p">,</span>
     <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
 <span class="p">)</span>
@@ -733,7 +768,7 @@ histograms for each component pair:</p>
 <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_components_006.png" srcset="../../../_images/sphx_glr_phasorpy_components_006.png" alt="Graphical analysis of three components" class = "sphx-glr-single-img"/><p>The graphical method for resolving the contribution of three components
+<img src="../../../_images/sphx_glr_phasorpy_components_007.png" srcset="../../../_images/sphx_glr_phasorpy_components_007.png" alt="Graphical analysis of three components" class = "sphx-glr-single-img"/><p>The graphical method for resolving the contribution of three components
 (pairwise) to a phasor coordinate is based on the quantification of moving
 circular cursors along the line between the components, demonstrated in the
 following animation for component A vs B.
@@ -748,29 +783,29 @@ of components, A vs C and B vs C:</p>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
-    <span class="n">components_real</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
-    <span class="n">components_imag</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">component_real</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
+    <span class="n">component_imag</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">component_style</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
-    <span class="n">components_real</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
+    <span class="n">component_real</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">component_imag</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">component_style</span>
 <span class="p">)</span>
 
 <span class="n">hist</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">hist</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fraction&#39;</span><span class="p">)</span>
 <span class="n">hist</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
 
-<span class="n">direction_real</span> <span class="o">=</span> <span class="n">components_real</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">components_real</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">direction_imag</span> <span class="o">=</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">direction_real</span> <span class="o">=</span> <span class="n">component_real</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">component_real</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">direction_imag</span> <span class="o">=</span> <span class="n">component_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">component_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="n">plots</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">fractions</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
-    <span class="n">cursor_real</span> <span class="o">=</span> <span class="n">components_real</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">direction_real</span>
-    <span class="n">cursor_imag</span> <span class="o">=</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">direction_imag</span>
+    <span class="n">cursor_real</span> <span class="o">=</span> <span class="n">component_real</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">direction_real</span>
+    <span class="n">cursor_imag</span> <span class="o">=</span> <span class="n">component_imag</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">direction_imag</span>
     <span class="n">plot_lines</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">cursor_real</span><span class="p">,</span> <span class="n">components_real</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
-        <span class="p">[</span><span class="n">cursor_imag</span><span class="p">,</span> <span class="n">components_imag</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+        <span class="p">[</span><span class="n">cursor_real</span><span class="p">,</span> <span class="n">component_real</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+        <span class="p">[</span><span class="n">cursor_imag</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
         <span class="s1">&#39;-&#39;</span><span class="p">,</span>
         <span class="n">linewidth</span><span class="o">=</span><span class="n">plot</span><span class="o">.</span><span class="n">dataunit_to_point</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span>
         <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span>
@@ -972,42 +1007,42 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img8a14210424944a5d8f036eae51b70d56">
+  <img id="_anim_imgdd8fa605ab554325a390c2254be94c55">
   <div class="anim-controls">
-    <input id="_anim_slider8a14210424944a5d8f036eae51b70d56" type="range" class="anim-slider"
+    <input id="_anim_sliderdd8fa605ab554325a390c2254be94c55" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim8a14210424944a5d8f036eae51b70d56.set_frame(parseInt(this.value));">
+           oninput="animdd8fa605ab554325a390c2254be94c55.set_frame(parseInt(this.value));">
     <div class="anim-buttons">
-      <button title="Decrease speed" aria-label="Decrease speed" onclick="anim8a14210424944a5d8f036eae51b70d56.slower()">
+      <button title="Decrease speed" aria-label="Decrease speed" onclick="animdd8fa605ab554325a390c2254be94c55.slower()">
           <i class="fa fa-minus"></i></button>
-      <button title="First frame" aria-label="First frame" onclick="anim8a14210424944a5d8f036eae51b70d56.first_frame()">
+      <button title="First frame" aria-label="First frame" onclick="animdd8fa605ab554325a390c2254be94c55.first_frame()">
         <i class="fa fa-fast-backward"></i></button>
-      <button title="Previous frame" aria-label="Previous frame" onclick="anim8a14210424944a5d8f036eae51b70d56.previous_frame()">
+      <button title="Previous frame" aria-label="Previous frame" onclick="animdd8fa605ab554325a390c2254be94c55.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button title="Play backwards" aria-label="Play backwards" onclick="anim8a14210424944a5d8f036eae51b70d56.reverse_animation()">
+      <button title="Play backwards" aria-label="Play backwards" onclick="animdd8fa605ab554325a390c2254be94c55.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button title="Pause" aria-label="Pause" onclick="anim8a14210424944a5d8f036eae51b70d56.pause_animation()">
+      <button title="Pause" aria-label="Pause" onclick="animdd8fa605ab554325a390c2254be94c55.pause_animation()">
           <i class="fa fa-pause"></i></button>
-      <button title="Play" aria-label="Play" onclick="anim8a14210424944a5d8f036eae51b70d56.play_animation()">
+      <button title="Play" aria-label="Play" onclick="animdd8fa605ab554325a390c2254be94c55.play_animation()">
           <i class="fa fa-play"></i></button>
-      <button title="Next frame" aria-label="Next frame" onclick="anim8a14210424944a5d8f036eae51b70d56.next_frame()">
+      <button title="Next frame" aria-label="Next frame" onclick="animdd8fa605ab554325a390c2254be94c55.next_frame()">
           <i class="fa fa-step-forward"></i></button>
-      <button title="Last frame" aria-label="Last frame" onclick="anim8a14210424944a5d8f036eae51b70d56.last_frame()">
+      <button title="Last frame" aria-label="Last frame" onclick="animdd8fa605ab554325a390c2254be94c55.last_frame()">
           <i class="fa fa-fast-forward"></i></button>
-      <button title="Increase speed" aria-label="Increase speed" onclick="anim8a14210424944a5d8f036eae51b70d56.faster()">
+      <button title="Increase speed" aria-label="Increase speed" onclick="animdd8fa605ab554325a390c2254be94c55.faster()">
           <i class="fa fa-plus"></i></button>
     </div>
-    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_select8a14210424944a5d8f036eae51b70d56"
+    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selectdd8fa605ab554325a390c2254be94c55"
           class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_8a14210424944a5d8f036eae51b70d56"
+      <input type="radio" name="state" value="once" id="_anim_radio1_dd8fa605ab554325a390c2254be94c55"
              >
-      <label for="_anim_radio1_8a14210424944a5d8f036eae51b70d56">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_8a14210424944a5d8f036eae51b70d56"
+      <label for="_anim_radio1_dd8fa605ab554325a390c2254be94c55">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_dd8fa605ab554325a390c2254be94c55"
              checked>
-      <label for="_anim_radio2_8a14210424944a5d8f036eae51b70d56">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_8a14210424944a5d8f036eae51b70d56"
+      <label for="_anim_radio2_dd8fa605ab554325a390c2254be94c55">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_dd8fa605ab554325a390c2254be94c55"
              >
-      <label for="_anim_radio3_8a14210424944a5d8f036eae51b70d56">Reflect</label>
+      <label for="_anim_radio3_dd8fa605ab554325a390c2254be94c55">Reflect</label>
     </form>
   </div>
 </div>
@@ -1017,9 +1052,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img8a14210424944a5d8f036eae51b70d56";
-    var slider_id = "_anim_slider8a14210424944a5d8f036eae51b70d56";
-    var loop_select_id = "_anim_loop_select8a14210424944a5d8f036eae51b70d56";
+    var img_id = "_anim_imgdd8fa605ab554325a390c2254be94c55";
+    var slider_id = "_anim_sliderdd8fa605ab554325a390c2254be94c55";
+    var loop_select_id = "_anim_loop_selectdd8fa605ab554325a390c2254be94c55";
     var frames = new Array(20);
 
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiYAAAMgCAYAAAAX4KnvAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -16787,15 +16822,15 @@ RCQbDCZEREQkGwwmREREJBsMJkRERCQbDCZEREQkG/8f5AXijVSpMq0AAAAASUVORK5CYII=\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim8a14210424944a5d8f036eae51b70d56 = new Animation(frames, img_id, slider_id, 100.0,
+        animdd8fa605ab554325a390c2254be94c55 = new Animation(frames, img_id, slider_id, 100.0,
                                  loop_select_id);
     }, 0);
   })()
 </script></div>
-<p>sphinx_gallery_thumbnail_number = 5
+<p>sphinx_gallery_thumbnail_number = 6
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.405 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.696 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-components-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/15b8b3be152b5ccd1ea235f208641df7/phasorpy_components.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_components.ipynb</span></code></a></p>
@@ -16860,6 +16895,7 @@ mypy: disable-error-code=”arg-type”</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fractions-of-two-components">Fractions of two components</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribution-of-fractions-of-two-components">Distribution of fractions of two components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-component-fit">Multi-component fit</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graphical-analysis-of-two-components">Graphical analysis of two components</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graphical-analysis-of-three-components">Graphical analysis of three components</a></li>
 </ul>
