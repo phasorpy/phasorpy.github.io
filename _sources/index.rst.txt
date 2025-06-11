@@ -34,8 +34,6 @@ Resources
 News
 ====
 
-- Apr 14, 2025: Funding by CZI ceases.
-
 - Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
@@ -82,6 +80,12 @@ Events
 ======
 
 The PhasorPy project is presented at the following events:
+
+- Leonel Malacrida.
+  PhasorPy library for open source phasor analysis of FLIM and HSI: present, future and some applications in biological fluorescence.
+  `12th International Weber Symposium
+  <https://www.webersymposium.com/>`_.
+  June 15-20, 2025. Genoa, Italy.
 
 - Bruno Pannunzio, Bruno Schuty Teske, Michelle Digman, Christoph Gohlke, and Leonel Malacrida.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
