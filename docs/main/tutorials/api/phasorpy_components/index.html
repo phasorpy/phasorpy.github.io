@@ -569,9 +569,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.components</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">graphical_component_analysis</span><span class="p">,</span>
     <span class="n">phasor_component_fit</span><span class="p">,</span>
-    <span class="n">two_fractions_from_phasor</span><span class="p">,</span>
+    <span class="n">phasor_component_fraction</span><span class="p">,</span>
+    <span class="n">phasor_component_graphical</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_lifetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhasorPlot</span><span class="p">,</span> <span class="n">plot_histograms</span>
@@ -619,7 +619,7 @@ can be calculated:</p>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">component_lifetimes</span><span class="p">,</span> <span class="n">component_fractions</span>
 <span class="p">)</span>
 
-<span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">two_fractions_from_phasor</span><span class="p">(</span>
+<span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">phasor_component_fraction</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span>
 <span class="p">)</span>
 
@@ -649,9 +649,9 @@ two components with known phasor coordinates:</p>
 their fractional contributions to phasor coordinates can be calculated by
 projecting the phasor coordinate onto the line connecting the components.
 Fractions are calculated using
-<a class="reference internal" href="../../../api/components/#phasorpy.components.two_fractions_from_phasor" title="phasorpy.components.two_fractions_from_phasor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.two_fractions_from_phasor()</span></code></a>
+<a class="reference internal" href="../../../api/components/#phasorpy.components.phasor_component_fraction" title="phasorpy.components.phasor_component_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.phasor_component_fraction()</span></code></a>
 and plotted as histograms:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">two_fractions_from_phasor</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fraction_of_first_component</span> <span class="o">=</span> <span class="n">phasor_component_fraction</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span>
 <span class="p">)</span>
 
@@ -700,7 +700,7 @@ tutorial demonstrates how to fit 5 components using two-harmonics.</p>
 </section>
 <section id="graphical-analysis-of-two-components">
 <h2>Graphical analysis of two components<a class="headerlink" href="#graphical-analysis-of-two-components" title="Link to this heading">#</a></h2>
-<p>The <a class="reference internal" href="../../../api/components/#phasorpy.components.graphical_component_analysis" title="phasorpy.components.graphical_component_analysis"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.graphical_component_analysis()</span></code></a>
+<p>The <a class="reference internal" href="../../../api/components/#phasorpy.components.phasor_component_graphical" title="phasorpy.components.phasor_component_graphical"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.components.phasor_component_graphical()</span></code></a>
 function for two components counts the number of phasor coordinates
 that fall within a radius at given fractions along the line between
 the components.
@@ -708,7 +708,7 @@ Compare the plot of counts vs fraction to the previous histogram:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.025</span>
 <span class="n">fractions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 
-<span class="n">counts</span> <span class="o">=</span> <span class="n">graphical_component_analysis</span><span class="p">(</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">phasor_component_graphical</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="n">component_real</span><span class="p">,</span>
@@ -748,7 +748,7 @@ three components:</p>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_components_006.png" srcset="../../../_images/sphx_glr_phasorpy_components_006.png" alt="Graphical analysis of three components" class = "sphx-glr-single-img"/><p>The results of the graphical component analysis are plotted as
 histograms for each component pair:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">graphical_component_analysis</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">phasor_component_graphical</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="n">component_real</span><span class="p">,</span>
@@ -1007,42 +1007,42 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_imgdd8fa605ab554325a390c2254be94c55">
+  <img id="_anim_imge21b0b7b9fbc46fba8ae6c2eab81a348">
   <div class="anim-controls">
-    <input id="_anim_sliderdd8fa605ab554325a390c2254be94c55" type="range" class="anim-slider"
+    <input id="_anim_slidere21b0b7b9fbc46fba8ae6c2eab81a348" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="animdd8fa605ab554325a390c2254be94c55.set_frame(parseInt(this.value));">
+           oninput="anime21b0b7b9fbc46fba8ae6c2eab81a348.set_frame(parseInt(this.value));">
     <div class="anim-buttons">
-      <button title="Decrease speed" aria-label="Decrease speed" onclick="animdd8fa605ab554325a390c2254be94c55.slower()">
+      <button title="Decrease speed" aria-label="Decrease speed" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.slower()">
           <i class="fa fa-minus"></i></button>
-      <button title="First frame" aria-label="First frame" onclick="animdd8fa605ab554325a390c2254be94c55.first_frame()">
+      <button title="First frame" aria-label="First frame" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.first_frame()">
         <i class="fa fa-fast-backward"></i></button>
-      <button title="Previous frame" aria-label="Previous frame" onclick="animdd8fa605ab554325a390c2254be94c55.previous_frame()">
+      <button title="Previous frame" aria-label="Previous frame" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button title="Play backwards" aria-label="Play backwards" onclick="animdd8fa605ab554325a390c2254be94c55.reverse_animation()">
+      <button title="Play backwards" aria-label="Play backwards" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button title="Pause" aria-label="Pause" onclick="animdd8fa605ab554325a390c2254be94c55.pause_animation()">
+      <button title="Pause" aria-label="Pause" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.pause_animation()">
           <i class="fa fa-pause"></i></button>
-      <button title="Play" aria-label="Play" onclick="animdd8fa605ab554325a390c2254be94c55.play_animation()">
+      <button title="Play" aria-label="Play" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.play_animation()">
           <i class="fa fa-play"></i></button>
-      <button title="Next frame" aria-label="Next frame" onclick="animdd8fa605ab554325a390c2254be94c55.next_frame()">
+      <button title="Next frame" aria-label="Next frame" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.next_frame()">
           <i class="fa fa-step-forward"></i></button>
-      <button title="Last frame" aria-label="Last frame" onclick="animdd8fa605ab554325a390c2254be94c55.last_frame()">
+      <button title="Last frame" aria-label="Last frame" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.last_frame()">
           <i class="fa fa-fast-forward"></i></button>
-      <button title="Increase speed" aria-label="Increase speed" onclick="animdd8fa605ab554325a390c2254be94c55.faster()">
+      <button title="Increase speed" aria-label="Increase speed" onclick="anime21b0b7b9fbc46fba8ae6c2eab81a348.faster()">
           <i class="fa fa-plus"></i></button>
     </div>
-    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selectdd8fa605ab554325a390c2254be94c55"
+    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selecte21b0b7b9fbc46fba8ae6c2eab81a348"
           class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_dd8fa605ab554325a390c2254be94c55"
+      <input type="radio" name="state" value="once" id="_anim_radio1_e21b0b7b9fbc46fba8ae6c2eab81a348"
              >
-      <label for="_anim_radio1_dd8fa605ab554325a390c2254be94c55">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_dd8fa605ab554325a390c2254be94c55"
+      <label for="_anim_radio1_e21b0b7b9fbc46fba8ae6c2eab81a348">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_e21b0b7b9fbc46fba8ae6c2eab81a348"
              checked>
-      <label for="_anim_radio2_dd8fa605ab554325a390c2254be94c55">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_dd8fa605ab554325a390c2254be94c55"
+      <label for="_anim_radio2_e21b0b7b9fbc46fba8ae6c2eab81a348">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_e21b0b7b9fbc46fba8ae6c2eab81a348"
              >
-      <label for="_anim_radio3_dd8fa605ab554325a390c2254be94c55">Reflect</label>
+      <label for="_anim_radio3_e21b0b7b9fbc46fba8ae6c2eab81a348">Reflect</label>
     </form>
   </div>
 </div>
@@ -1052,9 +1052,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_imgdd8fa605ab554325a390c2254be94c55";
-    var slider_id = "_anim_sliderdd8fa605ab554325a390c2254be94c55";
-    var loop_select_id = "_anim_loop_selectdd8fa605ab554325a390c2254be94c55";
+    var img_id = "_anim_imge21b0b7b9fbc46fba8ae6c2eab81a348";
+    var slider_id = "_anim_slidere21b0b7b9fbc46fba8ae6c2eab81a348";
+    var loop_select_id = "_anim_loop_selecte21b0b7b9fbc46fba8ae6c2eab81a348";
     var frames = new Array(20);
 
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiYAAAMgCAYAAAAX4KnvAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -16822,7 +16822,7 @@ RCQbDCZEREQkGwwmREREJBsMJkRERCQbDCZEREQkG/8f5AXijVSpMq0AAAAASUVORK5CYII=\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        animdd8fa605ab554325a390c2254be94c55 = new Animation(frames, img_id, slider_id, 100.0,
+        anime21b0b7b9fbc46fba8ae6c2eab81a348 = new Animation(frames, img_id, slider_id, 100.0,
                                  loop_select_id);
     }, 0);
   })()
@@ -16830,7 +16830,7 @@ RCQbDCZEREQkGwwmREREJBsMJkRERCQbDCZEREQkG/8f5AXijVSpMq0AAAAASUVORK5CYII=\
 <p>sphinx_gallery_thumbnail_number = 6
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.696 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.637 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-components-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/15b8b3be152b5ccd1ea235f208641df7/phasorpy_components.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_components.ipynb</span></code></a></p>
