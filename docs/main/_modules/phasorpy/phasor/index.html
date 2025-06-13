@@ -611,6 +611,7 @@
     <span class="s1">&#39;phasor_multiply&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_normalize&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_semicircle_intersect&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_threshold&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_apparent_lifetime&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_to_complex&#39;</span><span class="p">,</span>
@@ -643,6 +644,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">._phasorpy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_gaussian_signal</span><span class="p">,</span>
+    <span class="n">_intersect_semicircle_line</span><span class="p">,</span>
     <span class="n">_median_filter_2d</span><span class="p">,</span>
     <span class="n">_phasor_at_harmonic</span><span class="p">,</span>
     <span class="n">_phasor_divide</span><span class="p">,</span>
@@ -1322,6 +1324,68 @@
     <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">arange</span><span class="p">)</span>
     <span class="n">imag</span> <span class="o">*=</span> <span class="mf">0.5</span>
     <span class="k">return</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_semicircle_intersect">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_semicircle_intersect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_semicircle_intersect</span><span class="p">(</span>
+    <span class="n">real0</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag0</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">real1</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag1</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return intersection of line through phasors with universal semicircle.</span>
+
+<span class="sd">    Return the phasor coordinates of two intersections of the universal</span>
+<span class="sd">    semicircle with the line between two phasor coordinates.</span>
+<span class="sd">    Return NaN if the line does not intersect the semicircle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real0 : array_like</span>
+<span class="sd">        Real component of first set of phasor coordinates.</span>
+<span class="sd">    imag0 : array_like</span>
+<span class="sd">        Imaginary component of first set of phasor coordinates.</span>
+<span class="sd">    real1 : array_like</span>
+<span class="sd">        Real component of second set of phasor coordinates.</span>
+<span class="sd">    imag1 : array_like</span>
+<span class="sd">        Imaginary component of second set of phasor coordinates.</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Optional `arguments passed to numpy universal functions</span>
+<span class="sd">        &lt;https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real0 : ndarray</span>
+<span class="sd">        Real component of first intersect of phasors with semicircle.</span>
+<span class="sd">    imag0 : ndarray</span>
+<span class="sd">        Imaginary component of first intersect of phasors with semicircle.</span>
+<span class="sd">    real1 : ndarray</span>
+<span class="sd">        Real component of second intersect of phasors with semicircle.</span>
+<span class="sd">    imag1 : ndarray</span>
+<span class="sd">        Imaginary component of second intersect of phasors with semicircle.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Calculate two intersects of a line through two phasor coordinates</span>
+<span class="sd">    with the universal semicircle:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_semicircle_intersect(0.2, 0.25, 0.6, 0.25)  # doctest: +NUMBER</span>
+<span class="sd">    (0.066, 0.25, 0.933, 0.25)</span>
+
+<span class="sd">    The line between two phasor coordinates may not intersect the semicircle</span>
+<span class="sd">    at two points:</span>
+
+<span class="sd">    &gt;&gt;&gt; phasor_semicircle_intersect(0.2, 0.0, 0.6, 0.25)  # doctest: +NUMBER</span>
+<span class="sd">    (nan, nan, 0.817, 0.386)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_intersect_semicircle_line</span><span class="p">(</span>  <span class="c1"># type: ignore[no-any-return]</span>
+        <span class="n">real0</span><span class="p">,</span> <span class="n">imag0</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
 
 
 
