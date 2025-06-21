@@ -50,7 +50,6 @@
     <script src="../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=30646c52"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/utils';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -478,6 +477,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../plot/">phasorpy.plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../io/">phasorpy.io</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../color/">phasorpy.color</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experimental/">phasorpy.experimental</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../datasets/">phasorpy.datasets</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">phasorpy.utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_utils/">phasorpy._utils</a></li>
@@ -549,107 +549,6 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.utils</span></code> module provides auxiliary and convenience functions
 that do not naturally fit into other modules.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.utils.anscombe_transformation">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">anscombe_transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#anscombe_transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.anscombe_transformation" title="Link to this definition">#</a></dt>
-<dd><p>Return Anscombe variance-stabilizing transformation.</p>
-<p>The Anscombe transformation normalizes the standard deviation of noisy,
-Poisson-distributed data.
-It can be used to transform un-normalized phasor coordinates to
-approximate standard Gaussian distributions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>array_like</em>) – Noisy Poisson-distributed data to be transformed.</p></li>
-<li><p><strong>**kwargs</strong> – Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Anscombe-transformed data with variance of approximately 1.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The Anscombe transformation according to <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
-<div class="math notranslate nohighlight">
-\[z = 2 \cdot \sqrt{x + 3 / 8}\]</div>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
-<p>Anscombe FJ.
-<a class="reference external" href="https://doi.org/10.2307/2332343">The transformation of Poisson, binomial and negative-binomial data</a>.
-<em>Biometrika</em>, 35(3-4): 246-254 (1948)</p>
-</aside>
-</aside>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">anscombe_transformation</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.utils.anscombe_transformation_inverse">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">anscombe_transformation_inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#anscombe_transformation_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.anscombe_transformation_inverse" title="Link to this definition">#</a></dt>
-<dd><p>Return inverse Anscombe transformation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>array_like</em>) – Anscombe-transformed data.</p></li>
-<li><p><strong>approx</strong> (<em>bool</em><em>, </em><em>default: False</em>) – If true, return approximation of exact unbiased inverse.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Inverse Anscombe-transformed data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The inverse Anscombe transformation according to <a class="footnote-reference brackets" href="#id2" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>:</p>
-<div class="math notranslate nohighlight">
-\[x = (z / 2.0)^2 - 3 / 8\]</div>
-<p>The approximate inverse Anscombe transformation according to <a class="footnote-reference brackets" href="#id7" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> and <a class="footnote-reference brackets" href="#id8" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>:</p>
-<div class="math notranslate nohighlight">
-\[x = 1/4 \cdot z^2{2}
-  + 1/4 \cdot \sqrt{3/2} \cdot z^{-1}
-  - 11/8 \cdot z^{-2}
-  + 5/8 \cdot \sqrt(3/2) \cdot z^{-3}
-  - 1/8\]</div>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id7" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
-<p>Makitalo M, and Foi A.
-<a class="reference external" href="https://doi.org/10.1109/TIP.2011.2121085">A closed-form approximation of the exact unbiased inverse of the
-Anscombe variance-stabilizing transformation</a>.
-<em>IEEE Trans Image Process</em>, 20(9): 2697-8 (2011).</p>
-</aside>
-<aside class="footnote brackets" id="id8" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
-<p>Makitalo M, and Foi A
-<a class="reference external" href="https://doi.org/10.1109/TIP.2012.2202675">Optimal inversion of the generalized Anscombe transformation for
-Poisson-Gaussian noise</a>,
-<em>IEEE Trans Image Process</em>, 22(1): 91-103 (2013)</p>
-</aside>
-</aside>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x2</span> <span class="o">=</span> <span class="n">anscombe_transformation_inverse</span><span class="p">(</span><span class="n">anscombe_transformation</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.utils.logger">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.logger" title="Link to this definition">#</a></dt>
 <dd><p>Return <code class="docutils literal notranslate"><span class="pre">logging.getLogger('phasorpy')</span></code>.</p>
@@ -688,70 +587,31 @@ variable if set, else half the CPU cores up to <cite>max_threads</cite> or 32.</
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="phasorpy.utils.spectral_vector_denoise">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">spectral_vector_denoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">spectral_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#spectral_vector_denoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.spectral_vector_denoise" title="Link to this definition">#</a></dt>
-<dd><p>Return spectral-vector-denoised signal.</p>
-<p>The spectral vector denoising algorithm is based on a Gaussian weighted
-average calculation, with weights obtained in n-dimensional Chebyshev or
-Fourier space <a class="footnote-reference brackets" href="#id10" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<dt class="sig sig-object py" id="phasorpy.utils.versions">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.utils.</span></span><span class="sig-name descname"><span class="pre">versions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/utils/#versions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.utils.versions" title="Link to this definition">#</a></dt>
+<dd><p>Return version information for PhasorPy and its dependencies.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>signal</strong> (<em>array_like</em>) – Hyperspectral data to be denoised.
-A minimum of three samples are required along <cite>axis</cite>.
-The samples must be uniformly spaced.</p></li>
-<li><p><strong>spectral_vector</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Spectral vector.
-For example, phasor coordinates, PCA projected phasor coordinates,
-or Chebyshev coefficients.
-Must be of same shape as <cite>signal</cite> with <cite>axis</cite> removed and axis
-containing spectral space appended.
-If None (default), phasor coordinates are calculated at specified
-<cite>harmonic</cite>.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: -1</em>) – Axis over which <cite>spectral_vector</cite> is computed if not provided.
-The default is the last axis (-1).</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonics to include in calculating <cite>spectral_vector</cite>.
-If <cite>‘all’</cite>, include all harmonics for <cite>signal</cite> samples along <cite>axis</cite>.
-Else, harmonics must be at least one and no larger than half the
-number of <cite>signal</cite> samples along <cite>axis</cite>.
-The default is the first harmonic (fundamental frequency).
-A minimum of <cite>harmonic * 2 + 1</cite> samples are required along <cite>axis</cite>
-to calculate correct phasor coordinates at <cite>harmonic</cite>.</p></li>
-<li><p><strong>sigma</strong> (<em>float</em><em>, </em><em>default: 0.05</em>) – Width of Gaussian filter in spectral vector space.
-Weighted averages are calculated using the spectra of signal items
-within an spectral vector Euclidean distance of <cite>3 * sigma</cite> and
-intensity above <cite>vmin</cite>.</p></li>
-<li><p><strong>vmin</strong> (<em>float</em><em>, </em><em>optional</em>) – Signal intensity along <cite>axis</cite> below which not to include in denoising.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
-The default is float64 unless the <cite>signal</cite> is float32.</p></li>
-<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
-By default, multi-threading is disabled.
-If zero, up to half of logical CPUs are used.
-OpenMP may not be available on all platforms.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – Separator between version items. Defaults to newline.</p></li>
+<li><p><strong>dash</strong> (<em>str</em><em>, </em><em>optional</em>) – Separator between module name and version. Defaults to dash.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Include paths to Python interpreter and modules.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Denoised signal of <cite>dtype</cite>.
-Spectra with integrated intensity below <cite>vmin</cite> are unchanged.</p>
+<dd class="field-even"><p>Formatted string containing version information.
+Format: “&lt;package&gt;&lt;dash&gt;&lt;version&gt;[&lt;space&gt;(&lt;path&gt;)]&lt;sep&gt;”</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id10" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">4</a><span class="fn-bracket">]</span></span>
-<p>Harman RC, Lang RT, Kercher EM, Leven P, and Spring BQ.
-<a class="reference external" href="https://doi.org/10.1364/BOE.463979">Denoising multiplexed microscopy images in n-dimensional spectral space</a>.
-<em>Biomed Opt Express</em>, 13(8): 4298-4309 (2022)</p>
-</aside>
-</aside>
-<p class="rubric">Examples</p>
-<p>Denoise a hyperspectral image with a Gaussian filter width of 0.1 in
-spectral vector space using first and second harmonic:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spectral_vector_denoise</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<span class="go">array([[[...]]])</span>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">versions</span><span class="p">())</span>
+<span class="go">Python-3...</span>
+<span class="go">phasorpy-0...</span>
+<span class="go">numpy-...</span>
+<span class="go">...</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -805,11 +665,9 @@ spectral vector space using first and second harmonic:</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.anscombe_transformation"><code class="docutils literal notranslate"><span class="pre">anscombe_transformation()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.anscombe_transformation_inverse"><code class="docutils literal notranslate"><span class="pre">anscombe_transformation_inverse()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.logger"><code class="docutils literal notranslate"><span class="pre">logger()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.number_threads"><code class="docutils literal notranslate"><span class="pre">number_threads()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.spectral_vector_denoise"><code class="docutils literal notranslate"><span class="pre">spectral_vector_denoise()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.utils.versions"><code class="docutils literal notranslate"><span class="pre">versions()</span></code></a></li>
 </ul>
   </nav></div>
 
