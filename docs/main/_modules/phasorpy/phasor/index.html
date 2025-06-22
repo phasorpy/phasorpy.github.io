@@ -586,6 +586,10 @@
 <span class="sd">  - :py:func:`phasor_filter_pawflim`</span>
 <span class="sd">  - :py:func:`phasor_threshold`</span>
 
+<span class="sd">- find nearest neighbor phasor coordinates from another set of phasor coordinates:</span>
+
+<span class="sd">  - :py:func:`phasor_nearest_neighbor`</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
@@ -609,6 +613,7 @@
     <span class="s1">&#39;phasor_from_polar&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_from_signal&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_multiply&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;phasor_nearest_neighbor&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_normalize&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_semicircle&#39;</span><span class="p">,</span>
     <span class="s1">&#39;phasor_semicircle_intersect&#39;</span><span class="p">,</span>
@@ -646,6 +651,7 @@
     <span class="n">_gaussian_signal</span><span class="p">,</span>
     <span class="n">_intersect_semicircle_line</span><span class="p">,</span>
     <span class="n">_median_filter_2d</span><span class="p">,</span>
+    <span class="n">_nearest_neighbor_2d</span><span class="p">,</span>
     <span class="n">_phasor_at_harmonic</span><span class="p">,</span>
     <span class="n">_phasor_divide</span><span class="p">,</span>
     <span class="n">_phasor_from_apparent_lifetime</span><span class="p">,</span>
@@ -3264,6 +3270,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    phasorpy.phasor.phasor_from_fret_acceptor</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_api_phasorpy_fret.py`</span>
+<span class="sd">    :ref:`sphx_glr_tutorials_applications_phasorpy_fret_efficiency.py`</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -4212,6 +4219,157 @@
         <span class="n">mean</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">mean</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span></div>
+
+
+
+<div class="viewcode-block" id="phasor_nearest_neighbor">
+<a class="viewcode-back" href="../../../api/phasor/#phasorpy.phasor.phasor_nearest_neighbor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">phasor_nearest_neighbor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">neighbor_real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">neighbor_imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="o">/</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">DTypeLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">distance_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">num_threads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return indices or values of nearest neighbor from other coordinates.</span>
+
+<span class="sd">    For each phasor coordinate, find the nearest neighbor in another set of</span>
+<span class="sd">    phasor coordinates and return its flat index. If more than one neighbor</span>
+<span class="sd">    has the same distance, return the smallest index.</span>
+
+<span class="sd">    For phasor coordinates that are NaN, or have a distance to the nearest</span>
+<span class="sd">    neighbor that is larger than `distance_max`, return an index of -1.</span>
+
+<span class="sd">    If `values` are provided, return the values corresponding to the nearest</span>
+<span class="sd">    neighbor coordinates instead of indices. Return NaN values for indices</span>
+<span class="sd">    that are -1.</span>
+
+<span class="sd">    This function does not support multi-harmonic, multi-channel, or</span>
+<span class="sd">    multi-frequency phasor coordinates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : array_like</span>
+<span class="sd">        Real component of phasor coordinates.</span>
+<span class="sd">    imag : array_like</span>
+<span class="sd">        Imaginary component of phasor coordinates.</span>
+<span class="sd">    neighbor_real : array_like</span>
+<span class="sd">        Real component of neighbor phasor coordinates.</span>
+<span class="sd">    neighbor_imag : array_like</span>
+<span class="sd">        Imaginary component of neighbor phasor coordinates.</span>
+<span class="sd">    values : array_like, optional</span>
+<span class="sd">        Array of values corresponding to neighbor coordinates.</span>
+<span class="sd">        If provided, return the values corresponding to the nearest</span>
+<span class="sd">        neighbor coordinates.</span>
+<span class="sd">    distance_max : float, optional</span>
+<span class="sd">        Maximum Euclidean distance to consider a neighbor valid.</span>
+<span class="sd">        By default, all neighbors are considered.</span>
+<span class="sd">    dtype : dtype_like, optional</span>
+<span class="sd">        Floating point data type used for calculation and output values.</span>
+<span class="sd">        Either `float32` or `float64`. The default is `float64`.</span>
+<span class="sd">    num_threads : int, optional</span>
+<span class="sd">        Number of OpenMP threads to use for parallelization.</span>
+<span class="sd">        By default, multi-threading is disabled.</span>
+<span class="sd">        If zero, up to half of logical CPUs are used.</span>
+<span class="sd">        OpenMP may not be available on all platforms.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nearest : ndarray</span>
+<span class="sd">        Flat indices (or the corresponding values if provided) of the nearest</span>
+<span class="sd">        neighbor coordinates.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the shapes of `real`, and `imag` do not match.</span>
+<span class="sd">        If the shapes of `neighbor_real` and `neighbor_imag` do not match.</span>
+<span class="sd">        If the shapes of `values` and `neighbor_real` do not match.</span>
+<span class="sd">        If `distance_max` is less than or equal to zero.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :ref:`sphx_glr_tutorials_applications_phasorpy_fret_efficiency.py`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function uses linear search, which is inefficient for large</span>
+<span class="sd">    number of coordinates or neighbors.</span>
+<span class="sd">    ``scipy.spatial.KDTree.query()`` would be more efficient in those cases.</span>
+<span class="sd">    However, KDTree is known to return non-deterministic results in case of</span>
+<span class="sd">    multiple neighbors with the same distance.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; phasor_nearest_neighbor(</span>
+<span class="sd">    ...     [0.1, 0.5, numpy.nan],</span>
+<span class="sd">    ...     [0.1, 0.5, numpy.nan],</span>
+<span class="sd">    ...     [0, 0.4],</span>
+<span class="sd">    ...     [0, 0.4],</span>
+<span class="sd">    ...     values=[10, 20],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    array([10, 20, nan])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">}:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dtype</span><span class="si">=}</span><span class="s1"> is not a floating point type&#39;</span><span class="p">)</span>
+
+    <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">neighbor_real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">neighbor_real</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">neighbor_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">neighbor_imag</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">neighbor_real</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">neighbor_imag</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">neighbor_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">neighbor_imag</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="n">real</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">neighbor_real</span> <span class="o">=</span> <span class="n">neighbor_real</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">neighbor_imag</span> <span class="o">=</span> <span class="n">neighbor_imag</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
+        <span class="n">real</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min_scalar_type</span><span class="p">(</span><span class="o">-</span><span class="n">neighbor_real</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">distance_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">distance_max</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">distance_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">distance_max</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">distance_max</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">distance_max</span><span class="si">=}</span><span class="s1"> &lt;= 0&#39;</span><span class="p">)</span>
+
+    <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+
+    <span class="n">_nearest_neighbor_2d</span><span class="p">(</span>
+        <span class="n">indices</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">,</span>
+        <span class="n">neighbor_real</span><span class="p">,</span>
+        <span class="n">neighbor_imag</span><span class="p">,</span>
+        <span class="n">distance_max</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">indices</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">neighbor_real</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="n">neighbor_real</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">nearest_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+    <span class="n">nearest_values</span><span class="p">[</span><span class="n">indices</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">nearest_values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span></div>
 
 
 
