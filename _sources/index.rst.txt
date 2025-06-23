@@ -42,7 +42,7 @@ News
 
 - Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
-- Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ to read Leica LIF files is released.
+- Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ for reading Leica LIF files is released.
 
 - Jan 8, 2025: PhasorPy is available on `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`_.
 
@@ -60,7 +60,7 @@ News
 
 - Feb 16, 2024: First `tutorial <https://www.phasorpy.org/docs/stable/tutorials/>`_ added to the documentation.
 
-- Nov 1, 2023: The `ptufile library <https://github.com/cgohlke/ptufile>`_ to read PicoQuant PTU files is released.
+- Nov 1, 2023: The `ptufile library <https://github.com/cgohlke/ptufile>`_ for reading PicoQuant PTU files is released.
 
 - Oct 26, 2023: The PhasorPy project is introduced at the `17th LFD Workshop <https://www.lfd.uci.edu/workshop/2023/>`_.
 
@@ -72,7 +72,7 @@ News
 
 - Aug 21, 2023: First PhasorPy developer meeting, to be held remotely every two weeks.
 
-- July 6, 2023: PhasorPy's `organization and repository on GitHub <https://github.com/phasorpy/phasorpy>`_ are life.
+- July 6, 2023: PhasorPy's `organization and repository on GitHub <https://github.com/phasorpy/phasorpy>`_ are live.
 
 - July 1, 2023: `Christoph Gohlke <https://github.com/cgohlke>`_ joins the PhasorPy project.
 
@@ -86,7 +86,7 @@ Events
 The PhasorPy project is presented at the following events:
 
 - Leonel Malacrida.
-  PhasorPy library for open source phasor analysis of FLIM and HSI: present, future and some applications in biological fluorescence.
+  PhasorPy library for open-source phasor analysis of FLIM and HSI: present, future and some applications in biological fluorescence.
   `12th International Weber Symposium
   <https://www.webersymposium.com/>`_.
   June 15-20, 2025. Genoa, Italy.
@@ -167,7 +167,7 @@ The PhasorPy project is presented at the following events:
   <https://chanzuckerberg.com/science/programs-resources/open-science/>`_.
   June 11-14, 2024. Boston, USA.
 
-- Leonel Malacirda.
+- Leonel Malacrida.
   The phasor plots for time-resolved and hyperspectral imaging: fundamentals and new developments.
   `Sociedad Argentina de Microscopia
   <https://www.samictucuman2024.com/>`_.
