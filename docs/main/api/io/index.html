@@ -1024,13 +1024,15 @@ harmonics are present).</p>
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_simfcs_referenced">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_simfcs_referenced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.phasor_from_simfcs_referenced" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates and metadata from SimFCS REF or R64 file.</p>
-<p>SimFCS referenced REF and R64 files contain phasor coordinate images
-(encoded as phase and modulation) for two harmonics.
-Phasor coordinates from lifetime-resolved signals are calibrated.</p>
+<p>SimFCS referenced REF and R64 files contain square-shaped phasor
+coordinate images (encoded as phase and modulation) for two harmonics.
+Phasor coordinates from lifetime-resolved signals are calibrated.
+Variants of referenced files (RE&lt;n&gt;) written by other software may
+contain up to eight harmonics and may be uncalibrated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS REF or R64 file to read.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS REF, R64, or RE&lt;n&gt; file to read.</p></li>
 <li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonic(s) to include in returned phasor coordinates.
 By default, only the first harmonic is returned.</p></li>
 </ul>
@@ -1052,7 +1054,7 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lfdfiles.LfdfileError</strong> – File is not a SimFCS REF or R64 file.</p>
+<dd class="field-odd"><p><strong>lfdfiles.LfdfileError</strong> – File is not a SimFCS REF, R64, or RE&lt;n&gt; file.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1060,7 +1062,7 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 <p><a class="reference internal" href="#phasorpy.io.phasor_to_simfcs_referenced" title="phasorpy.io.phasor_to_simfcs_referenced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.io.phasor_to_simfcs_referenced</span></code></a></p>
 </div>
 <p class="rubric">Notes</p>
-<p>The implementation is based on the
+<p>The implementation for reading R64 files is based on the
 <a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_simfcs_referenced</span><span class="p">(</span>
