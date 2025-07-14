@@ -588,11 +588,11 @@ Must be one or two-dimensional with harmonics in the first dimension.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>fractions</strong> – Component fractions, one array per component.
+<dd class="field-even"><p><strong>fractions</strong> – Component fractions.
 Fractions may not exactly add up to 1.0.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple of ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
@@ -631,7 +631,8 @@ imaging</a>.
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_fit</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">(array([0.4644, 0.5356, 0.6068]), array([0.5559, 0.4441, 0.3322]))</span>
+<span class="go">array([[0.4644, 0.5356, 0.6068],</span>
+<span class="go">       [0.5559, 0.4441, 0.3322]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -707,10 +708,12 @@ the cursor (see Notes below).</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>counts</strong> – Counts along each line segment connecting components.
-Ordered 0-1 (2 components) or 0-1, 0-2, 1-2 (3 components).</p>
+Ordered 0-1 (2 components) or 0-1, 0-2, 1-2 (3 components).
+Shaped <cite>(number fractions,)</cite> (2 components) or
+<cite>(3, number fractions)</cite> (3 components).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple of ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite>, or <cite>component_real</cite> and
@@ -752,7 +755,7 @@ calculate changes of metabolic trajectory in biological systems</a>.
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_graphical</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">fractions</span><span class="o">=</span><span class="mi">6</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">(array([0, 0, 1, 0, 1, 0], dtype=uint64),)</span>
+<span class="go">array([0, 0, 1, 0, 1, 0], dtype=uint8)</span>
 </pre></div>
 </div>
 <p>Count the number of phasors between the combinations of three components:</p>
@@ -763,9 +766,9 @@ calculate changes of metabolic trajectory in biological systems</a>.
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">fractions</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="go">(array([0, 1, 1, 1, 1, 0], dtype=uint64),</span>
-<span class="go"> array([0, 1, 0, 0, 0, 0], dtype=uint64),</span>
-<span class="go"> array([0, 1, 2, 0, 0, 0], dtype=uint64))</span>
+<span class="go">array([[0, 1, 1, 1, 1, 0],</span>
+<span class="go">       [0, 1, 0, 0, 0, 0],</span>
+<span class="go">       [0, 1, 2, 0, 0, 0]], dtype=uint8)</span>
 </pre></div>
 </div>
 </dd></dl>
