@@ -557,6 +557,8 @@ known (not implemented)</p></li>
 harmonic information (<a class="reference internal" href="#phasorpy.components.phasor_component_fit" title="phasorpy.components.phasor_component_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a>)</p></li>
 <li><p>calculate fractions of two or three known components by resolving
 graphically with histogram (<a class="reference internal" href="#phasorpy.components.phasor_component_graphical" title="phasorpy.components.phasor_component_graphical"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_graphical()</span></code></a>)</p></li>
+<li><p>calculate mean value coordinates of phasor coordinates with respect
+to three or more components (<a class="reference internal" href="#phasorpy.components.phasor_component_mvc" title="phasorpy.components.phasor_component_mvc"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_mvc()</span></code></a>)</p></li>
 <li><p>blindly resolve fractions of multiple components by using harmonic
 information (<code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_blind()</span></code>, not implemented)</p></li>
 <li><p>calculate phasor coordinates from fractional intensities of
@@ -774,6 +776,75 @@ calculate changes of metabolic trajectory in biological systems</a>.
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.components.phasor_component_mvc">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">phasor_component_mvc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/components/#phasor_component_mvc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.phasor_component_mvc" title="Link to this definition">#</a></dt>
+<dd><p>Return mean value coordinates of phasor coordinates from components.</p>
+<p>The mean value coordinates of phasor coordinates with respect to three or
+more components spanning an arbitrary simple polygon are computed using
+the stable method described in <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.
+For three components, mean value coordinates are equivalent to
+barycentric coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>component_real</strong> (<em>array_like</em>) – Real coordinates of at least three components.</p></li>
+<li><p><strong>component_imag</strong> (<em>array_like</em>) – Imaginary coordinates of at least three components.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Floating point data type used for calculation and output values.
+Either <cite>float32</cite> or <cite>float64</cite>. The default is <cite>float64</cite>.</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
+By default, multi-threading is disabled.
+If zero, up to half of logical CPUs are used.
+OpenMP may not be available on all platforms.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fractions</strong> – Mean value coordinates for each phasor coordinate.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    The array shapes of <cite>component_real</cite> and <cite>component_imag</cite> do not match.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Calculation of mean value coordinates for different channels,
+frequencies, or harmonics is not supported. Only one set of components
+can be analyzed and is broadcast to all channels/frequencies/harmonics.</p>
+<p>For three components, this function returns the same result as
+<a class="reference internal" href="#phasorpy.components.phasor_component_fit" title="phasorpy.components.phasor_component_fit"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a>. For more than three components,
+the system is underdetermined and the mean value coordinates represent
+one of multiple solutions. However, the special properties of the mean
+value coordinates make them particularly useful for interpolating and
+visualizing multi-component data.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<p>Fuda C and Hormann K.
+<a class="reference external" href="https://doi.org/10.1016/j.cagd.2024.102310">A new stable method to compute mean value coordinates</a>.
+<em>Computer Aided Geometric Design</em>, 111: 102310 (2024)</p>
+</aside>
+</aside>
+<p class="rubric">Example</p>
+<p>Calculate the barycentric coordinates of a phasor coordinate
+in a triangle defined by three components:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_mvc</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="go">array([0.3, 0.6, 0.1])</span>
+</pre></div>
+</div>
+<p>The barycentric coordinates of phasor coordinates outside the polygon
+defined by the components may be outside the range [0.0, 1.0]:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_mvc</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="go">array([0.6, 0.6, -0.2])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.components.phasor_from_component">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.components.</span></span><span class="sig-name descname"><span class="pre">phasor_from_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/components/#phasor_from_component"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.components.phasor_from_component" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from fractional intensities of components.</p>
@@ -864,6 +935,7 @@ intensities:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_component_fit"><code class="docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_component_fraction"><code class="docutils literal notranslate"><span class="pre">phasor_component_fraction()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_component_graphical"><code class="docutils literal notranslate"><span class="pre">phasor_component_graphical()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_component_mvc"><code class="docutils literal notranslate"><span class="pre">phasor_component_mvc()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.components.phasor_from_component"><code class="docutils literal notranslate"><span class="pre">phasor_from_component()</span></code></a></li>
 </ul>
   </nav></div>
