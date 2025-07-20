@@ -749,10 +749,13 @@ Zeroed if an intensity image is not present in file.</p></li>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'dims'</span></code> (tuple of str):
 <a class="reference internal" href="#axes"><span class="std std-ref">Axes codes</span></a> for <cite>mean</cite> image dimensions.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'harmonic'</span></code> (int):
-Harmonic of <cite>real</cite> and <cite>imag</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'samples'</span></code> (int):
+Number of time bins (always 256).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'harmonic'</span></code> (int or list of int):
+Harmonic(s) of <cite>real</cite> and <cite>imag</cite>.
+Single int if one harmonic, list if multiple harmonics.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float):
-Fundamental frequency of time-resolved phasor coordinates in MHz.</p></li>
+Laser repetition frequency in MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'flimlabs_header'</span></code> (dict):
 FLIM LABS file header.</p></li>
 </ul>
@@ -802,7 +805,7 @@ lifetime measurements.</p>
 <li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of channel to return.
 By default, return the first channel.
 If None, return all channels.</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonic(s) to return from file.
+<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>'any'</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonic(s) to return from file.
 If None (default), return the first harmonic stored in file.
 If <cite>‘all’</cite>, return all harmonics of first frequency stored in file.
 If <cite>‘any’</cite>, return all frequencies as stored in file, not necessarily
@@ -1034,8 +1037,10 @@ contain up to eight harmonics and may be uncalibrated.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS REF, R64, or RE&lt;n&gt; file to read.</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonic(s) to include in returned phasor coordinates.
-By default, only the first harmonic is returned.</p></li>
+<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonic(s) to include in returned phasor coordinates.
+By default, only the first harmonic is returned.
+If ‘all’, return all available harmonics.
+If int or sequence, return specified harmonic(s).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1045,7 +1050,7 @@ By default, only the first harmonic is returned.</p></li>
 Multiple harmonics, if any, are in the first axis.</p></li>
 <li><p><strong>imag</strong> (<em>ndarray</em>) – Image of imaginary component of phasor coordinates.
 Multiple harmonics, if any, are in the first axis.</p></li>
-<li><p><strong>attrs</strong> (<em>dict</em>) – Select metadata:</p>
+<li><p><strong>attrs</strong> (<em>dict</em>) – Select metadata containing:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'dims'</span></code> (tuple of str):
 <a class="reference internal" href="#axes"><span class="std std-ref">Axes codes</span></a> for <cite>mean</cite> image dimensions.</p></li>
@@ -1106,14 +1111,13 @@ Usually in units of MHz.
 Write to image series named ‘Phasor frequency’.</p></li>
 <li><p><strong>harmonic</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Harmonics present in the first dimension of <cite>real</cite> and <cite>imag</cite>, if any.
 Write to image series named ‘Phasor harmonic’.
-It is only needed if harmonics are not starting at and increasing by
-one.</p></li>
+Only needed if harmonics are not starting at and increasing by one.</p></li>
 <li><p><strong>dims</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Character codes for <cite>mean</cite> image dimensions.
 By default, the last dimensions are assumed to be ‘TZCYX’.
 If harmonics are present in <cite>real</cite> and <cite>imag</cite>, an “other” (<code class="docutils literal notranslate"><span class="pre">Q</span></code>)
 dimension is prepended to axes for those arrays.
 Refer to the OME-TIFF model for allowed axes and their order.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em>) – Floating point data type used to store phasor coordinates.
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Floating point data type used to store phasor coordinates.
 The default is <code class="docutils literal notranslate"><span class="pre">float32</span></code>, which has 6 digits of precision
 and maximizes compatibility with other software.</p></li>
 <li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Plain-text description of dataset. Write as OME dataset description.</p></li>
@@ -1172,8 +1176,10 @@ Harmonics must be starting at and increasing by one.</p></li>
 Multiple harmonics, if any, must be in the first dimension.
 Harmonics must be starting at and increasing by one.</p></li>
 <li><p><strong>size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of X and Y dimensions of square-sized images stored in file.
+Must be in range [4, 65535].
 By default, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">min(256,</span> <span class="pre">max(4,</span> <span class="pre">sizey,</span> <span class="pre">sizex))</span></code>.</p></li>
-<li><p><strong>dims</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Character codes for <cite>mean</cite> dimensions used to format file names.</p></li>
+<li><p><strong>dims</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Character codes for <cite>mean</cite> dimensions used to format file names.
+Only used when chunking multi-dimensional data into multiple files.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1241,7 +1247,7 @@ cards, or converted from other data sources. B&amp;H files contain no metadata.<
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS B&amp;H file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>TCSPC histogram with ref:<cite>axes codes &lt;axes&gt;</cite> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
+<dd class="field-even"><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
 shape <code class="docutils literal notranslate"><span class="pre">(256,</span> <span class="pre">256,</span> <span class="pre">256)</span></code>, and type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1279,7 +1285,7 @@ cards, or converted from other data sources. BHZ files contain no metadata.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS BHZ file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>TCSPC histogram with ref:<cite>axes codes &lt;axes&gt;</cite> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
+<dd class="field-even"><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'HYX'</span></code>,
 shape <code class="docutils literal notranslate"><span class="pre">(256,</span> <span class="pre">256,</span> <span class="pre">256)</span></code>, and type <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1324,7 +1330,7 @@ changed during acquisition.</p>
 <li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of FLIMbox FBD file to read.</p></li>
 <li><p><strong>frame</strong> (<em>int</em><em>, </em><em>optional</em>) – If None (default), return all frames.
 If &lt; 0, integrate time axis, else return specified frame.</p></li>
-<li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of channel to return.
+<li><p><strong>channel</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Index of channel to return.
 By default, return the first channel.
 If None, return all channels.</p></li>
 <li><p><strong>keepdims</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – If true, return reduced axes as size-one dimensions.</p></li>
@@ -1439,15 +1445,21 @@ The file name usually contains the string “_imaging” or “_phasor”.</p></
 <li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of channel to return.
 By default, return the first channel.
 If None, return all channels.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
 Increase the bit-depth for high photon counts.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'CYXH'</span></code> and
-type specified in <code class="docutils literal notranslate"><span class="pre">dtype</span></code>:</p>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> depending on
+<cite>channel</cite> parameter:</p>
+<ul class="simple">
+<li><p>Single channel: axes <code class="docutils literal notranslate"><span class="pre">'YXH'</span></code></p></li>
+<li><p>Multiple channels: axes <code class="docutils literal notranslate"><span class="pre">'CYXH'</span></code></p></li>
+</ul>
+<p>Type specified by <code class="docutils literal notranslate"><span class="pre">dtype</span></code> parameter.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: channel indices (if multiple channels).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: laser repetition frequency in MHz.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">attrs['flimlabs_header']</span></code>: FLIM LABS file header.</p></li>
 </ul>
@@ -1458,9 +1470,10 @@ type specified in <code class="docutils literal notranslate"><span class="pre">d
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – File is not a FLIM LABS JSON file containing TCSPC histogram.
-    <cite>dtype</cite> is not an unsigned integer.</p></li>
-<li><p><strong>IndexError</strong> – Channel out of range.</p></li>
+<li><p><strong>ValueError</strong> – If file is not a valid JSON file.
+    If file is not a FLIM LABS JSON file containing TCSPC histogram.
+    If <cite>dtype</cite> is not an unsigned integer type.</p></li>
+<li><p><strong>IndexError</strong> – If <cite>channel</cite> is out of range.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1481,7 +1494,7 @@ type specified in <code class="docutils literal notranslate"><span class="pre">d
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
 <span class="go">array(...)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
-<span class="go">40.00</span>
+<span class="go">40.0</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1591,7 +1604,7 @@ because the compression scheme is patent-pending.</p>
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_lsm">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lsm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_lsm" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Zeiss LSM file.</p>
-<p>LSM files contain multi-dimensional images and metadata from laser
+<p>Zeiss LSM files contain multi-dimensional images and metadata from laser
 scanning microscopy measurements. The file format is based on TIFF.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1648,7 +1661,7 @@ which are decoded to a multi-dimensional TCSPC histogram.</p>
 <li><p><strong>selection</strong> (<em>sequence</em><em> of </em><em>index types</em><em>, </em><em>optional</em>) – <p>Indices for all dimensions of image mode files:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: return all items along axis (default).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code>: return all items along multiple axes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Ellipsis</span></code> (<code class="docutils literal notranslate"><span class="pre">...</span></code>): return all items along multiple axes.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">int</span></code>: return single item along axis.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">slice</span></code>: return chunk of axis.
 <code class="docutils literal notranslate"><span class="pre">slice.step</span></code> is a binning factor.
@@ -1656,7 +1669,7 @@ If <code class="docutils literal notranslate"><span class="pre">slice.step=-1</s
 </ul>
 </p></li>
 <li><p><strong>trimdims</strong> (<em>str</em><em>, </em><em>optional</em><em>, </em><em>default: 'TCH'</em>) – Axes to trim.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype-like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em><em>, </em><em>default: uint16</em>) – Unsigned integer type of TCSPC histogram.
 Increase the bit depth to avoid overflows when integrating.</p></li>
 <li><p><strong>frame</strong> (<em>int</em><em>, </em><em>optional</em>) – If &lt; 0, integrate time axis, else return specified frame.
 Overrides <cite>selection</cite> for axis <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
@@ -1724,7 +1737,7 @@ broadcastable to image data.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of Becker &amp; Hickl SDT file to read.</p></li>
-<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Index of dataset to read in case the file contains multiple datasets.</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Index of dataset to read if the file contains multiple datasets.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1741,7 +1754,7 @@ Dimensions <code class="docutils literal notranslate"><span class="pre">'Q'</spa
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – File is not a SDT file containing TCSPC histogram.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – File is not an SDT file containing TCSPC histogram.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>

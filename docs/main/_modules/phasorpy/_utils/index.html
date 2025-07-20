@@ -570,6 +570,23 @@
 
 <span class="sd">    If `_del` is true (default), existing keys are deleted from `kwargs`.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Source dictionary to extract keys from.</span>
+<span class="sd">    *keys : str</span>
+<span class="sd">        Keys to extract from kwargs if present.</span>
+<span class="sd">    _del : bool, default: True</span>
+<span class="sd">        If True, remove extracted keys from kwargs.</span>
+<span class="sd">    **keyvalues : Any</span>
+<span class="sd">        Key-value pairs. If key exists in kwargs, use kwargs value,</span>
+<span class="sd">        otherwise use provided default value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dictionary containing extracted keys and values.</span>
+
 <span class="sd">    &gt;&gt;&gt; kwargs = {&#39;one&#39;: 1, &#39;two&#39;: 2, &#39;four&#39;: 4}</span>
 <span class="sd">    &gt;&gt;&gt; kwargs2 = parse_kwargs(kwargs, &#39;two&#39;, &#39;three&#39;, four=None, five=5)</span>
 <span class="sd">    &gt;&gt;&gt; kwargs == {&#39;one&#39;: 1}</span>
@@ -632,14 +649,14 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    factor: float</span>
+<span class="sd">    factor : float</span>
 <span class="sd">        Scale factor.</span>
-<span class="sd">    origin: (float, float)</span>
+<span class="sd">    origin : (float, float)</span>
 <span class="sd">        Coordinates of point around which to scale.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    matrix: ndarray</span>
+<span class="sd">    matrix : ndarray</span>
 <span class="sd">        A 3x3 homogeneous transformation matrix.</span>
 
 <span class="sd">    Examples</span>
@@ -677,8 +694,10 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real, imag : ndarray</span>
-<span class="sd">        Coordinates sorted by angle.</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Sorted real coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Sorted imaginary coordinates.</span>
 <span class="sd">    indices : ndarray</span>
 <span class="sd">        Indices used to reorder coordinates.</span>
 <span class="sd">        Use ``indices.argsort()`` to get original order.</span>
@@ -724,8 +743,10 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    real, imag : ndarray</span>
-<span class="sd">        Coordinates dilated by offset.</span>
+<span class="sd">    real : ndarray</span>
+<span class="sd">        Dilated real coordinates.</span>
+<span class="sd">    imag : ndarray</span>
+<span class="sd">        Dilated imaginary coordinates.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -767,8 +788,28 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return polar from scalar phasor coordinates.</span>
 
-<span class="sd">    &gt;&gt;&gt; phasor_to_polar_scalar(1.0, 0.0, degree=True, percent=True)</span>
-<span class="sd">    (0.0, 100.0)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    real : float</span>
+<span class="sd">        Real component of phasor coordinate.</span>
+<span class="sd">    imag : float</span>
+<span class="sd">        Imaginary component of phasor coordinate.</span>
+<span class="sd">    degree : bool, optional</span>
+<span class="sd">        If true, return phase in degrees instead of radians.</span>
+<span class="sd">    percent : bool, optional</span>
+<span class="sd">        If true, return modulation as percentage instead of fraction.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    phase : float</span>
+<span class="sd">        Phase angle in radians (or degrees if degree=True).</span>
+<span class="sd">    modulation : float</span>
+<span class="sd">        Modulation depth as fraction (or percentage if percent=True).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; phasor_to_polar_scalar(0.0, 1.0, degree=True, percent=True)</span>
+<span class="sd">    (90.0, 100.0)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">real</span><span class="p">)</span>
@@ -793,6 +834,26 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return phasor from scalar polar coordinates.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phase : float</span>
+<span class="sd">        Phase angle in radians (or degrees if degree=True).</span>
+<span class="sd">    modulation : float</span>
+<span class="sd">        Modulation depth as fraction (or percentage if percent=True).</span>
+<span class="sd">    degree : bool, optional</span>
+<span class="sd">        If true, phase is in degrees instead of radians.</span>
+<span class="sd">    percent : bool, optional</span>
+<span class="sd">        If true, modulation is as percentage instead of fraction.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    real : float</span>
+<span class="sd">        Real component of phasor coordinate.</span>
+<span class="sd">    imag : float</span>
+<span class="sd">        Imaginary component of phasor coordinate.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; phasor_from_polar_scalar(0.0, 100.0, degree=True, percent=True)</span>
 <span class="sd">    (1.0, 0.0)</span>
 
@@ -821,23 +882,27 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    signal : array_like</span>
-<span class="sd">        Image stack.</span>
-<span class="sd">    axis : int or str, optional</span>
-<span class="sd">        Axis over which phasor coordinates are computed.</span>
-<span class="sd">        By default, the &#39;H&#39; or &#39;C&#39; axes if `signal` contains such</span>
-<span class="sd">        dimension names, else the last axis (-1).</span>
+<span class="sd">        Signal array.</span>
+<span class="sd">        Axis names are used if it has a `dims` attribute.</span>
+<span class="sd">    axis : int, str, or None, default: None</span>
+<span class="sd">        Axis over which to compute phasor coordinates.</span>
+<span class="sd">        If None, automatically selects &#39;H&#39; or &#39;C&#39; axis if available,</span>
+<span class="sd">        otherwise uses the last axis (-1).</span>
+<span class="sd">        If int, specifies axis index.</span>
+<span class="sd">        If str, specifies axis name (requires `signal.dims`).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    axis : int</span>
-<span class="sd">        Axis over which phasor coordinates are computed.</span>
+<span class="sd">        Index of axis over which phasor coordinates are computed.</span>
 <span class="sd">    axis_label : str</span>
-<span class="sd">        Axis label from `signal.dims` if any.</span>
+<span class="sd">        Label of axis from `signal.dims` if available, empty string otherwise.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        Axis not found in signal.dims or invalid for signal type.</span>
+<span class="sd">        If axis string is not found in signal.dims.</span>
+<span class="sd">        If axis string is provided but signal has no dims attribute.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -907,6 +972,8 @@
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ndim is negative.</span>
 <span class="sd">    IndexError</span>
 <span class="sd">        If any `skip_axis` value is out of bounds of `ndim`.</span>
 
@@ -955,7 +1022,7 @@
 <span class="sd">    harmonic : int, sequence of int, &#39;all&#39;, or None</span>
 <span class="sd">        Harmonic parameter to parse.</span>
 <span class="sd">    harmonic_max : int, optional</span>
-<span class="sd">        Maximum value allowed in `hamonic`. Must be one or greater.</span>
+<span class="sd">        Maximum value allowed in `harmonic`. Must be one or greater.</span>
 <span class="sd">        To verify against known number of signal samples,</span>
 <span class="sd">        pass ``samples // 2``.</span>
 <span class="sd">        If `harmonic=&#39;all&#39;`, a range of harmonics from one to `harmonic_max`</span>
@@ -1044,11 +1111,11 @@
 <span class="sd">    pattern : str, optional</span>
 <span class="sd">        String to format chunk indices.</span>
 <span class="sd">        If None, use ``_[{dims[index]}{chunk_index[index]}]`` for each axis.</span>
-<span class="sd">    squeeze : bool</span>
+<span class="sd">    squeeze : bool, optional</span>
 <span class="sd">        If true, do not include length-1 chunked dimensions in label</span>
 <span class="sd">        unless dimensions are part of `chunk_shape`.</span>
 <span class="sd">        Applies only if `pattern` is None.</span>
-<span class="sd">    use_index : bool</span>
+<span class="sd">    use_index : bool, optional</span>
 <span class="sd">        If true, use indices of chunks in `shape` instead of chunk indices to</span>
 <span class="sd">        format pattern.</span>
 

@@ -518,14 +518,13 @@
 
 <span class="sd">The ``phasorpy.datasets`` module provides a :py:func:`fetch` function to</span>
 <span class="sd">download data files from remote repositories and cache them in a local</span>
-<span class="sd">directory. The cache location can be changed by setting the</span>
-<span class="sd">``PHASORPY_DATA_DIR`` environment variable.</span>
+<span class="sd">directory.</span>
 
 <span class="sd">Datasets from the following repositories are available:</span>
 
-<span class="sd">- `PhasorPy tests &lt;https://zenodo.org/record/8417894&gt;`_</span>
-<span class="sd">- `LFD Workshop &lt;https://zenodo.org/record/8411056&gt;`_</span>
-<span class="sd">- `FLUTE &lt;https://zenodo.org/record/8046636&gt;`_</span>
+<span class="sd">- `PhasorPy tests &lt;https://zenodo.org/records/8417894&gt;`_</span>
+<span class="sd">- `LFD Workshop &lt;https://zenodo.org/records/8411056&gt;`_</span>
+<span class="sd">- `FLUTE &lt;https://zenodo.org/records/8046636&gt;`_</span>
 <span class="sd">- `napari-flim-phasor-plotter</span>
 <span class="sd">  &lt;https://github.com/zoccoler/napari-flim-phasor-plotter/tree/0.0.6/src/napari_flim_phasor_plotter/data&gt;`_</span>
 <span class="sd">- `Phasor-based multi-harmonic unmixing for in-vivo hyperspectral imaging</span>
@@ -540,6 +539,10 @@
 
 <span class="sd">The implementation is based on the `Pooch &lt;https://www.fatiando.org/pooch&gt;`_</span>
 <span class="sd">library.</span>
+
+<span class="sd">The default cache location is determined by the Pooch library, but can be</span>
+<span class="sd">overridden by setting the ``PHASORPY_DATA_DIR`` environment variable to</span>
+<span class="sd">a custom directory path.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -1046,7 +1049,12 @@
     <span class="s1">&#39;figshare_22336594_exported&#39;</span><span class="p">:</span> <span class="n">FIGSHARE_22336594_EXPORTED</span><span class="p">,</span>
     <span class="s1">&#39;misc&#39;</span><span class="p">:</span> <span class="n">MISC</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Pooch repositories.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Dictionary mapping repository names to Pooch repository objects.</span>
+
+<span class="sd">Each repository provides access to a specific collection of sample data files</span>
+<span class="sd">that can be fetched using the :py:func:`fetch` function.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="fetch">
@@ -1064,8 +1072,15 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    *args : str or iterable of str, optional</span>
+<span class="sd">    *args : str, iterable of str, or pooch.Pooch</span>
 <span class="sd">        Name(s) of file(s) or repositories to fetch from local storage.</span>
+<span class="sd">        Can be:</span>
+
+<span class="sd">        - File names (for example, &#39;simfcs.r64&#39;)</span>
+<span class="sd">        - Repository names (for example, &#39;tests&#39;, &#39;flute&#39;)</span>
+<span class="sd">        - Pooch repository objects</span>
+<span class="sd">        - Iterables of the above</span>
+
 <span class="sd">        If omitted, return files in all repositories.</span>
 <span class="sd">    extract_dir : str or None, optional</span>
 <span class="sd">        Path, relative to cache location, where ZIP files will be unpacked.</span>
@@ -1079,6 +1094,13 @@
 <span class="sd">    -------</span>
 <span class="sd">    str or tuple of str</span>
 <span class="sd">        Absolute path(s) of file(s) in local storage.</span>
+<span class="sd">        Returns a single string if only one file and `return_scalar=True`,</span>
+<span class="sd">        otherwise returns a tuple of strings.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If specified file is not found in any repository.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>

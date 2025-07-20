@@ -546,7 +546,7 @@
                   
   <section id="module-phasorpy.color">
 <span id="phasorpy-color"></span><h1>phasorpy.color<a class="headerlink" href="#module-phasorpy.color" title="Link to this heading">#</a></h1>
-<p>Color palettes and manipulation.</p>
+<p>Color palettes and color manipulation utilities.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.color.float2int">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.color.</span></span><span class="sig-name descname"><span class="pre">float2int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.uint8'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/color/#float2int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.color.float2int" title="Link to this definition">#</a></dt>
@@ -555,7 +555,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rgb</strong> (<em>array_like</em>) – Scalar or array of normalized floating-point color components.</p></li>
-<li><p><strong>dtype</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data type of return value. The default is <code class="docutils literal notranslate"><span class="pre">uint8</span></code>.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of return value. The default is <code class="docutils literal notranslate"><span class="pre">uint8</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -576,22 +576,24 @@
 <dt class="sig sig-object py" id="phasorpy.color.wavelength2rgb">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.color.</span></span><span class="sig-name descname"><span class="pre">wavelength2rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavelength</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/color/#wavelength2rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.color.wavelength2rgb" title="Link to this definition">#</a></dt>
 <dd><p>Return approximate sRGB color components of visible wavelength(s).</p>
-<p>Wavelengths are clipped to range [360, 750] nm, rounded, and used to
+<p>Wavelengths are clipped to the range [360, 750] nm, rounded, and used to
 index the <a class="reference internal" href="#phasorpy.color.SRGB_SPECTRUM" title="phasorpy.color.SRGB_SPECTRUM"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SRGB_SPECTRUM</span></code></a> palette.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>wavelength</strong> (<em>array_like</em>) – Scalar or array of wavelengths in nm.</p></li>
-<li><p><strong>dtype</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data-type of return value. The default is <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data-type of return value. The default is <code class="docutils literal notranslate"><span class="pre">float32</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Approximate sRGB color components of visible wavelength.
+<dd class="field-even"><p>Approximate sRGB color components of visible wavelength(s).
+If input is scalar, return tuple of three floats.
+If input is array, return ndarray with shape (…, 3).
 Floating-point values are in range [0.0, 1.0].
 Integer values are scaled to the dtype’s maximum value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray or tuple</p>
+<dd class="field-odd"><p>ndarray or tuple of float</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -608,7 +610,7 @@ Integer values are scaled to the dtype’s maximum value.</p>
 <dt class="sig sig-object py" id="phasorpy.color.CATEGORICAL">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.color.</span></span><span class="sig-name descname"><span class="pre">CATEGORICAL</span></span><a class="headerlink" href="#phasorpy.color.CATEGORICAL" title="Link to this definition">#</a></dt>
 <dd><p>Categorical sRGB color palette inspired by C. Glasbey.</p>
-<p>Contains 64 maximally distinct colours for visualization.</p>
+<p>Contains 64 maximally distinct colors for visualization.</p>
 <p>Generated using the <a class="reference external" href="https://glasbey.readthedocs.io">glasbey</a> package:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">glasbey</span><span class="p">;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">glasbey</span><span class="o">.</span><span class="n">create_palette</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">as_hex</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
@@ -620,7 +622,9 @@ Integer values are scaled to the dtype’s maximum value.</p>
 <dt class="sig sig-object py" id="phasorpy.color.SRGB_SPECTRUM">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.color.</span></span><span class="sig-name descname"><span class="pre">SRGB_SPECTRUM</span></span><a class="headerlink" href="#phasorpy.color.SRGB_SPECTRUM" title="Link to this definition">#</a></dt>
 <dd><p>sRGB color components for wavelengths of visible light (360-750 nm).</p>
-<p>Based on the CIE 1931 2° Standard Observer.</p>
+<p>Array of shape (391, 3) containing normalized sRGB color components
+for wavelengths from 360 to 750 nm in 1 nm increments.
+Based on the CIE 1931 2° Standard Observer.</p>
 <p>Generated using the <a class="reference external" href="https://colour.readthedocs.io">colour</a> package:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">colour</span><span class="p">;</span> <span class="n">colour</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">plot_visible_spectrum</span><span class="p">()</span>
 </pre></div>

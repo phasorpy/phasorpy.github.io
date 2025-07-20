@@ -587,8 +587,7 @@
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_threshold" title="phasorpy.phasor.phasor_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>find nearest neighbor phasor coordinates from another set of phasor
-coordinates:</p>
+<li><p>find nearest neighbor phasor coordinates from other phasor coordinates:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_nearest_neighbor()</span></code></a></p></li>
 </ul>
@@ -708,7 +707,7 @@ intensity unchanged.</p>
 By default, all axes except harmonics are included.</p></li>
 <li><p><strong>use_scipy</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.ndimage.median_filter()</span></code>.
 This function has undefined behavior if the input arrays contain
-<cite>NaN</cite> values but is faster when filtering more than 2 dimensions.
+NaN values but is faster when filtering more than 2 dimensions.
 See <a class="reference external" href="https://github.com/phasorpy/phasorpy/issues/87">issue #87</a>.</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
 Applies to filtering in two dimensions when not using scipy.
@@ -964,8 +963,8 @@ according to:</p>
 \cos{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\\S &amp;= \frac{1}{K} \sum_{k=0}^{K-1} F_{k}
 \sin{\left (2 \pi h \frac{k}{K} \right )} \cdot \frac{1}{F_{DC}}\end{aligned}\end{align} \]</div>
 <p>If <span class="math notranslate nohighlight">\(F_{DC} = 0\)</span>, the phasor coordinates are undefined
-(resulting in <span class="math notranslate nohighlight">\(NaN\)</span> or <span class="math notranslate nohighlight">\(\infty\)</span>).
-Use <cite>NaN</cite>-aware software to further process the phasor coordinates.</p>
+(resulting in NaN or infinity).
+Use NaN-aware software to further process the phasor coordinates.</p>
 <p>The phasor coordinates may be zero, for example, in case of only constant
 background in time-resolved signals, or as the result of linear
 combination of non-zero spectral phasors coordinates.</p>
@@ -1129,7 +1128,7 @@ according to:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}F_{DC} &amp;= F / K\\G &amp;= G' / F\\S &amp;= S' / F\end{aligned}\end{align} \]</div>
 <p>If <span class="math notranslate nohighlight">\(F = 0\)</span>, the normalized phasor coordinates (<span class="math notranslate nohighlight">\(G\)</span>)
-and (<span class="math notranslate nohighlight">\(S\)</span>) are undefined (<span class="math notranslate nohighlight">\(NaN\)</span> or <span class="math notranslate nohighlight">\(\infty\)</span>).</p>
+and (<span class="math notranslate nohighlight">\(S\)</span>) are undefined (NaN or infinity).</p>
 <p class="rubric">Examples</p>
 <p>Normalize phasor coordinates with intensity integrated over 10 samples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_normalize</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -1291,7 +1290,7 @@ are converted to polar coordinates <cite>phase</cite> (<span class="math notrans
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_principal_plane">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_principal_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/phasor/#phasor_to_principal_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_principal_plane" title="Link to this definition">#</a></dt>
 <dd><p>Return multi-harmonic phasor coordinates projected onto principal plane.</p>
-<p>Principal Component Analysis (PCA) is used to project
+<p>Principal component analysis (PCA) is used to project
 multi-harmonic phasor coordinates onto a plane, along which
 coordinate axes the phasor coordinates have the largest variations.</p>
 <p>The transformed coordinates are not phasor coordinates. However, the
@@ -1331,7 +1330,7 @@ The shape is <code class="docutils literal notranslate"><span class="pre">(2,</s
 </div>
 <p class="rubric">Notes</p>
 <p>This implementation does not work with coordinates containing
-undefined <cite>NaN</cite> values.</p>
+undefined NaN values.</p>
 <p>The transformation matrix can be used to project multi-harmonic phasor
 coordinates, where the first axis is the frequency:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
@@ -1414,7 +1413,7 @@ Used to calculate the real inverse FFT.</p></li>
 </div>
 <p class="rubric">Notes</p>
 <p>The reconstructed signal may be undefined if the input phasor coordinates,
-or signal mean contain <cite>NaN</cite> values.</p>
+or signal mean contain NaN values.</p>
 <p class="rubric">Examples</p>
 <p>Reconstruct exact signal from phasor coordinates at all harmonics:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

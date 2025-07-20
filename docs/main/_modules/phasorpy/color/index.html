@@ -514,7 +514,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for phasorpy.color</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Color palettes and manipulation.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Color palettes and color manipulation utilities.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -537,20 +537,22 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return approximate sRGB color components of visible wavelength(s).</span>
 
-<span class="sd">    Wavelengths are clipped to range [360, 750] nm, rounded, and used to</span>
+<span class="sd">    Wavelengths are clipped to the range [360, 750] nm, rounded, and used to</span>
 <span class="sd">    index the :py:attr:`SRGB_SPECTRUM` palette.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    wavelength : array_like</span>
 <span class="sd">        Scalar or array of wavelengths in nm.</span>
-<span class="sd">    dtype : data-type, optional</span>
+<span class="sd">    dtype : dtype_like, optional</span>
 <span class="sd">        Data-type of return value. The default is ``float32``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    ndarray or tuple</span>
-<span class="sd">        Approximate sRGB color components of visible wavelength.</span>
+<span class="sd">    ndarray or tuple of float</span>
+<span class="sd">        Approximate sRGB color components of visible wavelength(s).</span>
+<span class="sd">        If input is scalar, return tuple of three floats.</span>
+<span class="sd">        If input is array, return ndarray with shape (..., 3).</span>
 <span class="sd">        Floating-point values are in range [0.0, 1.0].</span>
 <span class="sd">        Integer values are scaled to the dtype&#39;s maximum value.</span>
 
@@ -595,7 +597,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    rgb : array_like</span>
 <span class="sd">        Scalar or array of normalized floating-point color components.</span>
-<span class="sd">    dtype : data-type, optional</span>
+<span class="sd">    dtype : dtype_like, optional</span>
 <span class="sd">        Data type of return value. The default is ``uint8``.</span>
 
 <span class="sd">    Returns</span>
@@ -691,7 +693,7 @@
 <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;Categorical sRGB color palette inspired by C. Glasbey.</span>
 
-<span class="sd">Contains 64 maximally distinct colours for visualization.</span>
+<span class="sd">Contains 64 maximally distinct colors for visualization.</span>
 
 <span class="sd">Generated using the `glasbey &lt;https://glasbey.readthedocs.io&gt;`_ package::</span>
 
@@ -1097,6 +1099,8 @@
 <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;sRGB color components for wavelengths of visible light (360-750 nm).</span>
 
+<span class="sd">Array of shape (391, 3) containing normalized sRGB color components</span>
+<span class="sd">for wavelengths from 360 to 750 nm in 1 nm increments.</span>
 <span class="sd">Based on the CIE 1931 2° Standard Observer.</span>
 
 <span class="sd">Generated using the `colour &lt;https://colour.readthedocs.io&gt;`_ package::</span>

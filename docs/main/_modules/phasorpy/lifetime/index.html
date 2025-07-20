@@ -557,7 +557,7 @@
 <span class="sd">  - :py:func:`lifetime_fraction_from_amplitude`</span>
 <span class="sd">  - :py:func:`lifetime_fraction_to_amplitude`</span>
 
-<span class="sd">- calculate phasor coordinates on universal semicircle:</span>
+<span class="sd">- calculate phasor coordinates on the universal semicircle:</span>
 
 <span class="sd">  - :py:func:`phasor_semicircle`</span>
 <span class="sd">  - :py:func:`phasor_semicircle_intersect`</span>
@@ -790,10 +790,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">unit_conversion</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">unit_conversion</span><span class="si">=}</span><span class="s1"> &lt; 1e-16&#39;</span><span class="p">)</span>
-    <span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+    <span class="n">frequency</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">frequency</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;frequency is not one-dimensional array&#39;</span><span class="p">)</span>
-    <span class="n">lifetime</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+    <span class="n">lifetime</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">lifetime</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">lifetime</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;lifetime must be one- or two-dimensional array&#39;</span><span class="p">)</span>
 
@@ -924,13 +928,13 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.phasor_from_lifetime</span>
+<span class="sd">    phasorpy.lifetime.phasor_from_lifetime</span>
 <span class="sd">    phasorpy.phasor.phasor_to_signal</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_api_phasorpy_lifetime_to_signal.py`</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This implementation is based on an inverse Discrete Fourier transform</span>
+<span class="sd">    This implementation is based on an inverse discrete Fourier transform</span>
 <span class="sd">    (DFT). Because DFT cannot be used on signals with discontinuities</span>
 <span class="sd">    (for example, an exponential decay starting at zero) without producing</span>
 <span class="sd">    strong artifacts (ripples), the signal is convolved with a continuous</span>
@@ -960,7 +964,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">harmonic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">harmonic</span> <span class="o">=</span> <span class="s1">&#39;all&#39;</span>
-    <span class="n">all_hamonics</span> <span class="o">=</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span>
+    <span class="n">all_harmonics</span> <span class="o">=</span> <span class="n">harmonic</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span>
     <span class="n">harmonic</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_harmonic</span><span class="p">(</span><span class="n">harmonic</span><span class="p">,</span> <span class="n">samples</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">samples</span> <span class="o">&lt;</span> <span class="mi">16</span><span class="p">:</span>
@@ -1020,7 +1024,7 @@
         <span class="c1"># make broadcastable with real and imag</span>
         <span class="n">zero_real</span> <span class="o">=</span> <span class="n">zero_real</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
         <span class="n">zero_imag</span> <span class="o">=</span> <span class="n">zero_imag</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_hamonics</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">all_harmonics</span><span class="p">:</span>
         <span class="n">zero</span> <span class="o">=</span> <span class="n">phasor_to_signal</span><span class="p">(</span>
             <span class="n">zero_mean</span><span class="p">,</span> <span class="n">zero_real</span><span class="p">,</span> <span class="n">zero_imag</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span>
         <span class="p">)</span>
@@ -1143,9 +1147,9 @@
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    phasorpy.phasor.phasor_transform</span>
-<span class="sd">    phasorpy.phasor.polar_from_reference_phasor</span>
 <span class="sd">    phasorpy.phasor.phasor_center</span>
-<span class="sd">    phasorpy.phasor.phasor_from_lifetime</span>
+<span class="sd">    phasorpy.lifetime.polar_from_reference_phasor</span>
+<span class="sd">    phasorpy.lifetime.phasor_from_lifetime</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1359,7 +1363,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.polar_from_reference</span>
+<span class="sd">    phasorpy.lifetime.polar_from_reference</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1423,7 +1427,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.polar_from_reference_phasor</span>
+<span class="sd">    phasorpy.lifetime.polar_from_reference_phasor</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -1479,7 +1483,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.phasor_from_apparent_lifetime</span>
+<span class="sd">    phasorpy.lifetime.phasor_from_apparent_lifetime</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_phasorpy_lifetime_geometry.py`</span>
 
 <span class="sd">    Notes</span>
@@ -1568,7 +1572,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.phasor_to_apparent_lifetime</span>
+<span class="sd">    phasorpy.lifetime.phasor_to_apparent_lifetime</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1635,7 +1639,7 @@
 
 <span class="sd">    The normal lifetime of phasor coordinates represents the single lifetime</span>
 <span class="sd">    equivalent corresponding to the perpendicular projection of the coordinates</span>
-<span class="sd">    onto the universal semicircle, as defined in [3]_.</span>
+<span class="sd">    onto the universal semicircle, as defined in [2]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1678,9 +1682,9 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-
-<span class="sd">    .. [3] Silberberg M, and Grecco H. `pawFLIM: reducing bias and</span>
-<span class="sd">      uncertainty to enable lower photon count in FLIM experiments</span>
+<span class="sd">    .. [2] Silberberg M, and Grecco H.</span>
+<span class="sd">      `pawFLIM: reducing bias and uncertainty to enable lower photon</span>
+<span class="sd">      count in FLIM experiments</span>
 <span class="sd">      &lt;https://doi.org/10.1088/2050-6120/aa72ab&gt;`_.</span>
 <span class="sd">      *Methods Appl Fluoresc*, 5(2): 024016 (2017)</span>
 
@@ -1828,7 +1832,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.lifetime_fraction_from_amplitude</span>
+<span class="sd">    phasorpy.lifetime.lifetime_fraction_from_amplitude</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1878,7 +1882,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.lifetime_fraction_to_amplitude</span>
+<span class="sd">    phasorpy.lifetime.lifetime_fraction_to_amplitude</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -2035,7 +2039,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return phasor coordinates on universal semicircle at other harmonics.</span>
 
-<span class="sd">    Return phasor coordinates at any harmonic, given the real component of</span>
+<span class="sd">    Return phasor coordinates at any harmonic from the real component of</span>
 <span class="sd">    phasor coordinates of a single exponential lifetime at a certain harmonic.</span>
 <span class="sd">    The input and output phasor coordinates lie on the universal semicircle.</span>
 
@@ -2124,7 +2128,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    phase : array_like</span>
 <span class="sd">        Angular component of polar coordinates.</span>
-<span class="sd">    imag : array_like</span>
+<span class="sd">    modulation : array_like</span>
 <span class="sd">        Radial component of polar coordinates.</span>
 <span class="sd">    frequency : array_like</span>
 <span class="sd">        Laser pulse or modulation frequency in MHz.</span>
@@ -2145,7 +2149,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.polar_from_apparent_lifetime</span>
+<span class="sd">    phasorpy.lifetime.polar_from_apparent_lifetime</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -2221,7 +2225,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.polar_to_apparent_lifetime</span>
+<span class="sd">    phasorpy.lifetime.polar_to_apparent_lifetime</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -2325,7 +2329,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.phasor_from_fret_acceptor</span>
+<span class="sd">    phasorpy.lifetime.phasor_from_fret_acceptor</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_api_phasorpy_fret.py`</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_applications_phasorpy_fret_efficiency.py`</span>
 
@@ -2444,7 +2448,7 @@
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    phasorpy.phasor.phasor_from_fret_donor</span>
+<span class="sd">    phasorpy.lifetime.phasor_from_fret_donor</span>
 <span class="sd">    :ref:`sphx_glr_tutorials_api_phasorpy_fret.py`</span>
 
 <span class="sd">    Examples</span>

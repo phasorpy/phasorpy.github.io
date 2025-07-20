@@ -564,10 +564,10 @@ They are intended to facilitate the development of the PhasorPy library.</p>
 <li><p><strong>dims</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Labels for each axis in shape if <cite>pattern</cite> is None.</p></li>
 <li><p><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – String to format chunk indices.
 If None, use <code class="docutils literal notranslate"><span class="pre">_[{dims[index]}{chunk_index[index]}]</span></code> for each axis.</p></li>
-<li><p><strong>squeeze</strong> (<em>bool</em>) – If true, do not include length-1 chunked dimensions in label
+<li><p><strong>squeeze</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, do not include length-1 chunked dimensions in label
 unless dimensions are part of <cite>chunk_shape</cite>.
 Applies only if <cite>pattern</cite> is None.</p></li>
-<li><p><strong>use_index</strong> (<em>bool</em>) – If true, use indices of chunks in <cite>shape</cite> instead of chunk indices to
+<li><p><strong>use_index</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, use indices of chunks in <cite>shape</cite> instead of chunk indices to
 format pattern.</p></li>
 </ul>
 </dd>
@@ -608,10 +608,11 @@ Indexing ndarray with <cite>index</cite> will yield a slice smaller than
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>real, imag</strong> – Coordinates dilated by offset.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>ndarray</em>) – Dilated real coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Dilated imaginary coordinates.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -656,7 +657,7 @@ of user-provided <cite>harmonic</cite> parameter.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>'all'</em><em>, or </em><em>None</em>) – Harmonic parameter to parse.</p></li>
-<li><p><strong>harmonic_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum value allowed in <cite>hamonic</cite>. Must be one or greater.
+<li><p><strong>harmonic_max</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum value allowed in <cite>harmonic</cite>. Must be one or greater.
 To verify against known number of signal samples,
 pass <code class="docutils literal notranslate"><span class="pre">samples</span> <span class="pre">//</span> <span class="pre">2</span></code>.
 If <cite>harmonic=’all’</cite>, a range of harmonics from one to <cite>harmonic_max</cite>
@@ -689,14 +690,29 @@ If <cite>harmonic=’all’</cite>, a range of harmonics from one to <cite>harmo
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">parse_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_del</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyvalues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/_utils/#parse_kwargs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.parse_kwargs" title="Link to this definition">#</a></dt>
 <dd><p>Return dict with keys from keys|keyvals and values from kwargs|keyvals.</p>
 <p>If <cite>_del</cite> is true (default), existing keys are deleted from <cite>kwargs</cite>.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs2</span> <span class="o">=</span> <span class="n">parse_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="n">four</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">five</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kwargs2</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;two&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
-<span class="go">True</span>
-</pre></div>
-</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Source dictionary to extract keys from.</p></li>
+<li><p><strong>*keys</strong> (<em>str</em>) – Keys to extract from kwargs if present.</p></li>
+<li><p><strong>_del</strong> (<em>bool</em><em>, </em><em>default: True</em>) – If True, remove extracted keys from kwargs.</p></li>
+<li><p><strong>**keyvalues</strong> (<em>Any</em>) – Key-value pairs. If key exists in kwargs, use kwargs value,
+otherwise use provided default value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>dict</em> – Dictionary containing extracted keys and values.</p></li>
+<li><p><strong>&gt;&gt;&gt; kwargs = {‘one’</strong> (<em>1, ‘two’: 2, ‘four’: 4}</em>)</p></li>
+<li><p><em>&gt;&gt;&gt; kwargs2 = parse_kwargs(kwargs, ‘two’, ‘three’, four=None, five=5)</em></p></li>
+<li><p><strong>&gt;&gt;&gt; kwargs == {‘one’</strong> (<em>1}</em>)</p></li>
+<li><p><em>True</em></p></li>
+<li><p><strong>&gt;&gt;&gt; kwargs2 == {‘two’</strong> (<em>2, ‘four’: 4, ‘five’: 5}</em>)</p></li>
+<li><p><em>True</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -707,21 +723,25 @@ If <cite>harmonic=’all’</cite>, a range of harmonics from one to <cite>harmo
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>signal</strong> (<em>array_like</em>) – Image stack.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Axis over which phasor coordinates are computed.
-By default, the ‘H’ or ‘C’ axes if <cite>signal</cite> contains such
-dimension names, else the last axis (-1).</p></li>
+<li><p><strong>signal</strong> (<em>array_like</em>) – Signal array.
+Axis names are used if it has a <cite>dims</cite> attribute.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>str</em><em>, or </em><em>None</em><em>, </em><em>default: None</em>) – Axis over which to compute phasor coordinates.
+If None, automatically selects ‘H’ or ‘C’ axis if available,
+otherwise uses the last axis (-1).
+If int, specifies axis index.
+If str, specifies axis name (requires <cite>signal.dims</cite>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>axis</strong> (<em>int</em>) – Axis over which phasor coordinates are computed.</p></li>
-<li><p><strong>axis_label</strong> (<em>str</em>) – Axis label from <cite>signal.dims</cite> if any.</p></li>
+<li><p><strong>axis</strong> (<em>int</em>) – Index of axis over which phasor coordinates are computed.</p></li>
+<li><p><strong>axis_label</strong> (<em>str</em>) – Label of axis from <cite>signal.dims</cite> if available, empty string otherwise.</p></li>
 </ul>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – Axis not found in signal.dims or invalid for signal type.</p>
+<dd class="field-odd"><p><strong>ValueError</strong> – If axis string is not found in signal.dims.
+    If axis string is provided but signal has no dims attribute.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -764,7 +784,10 @@ parameters.</p>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>IndexError</strong> – If any <cite>skip_axis</cite> value is out of bounds of <cite>ndim</cite>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – If ndim is negative.</p></li>
+<li><p><strong>IndexError</strong> – If any <cite>skip_axis</cite> value is out of bounds of <cite>ndim</cite>.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -782,6 +805,24 @@ parameters.</p>
 <dt class="sig sig-object py" id="phasorpy._utils.phasor_from_polar_scalar">
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">phasor_from_polar_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/_utils/#phasor_from_polar_scalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.phasor_from_polar_scalar" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor from scalar polar coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>phase</strong> (<em>float</em>) – Phase angle in radians (or degrees if degree=True).</p></li>
+<li><p><strong>modulation</strong> (<em>float</em>) – Modulation depth as fraction (or percentage if percent=True).</p></li>
+<li><p><strong>degree</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, phase is in degrees instead of radians.</p></li>
+<li><p><strong>percent</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, modulation is as percentage instead of fraction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>real</strong> (<em>float</em>) – Real component of phasor coordinate.</p></li>
+<li><p><strong>imag</strong> (<em>float</em>) – Imaginary component of phasor coordinate.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_from_polar_scalar</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">(1.0, 0.0)</span>
 </pre></div>
@@ -792,8 +833,26 @@ parameters.</p>
 <dt class="sig sig-object py" id="phasorpy._utils.phasor_to_polar_scalar">
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">phasor_to_polar_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/_utils/#phasor_to_polar_scalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.phasor_to_polar_scalar" title="Link to this definition">#</a></dt>
 <dd><p>Return polar from scalar phasor coordinates.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">(0.0, 100.0)</span>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>float</em>) – Real component of phasor coordinate.</p></li>
+<li><p><strong>imag</strong> (<em>float</em>) – Imaginary component of phasor coordinate.</p></li>
+<li><p><strong>degree</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, return phase in degrees instead of radians.</p></li>
+<li><p><strong>percent</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, return modulation as percentage instead of fraction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>phase</strong> (<em>float</em>) – Phase angle in radians (or degrees if degree=True).</p></li>
+<li><p><strong>modulation</strong> (<em>float</em>) – Modulation depth as fraction (or percentage if percent=True).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">percent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">(90.0, 100.0)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -840,7 +899,8 @@ By default, sort around the mean of <cite>real</cite> and <cite>imag</cite>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>real, imag</strong> (<em>ndarray</em>) – Coordinates sorted by angle.</p></li>
+<li><p><strong>real</strong> (<em>ndarray</em>) – Sorted real coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>ndarray</em>) – Sorted imaginary coordinates.</p></li>
 <li><p><strong>indices</strong> (<em>ndarray</em>) – Indices used to reorder coordinates.
 Use <code class="docutils literal notranslate"><span class="pre">indices.argsort()</span></code> to get original order.</p></li>
 </ul>

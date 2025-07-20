@@ -549,13 +549,12 @@
 <p>Manage sample data files for testing and tutorials.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.datasets</span></code> module provides a <a class="reference internal" href="#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch()</span></code></a> function to
 download data files from remote repositories and cache them in a local
-directory. The cache location can be changed by setting the
-<code class="docutils literal notranslate"><span class="pre">PHASORPY_DATA_DIR</span></code> environment variable.</p>
+directory.</p>
 <p>Datasets from the following repositories are available:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://zenodo.org/record/8417894">PhasorPy tests</a></p></li>
-<li><p><a class="reference external" href="https://zenodo.org/record/8411056">LFD Workshop</a></p></li>
-<li><p><a class="reference external" href="https://zenodo.org/record/8046636">FLUTE</a></p></li>
+<li><p><a class="reference external" href="https://zenodo.org/records/8417894">PhasorPy tests</a></p></li>
+<li><p><a class="reference external" href="https://zenodo.org/records/8411056">LFD Workshop</a></p></li>
+<li><p><a class="reference external" href="https://zenodo.org/records/8046636">FLUTE</a></p></li>
 <li><p><a class="reference external" href="https://github.com/zoccoler/napari-flim-phasor-plotter/tree/0.0.6/src/napari_flim_phasor_plotter/data">napari-flim-phasor-plotter</a></p></li>
 <li><p><a class="reference external" href="https://zenodo.org/records/13625087">Phasor-based multi-harmonic unmixing for in-vivo hyperspectral imaging</a>
 (<a class="reference external" href="https://zenodo.org/records/14860228">second record</a>)</p></li>
@@ -565,6 +564,9 @@ directory. The cache location can be changed by setting the
 </ul>
 <p>The implementation is based on the <a class="reference external" href="https://www.fatiando.org/pooch">Pooch</a>
 library.</p>
+<p>The default cache location is determined by the Pooch library, but can be
+overridden by setting the <code class="docutils literal notranslate"><span class="pre">PHASORPY_DATA_DIR</span></code> environment variable to
+a custom directory path.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.datasets.fetch">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.datasets.</span></span><span class="sig-name descname"><span class="pre">fetch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_scalar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/datasets/#fetch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.datasets.fetch" title="Link to this definition">#</a></dt>
@@ -574,8 +576,16 @@ storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> (<em>str</em><em> or </em><em>iterable</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Name(s) of file(s) or repositories to fetch from local storage.
-If omitted, return files in all repositories.</p></li>
+<li><p><strong>*args</strong> (<em>str</em><em>, </em><em>iterable</em><em> of </em><em>str</em><em>, or </em><em>pooch.Pooch</em>) – <p>Name(s) of file(s) or repositories to fetch from local storage.
+Can be:</p>
+<ul>
+<li><p>File names (for example, ‘simfcs.r64’)</p></li>
+<li><p>Repository names (for example, ‘tests’, ‘flute’)</p></li>
+<li><p>Pooch repository objects</p></li>
+<li><p>Iterables of the above</p></li>
+</ul>
+<p>If omitted, return files in all repositories.</p>
+</p></li>
 <li><p><strong>extract_dir</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Path, relative to cache location, where ZIP files will be unpacked.</p></li>
 <li><p><strong>return_scalar</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true (default), return single path as string, else tuple of string.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to <code class="docutils literal notranslate"><span class="pre">pooch.fetch()</span></code>.
@@ -583,10 +593,15 @@ For example, <code class="docutils literal notranslate"><span class="pre">progre
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Absolute path(s) of file(s) in local storage.</p>
+<dd class="field-even"><p>Absolute path(s) of file(s) in local storage.
+Returns a single string if only one file and <cite>return_scalar=True</cite>,
+otherwise returns a tuple of strings.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str or tuple of str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If specified file is not found in any repository.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -601,7 +616,9 @@ For example, <code class="docutils literal notranslate"><span class="pre">progre
 <dl class="py data">
 <dt class="sig sig-object py" id="phasorpy.datasets.REPOSITORIES">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.datasets.</span></span><span class="sig-name descname"><span class="pre">REPOSITORIES</span></span><a class="headerlink" href="#phasorpy.datasets.REPOSITORIES" title="Link to this definition">#</a></dt>
-<dd><p>Pooch repositories.</p>
+<dd><p>Dictionary mapping repository names to Pooch repository objects.</p>
+<p>Each repository provides access to a specific collection of sample data files
+that can be fetched using the <a class="reference internal" href="#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><code class="xref py py-func docutils literal notranslate"><span class="pre">fetch()</span></code></a> function.</p>
 </dd></dl>
 
 </section>
