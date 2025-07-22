@@ -562,6 +562,7 @@ fluorescence lifetimes:</p>
 <li><p><a class="reference internal" href="#phasorpy.lifetime.phasor_from_apparent_lifetime" title="phasorpy.lifetime.phasor_from_apparent_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_apparent_lifetime()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.lifetime.phasor_to_apparent_lifetime" title="phasorpy.lifetime.phasor_to_apparent_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_normal_lifetime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_lifetime_search()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>convert to and from polar coordinates (phase and modulation):</p>
@@ -1485,12 +1486,80 @@ infinite and zero:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.lifetime.phasor_to_lifetime_search">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.lifetime.</span></span><span class="sig-name descname"><span class="pre">phasor_to_lifetime_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/lifetime/#phasor_to_lifetime_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.lifetime.phasor_to_lifetime_search" title="Link to this definition">#</a></dt>
+<dd><p>Return two lifetime components from multi-harmonic phasor coordinates.</p>
+<p>Return estimated lifetimes and fractional intensities of two
+single-exponential components from a set of multi-harmonic
+phasor coordinates using the graphical approach described
+in <a class="footnote-reference brackets" href="#id7" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>Return NaN for coordinates outside the universal semicircle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.
+Must contain at least two linearly increasing harmonics
+in the first dimension.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.
+Must have same shape as <cite>real</cite>.</p></li>
+<li><p><strong>frequency</strong> (<em>float</em>) – Laser pulse or modulation frequency in MHz.</p></li>
+<li><p><strong>lifetime_range</strong> (<em>tuple</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – Start, stop, and step of lifetime range in ns to search for components.
+Defines the search range for the first lifetime component.
+The default is <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">20.0,</span> <span class="pre">0.1)</span></code>.</p></li>
+<li><p><strong>unit_conversion</strong> (<em>float</em><em>, </em><em>optional</em><em>, </em><em>default: 1e-3</em>) – Product of <cite>frequency</cite> and <cite>lifetime</cite> units’ prefix factors.
+The default is 1e-3 for MHz and ns, or Hz and ms.
+Use 1.0 for Hz and s.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Floating point data type used for calculation and output values.
+Either <cite>float32</cite> or <cite>float64</cite>. The default is <cite>float64</cite>.</p></li>
+<li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
+By default, multi-threading is disabled.
+If zero, up to half of logical CPUs are used.
+OpenMP may not be available on all platforms.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>lifetime</strong> (<em>ndarray</em>) – Lifetime components, shaped <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">*real.shape[1:])</span></code>.</p></li>
+<li><p><strong>fraction</strong> (<em>ndarray</em>) – Fractional intensities of resolved lifetime components.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – The shapes of real and imaginary coordinates do not match.
+    The number of harmonics is less than the number of components.
+    The lifetime range is invalid.</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">1</a><span class="fn-bracket">]</span></span>
+<p>Vallmitjana A, Torrado B, Dvornikov A, Ranjit S, and Gratton E.
+<a class="reference external" href="https://doi.org/10.1021/acs.jpcb.0c06946">Blind resolution of lifetime components in individual pixels of
+fluorescence lifetime images using the phasor approach</a>.
+<em>J Phys Chem B</em>, 124(45): 10126-10137 (2020)</p>
+</aside>
+</aside>
+<p class="rubric">Notes</p>
+<p>This function currently supports only two lifetime components.</p>
+<p class="rubric">Examples</p>
+<p>Resolve two lifetime components from the phasor coordinates of a mixture
+of 4.2 and 0.9 ns lifetimes with 70/30% fractions at 80 and 160 MHz:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_lifetime_search</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.3773104</span><span class="p">,</span> <span class="mf">0.20213886</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3834715</span><span class="p">,</span> <span class="mf">0.30623315</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(array([0.9, 4.2]), array([0.3, 0.7]))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.lifetime.phasor_to_normal_lifetime">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.lifetime.</span></span><span class="sig-name descname"><span class="pre">phasor_to_normal_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_conversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/lifetime/#phasor_to_normal_lifetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.lifetime.phasor_to_normal_lifetime" title="Link to this definition">#</a></dt>
 <dd><p>Return normal lifetimes from phasor coordinates.</p>
 <p>The normal lifetime of phasor coordinates represents the single lifetime
 equivalent corresponding to the perpendicular projection of the coordinates
-onto the universal semicircle, as defined in <a class="footnote-reference brackets" href="#id8" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+onto the universal semicircle, as defined in <a class="footnote-reference brackets" href="#id10" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1523,8 +1592,8 @@ at frequency <span class="math notranslate nohighlight">\(f\)</span> according t
 \[ \begin{align}\begin{aligned}\omega &amp;= 2 \pi f\\G_{N} &amp;= 0.5 \cdot (1 + \cos{\arctan{\frac{S}{G - 0.5}}})\\\tau_{N} &amp;= \sqrt{\frac{1 - G_{N}}{\omega^{2} \cdot G_{N}}}\end{aligned}\end{align} \]</div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id8" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">2</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id10" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">2</a><span class="fn-bracket">]</span></span>
 <p>Silberberg M, and Grecco H.
 <a class="reference external" href="https://doi.org/10.1088/2050-6120/aa72ab">pawFLIM: reducing bias and uncertainty to enable lower photon
 count in FLIM experiments</a>.
@@ -1783,6 +1852,7 @@ only if the polar coordinates lie on the universal semicircle:</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.phasor_semicircle"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.phasor_semicircle_intersect"><code class="docutils literal notranslate"><span class="pre">phasor_semicircle_intersect()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.phasor_to_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_apparent_lifetime()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.phasor_to_lifetime_search"><code class="docutils literal notranslate"><span class="pre">phasor_to_lifetime_search()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.phasor_to_normal_lifetime"><code class="docutils literal notranslate"><span class="pre">phasor_to_normal_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.polar_from_apparent_lifetime"><code class="docutils literal notranslate"><span class="pre">polar_from_apparent_lifetime()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.lifetime.polar_from_reference"><code class="docutils literal notranslate"><span class="pre">polar_from_reference()</span></code></a></li>
