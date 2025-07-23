@@ -562,13 +562,13 @@
   <section class="sphx-glr-example-title" id="multi-component-fit">
 <span id="sphx-glr-tutorials-applications-phasorpy-component-fit-py"></span><h1>Multi-component fit<a class="headerlink" href="#multi-component-fit" title="Link to this heading">#</a></h1>
 <p>Spectral unmixing using multi-component analysis in phasor space.</p>
-<p>The fluorescent components comprising a fluorescence spectrum can be unmixed
+<p>Fluorescent components in a fluorescence spectrum can be unmixed
 if the spectra of the individual components are known.
-This can be achieved by solving a system of linear equations, fitting
-the fractional contributions of the phasor coordinates of the component spectra
-to the phasor coordinates of the mixture spectrum. Phasor coordinates
-at multiple harmonics may be used to ensure the linear system is not
-underdetermined.</p>
+This can be achieved by solving a system of linear equations that fits
+the fractional contributions of the phasor coordinates of the component
+spectra to the phasor coordinates of the mixture spectrum.
+Phasor coordinates at multiple harmonics may be used to ensure the
+linear system is not underdetermined.</p>
 <p>This analysis method is demonstrated using a hyperspectral imaging dataset
 containing five fluorescent markers as presented in:</p>
 <blockquote>
@@ -596,7 +596,7 @@ coordinates at two harmonics.</p>
 </pre></div>
 </div>
 <p>Define dataset and processing parameters:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># hyperspectral image containing of all five components</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># hyperspectral image containing all five components</span>
 <span class="n">samplefile</span> <span class="o">=</span> <span class="s1">&#39;38_Hoechst_Golgi_Mito_Lyso_CellMAsk_404_488_561_633_SP.lsm&#39;</span>
 
 <span class="c1"># hyperspectral images of individual components</span>
@@ -635,6 +635,10 @@ For each component:</p>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
     <span class="n">num_harmonics</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.8</span><span class="p">,</span> <span class="n">num_harmonics</span> <span class="o">*</span> <span class="mf">4.8</span><span class="p">)</span>
 <span class="p">)</span>
+<span class="n">plots</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Harmonic </span><span class="si">{</span><span class="n">harmonic</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_harmonics</span><span class="p">)</span>
+<span class="p">]</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Components&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">components</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -652,10 +656,7 @@ For each component:</p>
     <span class="n">component_real</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">center_real</span>
     <span class="n">component_imag</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">center_imag</span>
 
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_harmonics</span><span class="p">):</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
-            <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Harmonic </span><span class="si">{</span><span class="n">harmonic</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">plot</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plots</span><span class="p">):</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">center_real</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">center_imag</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
@@ -673,7 +674,7 @@ raw spectral data:</p>
 <span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Component mixture&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_component_fit_002.png" srcset="../../../_images/sphx_glr_phasorpy_component_fit_002.png" alt="Component mixture, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Calculate and plot phasor coordinates for the component mixture:</p>
+<img src="../../../_images/sphx_glr_phasorpy_component_fit_002.png" srcset="../../../_images/sphx_glr_phasorpy_component_fit_002.png" alt="Component mixture, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Calculate and plot phasor coordinates of the component mixture:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">)</span>
 <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_filter_median</span><span class="p">(</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">median_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">median_repeat</span>
@@ -685,6 +686,7 @@ raw spectral data:</p>
     <span class="n">num_harmonics</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.8</span><span class="p">,</span> <span class="n">num_harmonics</span> <span class="o">*</span> <span class="mf">4.8</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Component mixture&#39;</span><span class="p">)</span>
+
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_harmonics</span><span class="p">):</span>
     <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
         <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Harmonic </span><span class="si">{</span><span class="n">harmonic</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -732,7 +734,7 @@ of the mixture and plot the component fraction images:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_component_fit_005.png" srcset="../../../_images/sphx_glr_phasorpy_component_fit_005.png" alt="Intensity of components in mixture, Mixture, Hoechst, LysoTracker, Golgi, MitoTracker, CellMask" class = "sphx-glr-single-img"/><p>Assert that the experimental phasor coordinates can approximately be
+<img src="../../../_images/sphx_glr_phasorpy_component_fit_005.png" srcset="../../../_images/sphx_glr_phasorpy_component_fit_005.png" alt="Intensity of components in mixture, Mixture, Hoechst, LysoTracker, Golgi, MitoTracker, CellMask" class = "sphx-glr-single-img"/><p>Assert that the experimental phasor coordinates can be approximately
 restored from the components’ coordinates and fitted fractions:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.component</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_component</span>
 
@@ -745,7 +747,7 @@ restored from the components’ coordinates and fitted fractions:</p>
 </div>
 <p>sphinx_gallery_thumbnail_number = -2
 mypy: allow-untyped-defs, allow-untyped-calls</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.822 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.521 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-component-fit-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/48468d09fb73a61a0aaeafe78be9fd74/phasorpy_component_fit.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_component_fit.ipynb</span></code></a></p>

@@ -23,13 +23,13 @@ Multi-component fit
 
 Spectral unmixing using multi-component analysis in phasor space.
 
-The fluorescent components comprising a fluorescence spectrum can be unmixed
+Fluorescent components in a fluorescence spectrum can be unmixed
 if the spectra of the individual components are known.
-This can be achieved by solving a system of linear equations, fitting
-the fractional contributions of the phasor coordinates of the component spectra
-to the phasor coordinates of the mixture spectrum. Phasor coordinates
-at multiple harmonics may be used to ensure the linear system is not
-underdetermined.
+This can be achieved by solving a system of linear equations that fits
+the fractional contributions of the phasor coordinates of the component
+spectra to the phasor coordinates of the mixture spectrum.
+Phasor coordinates at multiple harmonics may be used to ensure the
+linear system is not underdetermined.
 
 This analysis method is demonstrated using a hyperspectral imaging dataset
 containing five fluorescent markers as presented in:
@@ -82,7 +82,7 @@ Define dataset and processing parameters:
 .. code-block:: Python
 
 
-    # hyperspectral image containing of all five components
+    # hyperspectral image containing all five components
     samplefile = '38_Hoechst_Golgi_Mito_Lyso_CellMAsk_404_488_561_633_SP.lsm'
 
     # hyperspectral images of individual components
@@ -121,7 +121,7 @@ For each component:
 4. Calculate center coordinates using mean method
 5. Plot in phasor space
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-116
+.. GENERATED FROM PYTHON SOURCE LINES 79-117
 
 .. code-block:: Python
 
@@ -135,6 +135,10 @@ For each component:
     fig, axs = pyplot.subplots(
         num_harmonics, 1, figsize=(4.8, num_harmonics * 4.8)
     )
+    plots = [
+        PhasorPlot(ax=axs[i], allquadrants=True, title=f'Harmonic {harmonic[i]}')
+        for i in range(num_harmonics)
+    ]
     fig.suptitle('Components')
 
     for i, (name, filename) in enumerate(components.items()):
@@ -152,10 +156,7 @@ For each component:
         component_real[:, i] = center_real
         component_imag[:, i] = center_imag
 
-        for j in range(num_harmonics):
-            plot = PhasorPlot(
-                ax=axs[j], allquadrants=True, title=f'Harmonic {harmonic[j]}'
-            )
+        for j, plot in enumerate(plots):
             plot.hist2d(real[j], imag[j], cmap='Greys')
             plot.plot(center_real[j], center_imag[j], label=name, markersize=10)
             plot.ax.legend(loc='right').set_visible(j == 0)
@@ -174,7 +175,7 @@ For each component:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-122
+.. GENERATED FROM PYTHON SOURCE LINES 118-123
 
 Component mixture
 -----------------
@@ -182,7 +183,7 @@ Component mixture
 Read the mixture sample image containing all markers and visualize the
 raw spectral data:
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-127
+.. GENERATED FROM PYTHON SOURCE LINES 123-128
 
 .. code-block:: Python
 
@@ -203,11 +204,11 @@ raw spectral data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 129-130
 
-Calculate and plot phasor coordinates for the component mixture:
+Calculate and plot phasor coordinates of the component mixture:
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-157
+.. GENERATED FROM PYTHON SOURCE LINES 130-159
 
 .. code-block:: Python
 
@@ -223,6 +224,7 @@ Calculate and plot phasor coordinates for the component mixture:
         num_harmonics, 1, figsize=(4.8, num_harmonics * 4.8)
     )
     fig.suptitle('Component mixture')
+
     for i in range(num_harmonics):
         plot = PhasorPlot(
             ax=axs[i], allquadrants=True, title=f'Harmonic {harmonic[i]}'
@@ -251,7 +253,7 @@ Calculate and plot phasor coordinates for the component mixture:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-163
+.. GENERATED FROM PYTHON SOURCE LINES 160-165
 
 Fractions of components in mixture
 ----------------------------------
@@ -259,7 +261,7 @@ Fractions of components in mixture
 Fit fractions of each component to the phasor coordinates at each pixel
 of the mixture and plot the component fraction images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-177
+.. GENERATED FROM PYTHON SOURCE LINES 165-179
 
 .. code-block:: Python
 
@@ -289,11 +291,11 @@ of the mixture and plot the component fraction images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 180-181
 
 Plot the intensity of each component in the mixture:
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-189
+.. GENERATED FROM PYTHON SOURCE LINES 181-191
 
 .. code-block:: Python
 
@@ -319,12 +321,12 @@ Plot the intensity of each component in the mixture:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-192
+.. GENERATED FROM PYTHON SOURCE LINES 192-194
 
-Assert that the experimental phasor coordinates can approximately be
+Assert that the experimental phasor coordinates can be approximately
 restored from the components' coordinates and fitted fractions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-201
+.. GENERATED FROM PYTHON SOURCE LINES 194-203
 
 .. code-block:: Python
 
@@ -344,7 +346,7 @@ restored from the components' coordinates and fitted fractions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 202-204
+.. GENERATED FROM PYTHON SOURCE LINES 204-206
 
 sphinx_gallery_thumbnail_number = -2
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -352,7 +354,7 @@ mypy: allow-untyped-defs, allow-untyped-calls
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.822 seconds)
+   **Total running time of the script:** (0 minutes 4.521 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_component_fit.py:
