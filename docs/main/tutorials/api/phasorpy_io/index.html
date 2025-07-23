@@ -746,10 +746,10 @@ library.</p>
 <p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_ptu" title="phasorpy.io.signal_from_ptu"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_ptu()</span></code></a> function is used to read
 the TCSPC histogram from a PTU file exported from the <a class="reference external" href="https://dx.doi.org/10.6084/m9.figshare.22336594.v1">FLIM_testdata LIF
 dataset</a>.
-For phasor analysis, all photons in periods with multiple photons must
-be discarded before exporting to PTU format. In the Leica LAS X software,
-select the “FLIM” tab, click on the “Phasor” button, and under
-“Specialist Settings” select the option “Standard (High Speed)”.
+For phasor analysis, periods containing multiple photons must have all
+their photons discarded before exporting to PTU format. In the Leica
+LAS X software, select the “FLIM” tab, click on the “Phasor” button,
+and under “Specialist Settings” select the option “Standard (High Speed)”.
 The first channel in the first frame is read from the PTU file:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_ptu</span>
 
@@ -858,8 +858,8 @@ channel axis:</p>
 <p>SDT files are written by Becker &amp; Hickl software.
 They may contain TCSPC histograms and metadata from laser-scanning
 microscopy.</p>
-<p>PhasorPy supports reading TCSPC histograms from FBD files via the
-<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
+<p>PhasorPy supports reading TCSPC histograms from SDT files via the
+<a class="reference external" href="https://github.com/cgohlke/sdtfile/">sdtfile</a> library.</p>
 <p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_sdt" title="phasorpy.io.signal_from_sdt"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_sdt()</span></code></a> function is used to read a
 TCSPC histogram from a SDT file:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_sdt</span>
@@ -895,8 +895,8 @@ They contain encoded cross-correlation phase histograms from digital
 frequency-domain measurements acquired with a FLIMbox device.
 Newer file versions also contain metadata.</p>
 <p>The FBD file format is undocumented, not standardized, and files are
-frequently found corrupted. It is recommended to export FLIMbox data to
-another format from the software used to acquire the data.</p>
+frequently found corrupted. Therefore, it is recommended to export FLIMbox
+files to another format from the software used to acquire the data.</p>
 <p>PhasorPy supports reading some FLIMbox FBD files via the
 <a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
 <p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_fbd()</span></code></a> function is used to read
@@ -1104,8 +1104,8 @@ coordinates used for calibration:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_io_019.png" srcset="../../../_images/sphx_glr_phasorpy_io_019.png" alt="NADHandSHG.ifli (79.99 MHz)" class = "sphx-glr-single-img"/><p>Three main lifetime components are expected in the sample:
-free NADH (~0.4 ns), bound NADH (3.4 ns) and a long lifetime species (~8 ns).
+<img src="../../../_images/sphx_glr_phasorpy_io_019.png" srcset="../../../_images/sphx_glr_phasorpy_io_019.png" alt="NADHandSHG.ifli (79.99 MHz)" class = "sphx-glr-single-img"/><p>Three main lifetime components are expected in the sample: free
+NADH (~0.4 ns), bound NADH (3.4 ns), and a long lifetime species (~8 ns).
 It appears the calibration is off in this sample.</p>
 </section>
 <section id="simfcs-ref-and-r64">
@@ -1189,9 +1189,9 @@ capillaries1001_0_160_160.r64
 formatted files, which are compatible with Bio-Formats, Fiji, and other
 software. The implementation is based on the
 <a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
-<p>In comparison with the SimFCS R64 format, OME-TIFF can store higher
-dimensional, higher precision images of any size, any number of harmonics,
-and select metadata.</p>
+<p>Compared to the SimFCS R64 format, OME-TIFF offers several advantages.
+It can store higher-dimensional, higher-precision images of any size,
+any number of harmonics, and selected metadata.</p>
 <p>PhasorPy OME-TIFF files are intended for temporarily exchanging phasor
 coordinates with other software, not as a long-term storage solution.
 Always preserve original data files in their native formats.</p>
@@ -1200,9 +1200,9 @@ Always preserve original data files in their native formats.</p>
 read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_ometiff</span><span class="p">,</span> <span class="n">phasor_to_ometiff</span>
 
-<span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">.ome.tiff&#39;</span>
-
 <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;capillaries1001.ome.tif&#39;</span><span class="p">)</span>
 
     <span class="n">phasor_to_ometiff</span><span class="p">(</span>
         <span class="n">filename</span><span class="p">,</span>
@@ -1257,7 +1257,7 @@ the first array dimension:</p>
 <img src="../../../_images/sphx_glr_phasorpy_io_023.png" srcset="../../../_images/sphx_glr_phasorpy_io_023.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 23.495 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 19.350 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>
