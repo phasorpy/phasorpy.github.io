@@ -50,6 +50,7 @@
     <script src="../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/plot';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -587,7 +588,7 @@ Default is False.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="phasorpy.plot.PhasorPlot">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">phasorpy.plot.</span></span><span class="sig-name descname"><span class="pre">PhasorPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allquadrants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.plot.PhasorPlot" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">phasorpy.plot.</span></span><span class="sig-name descname"><span class="pre">PhasorPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allquadrants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.plot.PhasorPlot" title="Link to this definition">#</a></dt>
 <dd><p>Phasor plot.</p>
 <p>Create publication quality visualizations of phasor coordinates.</p>
 <dl class="field-list simple">
@@ -598,7 +599,11 @@ By default, only the first quadrant with universal semicircle is shown.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Matplotlib axes used for plotting.
 By default, a new subplot axes is created.</p></li>
 <li><p><strong>frequency</strong> (<em>float</em><em>, </em><em>optional</em>) – Laser pulse or modulation frequency in MHz.</p></li>
-<li><p><strong>grid</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – Display polar grid or universal semicircle.</p></li>
+<li><p><strong>pad</strong> (<em>float</em><em>, </em><em>optional</em>) – Padding around the plot. The default is 0.05.</p></li>
+<li><p><strong>grid</strong> (<em>dict</em><em> or </em><em>bool</em><em>, </em><em>optional</em>) – Display universal semicircle (default) or polar grid (allquadrants).
+If False, no grid is displayed.
+If a dictionary, it is passed to <a class="reference internal" href="#phasorpy.plot.PhasorPlot.polar_grid" title="phasorpy.plot.PhasorPlot.polar_grid"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PhasorPlot.polar_grid()</span></code></a>
+or <a class="reference internal" href="#phasorpy.plot.PhasorPlot.semicircle" title="phasorpy.plot.PhasorPlot.semicircle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PhasorPlot.semicircle()</span></code></a>.</p></li>
 <li><p><strong>**kwargs</strong> – Additional properties to set on <cite>ax</cite>.</p></li>
 </ul>
 </dd>
@@ -860,15 +865,48 @@ tangent on the universal semicircle, else align to the unit circle.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="phasorpy.plot.PhasorPlot.polar_grid">
-<span class="sig-name descname"><span class="pre">polar_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/plot/_phasorplot/#PhasorPlot.polar_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.polar_grid" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">polar_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tick_space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tick_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/phasorpy/plot/_phasorplot/#PhasorPlot.polar_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.plot.PhasorPlot.polar_grid" title="Link to this definition">#</a></dt>
 <dd><p>Draw polar coordinate system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**kwargs</strong> – Parameters passed to
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radii</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – Position of radial gridlines in range (0, 1].
+If an integer, the number of equidistant radial gridlines.
+By default, three equidistant radial gridlines are drawn.
+The unit circle (radius 1), if included, is drawn in major style.</p></li>
+<li><p><strong>angles</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>float</em><em>, </em><em>optional</em>) – Position of angular gridlines in range [0, 2 pi].
+If an integer, the number of equidistant angular gridlines.
+By default, 12 equidistant angular gridlines are drawn.</p></li>
+<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of vertices of polygon inscribed in unit circle.
+By default, no inscribed polygon is drawn.</p></li>
+<li><p><strong>labels</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Tick labels on unit circle.
+Labels are placed at equidistant angles if <cite>ticks</cite> are not
+provided.</p></li>
+<li><p><strong>ticks</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Values at which to place tick labels on unit circle.
+If <cite>labels</cite> are not provided, <cite>ticks</cite> values formatted with
+<cite>tick_format</cite> are used as labels.
+If <cite>tick_space</cite> is not provided, tick values are angles in radians.</p></li>
+<li><p><strong>tick_space</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Values used to convert <cite>ticks</cite> to angles.
+For example, the wavelengths used to calculate spectral phasors
+or the minimum and maximum wavelengths of a sine-cosine filter.</p></li>
+<li><p><strong>tick_format</strong> (<em>str</em><em>, </em><em>optional</em>) – Format string for tick values if <cite>labels</cite> is None.
+By default, the tick format is “{}”.</p></li>
+<li><p><strong>**kwargs</strong> – Parameters passed to
 <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Circle</span></code> and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code>.</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If number of ticks doesn’t match number of labels.
+    If <cite>tick_space</cite> has less than two values.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">radii=1,</span> <span class="pre">angles=4</span></code> to draw major gridlines only.</p>
+<p>The values of ticks (<span class="math notranslate nohighlight">\(v\)</span>) are converted to angles
+(<span class="math notranslate nohighlight">\(\theta\)</span>) using <cite>tick_space</cite> (<span class="math notranslate nohighlight">\(s\)</span>) according to:</p>
+<div class="math notranslate nohighlight">
+\[\theta = \frac{v - s_0}{s_{-1} + s_1 - 2 s_0} \cdot 2 \pi\]</div>
 </dd></dl>
 
 <dl class="py method">
@@ -913,7 +951,7 @@ Only applies when <cite>frequency</cite> and <cite>lifetime</cite> are specified
 <dd class="field-even"><p>Lines representing plotted semicircle and ticks.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[matplotlib.lines.Line2D]</p>
+<dd class="field-odd"><p>list of matplotlib.lines.Line2D</p>
 </dd>
 </dl>
 </dd></dl>

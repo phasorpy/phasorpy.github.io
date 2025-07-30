@@ -822,7 +822,7 @@ way as time-resolved signals. Calibration is not necessary.
 Open a hyperspectral dataset acquired with a laser scanning microscope
 at 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-424
+.. GENERATED FROM PYTHON SOURCE LINES 412-425
 
 .. code-block:: Python
 
@@ -830,6 +830,7 @@ at 30 emission wavelengths:
     from phasorpy.io import signal_from_lsm
 
     hyperspectral_signal = signal_from_lsm(fetch('paramecium.lsm'))
+    wavelengths = hyperspectral_signal.coords['C'].values
 
     plot_signal_image(
         hyperspectral_signal,
@@ -850,12 +851,12 @@ at 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 425-427
+.. GENERATED FROM PYTHON SOURCE LINES 426-428
 
 Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 427-431
+.. GENERATED FROM PYTHON SOURCE LINES 428-432
 
 .. code-block:: Python
 
@@ -870,16 +871,23 @@ pixels with low intensities:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 432-433
+.. GENERATED FROM PYTHON SOURCE LINES 433-434
 
 Plot the phasor coordinates as a two-dimensional histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-436
+.. GENERATED FROM PYTHON SOURCE LINES 434-444
 
 .. code-block:: Python
 
 
-    plot_phasor(real, imag, allquadrants=True, title='Hyperspectral phasor plot')
+    plot_phasor(
+        real,
+        imag,
+        title='Hyperspectral phasor plot',
+        allquadrants=True,
+        pad=0.2,  # make space for labels
+        grid={'ticks': [450, 500, 550, 600, 650, 700], 'tick_space': wavelengths},
+    )
 
 
 
@@ -893,7 +901,7 @@ Plot the phasor coordinates as a two-dimensional histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 437-442
+.. GENERATED FROM PYTHON SOURCE LINES 445-450
 
 Find clusters
 -------------
@@ -901,7 +909,7 @@ Find clusters
 Automatically find the two elliptical clusters in the phasor space using
 a Gaussian mixture model and plot them in distinct colors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 442-463
+.. GENERATED FROM PYTHON SOURCE LINES 450-471
 
 .. code-block:: Python
 
@@ -938,11 +946,11 @@ a Gaussian mixture model and plot them in distinct colors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 464-465
+.. GENERATED FROM PYTHON SOURCE LINES 472-473
 
 Use the elliptic clusters to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 465-478
+.. GENERATED FROM PYTHON SOURCE LINES 473-486
 
 .. code-block:: Python
 
@@ -966,12 +974,12 @@ Use the elliptic clusters to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 479-481
+.. GENERATED FROM PYTHON SOURCE LINES 487-489
 
 Plot a pseudo-color image, composited from the elliptic cursor masks and
 the mean intensity image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 481-488
+.. GENERATED FROM PYTHON SOURCE LINES 489-496
 
 .. code-block:: Python
 
@@ -994,14 +1002,14 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 489-493
+.. GENERATED FROM PYTHON SOURCE LINES 497-501
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 493-498
+.. GENERATED FROM PYTHON SOURCE LINES 501-506
 
 .. code-block:: Python
 
@@ -1025,10 +1033,10 @@ Print information about Python interpreter and installed packages:
     imagecodecs-n/a
     lfdfiles-2025.5.10
     sdtfile-2025.5.10
-    ptufile-2025.5.10
+    ptufile-2025.7.30
     liffile-2025.5.10
     matplotlib-3.10.3
-    scipy-1.16.0
+    scipy-1.16.1
     skimage-n/a
     sklearn-1.7.1
     pandas-2.3.1
@@ -1039,7 +1047,7 @@ Print information about Python interpreter and installed packages:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 499-503
+.. GENERATED FROM PYTHON SOURCE LINES 507-511
 
 sphinx_gallery_thumbnail_number = -8
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1049,7 +1057,7 @@ isort: skip_file
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 16.060 seconds)
+   **Total running time of the script:** (0 minutes 12.891 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:

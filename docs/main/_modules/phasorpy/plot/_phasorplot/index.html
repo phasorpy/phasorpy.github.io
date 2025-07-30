@@ -558,9 +558,10 @@
 <span class="n">GRID_COLOR</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
 <span class="n">GRID_LINESTYLE</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
 <span class="n">GRID_LINESTYLE_MAJOR</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
-<span class="n">GRID_LINEWIDH</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">GRID_LINEWIDH_MINOR</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">GRID_LINEWIDTH</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">GRID_LINEWIDTH_MINOR</span> <span class="o">=</span> <span class="mf">0.6</span>
 <span class="n">GRID_FILL</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">GRID_ZORDER</span> <span class="o">=</span> <span class="mi">2</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PhasorPlot</span><span class="p">:</span>
@@ -578,8 +579,13 @@
 <span class="sd">        By default, a new subplot axes is created.</span>
 <span class="sd">    frequency : float, optional</span>
 <span class="sd">        Laser pulse or modulation frequency in MHz.</span>
-<span class="sd">    grid : bool, optional, default: True</span>
-<span class="sd">        Display polar grid or universal semicircle.</span>
+<span class="sd">    pad : float, optional</span>
+<span class="sd">        Padding around the plot. The default is 0.05.</span>
+<span class="sd">    grid : dict or bool, optional</span>
+<span class="sd">        Display universal semicircle (default) or polar grid (allquadrants).</span>
+<span class="sd">        If False, no grid is displayed.</span>
+<span class="sd">        If a dictionary, it is passed to :py:meth:`PhasorPlot.polar_grid`</span>
+<span class="sd">        or :py:meth:`PhasorPlot.semicircle`.</span>
 <span class="sd">    **kwargs</span>
 <span class="sd">        Additional properties to set on `ax`.</span>
 
@@ -599,8 +605,11 @@
     <span class="n">_full</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Show all quadrants of phasor space.&quot;&quot;&quot;</span>
 
-    <span class="n">_semicircle_ticks</span><span class="p">:</span> <span class="n">SemicircleTicks</span> <span class="o">|</span> <span class="kc">None</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Last SemicircleTicks instance created.&quot;&quot;&quot;</span>
+    <span class="n">_semicircle_ticks</span><span class="p">:</span> <span class="n">CircleTicks</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Last CircleTicks instance created for semicircle.&quot;&quot;&quot;</span>
+
+    <span class="n">_unitcircle_ticks</span><span class="p">:</span> <span class="n">CircleTicks</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Last CircleTicks instance created for unit circle.&quot;&quot;&quot;</span>
 
     <span class="n">_frequency</span><span class="p">:</span> <span class="nb">float</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Laser pulse or modulation frequency in MHz.&quot;&quot;&quot;</span>
@@ -612,7 +621,8 @@
         <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">grid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">grid</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pad</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># initialize empty phasor plot</span>
@@ -621,23 +631,36 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_on_format_coord</span>
         <span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">grid_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">grid_kwargs</span> <span class="o">=</span> <span class="n">grid</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">grid_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_semicircle_ticks</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unitcircle_ticks</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_full</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">allquadrants</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full</span><span class="p">:</span>
-            <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
-            <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+            <span class="n">pad</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="k">if</span> <span class="n">pad</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">pad</span><span class="p">))</span>
+            <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">pad</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
             <span class="n">xticks</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="n">yticks</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">polar_grid</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polar_grid</span><span class="p">(</span><span class="o">**</span><span class="n">grid_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
-            <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+            <span class="n">pad</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="k">if</span> <span class="n">pad</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">pad</span><span class="p">))</span>
+            <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">pad</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
+            <span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">pad</span><span class="p">,</span> <span class="mf">0.65</span> <span class="o">+</span> <span class="n">pad</span><span class="p">)</span>
             <span class="n">xticks</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
             <span class="n">yticks</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="o">**</span><span class="n">grid_kwargs</span><span class="p">)</span>
 
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Phasor plot&#39;</span>
         <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -994,7 +1017,7 @@
                 <span class="n">kwargs</span><span class="p">,</span>
                 <span class="n">edgecolor</span><span class="o">=</span><span class="n">GRID_COLOR</span> <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">color</span><span class="p">,</span>
                 <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
                 <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
@@ -1016,7 +1039,7 @@
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span> <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">color</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">center_re</span><span class="p">,</span> <span class="n">center_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">fraction</span>
@@ -1070,7 +1093,7 @@
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))]</span></div>
 
@@ -1104,7 +1127,7 @@
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
             <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
@@ -1290,7 +1313,7 @@
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
             <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">_circle_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_circle_only&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -1376,45 +1399,163 @@
 
 <div class="viewcode-block" id="PhasorPlot.polar_grid">
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.polar_grid">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">polar_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw polar coordinate system.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">polar_grid</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">radii</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tick_space</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tick_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Draw polar coordinate system.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        radii : int or sequence of float, optional</span>
+<span class="sd">            Position of radial gridlines in range (0, 1].</span>
+<span class="sd">            If an integer, the number of equidistant radial gridlines.</span>
+<span class="sd">            By default, three equidistant radial gridlines are drawn.</span>
+<span class="sd">            The unit circle (radius 1), if included, is drawn in major style.</span>
+<span class="sd">        angles : int or sequence of float, optional</span>
+<span class="sd">            Position of angular gridlines in range [0, 2 pi].</span>
+<span class="sd">            If an integer, the number of equidistant angular gridlines.</span>
+<span class="sd">            By default, 12 equidistant angular gridlines are drawn.</span>
+<span class="sd">        samples : int, optional</span>
+<span class="sd">            Number of vertices of polygon inscribed in unit circle.</span>
+<span class="sd">            By default, no inscribed polygon is drawn.</span>
+<span class="sd">        labels : sequence of str, optional</span>
+<span class="sd">            Tick labels on unit circle.</span>
+<span class="sd">            Labels are placed at equidistant angles if `ticks` are not</span>
+<span class="sd">            provided.</span>
+<span class="sd">        ticks : array_like, optional</span>
+<span class="sd">            Values at which to place tick labels on unit circle.</span>
+<span class="sd">            If `labels` are not provided, `ticks` values formatted with</span>
+<span class="sd">            `tick_format` are used as labels.</span>
+<span class="sd">            If `tick_space` is not provided, tick values are angles in radians.</span>
+<span class="sd">        tick_space : array_like, optional</span>
+<span class="sd">            Values used to convert `ticks` to angles.</span>
+<span class="sd">            For example, the wavelengths used to calculate spectral phasors</span>
+<span class="sd">            or the minimum and maximum wavelengths of a sine-cosine filter.</span>
+<span class="sd">        tick_format : str, optional</span>
+<span class="sd">            Format string for tick values if `labels` is None.</span>
+<span class="sd">            By default, the tick format is &quot;{}&quot;.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Parameters passed to</span>
 <span class="sd">            :py:class:`matplotlib.patches.Circle` and</span>
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`.</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If number of ticks doesn&#39;t match number of labels.</span>
+<span class="sd">            If `tick_space` has less than two values.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Use ``radii=1, angles=4`` to draw major gridlines only.</span>
+
+<span class="sd">        The values of ticks (:math:`v`) are converted to angles</span>
+<span class="sd">        (:math:`\theta`) using `tick_space` (:math:`s`) according to:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            \theta = \frac{v - s_0}{s_{-1} + s_1 - 2 s_0} \cdot 2 \pi</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span>
-        <span class="c1"># major gridlines</span>
-        <span class="n">kwargs_copy</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">minor_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">update_kwargs</span><span class="p">(</span>
+            <span class="n">minor_kwargs</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH_MINOR</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
             <span class="c1"># fill=GRID_FILL,</span>
         <span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="c1"># minor gridlines</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs_copy</span>
-        <span class="n">update_kwargs</span><span class="p">(</span>
-            <span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH_MINOR</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">):</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+
+        <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">xy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">radii</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">radii</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">radii</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr]</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+                <span class="c1"># skip zero radius</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-3</span><span class="p">:</span>
+                <span class="c1"># unit circle</span>
+                <span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># minor circle</span>
+                <span class="n">circle</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">minor_kwargs</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">angles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angles</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr]</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+                <span class="c1"># skip angles out of range</span>
+                <span class="k">continue</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="o">**</span><span class="n">minor_kwargs</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># no labels</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># equidistant labels</span>
+            <span class="k">assert</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">tick_space</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># use tick values as labels</span>
+            <span class="k">assert</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tick_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">tick_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">tick_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">]</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">ticks</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># ticks and labels</span>
+            <span class="n">ticks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ticks</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ticks</span><span class="o">.</span><span class="n">size</span><span class="si">=}</span><span class="s1"> != </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tick_space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tick_space</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tick_space</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tick_space</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">tick_space</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">tick_space</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> or </span><span class="si">{</span><span class="n">tick_space</span><span class="o">.</span><span class="n">size</span><span class="si">=}</span><span class="s1"> &lt; 2&#39;</span>
+                <span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ticks</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>  <span class="c1"># for mypy</span>
+            <span class="n">ticks</span> <span class="o">-=</span> <span class="n">tick_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ticks</span> <span class="o">/=</span> <span class="n">tick_space</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">tick_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tick_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ticks</span> <span class="o">*=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+        <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unitcircle_ticks</span> <span class="o">=</span> <span class="n">CircleTicks</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">path_effects</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_unitcircle_ticks</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PhasorPlot.semicircle">
@@ -1460,7 +1601,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list[matplotlib.lines.Line2D]</span>
+<span class="sd">        list of matplotlib.lines.Line2D</span>
 <span class="sd">            Lines representing plotted semicircle and ticks.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1471,7 +1612,8 @@
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
             <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDH</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">phasor_reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">polar_reference</span> <span class="o">=</span> <span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_reference</span><span class="p">)</span>
@@ -1511,7 +1653,7 @@
         <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">polar_reference</span> <span class="o">==</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
             <span class="c1"># draw ticks and labels</span>
             <span class="n">lifetime</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">_semicircle_ticks</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_semicircle_ticks</span> <span class="o">=</span> <span class="n">SemicircleTicks</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_semicircle_ticks</span> <span class="o">=</span> <span class="n">CircleTicks</span><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                     <span class="o">*</span><span class="n">phasor_transform</span><span class="p">(</span>
@@ -1539,11 +1681,13 @@
         <span class="k">return</span> <span class="s1">&#39;  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ret</span><span class="p">))</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">SemicircleTicks</span><span class="p">(</span><span class="n">AbstractPathEffect</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw ticks on universal semicircle.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CircleTicks</span><span class="p">(</span><span class="n">AbstractPathEffect</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw ticks on unit circle or universal semicircle.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    origin : (float, float), optional</span>
+<span class="sd">        Origin of circle.</span>
 <span class="sd">    size : float, optional</span>
 <span class="sd">        Length of tick in dots.</span>
 <span class="sd">        The default is ``rcParams[&#39;xtick.major.size&#39;]``.</span>
@@ -1555,23 +1699,31 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">_origin</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1"># origin of circle</span>
     <span class="n">_size</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># tick length</span>
     <span class="n">_labels</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># tick labels</span>
     <span class="n">_gc</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>  <span class="c1"># keywords passed to _update_gc</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
         <span class="n">size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">labels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
 
+        <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_origin</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_origin</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.major.size&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
@@ -1584,7 +1736,7 @@
 
     <span class="nd">@labels</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -1610,7 +1762,7 @@
         <span class="c1"># approximate half size of &#39;x&#39;</span>
         <span class="n">fontsize</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">())</span> <span class="o">/</span> <span class="mi">4</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_size</span><span class="p">)</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin</span><span class="p">])</span>
 
         <span class="n">transpath</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform_path</span><span class="p">(</span><span class="n">tpath</span><span class="p">)</span>
         <span class="n">polys</span> <span class="o">=</span> <span class="n">transpath</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">(</span><span class="n">closed_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1648,6 +1800,8 @@
                 <span class="c1"># TODO: get rendered text size from matplotlib.text.Text?</span>
                 <span class="c1"># this did not work:</span>
                 <span class="c1"># Text(d[i,0], h - d[i,1], label, ha=&#39;center&#39;, va=&#39;center&#39;)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+                    <span class="k">continue</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">fontsize</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">dx</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
                 <span class="n">y</span> <span class="o">=</span> <span class="n">h</span> <span class="o">-</span> <span class="n">y</span> <span class="o">+</span> <span class="n">fontsize</span>
                 <span class="n">renderer</span><span class="o">.</span><span class="n">draw_text</span><span class="p">(</span><span class="n">gc0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">font</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
