@@ -555,6 +555,7 @@ many file formats used in bio-imaging:</p>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_lif" title="phasorpy.io.signal_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_lif()</span></code></a> - Leica LIF and XLEF</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_lsm" title="phasorpy.io.signal_from_lsm"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_lsm()</span></code></a> - Zeiss LSM</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_ptu" title="phasorpy.io.signal_from_ptu"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_ptu()</span></code></a> - PicoQuant PTU</p></li>
+<li><p><a class="reference internal" href="#phasorpy.io.signal_from_pqbin" title="phasorpy.io.signal_from_pqbin"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_pqbin()</span></code></a> - PicoQuant BIN</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_sdt" title="phasorpy.io.signal_from_sdt"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_sdt()</span></code></a> - Becker &amp; Hickl SDT</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_fbd()</span></code></a> - FLIMbox FBD</p></li>
 <li><p><a class="reference internal" href="#phasorpy.io.signal_from_flimlabs_json" title="phasorpy.io.signal_from_flimlabs_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_from_flimlabs_json()</span></code></a> - FLIM LABS JSON</p></li>
@@ -1649,6 +1650,50 @@ Usually, a 3-to-5-dimensional array of type <code class="docutils literal notran
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.io.signal_from_pqbin">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_pqbin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_pqbin" title="Link to this definition">#</a></dt>
+<dd><p>Return TCSPC histogram and metadata from PicoQuant BIN file.</p>
+<p>PicoQuant BIN files contain TCSPC histograms with limited metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of PicoQuant BIN file to read.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>TCSPC histogram with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> <code class="docutils literal notranslate"><span class="pre">'YXH'</span></code>,
+and type <code class="docutils literal notranslate"><span class="pre">uint32</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">coords['H']</span></code>: delay-times of histogram bins in ns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrs['frequency']</span></code>: repetition frequency in MHz.
+This assumes that the histogram contains exactly one period.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.DataArray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – File is not a PicoQuant BIN file.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_pqbin</span><span class="p">(</span><span class="s1">&#39;picoquant.bin&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">values</span>
+<span class="go">array(...)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">dtype(&#39;uint32&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(256, 256, 2000)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">dims</span>
+<span class="go">(&#39;Y&#39;, &#39;X&#39;, &#39;H&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+<span class="go">array([0, ..., 49.975])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="go">19.99</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_ptu">
 <span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_ptu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trimdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#phasorpy.io.signal_from_ptu" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from PicoQuant PTU T3 mode file.</p>
@@ -1882,6 +1927,7 @@ volumes or TCSPC histograms. Z64 files contain no metadata.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_imspector_tiff"><code class="docutils literal notranslate"><span class="pre">signal_from_imspector_tiff()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_lif"><code class="docutils literal notranslate"><span class="pre">signal_from_lif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_lsm"><code class="docutils literal notranslate"><span class="pre">signal_from_lsm()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_pqbin"><code class="docutils literal notranslate"><span class="pre">signal_from_pqbin()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_ptu"><code class="docutils literal notranslate"><span class="pre">signal_from_ptu()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_sdt"><code class="docutils literal notranslate"><span class="pre">signal_from_sdt()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.io.signal_from_z64"><code class="docutils literal notranslate"><span class="pre">signal_from_z64()</span></code></a></li>
