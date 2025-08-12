@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>PhasorPy Logo &#8212; PhasorPy 0.7.dev0 documentation</title>
+    <title>PhasorPy logo &#8212; PhasorPy 0.7.dev0 documentation</title>
   
   
   
@@ -490,7 +490,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">PhasorPy Logo</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">PhasorPy logo</a></li>
 </ul>
 </details></li>
 </ul>
@@ -539,7 +539,7 @@
     
     <li class="breadcrumb-item"><a href="../" class="nav-link">Miscellaneous</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">PhasorPy Logo</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">PhasorPy logo</span></li>
   </ul>
 </nav>
 </div>
@@ -557,49 +557,57 @@
                 <article class="bd-article">
                   
   <section class="sphx-glr-example-title" id="phasorpy-logo">
-<span id="sphx-glr-tutorials-misc-phasorpy-logo-py"></span><h1>PhasorPy Logo<a class="headerlink" href="#phasorpy-logo" title="Link to this heading">#</a></h1>
+<span id="sphx-glr-tutorials-misc-phasorpy-logo-py"></span><h1>PhasorPy logo<a class="headerlink" href="#phasorpy-logo" title="Link to this heading">#</a></h1>
 <p>Render the PhasorPy logo.</p>
 <p>This script generates the PhasorPy logo using the PhasorPy library and
 matplotlib.
 The schematic logo shows a universal semicircle and the phasor coordinates of
-a mixture of two lifetime components. The corresponding time-domain signal is
-shown in an inset. An arrow is drawn between the time-domain signal and
-phasor coordinates to indicate the phasor transformation.
-The logo is scalable and works with white and dark backgrounds.</p>
+a mixture of two lifetime components. The corresponding time-domain and
+first harmonic signals are shown in insets. An optional arrow is drawn
+between the time-domain signal and phasor coordinates to indicate the
+phasor transformation.
+The logo is scalable, works with white and dark backgrounds, and can be
+cropped to a circle.</p>
 <p>Import required modules and define functions:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">lifetime_to_signal</span><span class="p">,</span> <span class="n">phasor_from_lifetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span><span class="p">,</span> <span class="n">phasor_to_signal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhasorPlot</span>
 </pre></div>
 </div>
-<p>Create data for the logo:</p>
+<p>Create signals and phasor coordinates for the logo:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
 <span class="n">lifetime</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">5.0</span>  <span class="c1"># ns</span>
 <span class="n">fraction</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="mi">256</span>  <span class="c1"># number of signal samples</span>
 
 <span class="n">signal</span><span class="p">,</span> <span class="n">irf</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span>
     <span class="n">frequency</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>  <span class="c1"># spread out the decay</span>
     <span class="n">lifetime</span><span class="p">,</span>
     <span class="n">fraction</span><span class="p">,</span>
     <span class="n">mean</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">samples</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>  <span class="c1"># smooth</span>
+    <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span>
     <span class="n">zero_phase</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span>
     <span class="n">zero_stdev</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">signal</span> <span class="o">/=</span> <span class="n">signal</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-<span class="n">center</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
-<span class="n">phasor</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">)</span>
+<span class="n">phasor</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
+<span class="n">harmonic</span> <span class="o">=</span> <span class="n">phasor_to_signal</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">),</span> <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">)</span>
+<span class="n">harmonic</span> <span class="o">/=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Create the PhasorPy logo and save it as a scalable vector graphics (SVG)
 file:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="mf">1.2</span>  <span class="c1"># scale factor for lines and markers</span>
-<span class="n">phasor_color</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span>
-<span class="n">signal_color</span> <span class="o">=</span> <span class="s1">&#39;tab:green&#39;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phasor_color</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span>
+<span class="n">signal_color</span> <span class="o">=</span> <span class="s1">&#39;tab:orange&#39;</span>
+<span class="n">harmonic_color</span> <span class="o">=</span> <span class="s1">&#39;tab:green&#39;</span>
+<span class="n">arrow_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to show arrow</span>
+<span class="n">outline_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to show outline</span>
+<span class="n">linewidth</span> <span class="o">=</span> <span class="mi">20</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 
 <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
@@ -609,58 +617,89 @@ file:</p>
     <span class="n">allquadrants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">1.04</span><span class="p">),</span>
-    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">),</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="mi">15</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">phasor_color</span><span class="p">,</span> <span class="n">capstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">)</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">lw</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">phasor_color</span><span class="p">,</span> <span class="n">capstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">)</span>
 
-<span class="c1"># draw marker at phasor coordinates</span>
+<span class="c1"># draw marker at phasor coordinate of mixture</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">center</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">phasor</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
-    <span class="n">markersize</span><span class="o">=</span><span class="mi">45</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-    <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">15</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+    <span class="n">markersize</span><span class="o">=</span><span class="mi">3</span> <span class="o">*</span> <span class="n">linewidth</span><span class="p">,</span>
+    <span class="n">markeredgewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
     <span class="n">markeredgecolor</span><span class="o">=</span><span class="n">phasor_color</span><span class="p">,</span>
     <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span>
     <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># draw arrow indicating phasor transformation</span>
-<span class="n">point</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.13</span>
-<span class="n">length</span> <span class="o">=</span> <span class="mf">0.66</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
-    <span class="n">point</span><span class="p">,</span>
-    <span class="p">(</span>
-        <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span> <span class="o">*</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-        <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span> <span class="o">*</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-    <span class="p">),</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
-    <span class="n">lw</span><span class="o">=</span><span class="mi">15</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
-    <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">angle</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">mutation_scale</span><span class="o">=</span><span class="mi">66</span><span class="p">,</span>
-<span class="p">)</span>
-
 <span class="c1"># draw time-domain signal in inset</span>
-<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">((</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">))</span>
-<span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">((</span><span class="mf">0.015</span><span class="p">,</span> <span class="mf">0.32</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">))</span>
 <span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">))</span>
+<span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 <span class="n">cax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">times</span><span class="p">,</span>
     <span class="n">signal</span><span class="p">,</span>
     <span class="s1">&#39;-&#39;</span><span class="p">,</span>
-    <span class="n">lw</span><span class="o">=</span><span class="mi">15</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
     <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="n">signal_color</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># draw harmonics in second inset</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span><span class="p">((</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.105</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
+<span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">cax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">times</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="p">,</span>
+    <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+    <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">harmonic_color</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># draw arrow indicating phasor transformation</span>
+<span class="k">if</span> <span class="n">arrow_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.77</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">),</span>
+        <span class="p">(</span>
+            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">arrow_color</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+        <span class="n">mutation_scale</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">angle</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="c1"># draw circle outline</span>
+<span class="k">if</span> <span class="n">outline_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span>
+        <span class="mf">0.5</span><span class="p">,</span>
+        <span class="mf">0.0</span><span class="p">,</span>
+        <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">outline_color</span><span class="p">,</span>
+        <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
 <span class="n">pyplot</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
-<span class="c1"># save the logo to a SVG file:</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;phasorpy_logo.svg&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="c1"># save the figure to a SVG file:</span>
+<span class="n">plot</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;phasorpy_logo.svg&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
 <span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_logo_001.png" srcset="../../../_images/sphx_glr_phasorpy_logo_001.png" alt="phasorpy logo" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.054 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_logo_001.png" srcset="../../../_images/sphx_glr_phasorpy_logo_001.png" alt="phasorpy logo" class = "sphx-glr-single-img"/><p>mypy: disable-error-code=”unreachable”</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.064 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-logo-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/51e1acba23be3887d1c2302d00fea961/phasorpy_logo.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_logo.ipynb</span></code></a></p>
