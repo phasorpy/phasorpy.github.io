@@ -34,6 +34,8 @@ Resources
 News
 ====
 
+- Aug 16, 2025: The new `PhasorPy logo <https://www.phasorpy.org/_static/phasorpy_logo.svg>`_ is live.
+
 - June 22, 2025: `PhasorPy 0.6 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - June 16, 2025: `200th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
