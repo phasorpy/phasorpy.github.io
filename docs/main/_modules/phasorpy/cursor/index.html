@@ -58,6 +58,7 @@
             true;
         </script>
     <script src="../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -542,10 +543,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-        <span class="n">ArrayLike</span><span class="p">,</span>
-        <span class="n">NDArray</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NDArray</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
@@ -660,8 +658,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
     <span class="n">radius_minor</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">angle</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">angle</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">bool_</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return masks for elliptic cursors of phasor coordinates.</span>
 
@@ -680,14 +677,11 @@
 <span class="sd">    radius_minor : array_like, optional, shape (n,)</span>
 <span class="sd">        Radii of ellipses along semi-minor axis.</span>
 <span class="sd">        By default, the ellipses are circular.</span>
-<span class="sd">    angle : array_like, optional, shape (n,)</span>
-<span class="sd">        Rotation angles of semi-major axes of ellipses in radians.</span>
-<span class="sd">        By default, the ellipses are automatically oriented depending on</span>
-<span class="sd">        `align_semicircle`.</span>
-<span class="sd">    align_semicircle : bool, optional</span>
-<span class="sd">        Determines orientation of ellipses if `angle` is not provided.</span>
-<span class="sd">        If true, align the minor axes of the ellipses with the closest tangent</span>
-<span class="sd">        on the universal semicircle, else the unit circle (default).</span>
+<span class="sd">    angle : array_like or {&#39;phase&#39;, &#39;semicircle&#39;}, optional</span>
+<span class="sd">        Rotation angle of semi-major axis of elliptic cursors in radians.</span>
+<span class="sd">        If None or &#39;phase&#39;, align the minor axes of the ellipses with</span>
+<span class="sd">        the closest tangent on the unit circle.</span>
+<span class="sd">        If &#39;semicircle&#39;, align the ellipses with the universal semicircle.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -741,12 +735,17 @@
         <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">radius_b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># TODO: vectorize align_semicircle?</span>
-        <span class="k">if</span> <span class="n">align_semicircle</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># TODO: vectorize str type</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">:</span>
             <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">center_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">angle</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">angle_sin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
     <span class="n">angle_cos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>

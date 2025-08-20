@@ -58,6 +58,7 @@
             true;
         </script>
     <script src="../../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex/" />
     <link rel="search" title="Search" href="../../../../search/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -526,7 +527,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">IO</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">IO</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
@@ -534,8 +535,16 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.font_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">FontProperties</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.legend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Legend</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Arc</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Ellipse</span><span class="p">,</span> <span class="n">FancyArrowPatch</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Arc</span><span class="p">,</span>
+    <span class="n">Circle</span><span class="p">,</span>
+    <span class="n">Ellipse</span><span class="p">,</span>
+    <span class="n">FancyArrowPatch</span><span class="p">,</span>
+    <span class="n">Polygon</span><span class="p">,</span>
+    <span class="n">Rectangle</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patheffects</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractPathEffect</span>
 
@@ -553,7 +562,7 @@
     <span class="n">phasor_semicircle</span><span class="p">,</span>
     <span class="n">phasor_to_apparent_lifetime</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_transform</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_to_polar</span><span class="p">,</span> <span class="n">phasor_transform</span>
 
 <span class="n">GRID_COLOR</span> <span class="o">=</span> <span class="s1">&#39;0.5&#39;</span>
 <span class="n">GRID_LINESTYLE</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
@@ -599,11 +608,11 @@
     <span class="n">_ax</span><span class="p">:</span> <span class="n">Axes</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Matplotlib axes.&quot;&quot;&quot;</span>
 
-    <span class="n">_limits</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Axes limits (xmin, xmax), (ymin, ymax).&quot;&quot;&quot;</span>
-
     <span class="n">_full</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Show all quadrants of phasor space.&quot;&quot;&quot;</span>
+
+    <span class="n">_labels</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot has labels attached.&quot;&quot;&quot;</span>
 
     <span class="n">_semicircle_ticks</span><span class="p">:</span> <span class="n">CircleTicks</span> <span class="o">|</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Last CircleTicks instance created for semicircle.&quot;&quot;&quot;</span>
@@ -630,6 +639,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">format_coord</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># type: ignore[method-assign]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_on_format_coord</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">grid_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -674,14 +684,21 @@
             <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
             <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;G, real&#39;</span><span class="p">,</span>
             <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;S, imag&#39;</span><span class="p">,</span>
-            <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span>
             <span class="n">xlim</span><span class="o">=</span><span class="n">xlim</span><span class="p">,</span>
             <span class="n">ylim</span><span class="o">=</span><span class="n">ylim</span><span class="p">,</span>
             <span class="n">xticks</span><span class="o">=</span><span class="n">xticks</span><span class="p">,</span>
             <span class="n">yticks</span><span class="o">=</span><span class="n">yticks</span><span class="p">,</span>
+            <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">],</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ylim&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;xlim&#39;</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">,</span> <span class="s1">&#39;xticks&#39;</span><span class="p">,</span> <span class="s1">&#39;yticks&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># set axis limits after ticks</span>
+        <span class="k">if</span> <span class="s1">&#39;xlim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;xlim&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;ylim&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ylim&#39;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">ax</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
@@ -710,8 +727,24 @@
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.show">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display all open figures. Call :py:func:`matplotlib.pyplot.show`.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
         <span class="c1"># self.fig.show()</span>
         <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PhasorPlot.legend">
+<a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.legend">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Legend</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add legend to plot.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            Keyword arguments passed to :py:func:`matplotlib.axes.Axes.legend`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PhasorPlot.save">
@@ -798,12 +831,11 @@
             <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">lbl</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">lbl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
                     <span class="k">pass</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">lbl</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_limits</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
@@ -815,7 +847,7 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return two-dimensional histogram of imag versus real coordinates.&quot;&quot;&quot;</span>
-        <span class="n">update_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">)</span>
+        <span class="n">update_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()))</span>
         <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">),</span> <span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;range&#39;</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">xmax</span> <span class="o">&gt;</span> <span class="n">xmin</span> <span class="ow">and</span> <span class="n">ymax</span> <span class="o">&gt;</span> <span class="n">ymin</span>
         <span class="n">bins</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bins&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
@@ -832,13 +864,6 @@
             <span class="n">numpy</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">imag</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset axes limits.&quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ylim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">pass</span>
 
 <div class="viewcode-block" id="PhasorPlot.hist2d">
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d">[docs]</a>
@@ -875,9 +900,12 @@
             <span class="n">h</span><span class="p">[</span><span class="n">h</span> <span class="o">&lt;</span> <span class="n">cmin</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">cmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">h</span><span class="p">[</span><span class="n">h</span> <span class="o">&gt;</span> <span class="n">cmax</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_limits</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
+        <span class="c1"># TODO: create custom labels for pcolormesh?</span>
+        <span class="c1"># if &#39;label&#39; in kwargs:</span>
+        <span class="c1">#     self._labels = True</span>
 
 <div class="viewcode-block" id="PhasorPlot.contour">
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.contour">[docs]</a>
@@ -911,9 +939,12 @@
         <span class="n">h</span><span class="p">,</span> <span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_histogram2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs_hist2d</span><span class="p">)</span>
         <span class="n">xedges</span> <span class="o">=</span> <span class="n">xedges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">((</span><span class="n">xedges</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xedges</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
         <span class="n">yedges</span> <span class="o">=</span> <span class="n">yedges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">((</span><span class="n">yedges</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">yedges</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_limits</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span><span class="p">,</span> <span class="n">h</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
+        <span class="c1"># TODO: create custom labels for contour?</span>
+        <span class="c1"># if &#39;label&#39; in kwargs:</span>
+        <span class="c1">#     self._labels = True</span>
 
 <div class="viewcode-block" id="PhasorPlot.imshow">
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.imshow">[docs]</a>
@@ -1013,14 +1044,16 @@
                 <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fraction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE</span><span class="p">)</span>
+            <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
             <span class="n">update_kwargs</span><span class="p">(</span>
                 <span class="n">kwargs</span><span class="p">,</span>
                 <span class="n">edgecolor</span><span class="o">=</span><span class="n">GRID_COLOR</span> <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">color</span><span class="p">,</span>
-                <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+                <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+                <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
                 <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">marker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
                     <span class="n">real</span><span class="p">,</span>
@@ -1031,18 +1064,20 @@
                     <span class="n">label</span><span class="o">=</span><span class="n">label_</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">label_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">return</span>
 
         <span class="n">fraction</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">fraction</span><span class="p">)[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span> <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">color</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">center_re</span><span class="p">,</span> <span class="n">center_im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">fraction</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">fraction</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">re</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span>
@@ -1059,7 +1094,7 @@
                 <span class="n">label</span><span class="o">=</span><span class="n">label_</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">label_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="PhasorPlot.line">
@@ -1089,11 +1124,10 @@
 <span class="sd">            List containing plotted line.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
-            <span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))]</span></div>
 
@@ -1123,11 +1157,13 @@
 <span class="sd">            :py:class:`matplotlib.patches.Circle`.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
             <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
@@ -1146,7 +1182,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw arrow between points.</span>
 
-<span class="sd">        By default, draw a straight arrow with a `&#39;-|&gt;&#39;` style, a mutation</span>
+<span class="sd">        By default, draw a straight arrow with a ``&#39;-|&gt;&#39;`` style, a mutation</span>
 <span class="sd">        scale of 20, and a miter join style.</span>
 
 <span class="sd">        Parameters</span>
@@ -1185,43 +1221,55 @@
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.cursor">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cursor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">real</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">imag</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+        <span class="n">real_limit</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imag_limit</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
-        <span class="n">real_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">imag_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">radius_minor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_minor</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">crosshair</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">polar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation grid lines and arcs at phasor coordinates.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw cursor(s) at phasor coordinates.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        real : float</span>
+<span class="sd">        real : array_like</span>
 <span class="sd">            Real component of phasor coordinate.</span>
-<span class="sd">        imag : float</span>
+<span class="sd">        imag : array_like</span>
 <span class="sd">            Imaginary component of phasor coordinate.</span>
-<span class="sd">        real_limit : float, optional</span>
+<span class="sd">        real_limit : array_like, optional</span>
 <span class="sd">            Real component of limiting phasor coordinate.</span>
-<span class="sd">        imag_limit : float, optional</span>
+<span class="sd">        imag_limit : array_like, optional</span>
 <span class="sd">            Imaginary component of limiting phasor coordinate.</span>
-<span class="sd">        radius : float, optional</span>
-<span class="sd">            Radius of circle limiting phase and modulation grid lines and arcs.</span>
-<span class="sd">        radius_minor : float, optional</span>
+<span class="sd">        radius : array_like, optional</span>
+<span class="sd">            Radius of circular cursor.</span>
+<span class="sd">        radius_minor : array_like, optional</span>
 <span class="sd">            Radius of elliptic cursor along semi-minor axis.</span>
 <span class="sd">            By default, `radius_minor` is equal to `radius`, that is,</span>
 <span class="sd">            the ellipse is circular.</span>
-<span class="sd">        angle : float, optional</span>
+<span class="sd">        angle : array_like or {&#39;phase&#39;, &#39;semicircle&#39;}, optional</span>
 <span class="sd">            Rotation angle of semi-major axis of elliptic cursor in radians.</span>
-<span class="sd">            If None (default), orient ellipse cursor according to</span>
-<span class="sd">            `align_semicircle`.</span>
-<span class="sd">        align_semicircle : bool, optional</span>
-<span class="sd">            Determines elliptic cursor orientation if `angle` is not provided.</span>
-<span class="sd">            If true, align the minor axis of the ellipse with the closest</span>
-<span class="sd">            tangent on the universal semicircle, else align to the unit circle.</span>
+<span class="sd">            If None or &#39;phase&#39;, align the minor axis of the ellipse with</span>
+<span class="sd">            the closest tangent on the unit circle.</span>
+<span class="sd">            If &#39;semicircle&#39;, align the ellipse with the universal semicircle.</span>
+<span class="sd">        color : array_like, optional</span>
+<span class="sd">            Color of cursor.</span>
+<span class="sd">        label : array_like, optional</span>
+<span class="sd">            String label for cursor.</span>
+<span class="sd">        crosshair : bool, optional</span>
+<span class="sd">            If true, draw polar or Cartesian lines or arcs limited by radius.</span>
+<span class="sd">            Else, draw circle or ellipse (default).</span>
+<span class="sd">            Only applies if `radius` is provided.</span>
+<span class="sd">        polar : bool, optional</span>
+<span class="sd">            If true, draw phase line and modulation arc.</span>
+<span class="sd">            Else, draw Cartesian lines.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional parameters passed to</span>
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`,</span>
@@ -1236,21 +1284,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">real_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">imag_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar_cursor</span><span class="p">(</span>
-                <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
-                <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real_limit</span><span class="p">,</span> <span class="n">imag_limit</span><span class="p">),</span>
+                <span class="o">*</span><span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
+                <span class="o">*</span><span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">real_limit</span><span class="p">,</span> <span class="n">imag_limit</span><span class="p">),</span>
                 <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
                 <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
                 <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
-                <span class="n">align_semicircle</span><span class="o">=</span><span class="n">align_semicircle</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+                <span class="n">crosshair</span><span class="o">=</span><span class="n">crosshair</span><span class="p">,</span>
+                <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">polar_cursor</span><span class="p">(</span>
-            <span class="o">*</span><span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
+            <span class="o">*</span><span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">),</span>
             <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
             <span class="n">radius_minor</span><span class="o">=</span><span class="n">radius_minor</span><span class="p">,</span>
             <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
-            <span class="n">align_semicircle</span><span class="o">=</span><span class="n">align_semicircle</span><span class="p">,</span>
-            <span class="c1"># _circle_only=True,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+            <span class="n">crosshair</span><span class="o">=</span><span class="n">crosshair</span><span class="p">,</span>
+            <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -1259,44 +1312,58 @@
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.polar_cursor">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">polar_cursor</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">modulation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">phase_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">modulation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">radius_minor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">align_semicircle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">phase</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">modulation</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">phase_limit</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">modulation_limit</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_minor</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">crosshair</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">polar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot phase and modulation grid lines and arcs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw cursor(s) at polar coordinates.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        phase : float, optional</span>
+<span class="sd">        phase : array_like, optional</span>
 <span class="sd">            Angular component of polar coordinate in radians.</span>
-<span class="sd">        modulation : float, optional</span>
+<span class="sd">        modulation : array_like, optional</span>
 <span class="sd">            Radial component of polar coordinate.</span>
-<span class="sd">        phase_limit : float, optional</span>
+<span class="sd">        phase_limit : array_like, optional</span>
 <span class="sd">            Angular component of limiting polar coordinate (in radians).</span>
-<span class="sd">            Modulation grid arcs are drawn between `phase` and `phase_limit`.</span>
-<span class="sd">        modulation_limit : float, optional</span>
+<span class="sd">            Modulation arcs are drawn between `phase` and `phase_limit`</span>
+<span class="sd">            if `polar` is true.</span>
+<span class="sd">        modulation_limit : array_like, optional</span>
 <span class="sd">            Radial component of limiting polar coordinate.</span>
-<span class="sd">            Phase grid lines are drawn from `modulation` to `modulation_limit`.</span>
-<span class="sd">        radius : float, optional</span>
-<span class="sd">            Radius of circle limiting phase and modulation grid lines and arcs.</span>
-<span class="sd">        radius_minor : float, optional</span>
+<span class="sd">            Phase lines are drawn from `modulation` to `modulation_limit`</span>
+<span class="sd">            if `polar` is true.</span>
+<span class="sd">        radius : array_like, optional</span>
+<span class="sd">            Radius of circular cursor.</span>
+<span class="sd">        radius_minor : array_like, optional</span>
 <span class="sd">            Radius of elliptic cursor along semi-minor axis.</span>
 <span class="sd">            By default, `radius_minor` is equal to `radius`, that is,</span>
 <span class="sd">            the ellipse is circular.</span>
-<span class="sd">        angle : float, optional</span>
+<span class="sd">        angle : array_like or {&#39;phase&#39;, &#39;semicircle&#39;}, optional</span>
 <span class="sd">            Rotation angle of semi-major axis of elliptic cursor in radians.</span>
-<span class="sd">            If None (default), orient ellipse cursor according to</span>
-<span class="sd">            `align_semicircle`.</span>
-<span class="sd">        align_semicircle : bool, optional</span>
-<span class="sd">            Determines elliptic cursor orientation if `angle` is not provided.</span>
-<span class="sd">            If true, align the minor axis of the ellipse with the closest</span>
-<span class="sd">            tangent on the universal semicircle, else align to the unit circle.</span>
+<span class="sd">            If None or &#39;phase&#39;, align the minor axis of the ellipse with</span>
+<span class="sd">            the closest tangent on the unit circle.</span>
+<span class="sd">            If &#39;semicircle&#39;, align the ellipse with the universal semicircle.</span>
+<span class="sd">        color : array_like, optional</span>
+<span class="sd">            Color of cursor.</span>
+<span class="sd">        label : array_like, optional</span>
+<span class="sd">            String label for cursor.</span>
+<span class="sd">        crosshair : bool, optional</span>
+<span class="sd">            If true, draw polar or Cartesian lines or arcs limited by radius.</span>
+<span class="sd">            Else, draw circle or ellipse (default).</span>
+<span class="sd">            Only applies if `radius` is provided.</span>
+<span class="sd">        polar : bool, optional</span>
+<span class="sd">            If true, draw phase line and modulation arc.</span>
+<span class="sd">            Else, draw Cartesian lines.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional parameters passed to</span>
 <span class="sd">            :py:class:`matplotlib.lines.Line2D`,</span>
@@ -1309,44 +1376,170 @@
 <span class="sd">        phasorpy.plot.PhasorPlot.cursor</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">phase</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">phase</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> != 1&#39;</span><span class="p">)</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">modulation</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">modulation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">modulation</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">modulation</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">modulation</span><span class="o">.</span><span class="n">ndim</span><span class="si">=}</span><span class="s1"> != 1&#39;</span><span class="p">)</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">modulation</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">phase_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">phase_limit</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">phase_limit</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">modulation_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">modulation_limit</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">modulation_limit</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">radius_minor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">radius_minor</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">label</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;U&#39;</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">color</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+
+            <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cursor</span><span class="p">(</span>
+                <span class="n">phase</span> <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">phase</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="n">modulation</span> <span class="k">if</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">modulation</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="n">phase_limit</span> <span class="k">if</span> <span class="n">phase_limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">phase_limit</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="p">(</span>
+                    <span class="n">modulation_limit</span>
+                    <span class="k">if</span> <span class="n">modulation_limit</span> <span class="ow">is</span> <span class="kc">None</span>
+                    <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">modulation_limit</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="p">),</span>
+                <span class="n">radius</span><span class="o">=</span><span class="n">radius</span> <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="n">radius_minor</span><span class="o">=</span><span class="p">(</span>
+                    <span class="n">radius_minor</span>
+                    <span class="k">if</span> <span class="n">radius_minor</span> <span class="ow">is</span> <span class="kc">None</span>
+                    <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius_minor</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="p">),</span>
+                <span class="n">angle</span><span class="o">=</span><span class="p">(</span>
+                    <span class="n">angle</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+                    <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">angle</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="p">),</span>
+                <span class="n">crosshair</span><span class="o">=</span><span class="n">crosshair</span><span class="p">,</span>
+                <span class="n">polar</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cursor</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">phase</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">modulation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">phase_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">modulation_limit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">radius_minor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">angle</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">crosshair</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">polar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw single cursor at polar coordinate.&quot;&quot;&quot;</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
             <span class="n">fill</span><span class="o">=</span><span class="n">GRID_FILL</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">_circle_only</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;_circle_only&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span>
         <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">radius_minor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">radius_minor</span> <span class="o">!=</span> <span class="n">radius</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">align_semicircle</span><span class="p">:</span>
+                    <span class="n">angle</span> <span class="o">=</span> <span class="n">phase</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">angle</span> <span class="o">==</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span>
+                        <span class="n">angle</span> <span class="o">=</span> <span class="n">phase</span>
+                    <span class="k">elif</span> <span class="n">angle</span> <span class="o">==</span> <span class="s1">&#39;semicircle&#39;</span><span class="p">:</span>
                         <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">angle</span> <span class="o">=</span> <span class="n">phase</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;invalid </span><span class="si">{</span><span class="n">angle</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
-                    <span class="n">Ellipse</span><span class="p">(</span>
-                        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
-                        <span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
-                        <span class="n">radius_minor</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
-                        <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
-                        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">crosshair</span><span class="p">:</span>
+                    <span class="c1"># draw elliptical cursor</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
+                        <span class="n">Ellipse</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                            <span class="n">radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                            <span class="n">radius_minor</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">angle</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                        <span class="p">)</span>
                     <span class="p">)</span>
-                <span class="p">)</span>
-                <span class="c1"># TODO: implement gridlines intersecting with ellipse</span>
+                    <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="c1"># TODO: implement crosshair intersecting with ellipse?</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;crosshair not implemented with ellipse&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">crosshair</span><span class="p">:</span>
+                <span class="c1"># draw circlar cursor</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Circle</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">_circle_only</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
+
             <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">polar</span><span class="p">:</span>
+                <span class="c1"># draw Cartesian crosshair lines limited by radius</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">_intersect_circle_line</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span>
+                <span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+                <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">_intersect_circle_line</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+                <span class="c1"># phase and modulation not defined at origin</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="c1"># draw crosshair phase line and modulation arc limited by circle</span>
             <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">_intersect_circle_line</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
             <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">_intersect_circle_circle</span><span class="p">(</span>
                 <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">radius</span>
             <span class="p">)</span>
@@ -1363,6 +1556,30 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">polar</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modulation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="n">modulation</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">phase_limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">modulation_limit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># draw Cartesian crosshair lines</span>
+                <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y0</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># draw rectangle</span>
+                <span class="n">x1</span> <span class="o">=</span> <span class="n">modulation_limit</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase_limit</span><span class="p">)</span>
+                <span class="n">y1</span> <span class="o">=</span> <span class="n">modulation_limit</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase_limit</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">),</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># TODO: implement filled polar region/rectangle</span>
         <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fill&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">phase_limit</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">phi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1374,9 +1591,12 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="n">y0</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="n">x1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
-                    <span class="n">y1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
-                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">((</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                    <span class="n">x1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+                    <span class="n">y1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">Line2D</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="p">(</span><span class="n">modulation</span><span class="p">,</span> <span class="n">modulation_limit</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">mod</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">phase_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1384,7 +1604,8 @@
                     <span class="n">theta2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">phase_limit</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">theta1</span> <span class="o">=</span> <span class="mf">0.0</span>
-                    <span class="n">theta2</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full</span> <span class="k">else</span> <span class="mf">90.0</span>
+                    <span class="n">theta2</span> <span class="o">=</span> <span class="mf">360.0</span>  <span class="c1"># if self._full else 90.0</span>
+                <span class="c1"># TODO: filling arc objects is not supported</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
                     <span class="n">Arc</span><span class="p">(</span>
                         <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
@@ -1392,12 +1613,14 @@
                         <span class="n">mod</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
                         <span class="n">theta1</span><span class="o">=</span><span class="n">theta1</span><span class="p">,</span>
                         <span class="n">theta2</span><span class="o">=</span><span class="n">theta2</span><span class="p">,</span>
-                        <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># filling arc objects is not supported</span>
+                        <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
+                <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="PhasorPlot.polar_grid">
 <a class="viewcode-back" href="../../../../api/plot/#phasorpy.plot.PhasorPlot.polar_grid">[docs]</a>
@@ -1468,25 +1691,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span>
         <span class="n">minor_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">minor_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">minor_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH_MINOR</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">minor_kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH_MINOR</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
             <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
             <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
             <span class="c1"># fill=GRID_FILL,</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">angle</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="n">xy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">xy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1610,13 +1837,18 @@
         <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_frequency</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
 
+        <span class="n">linestyle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">)</span>
+        <span class="n">linewidth</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;lw&#39;</span><span class="p">,</span> <span class="n">GRID_LINEWIDTH</span><span class="p">)</span>
         <span class="n">update_kwargs</span><span class="p">(</span>
             <span class="n">kwargs</span><span class="p">,</span>
+            <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">GRID_COLOR</span><span class="p">,</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="n">GRID_LINESTYLE_MAJOR</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="n">GRID_LINEWIDTH</span><span class="p">,</span>
             <span class="n">zorder</span><span class="o">=</span><span class="n">GRID_ZORDER</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="k">if</span> <span class="n">phasor_reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">polar_reference</span> <span class="o">=</span> <span class="n">phasor_to_polar_scalar</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_reference</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">polar_reference</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1652,6 +1884,9 @@
                     <span class="p">)</span>
                 <span class="p">)</span>
 
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># don&#39;t pass label to ticks</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;capstyle&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">frequency</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">polar_reference</span> <span class="o">==</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
             <span class="c1"># draw ticks and labels</span>
             <span class="n">lifetime</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">_semicircle_ticks</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
@@ -1666,7 +1901,6 @@
                     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_limits</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">lines</span></div>
 
 
@@ -1764,7 +1998,7 @@
         <span class="c1"># approximate half size of &#39;x&#39;</span>
         <span class="n">fontsize</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">get_size_in_points</span><span class="p">())</span> <span class="o">/</span> <span class="mi">4</span>
         <span class="n">size</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">points_to_pixels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_size</span><span class="p">)</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin</span><span class="p">])</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin</span><span class="p">,))</span>
 
         <span class="n">transpath</span> <span class="o">=</span> <span class="n">affine</span><span class="o">.</span><span class="n">transform_path</span><span class="p">(</span><span class="n">tpath</span><span class="p">)</span>
         <span class="n">polys</span> <span class="o">=</span> <span class="n">transpath</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">(</span><span class="n">closed_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

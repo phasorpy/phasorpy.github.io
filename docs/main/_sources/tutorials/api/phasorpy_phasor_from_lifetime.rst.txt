@@ -107,8 +107,8 @@ of the pure components:
 
     plot_phasor(
         *phasor_from_lifetime(frequency, lifetimes, fractions),
-        linestyle='-',
         frequency=frequency,
+        linestyle='-',
         title='Multi-component lifetimes',
     )
 
@@ -141,8 +141,8 @@ pre-exponential amplitudes are also located on a line:
         *phasor_from_lifetime(
             frequency, lifetimes, fractions, preexponential=True
         ),
-        linestyle='-',
         frequency=frequency,
+        linestyle='-',
         title='Pre-exponential amplitudes',
     )
 
@@ -241,7 +241,7 @@ specify a `unit_conversion` factor:
             unit_conversion=1.0,
         ),
         marker='.',
-        label=('40 MHz', '80 MHz', '160 MHz'),
+        label=['40 MHz', '80 MHz', '160 MHz'],
         title='Lifetime distributions at multiple frequencies',
     )
 
@@ -292,11 +292,11 @@ background signal, the phasor coordinates lie on the universal semicircle:
         *phasor_from_lifetime(
             frequency,
             lifetime=numpy.column_stack(
-                (
+                [
                     numpy.full(samples, lifetime),  # donor-only lifetime
                     lifetime_quenched,  # donor lifetime with FRET
                     numpy.full(samples, 1e9),  # background with long lifetime
-                )
+                ]
             ),
             fraction=[0.1, 0.9, 0.1 / 1e9],
             preexponential=True,
@@ -362,7 +362,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.494 seconds)
+   **Total running time of the script:** (0 minutes 0.505 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_phasor_from_lifetime.py:

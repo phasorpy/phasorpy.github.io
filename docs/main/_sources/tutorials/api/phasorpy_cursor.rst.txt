@@ -104,21 +104,20 @@ Use circular cursors to mask regions of interest in the phasor space:
 
 Show the circular cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-62
+.. GENERATED FROM PYTHON SOURCE LINES 49-61
 
 .. code-block:: Python
 
 
     plot = PhasorPlot(allquadrants=True, title='Circular cursors')
     plot.hist2d(real, imag, cmap='Greys')
-    for i in range(len(cursor_real)):
-        plot.cursor(
-            cursor_real[i],
-            cursor_imag[i],
-            radius=radius[i],
-            color=CATEGORICAL[i],
-            linestyle='-',
-        )
+    plot.cursor(
+        cursor_real,
+        cursor_imag,
+        radius=radius,
+        color=CATEGORICAL[:2],
+        label=['cursor 0', 'cursor 1'],
+    )
     plot.show()
 
 
@@ -133,11 +132,11 @@ Show the circular cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 The cursor masks can be blended to produce a pseudo-colored image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-72
+.. GENERATED FROM PYTHON SOURCE LINES 64-71
 
 .. code-block:: Python
 
@@ -160,7 +159,7 @@ The cursor masks can be blended to produce a pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-78
+.. GENERATED FROM PYTHON SOURCE LINES 72-77
 
 Elliptic cursors
 ----------------
@@ -168,7 +167,7 @@ Elliptic cursors
 Use elliptic cursors to mask more defined regions of interest in the
 phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-91
+.. GENERATED FROM PYTHON SOURCE LINES 77-90
 
 .. code-block:: Python
 
@@ -192,26 +191,25 @@ phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 Show the elliptic cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-107
+.. GENERATED FROM PYTHON SOURCE LINES 92-105
 
 .. code-block:: Python
 
 
     plot = PhasorPlot(allquadrants=True, title='Elliptic cursors')
     plot.hist2d(real, imag, cmap='Greys')
-    for i in range(len(cursor_real)):
-        plot.cursor(
-            cursor_real[i],
-            cursor_imag[i],
-            radius=radius[i],
-            radius_minor=radius_minor[i],
-            color=CATEGORICAL[i],
-            linestyle='-',
-        )
+    plot.cursor(
+        cursor_real,
+        cursor_imag,
+        radius=radius,
+        radius_minor=radius_minor,
+        color=CATEGORICAL[:2],
+        label=['cursor 0', 'cursor 1'],
+    )
     plot.show()
 
 
@@ -226,12 +224,12 @@ Show the elliptic cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-110
+.. GENERATED FROM PYTHON SOURCE LINES 106-108
 
 The mean intensity image can be used as a base layer to overlay
 the masks from the elliptic cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-119
+.. GENERATED FROM PYTHON SOURCE LINES 109-117
 
 .. code-block:: Python
 
@@ -255,14 +253,14 @@ the masks from the elliptic cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-124
+.. GENERATED FROM PYTHON SOURCE LINES 118-122
 
 Polar cursors
 -------------
 
 Create a mask with two ranges of phase and modulation values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-134
+.. GENERATED FROM PYTHON SOURCE LINES 122-132
 
 .. code-block:: Python
 
@@ -283,26 +281,25 @@ Create a mask with two ranges of phase and modulation values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-136
+.. GENERATED FROM PYTHON SOURCE LINES 133-134
 
 Show the polar cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-150
+.. GENERATED FROM PYTHON SOURCE LINES 134-147
 
 .. code-block:: Python
 
 
     plot = PhasorPlot(allquadrants=True, title='Polar cursors')
     plot.hist2d(real, imag, cmap='Greys')
-    for i in range(len(phase_min)):
-        plot.polar_cursor(
-            phase=phase_min[i],
-            phase_limit=phase_max[i],
-            modulation=modulation_min[i],
-            modulation_limit=modulation_max[i],
-            color=CATEGORICAL[i + 2],
-            linestyle='-',
-        )
+    plot.polar_cursor(
+        phase=phase_min,
+        phase_limit=phase_max,
+        modulation=modulation_min,
+        modulation_limit=modulation_max,
+        color=CATEGORICAL[2:4],
+        label=['cursor 0', 'cursor 1'],
+    )
     plot.show()
 
 
@@ -317,13 +314,13 @@ Show the polar cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-154
+.. GENERATED FROM PYTHON SOURCE LINES 148-151
 
 The thresholded mean intensity image can be used as a base layer to
 overlay the masks from the polar cursors. Values below the threshold are
 transparent (white):
 
-.. GENERATED FROM PYTHON SOURCE LINES 154-164
+.. GENERATED FROM PYTHON SOURCE LINES 151-161
 
 .. code-block:: Python
 
@@ -349,7 +346,7 @@ transparent (white):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-168
+.. GENERATED FROM PYTHON SOURCE LINES 162-165
 
 sphinx_gallery_thumbnail_number = 1
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -358,7 +355,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.677 seconds)
+   **Total running time of the script:** (0 minutes 0.880 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_cursor.py:

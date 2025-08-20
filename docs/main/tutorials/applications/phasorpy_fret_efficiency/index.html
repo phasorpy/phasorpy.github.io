@@ -59,6 +59,7 @@
             true;
         </script>
     <script src="../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
     <link rel="next" title="Miscellaneous" href="../../misc/" />
@@ -599,6 +600,7 @@ The data were acquired using a Lambert frequency-domain FLIM instrument
 at 80 MHz. The phasor coordinates are already referenced:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;CFP and CFP-YFp.ref&#39;</span>
 <span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
+
 <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_simfcs_referenced</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
 <span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
@@ -633,40 +635,45 @@ for the CFP FRET donor:</p>
     <span class="n">background_imag</span><span class="o">=</span><span class="n">background_imag</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">phasor_plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">))</span>
+<span class="n">phasor_plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency trajectory&#39;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span><span class="p">([</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">background_real</span><span class="p">],</span> <span class="p">[</span><span class="n">donor_imag</span><span class="p">,</span> <span class="n">background_imag</span><span class="p">])</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">donor_real</span><span class="p">,</span>
     <span class="n">donor_imag</span><span class="p">,</span>
     <span class="s1">&#39;o&#39;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Donor only&#39;</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
     <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
     <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Donor only&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="n">background_real</span><span class="p">,</span>
     <span class="n">background_imag</span><span class="p">,</span>
     <span class="s1">&#39;o&#39;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Background&#39;</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
     <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Background&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
     <span class="o">*</span><span class="n">fret_trajectory</span><span class="p">,</span>
     <span class="s1">&#39;-&#39;</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FRET trajectory&#39;</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
-    <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FRET trajectory&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" alt="Phasor plot (80 MHz)" class = "sphx-glr-single-img"/></section>
+<img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" alt="FRET efficiency trajectory" class = "sphx-glr-single-img"/></section>
 <section id="estimate-fret-efficiency">
 <h2>Estimate FRET efficiency<a class="headerlink" href="#estimate-fret-efficiency" title="Link to this heading">#</a></h2>
 <p>Estimate FRET efficiencies for each pixel in the image by finding
@@ -688,17 +695,17 @@ the closest phasor coordinates in the FRET efficiency trajectory:</p>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_003.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_003.png" alt="Estimated FRET efficiency" class = "sphx-glr-single-img"/><p>Visualize the distribution of FRET efficiencies as a histogram:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_histograms</span><span class="p">(</span>
     <span class="n">fret_efficiencies</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># convert to percentage</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency histogram&#39;</span><span class="p">,</span>
-    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;FRET efficiency (%)&#39;</span><span class="p">,</span>
-    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Counts&#39;</span><span class="p">,</span>
     <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">),</span>
     <span class="n">bins</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;FRET efficiency (%)&#39;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Counts&#39;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FRET efficiency histogram&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_004.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_004.png" alt="FRET efficiency histogram" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = -2
 mypy: allow-untyped-defs, allow-untyped-calls</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.656 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.704 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-fret-efficiency-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/ddf2d91f49d83d0ee9e3214c07ecc7a6/phasorpy_fret_efficiency.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_fret_efficiency.ipynb</span></code></a></p>

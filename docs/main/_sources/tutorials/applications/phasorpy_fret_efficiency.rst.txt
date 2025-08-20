@@ -76,13 +76,14 @@ containing fixed samples of CFP and CFP-YFP expressing cells.
 The data were acquired using a Lambert frequency-domain FLIM instrument
 at 80 MHz. The phasor coordinates are already referenced:
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-62
+.. GENERATED FROM PYTHON SOURCE LINES 47-63
 
 .. code-block:: Python
 
 
     filename = 'CFP and CFP-YFp.ref'
     frequency = 80.0  # MHz
+
     mean, real, imag, attrs = phasor_from_simfcs_referenced(fetch(filename))
 
     plot_phasor_image(mean, real, imag, title=filename)
@@ -107,7 +108,7 @@ at 80 MHz. The phasor coordinates are already referenced:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-68
+.. GENERATED FROM PYTHON SOURCE LINES 64-69
 
 FRET efficiency trajectory
 --------------------------
@@ -115,7 +116,7 @@ FRET efficiency trajectory
 Calculate a theoretical FRET efficiency trajectory of phasor coordinates
 for the CFP FRET donor:
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-117
+.. GENERATED FROM PYTHON SOURCE LINES 69-123
 
 .. code-block:: Python
 
@@ -136,35 +137,40 @@ for the CFP FRET donor:
         background_imag=background_imag,
     )
 
-    phasor_plot = PhasorPlot(frequency=frequency, xlim=(0.5, 1), ylim=(0.2, 0.6))
+    phasor_plot = PhasorPlot(
+        frequency=frequency,
+        xlim=(0.5, 1),
+        ylim=(0.2, 0.6),
+        title='FRET efficiency trajectory',
+    )
     phasor_plot.hist2d(real, imag)
     phasor_plot.line([donor_real, background_real], [donor_imag, background_imag])
     phasor_plot.plot(
         donor_real,
         donor_imag,
         'o',
-        label='Donor only',
         color='tab:green',
         markeredgecolor='black',
         markersize=10,
         zorder=10,
+        label='Donor only',
     )
     phasor_plot.plot(
         background_real,
         background_imag,
         'o',
-        label='Background',
         color='black',
         markersize=10,
         zorder=10,
+        label='Background',
     )
     phasor_plot.plot(
         *fret_trajectory,
         '-',
-        label='FRET trajectory',
         color='tab:orange',
-        lw=4,
+        linewidth=4,
         alpha=0.8,
+        label='FRET trajectory',
     )
     phasor_plot.show()
 
@@ -172,7 +178,7 @@ for the CFP FRET donor:
 
 
 .. image-sg:: /tutorials/applications/images/sphx_glr_phasorpy_fret_efficiency_002.png
-   :alt: Phasor plot (80 MHz)
+   :alt: FRET efficiency trajectory
    :srcset: /tutorials/applications/images/sphx_glr_phasorpy_fret_efficiency_002.png
    :class: sphx-glr-single-img
 
@@ -180,7 +186,7 @@ for the CFP FRET donor:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-123
+.. GENERATED FROM PYTHON SOURCE LINES 124-129
 
 Estimate FRET efficiency
 ------------------------
@@ -188,7 +194,7 @@ Estimate FRET efficiency
 Estimate FRET efficiencies for each pixel in the image by finding
 the closest phasor coordinates in the FRET efficiency trajectory:
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-133
+.. GENERATED FROM PYTHON SOURCE LINES 129-139
 
 .. code-block:: Python
 
@@ -209,11 +215,11 @@ the closest phasor coordinates in the FRET efficiency trajectory:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-135
+.. GENERATED FROM PYTHON SOURCE LINES 140-141
 
 Visualize the spatial distribution of FRET efficiencies:
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-138
+.. GENERATED FROM PYTHON SOURCE LINES 141-144
 
 .. code-block:: Python
 
@@ -232,22 +238,22 @@ Visualize the spatial distribution of FRET efficiencies:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-140
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
 
 Visualize the distribution of FRET efficiencies as a histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-150
+.. GENERATED FROM PYTHON SOURCE LINES 146-156
 
 .. code-block:: Python
 
 
     plot_histograms(
         fret_efficiencies * 100,  # convert to percentage
-        title='FRET efficiency histogram',
-        xlabel='FRET efficiency (%)',
-        ylabel='Counts',
         range=(0, 35),
         bins=35,
+        xlabel='FRET efficiency (%)',
+        ylabel='Counts',
+        title='FRET efficiency histogram',
     )
 
 
@@ -262,7 +268,7 @@ Visualize the distribution of FRET efficiencies as a histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-153
+.. GENERATED FROM PYTHON SOURCE LINES 157-159
 
 sphinx_gallery_thumbnail_number = -2
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -270,7 +276,7 @@ mypy: allow-untyped-defs, allow-untyped-calls
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.656 seconds)
+   **Total running time of the script:** (0 minutes 0.704 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_fret_efficiency.py:

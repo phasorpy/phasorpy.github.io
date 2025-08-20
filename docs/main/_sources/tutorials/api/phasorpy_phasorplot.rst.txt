@@ -83,26 +83,33 @@ universal semicircle:
 
 .. GENERATED FROM PYTHON SOURCE LINES 37-42
 
-Universal semicircle
---------------------
+Custom axes
+-----------
 
-Create a phasor plot at a frequency of 80 MHz and custom axis limits.
-Add a second, transformed universal semicircle:
+Create a phasor plot with custom axis limits, automatic ticks, and custom
+axis labels:
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-47
+.. GENERATED FROM PYTHON SOURCE LINES 42-54
 
 .. code-block:: Python
 
 
-    plot = PhasorPlot(frequency=80.0, xlim=(-0.2, 1.05))
-    plot.semicircle(polar_reference=(0.9852, 0.5526))
+    plot = PhasorPlot(
+        title='Custom axes',
+        xlabel='G',
+        ylabel='S',
+        xlim=(-0.1, 1.1),
+        ylim=(-0.1, 0.61),
+        xticks=None,
+        yticks=None,
+    )
     plot.show()
 
 
 
 
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_002.png
-   :alt: Phasor plot (80 MHz)
+   :alt: Custom axes
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_002.png
    :class: sphx-glr-single-img
 
@@ -110,14 +117,51 @@ Add a second, transformed universal semicircle:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-52
+.. GENERATED FROM PYTHON SOURCE LINES 55-60
+
+Universal semicircle
+--------------------
+
+Create a phasor plot at a frequency of 80 MHz with custom lifetime ticks.
+Add a second, transformed universal semicircle for FRET acceptor coordinates:
+
+.. GENERATED FROM PYTHON SOURCE LINES 60-73
+
+.. code-block:: Python
+
+
+    plot = PhasorPlot(xlim=(-0.2, 1.1), title='Universal semicircle')
+    plot.semicircle(
+        frequency=80.0,
+        lifetime=[0, 0.5, 1, 2, 4, 8, 16],
+        color='tab:green',
+        label='donor',
+    )
+    plot.semicircle(
+        polar_reference=(0.9852, 0.5526), color='tab:red', label='acceptor'
+    )
+    plot.show()
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_003.png
+   :alt: Universal semicircle
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_003.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 74-78
 
 Scatter and line plots
 ----------------------
 
 Plot phasor coordinates as scatter or lines:
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-59
+.. GENERATED FROM PYTHON SOURCE LINES 78-85
 
 .. code-block:: Python
 
@@ -131,41 +175,8 @@ Plot phasor coordinates as scatter or lines:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_003.png
-   :alt: Scatter and line plots
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_003.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
-
-Cursors
--------
-
-Highlight specific polar coordinates and ranges thereof using phasor
-coordinates:
-
-.. GENERATED FROM PYTHON SOURCE LINES 65-74
-
-.. code-block:: Python
-
-
-    plot = PhasorPlot(frequency=80.0, title='Cursors')
-    plot.cursor(0.4, 0.3)
-    plot.cursor(0.5, 0.3, 0.8, 0.15)
-    plot.cursor(0.9, 0.3, radius=0.05)
-    plot.cursor(0.4, 0.3, radius=0.05, radius_minor=0.1)
-    plot.cursor(0.1, 0.3, radius=0.05, radius_minor=0.1, align_semicircle=True)
-    plot.show()
-
-
-
-
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_004.png
-   :alt: Cursors
+   :alt: Scatter and line plots
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_004.png
    :class: sphx-glr-single-img
 
@@ -173,37 +184,36 @@ coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 86-91
 
-Alternatively, use polar coordinates with various options:
+Crosshair cursors
+-----------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-102
+Highlight specific phasor coordinates using Cartesian or polar lines,
+optionally limited by a radius:
+
+.. GENERATED FROM PYTHON SOURCE LINES 91-112
 
 .. code-block:: Python
 
 
-    plot = PhasorPlot(frequency=80.0, title='Polar cursors')
-    plot.polar_cursor(0.6435, 0.5, linestyle='-')
-    plot.polar_cursor(0.5236, 0.6, 0.1963, 0.8, linewidth=2)
-    plot.polar_cursor(0.3233, 0.9482, radius=0.05, color='tab:red')
-    plot.polar_cursor(
-        0.6435,
-        0.5,
-        radius=0.05,
-        radius_minor=0.1,
-        color='tab:blue',
-        fill=True,
-        alpha=0.5,
+    plot = PhasorPlot(frequency=80.0, title='Crosshair cursors')
+    plot.cursor(0.7, 0.25, color='tab:blue', label='cartesian')
+    plot.cursor(
+        0.7, 0.25, color='tab:orange', polar=True, linestyle='--', label='polar'
     )
-    plot.polar_cursor(
-        0.6435,
-        0.5,
+    plot.cursor(
+        0.2, 0.4, radius=0.1, crosshair=True, color='tab:red', label='radius'
+    )
+    plot.cursor(
+        0.45,
+        0.4,
         radius=0.1,
-        radius_minor=0.05,
-        angle=0.0,
+        crosshair=True,
+        polar=True,
+        linestyle='--',
         color='tab:green',
-        fill=True,
-        alpha=0.5,
+        label='radius|polar',
     )
     plot.show()
 
@@ -211,7 +221,7 @@ Alternatively, use polar coordinates with various options:
 
 
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_005.png
-   :alt: Polar cursors
+   :alt: Crosshair cursors
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_005.png
    :class: sphx-glr-single-img
 
@@ -219,14 +229,133 @@ Alternatively, use polar coordinates with various options:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-107
+.. GENERATED FROM PYTHON SOURCE LINES 113-117
+
+Cursors
+-------
+
+Highlight specific ranges of Cartesian or polar coordinates:
+
+.. GENERATED FROM PYTHON SOURCE LINES 117-144
+
+.. code-block:: Python
+
+
+    plot = PhasorPlot(frequency=80.0, title='Cursors')
+    plot.cursor(0.35, 0.3, 0.65, 0.1, color='tab:blue', label='rectangle')
+    plot.cursor(
+        0.35,
+        0.3,
+        0.65,
+        0.1,
+        polar=True,
+        color='tab:orange',
+        label='rectangle|polar',
+    )
+    plot.cursor(0.5, 0.5, radius=0.05, color='tab:red', label='circle')
+    plot.cursor(
+        0.1, 0.3, radius=0.05, radius_minor=0.1, color='tab:green', label='ellipse'
+    )
+    plot.cursor(
+        0.9,
+        0.3,
+        radius=0.05,
+        radius_minor=0.1,
+        angle='semicircle',
+        color='tab:purple',
+        label='semicircle aligned',
+    )
+    plot.show()
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_006.png
+   :alt: Cursors
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_006.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 145-146
+
+Multiple cursors sharing the same style may be plotted at once:
+
+.. GENERATED FROM PYTHON SOURCE LINES 146-159
+
+.. code-block:: Python
+
+
+    plot = PhasorPlot(frequency=80.0, title='Multiple cursors')
+    plot.cursor(
+        [0.2, 0.5, 0.8],
+        0.4,
+        radius=[0.05, 0.1, 0.05],
+        radius_minor=0.1,
+        angle='semicircle',
+        color=['tab:blue', '0.5', 'tab:orange'],
+        label=['blue ellipse', 'gray circle', 'orange ellipse'],
+    )
+    plot.show()
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_007.png
+   :alt: Multiple cursors
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_007.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 160-161
+
+Alternatively, use polar coordinates and various options:
+
+.. GENERATED FROM PYTHON SOURCE LINES 161-177
+
+.. code-block:: Python
+
+
+    plot = PhasorPlot(frequency=80.0, title='Polar cursors')
+    plot.polar_cursor(0.6435, 0.5, color='tab:blue', label='crosshair')
+    plot.polar_cursor(0.5236, 0.6, 0.1963, 0.8, linewidth=2, label='rectangle')
+    plot.polar_cursor(
+        0.6435,
+        0.5,
+        radius=0.05,
+        radius_minor=0.1,
+        alpha=0.5,
+        fill=True,
+        color='tab:blue',
+        label='ellipse',
+    )
+    plot.show()
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_008.png
+   :alt: Polar cursors
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_008.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 178-182
 
 Component mixtures
 ------------------
 
 Show linear combinations of phasor coordinates or ranges thereof:
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-127
+.. GENERATED FROM PYTHON SOURCE LINES 182-202
 
 .. code-block:: Python
 
@@ -242,8 +371,8 @@ Show linear combinations of phasor coordinates or ranges thereof:
         linestyle='',
         marker='o',
         labels=['A', 'B', 'C', 'D'],
-        color='tab:blue',
         fill=True,
+        color='tab:blue',
         facecolor='lightyellow',
         label='components',
     )
@@ -253,29 +382,29 @@ Show linear combinations of phasor coordinates or ranges thereof:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_006.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_009.png
    :alt: Component mixtures
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_006.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_009.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-132
+.. GENERATED FROM PYTHON SOURCE LINES 203-207
 
 Two-dimensional histogram
 -------------------------
 
 Plot large number of phasor coordinates as a two-dimensional histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-140
+.. GENERATED FROM PYTHON SOURCE LINES 207-215
 
 .. code-block:: Python
 
 
     real, imag = numpy.random.multivariate_normal(
-        (0.6, 0.4), [[3e-3, -1e-3], [-1e-3, 1e-3]], (256, 256)
+        [0.6, 0.4], [[3e-3, -1e-3], [-1e-3, 1e-3]], (256, 256)
     ).T
     plot = PhasorPlot(frequency=80.0, title='Two-dimensional histogram')
     plot.hist2d(real, imag)
@@ -284,23 +413,23 @@ Plot large number of phasor coordinates as a two-dimensional histogram:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_007.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_010.png
    :alt: Two-dimensional histogram
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_007.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_010.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-145
+.. GENERATED FROM PYTHON SOURCE LINES 216-220
 
 Contours
 --------
 
 Plot the contours of the density of phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-150
+.. GENERATED FROM PYTHON SOURCE LINES 220-225
 
 .. code-block:: Python
 
@@ -312,23 +441,23 @@ Plot the contours of the density of phasor coordinates:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_008.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_011.png
    :alt: Contours
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_008.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_011.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-155
+.. GENERATED FROM PYTHON SOURCE LINES 226-230
 
 Image
 -----
 
 Plot a custom-colored image of a two-dimensional histogram (not implemented):
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-160
+.. GENERATED FROM PYTHON SOURCE LINES 230-235
 
 .. code-block:: Python
 
@@ -340,64 +469,64 @@ Plot a custom-colored image of a two-dimensional histogram (not implemented):
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_009.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_012.png
    :alt: Image (not implemented yet)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_009.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_012.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-165
+.. GENERATED FROM PYTHON SOURCE LINES 236-240
 
 Combined plots
 --------------
 
 Multiple plots can be combined:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-183
+.. GENERATED FROM PYTHON SOURCE LINES 240-258
 
 .. code-block:: Python
 
 
     real2, imag2 = numpy.random.multivariate_normal(
-        (0.9, 0.2), [[2e-4, -1e-4], [-1e-4, 2e-4]], 4096
+        [0.9, 0.2], [[2e-4, -1e-4], [-1e-4, 2e-4]], 4096
     ).T
 
     plot = PhasorPlot(
-        title='Combined plots', xlim=(0.35, 1.03), ylim=(0.1, 0.59), grid=False
+        xlim=(0.35, 1.03), ylim=(0.1, 0.59), grid=False, title='Combined plots'
     )
+    plot.semicircle(frequency=80.0, color='tab:purple')
     plot.hist2d(real, imag, bins=64, cmap='Blues')
     plot.contour(real, imag, bins=48, levels=3, cmap='summer_r', norm='log')
     plot.hist2d(real2, imag2, bins=64, cmap='Oranges')
-    plot.plot(0.6, 0.4, '.', color='tab:blue')
-    plot.plot(0.9, 0.2, '.', color='tab:orange')
-    plot.cursor(0.9, 0.2, color='tab:orange')
+    plot.plot(0.6, 0.4, 'o', color='tab:blue', label='Blues')
+    plot.plot(0.9, 0.2, 'o', color='tab:orange', label='Oranges')
+    plot.cursor(0.9, 0.2, color='tab:orange', polar=True)
     plot.polar_cursor(math.atan2(0.4, 0.6), math.hypot(0.6, 0.4), color='tab:blue')
-    plot.semicircle(frequency=80.0, color='tab:purple')
     plot.show()
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_010.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_013.png
    :alt: Combined plots
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_010.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_013.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-188
+.. GENERATED FROM PYTHON SOURCE LINES 259-263
 
 All quadrants
 -------------
 
 Create an empty phasor plot showing all four quadrants:
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-193
+.. GENERATED FROM PYTHON SOURCE LINES 263-268
 
 .. code-block:: Python
 
@@ -409,30 +538,29 @@ Create an empty phasor plot showing all four quadrants:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_011.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_014.png
    :alt: All quadrants
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_011.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_014.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-198
+.. GENERATED FROM PYTHON SOURCE LINES 269-273
 
 Custom grid
 -----------
 
-Customize the grid of an all-quadrants plot:
+Customize the polar grid of an all-quadrants plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-213
+.. GENERATED FROM PYTHON SOURCE LINES 273-288
 
 .. code-block:: Python
 
 
     plot = PhasorPlot(
         allquadrants=True,
-        title='Custom grid',
         grid={
             'labels': ['', '450', '500 nm', '550', '600', '650', '700', ''],
             'ticks': [430, 450, 500, 550, 600, 650, 700, 730],
@@ -441,22 +569,23 @@ Customize the grid of an all-quadrants plot:
             'radii': 2,
         },
         pad=0.2,  # make space for labels
+        title='Custom grid',
     )
     plot.show()
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_012.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_015.png
    :alt: Custom grid
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_012.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_015.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-220
+.. GENERATED FROM PYTHON SOURCE LINES 289-295
 
 Matplotlib axes
 ---------------
@@ -465,7 +594,7 @@ The PhasorPlot class can use an existing matlotlib axes.
 The `PhasorPlot.ax` attribute provides access to the underlying
 matplotlib axes, for example, to add annotations:
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-234
+.. GENERATED FROM PYTHON SOURCE LINES 295-309
 
 .. code-block:: Python
 
@@ -479,23 +608,23 @@ matplotlib axes, for example, to add annotations:
         '0.6, 0.4',
         xy=(0.6, 0.4),
         xytext=(0.2, 0.2),
-        arrowprops=dict(arrowstyle='->'),
+        arrowprops={'arrowstyle': '->'},
     )
     pyplot.show()
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_013.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_016.png
    :alt: Matplotlib axes
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_013.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_016.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-240
+.. GENERATED FROM PYTHON SOURCE LINES 310-315
 
 plot_phasor function
 --------------------
@@ -503,37 +632,43 @@ plot_phasor function
 The :py:func:`phasorpy.plot.plot_phasor` function provides a simpler
 alternative to plot phasor coordinates in a single statement:
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-245
+.. GENERATED FROM PYTHON SOURCE LINES 315-326
 
 .. code-block:: Python
 
 
     from phasorpy.plot import plot_phasor
 
-    plot_phasor(real[0, :32], imag[0, :32], marker='.', frequency=80.0)
+    plot_phasor(
+        real[0, :32],
+        imag[0, :32],
+        frequency=80.0,
+        marker='.',
+        title='plot_phasor function',
+    )
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_014.png
-   :alt: Phasor plot (80 MHz)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_014.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_017.png
+   :alt: plot_phasor function
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_phasorplot_017.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 246-249
+.. GENERATED FROM PYTHON SOURCE LINES 327-330
 
-sphinx_gallery_thumbnail_number = 10
+sphinx_gallery_thumbnail_number = -5
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code="arg-type"
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.802 seconds)
+   **Total running time of the script:** (0 minutes 1.112 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_phasorplot.py:

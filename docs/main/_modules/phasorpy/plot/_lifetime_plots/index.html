@@ -58,6 +58,7 @@
             true;
         </script>
     <script src="../../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../../genindex/" />
     <link rel="search" title="Search" href="../../../../search/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -685,7 +686,12 @@
         <span class="n">time_plot</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time [ns]&#39;</span><span class="p">)</span>
         <span class="n">time_plot</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Intensity [normalized]&#39;</span><span class="p">)</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">time_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">times</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Signal&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span>
+            <span class="n">times</span><span class="p">,</span>
+            <span class="n">signal</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Signal&#39;</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_signal_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">num_components</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -695,7 +701,7 @@
                     <span class="n">component_signal</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                     <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Lifetime </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                    <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
                     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_signal_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -704,7 +710,7 @@
             <span class="n">irf</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Instrument response&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:grey&#39;</span><span class="p">,</span>
-            <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_signal_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -722,11 +728,11 @@
         <span class="k">if</span> <span class="n">num_components</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_components</span><span class="p">):</span>
                 <span class="n">lines</span> <span class="o">=</span> <span class="n">phasorplot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-                    <span class="p">[</span><span class="n">imag</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+                    <span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                    <span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
                     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                    <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
-                    <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
                     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_phasor_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -743,14 +749,14 @@
         <span class="n">phase_plot</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">phase_plot</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (MHz)&#39;</span><span class="p">)</span>
         <span class="n">phase_plot</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Phase (°)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">)</span>
-        <span class="n">phase_plot</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">])</span>
-        <span class="n">phase_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># set autoscale</span>
+        <span class="n">phase_plot</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">))</span>
+        <span class="n">phase_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># set autoscale</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">phase_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">frequency</span><span class="p">,</span> <span class="n">frequency</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">frequency</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span>
             <span class="s1">&#39;--&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span>
-            <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frequency_line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -759,7 +765,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_point</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">phase_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span> <span class="n">phase_</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span> <span class="n">phase_</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_phase_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">num_components</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -768,7 +774,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span>
                     <span class="n">component_phase_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                    <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_phase_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -778,14 +784,18 @@
         <span class="c1"># twinx modulation_plot is always plotted on top of phase_plot</span>
         <span class="n">modulation_plot</span> <span class="o">=</span> <span class="n">phase_plot</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
         <span class="n">modulation_plot</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Modulation (%)&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">)</span>
-        <span class="n">modulation_plot</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
-        <span class="n">modulation_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># set autoscale</span>
+        <span class="n">modulation_plot</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">,</span> <span class="mf">75.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">))</span>
+        <span class="n">modulation_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># set autoscale</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">modulation_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">frequency</span><span class="p">,</span> <span class="n">modulation</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modulation_point</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">modulation_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span> <span class="n">modulation_</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span>
+            <span class="n">modulation_</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:red&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modulation_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">num_components</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -794,7 +804,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_frequencies</span><span class="p">,</span>
                     <span class="n">component_modulation_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
                     <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_component_colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                    <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_modulation_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1038,8 +1048,7 @@
                     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="p">[</span><span class="n">imag</span><span class="p">,</span> <span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_phasor_points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-                    <span class="p">[</span><span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+                    <span class="p">[</span><span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="p">[</span><span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
                 <span class="p">)</span>
 
         <span class="c1"># frequency domain plot</span>

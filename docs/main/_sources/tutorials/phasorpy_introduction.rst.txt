@@ -710,9 +710,9 @@ Mask regions of interest in the phasor space using circular cursors:
     from phasorpy.color import CATEGORICAL
     from phasorpy.cursor import mask_from_circular_cursor
 
-    cursor_real = 0.69, 0.59
-    cursor_imag = 0.32, 0.33
-    radius = 0.05, 0.05
+    cursor_real = [0.69, 0.59]
+    cursor_imag = [0.32, 0.33]
+    radius = [0.05, 0.05]
     cursor_masks = mask_from_circular_cursor(
         real, imag, cursor_real, cursor_imag, radius=radius
     )
@@ -729,24 +729,17 @@ Mask regions of interest in the phasor space using circular cursors:
 Plot the cursors in distinct colors using the higher-level
 :py:class:`PhasorPlot` interface:
 
-.. GENERATED FROM PYTHON SOURCE LINES 368-383
+.. GENERATED FROM PYTHON SOURCE LINES 368-376
 
 .. code-block:: Python
 
 
     from phasorpy.plot import PhasorPlot
 
-    phasorplot = PhasorPlot(frequency=frequency, title='Cursors')
-    phasorplot.hist2d(real, imag)
-    for i in range(len(cursor_real)):
-        phasorplot.circle(
-            cursor_real[i],
-            cursor_imag[i],
-            radius=radius[i],
-            color=CATEGORICAL[i],
-            linestyle='-',
-        )
-    phasorplot.show()
+    plot = PhasorPlot(frequency=frequency, title='Cursors')
+    plot.hist2d(real, imag)
+    plot.cursor(cursor_real, cursor_imag, radius=radius, color=CATEGORICAL[:2])
+    plot.show()
 
 
 
@@ -760,12 +753,12 @@ Plot the cursors in distinct colors using the higher-level
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 384-386
+.. GENERATED FROM PYTHON SOURCE LINES 377-379
 
 Blend the cursor masks with the mean intensity image to produce a
 pseudo-colored image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 386-396
+.. GENERATED FROM PYTHON SOURCE LINES 379-389
 
 .. code-block:: Python
 
@@ -791,12 +784,12 @@ pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-399
+.. GENERATED FROM PYTHON SOURCE LINES 390-392
 
 Component analysis
 ------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 399-402
+.. GENERATED FROM PYTHON SOURCE LINES 392-395
 
 .. code-block:: Python
 
@@ -810,7 +803,7 @@ Component analysis
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 403-412
+.. GENERATED FROM PYTHON SOURCE LINES 396-405
 
 Spectral phasors
 ----------------
@@ -822,7 +815,7 @@ way as time-resolved signals. Calibration is not necessary.
 Open a hyperspectral dataset acquired with a laser scanning microscope
 at 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 412-425
+.. GENERATED FROM PYTHON SOURCE LINES 405-418
 
 .. code-block:: Python
 
@@ -835,8 +828,8 @@ at 30 emission wavelengths:
     plot_signal_image(
         hyperspectral_signal,
         axis=0,
-        title='Hyperspectral image',
         xlabel='wavelength (nm)',
+        title='Hyperspectral image',
     )
 
 
@@ -851,12 +844,12 @@ at 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 426-428
+.. GENERATED FROM PYTHON SOURCE LINES 419-421
 
 Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 428-432
+.. GENERATED FROM PYTHON SOURCE LINES 421-425
 
 .. code-block:: Python
 
@@ -871,11 +864,11 @@ pixels with low intensities:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 433-434
+.. GENERATED FROM PYTHON SOURCE LINES 426-427
 
 Plot the phasor coordinates as a two-dimensional histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 434-444
+.. GENERATED FROM PYTHON SOURCE LINES 427-437
 
 .. code-block:: Python
 
@@ -883,10 +876,10 @@ Plot the phasor coordinates as a two-dimensional histogram:
     plot_phasor(
         real,
         imag,
-        title='Hyperspectral phasor plot',
         allquadrants=True,
         pad=0.2,  # make space for labels
         grid={'ticks': [450, 500, 550, 600, 650, 700], 'tick_space': wavelengths},
+        title='Hyperspectral phasor plot',
     )
 
 
@@ -901,7 +894,7 @@ Plot the phasor coordinates as a two-dimensional histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 445-450
+.. GENERATED FROM PYTHON SOURCE LINES 438-443
 
 Find clusters
 -------------
@@ -909,7 +902,7 @@ Find clusters
 Automatically find the two elliptical clusters in the phasor space using
 a Gaussian mixture model and plot them in distinct colors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 450-471
+.. GENERATED FROM PYTHON SOURCE LINES 443-462
 
 .. code-block:: Python
 
@@ -920,19 +913,17 @@ a Gaussian mixture model and plot them in distinct colors:
         real, imag, clusters=2
     )
 
-    phasorplot = PhasorPlot(allquadrants=True, title='Elliptical clusters')
-    phasorplot.hist2d(real, imag, cmap='Greys')
-    for i in range(len(center_real)):
-        phasorplot.cursor(
-            center_real[i],
-            center_imag[i],
-            radius=radius[i],
-            radius_minor=radius_minor[i],
-            angle=angle[i],
-            color=CATEGORICAL[i],
-            linestyle='-',
-        )
-    phasorplot.show()
+    plot = PhasorPlot(allquadrants=True, title='Elliptical clusters')
+    plot.hist2d(real, imag, cmap='Greys')
+    plot.cursor(
+        center_real,
+        center_imag,
+        radius=radius,
+        radius_minor=radius_minor,
+        angle=angle,
+        color=CATEGORICAL[:2],
+    )
+    plot.show()
 
 
 
@@ -946,11 +937,11 @@ a Gaussian mixture model and plot them in distinct colors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 472-473
+.. GENERATED FROM PYTHON SOURCE LINES 463-464
 
 Use the elliptic clusters to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 473-486
+.. GENERATED FROM PYTHON SOURCE LINES 464-477
 
 .. code-block:: Python
 
@@ -974,12 +965,12 @@ Use the elliptic clusters to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 487-489
+.. GENERATED FROM PYTHON SOURCE LINES 478-480
 
 Plot a pseudo-color image, composited from the elliptic cursor masks and
 the mean intensity image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 489-496
+.. GENERATED FROM PYTHON SOURCE LINES 480-487
 
 .. code-block:: Python
 
@@ -1002,14 +993,14 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 497-501
+.. GENERATED FROM PYTHON SOURCE LINES 488-492
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 501-506
+.. GENERATED FROM PYTHON SOURCE LINES 492-497
 
 .. code-block:: Python
 
@@ -1026,7 +1017,7 @@ Print information about Python interpreter and installed packages:
 
  .. code-block:: none
 
-    Python-3.13.5
+    Python-3.13.6
     phasorpy-0.7.dev0
     numpy-2.3.2
     tifffile-2025.6.11
@@ -1040,14 +1031,14 @@ Print information about Python interpreter and installed packages:
     skimage-n/a
     sklearn-1.7.1
     pandas-2.3.1
-    xarray-2025.7.1
+    xarray-2025.8.0
     click-8.2.1
     pooch-1.8.2
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 507-511
+.. GENERATED FROM PYTHON SOURCE LINES 498-502
 
 sphinx_gallery_thumbnail_number = -8
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1057,7 +1048,7 @@ isort: skip_file
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 59.993 seconds)
+   **Total running time of the script:** (1 minutes 15.267 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:
