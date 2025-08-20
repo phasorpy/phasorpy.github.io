@@ -666,18 +666,19 @@ as well as the fundamental laser frequency (in MHz):</p>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_io_002.png" srcset="../../../_images/sphx_glr_phasorpy_io_002.png" alt="FLIM_testdata.lif (19.505 MHz)" class = "sphx-glr-single-img"/><p>Apparent single lifetimes are calculated from the calibrated phasor
-coordinates and compared to the lifetimes calculated by LAS X software:</p>
+coordinates and compared to the “Fast FLIM” lifetimes (average photon
+arrival times) calculated by LAS X software:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span> <span class="o">=</span> <span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span>
 <span class="p">)</span>
 
-<span class="n">fitted_lifetime</span> <span class="o">=</span> <span class="n">lifetime_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">fitted_lifetime</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mean</span><span class="p">)]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">fastflim_lifetime</span> <span class="o">=</span> <span class="n">lifetime_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">fastflim_lifetime</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mean</span><span class="p">)]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
 
 <span class="n">plot_histograms</span><span class="p">(</span>
     <span class="n">phase_lifetime</span><span class="p">,</span>
     <span class="n">modulation_lifetime</span><span class="p">,</span>
-    <span class="n">fitted_lifetime</span><span class="p">,</span>
+    <span class="n">fastflim_lifetime</span><span class="p">,</span>
     <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
     <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.66</span><span class="p">,</span>
@@ -686,16 +687,14 @@ coordinates and compared to the lifetimes calculated by LAS X software:</p>
     <span class="n">labels</span><span class="o">=</span><span class="p">[</span>
         <span class="s1">&#39;Phase lifetime&#39;</span><span class="p">,</span>
         <span class="s1">&#39;Modulation lifetime&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;Fitted lifetimes from LIF&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Fast FLIM lifetime from LIF&#39;</span><span class="p">,</span>
     <span class="p">],</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Lifetime histograms&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_io_003.png" srcset="../../../_images/sphx_glr_phasorpy_io_003.png" alt="Lifetime histograms" class = "sphx-glr-single-img"/><p>The apparent single lifetimes from phase and modulation do not exactly match.
-Most likely there is more than one lifetime component in the sample.
-This could also explain the difference from the lifetimes fitted by the
-LAS X software.</p>
+Most likely there is more than one lifetime component in the sample.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Reading of FLIM/TCSPC histograms from LIF-FLIM files is currently not
@@ -1255,7 +1254,7 @@ the first array dimension:</p>
 <img src="../../../_images/sphx_glr_phasorpy_io_023.png" srcset="../../../_images/sphx_glr_phasorpy_io_023.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
 mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 16.861 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 15.807 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>

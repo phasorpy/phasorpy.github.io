@@ -217,12 +217,13 @@ These metadata are used to calibrate and threshold the phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-124
+.. GENERATED FROM PYTHON SOURCE LINES 122-125
 
 Apparent single lifetimes are calculated from the calibrated phasor
-coordinates and compared to the lifetimes calculated by LAS X software:
+coordinates and compared to the "Fast FLIM" lifetimes (average photon
+arrival times) calculated by LAS X software:
 
-.. GENERATED FROM PYTHON SOURCE LINES 124-149
+.. GENERATED FROM PYTHON SOURCE LINES 125-150
 
 .. code-block:: Python
 
@@ -231,13 +232,13 @@ coordinates and compared to the lifetimes calculated by LAS X software:
         real, imag, frequency
     )
 
-    fitted_lifetime = lifetime_from_lif(fetch(filename))[0]
-    fitted_lifetime[numpy.isnan(mean)] = numpy.nan
+    fastflim_lifetime = lifetime_from_lif(fetch(filename))[0]
+    fastflim_lifetime[numpy.isnan(mean)] = numpy.nan
 
     plot_histograms(
         phase_lifetime,
         modulation_lifetime,
-        fitted_lifetime,
+        fastflim_lifetime,
         range=(0, 10),
         bins=100,
         alpha=0.66,
@@ -246,7 +247,7 @@ coordinates and compared to the lifetimes calculated by LAS X software:
         labels=[
             'Phase lifetime',
             'Modulation lifetime',
-            'Fitted lifetimes from LIF',
+            'Fast FLIM lifetime from LIF',
         ],
         title='Lifetime histograms',
     )
@@ -263,21 +264,19 @@ coordinates and compared to the lifetimes calculated by LAS X software:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-154
+.. GENERATED FROM PYTHON SOURCE LINES 151-153
 
 The apparent single lifetimes from phase and modulation do not exactly match.
 Most likely there is more than one lifetime component in the sample.
-This could also explain the difference from the lifetimes fitted by the
-LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-160
+.. GENERATED FROM PYTHON SOURCE LINES 155-159
 
 .. note::
   Reading of FLIM/TCSPC histograms from LIF-FLIM files is currently not
   supported because the storage scheme is undocumented or patent-pending.
   However, TTTR records can be exported to PTU format using LAS X software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-168
+.. GENERATED FROM PYTHON SOURCE LINES 161-167
 
 LIF hyperspectral
 .................
@@ -286,7 +285,7 @@ The :py:func:`phasorpy.io.signal_from_lif` function is used to read an
 image stack from the `Convallaria hyperspectral dataset
 <https://zenodo.org/records/14976703>`_ acquired at 29 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-177
+.. GENERATED FROM PYTHON SOURCE LINES 167-176
 
 .. code-block:: Python
 
@@ -311,12 +310,12 @@ image stack from the `Convallaria hyperspectral dataset
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-180
+.. GENERATED FROM PYTHON SOURCE LINES 177-179
 
 Emission wavelengths (in nm) are available in the coordinates of the
 channel axis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-183
+.. GENERATED FROM PYTHON SOURCE LINES 179-182
 
 .. code-block:: Python
 
@@ -337,11 +336,11 @@ channel axis:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-185
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
 Plot the first harmonic phasor coordinates after applying a median filter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-194
+.. GENERATED FROM PYTHON SOURCE LINES 184-193
 
 .. code-block:: Python
 
@@ -366,7 +365,7 @@ Plot the first harmonic phasor coordinates after applying a median filter:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-214
+.. GENERATED FROM PYTHON SOURCE LINES 194-213
 
 PicoQuant PTU
 -------------
@@ -388,7 +387,7 @@ LAS X software, select the "FLIM" tab, click on the "Phasor" button,
 and under "Specialist Settings" select the option "Standard (High Speed)".
 The first channel in the first frame is read from the PTU file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-223
+.. GENERATED FROM PYTHON SOURCE LINES 213-222
 
 .. code-block:: Python
 
@@ -413,7 +412,7 @@ The first channel in the first frame is read from the PTU file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-233
+.. GENERATED FROM PYTHON SOURCE LINES 223-232
 
 The returned ``signal`` is an `xarray.DataArray
 <https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html>`_
@@ -425,7 +424,7 @@ The reference phase and modulation previously loaded from the LIF-FLIM file
 are again used to calibrate the phasor coordinates. The same intensity
 threshold is applied:
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-253
+.. GENERATED FROM PYTHON SOURCE LINES 232-252
 
 .. code-block:: Python
 
@@ -461,12 +460,12 @@ threshold is applied:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-256
+.. GENERATED FROM PYTHON SOURCE LINES 253-255
 
 Compare the apparent single lifetimes calculated from the PTU file with the
 lifetimes previously read from the LIF-FLIM file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-269
+.. GENERATED FROM PYTHON SOURCE LINES 255-268
 
 .. code-block:: Python
 
@@ -495,7 +494,7 @@ lifetimes previously read from the LIF-FLIM file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 270-282
+.. GENERATED FROM PYTHON SOURCE LINES 269-281
 
 Zeiss CZI
 ---------
@@ -510,7 +509,7 @@ the `pylibCZIrw  <https://github.com/ZEISS/pylibczirw/>`_ or
 `BioIO <https://github.com/bioio-devs/bioio>`_ libraries. Another option is
 to export CZI files as LSM using the ZEN software.
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-296
+.. GENERATED FROM PYTHON SOURCE LINES 283-295
 
 Zeiss LSM
 ---------
@@ -525,7 +524,7 @@ via the `tifffile <https://github.com/cgohlke/tifffile/>`_ library.
 The :py:func:`phasorpy.io.signal_from_lsm` function is used to read
 a hyperspectral dataset with 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 296-305
+.. GENERATED FROM PYTHON SOURCE LINES 295-304
 
 .. code-block:: Python
 
@@ -550,12 +549,12 @@ a hyperspectral dataset with 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-308
+.. GENERATED FROM PYTHON SOURCE LINES 305-307
 
 Emission wavelengths (in nm) are available in the coordinates of the
 channel axis:
 
-.. GENERATED FROM PYTHON SOURCE LINES 308-311
+.. GENERATED FROM PYTHON SOURCE LINES 307-310
 
 .. code-block:: Python
 
@@ -576,11 +575,11 @@ channel axis:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-313
+.. GENERATED FROM PYTHON SOURCE LINES 311-312
 
 Plot the first harmonic phasor coordinates after applying a median filter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 313-322
+.. GENERATED FROM PYTHON SOURCE LINES 312-321
 
 .. code-block:: Python
 
@@ -605,7 +604,7 @@ Plot the first harmonic phasor coordinates after applying a median filter:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 323-335
+.. GENERATED FROM PYTHON SOURCE LINES 322-334
 
 Becker & Hickl SDT
 ------------------
@@ -620,7 +619,7 @@ PhasorPy supports reading TCSPC histograms from SDT files via the
 The :py:func:`phasorpy.io.signal_from_sdt` function is used to read a
 TCSPC histogram from a SDT file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 335-344
+.. GENERATED FROM PYTHON SOURCE LINES 334-343
 
 .. code-block:: Python
 
@@ -645,11 +644,11 @@ TCSPC histogram from a SDT file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-346
+.. GENERATED FROM PYTHON SOURCE LINES 344-345
 
 Plot the uncalibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 346-356
+.. GENERATED FROM PYTHON SOURCE LINES 345-355
 
 .. code-block:: Python
 
@@ -675,13 +674,13 @@ Plot the uncalibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 357-360
+.. GENERATED FROM PYTHON SOURCE LINES 356-359
 
 .. todo::
   No accompanying IRF dataset is available to calibrate the phasor
   coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 362-383
+.. GENERATED FROM PYTHON SOURCE LINES 361-382
 
 FLIMbox FBD
 -----------
@@ -705,7 +704,7 @@ acquired at the second harmonic. The dataset is a time series of two
 channels. Since the photon count is low and the second channel empty,
 only the first channel is read and the time-axis integrated:
 
-.. GENERATED FROM PYTHON SOURCE LINES 383-396
+.. GENERATED FROM PYTHON SOURCE LINES 382-395
 
 .. code-block:: Python
 
@@ -734,12 +733,12 @@ only the first channel is read and the time-axis integrated:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 397-399
+.. GENERATED FROM PYTHON SOURCE LINES 396-398
 
 The measurement of a solution of Rhodamine 110 with known lifetime of 4 ns
 is used as a calibration reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 399-413
+.. GENERATED FROM PYTHON SOURCE LINES 398-412
 
 .. code-block:: Python
 
@@ -769,12 +768,12 @@ is used as a calibration reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 414-416
+.. GENERATED FROM PYTHON SOURCE LINES 413-415
 
 Phasor coordinates are calculated from the signal and calibrated with
 the reference signal:
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-435
+.. GENERATED FROM PYTHON SOURCE LINES 415-434
 
 .. code-block:: Python
 
@@ -809,7 +808,7 @@ the reference signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 436-447
+.. GENERATED FROM PYTHON SOURCE LINES 435-446
 
 FLIM LABS JSON
 --------------
@@ -823,7 +822,7 @@ The :py:func:`phasorpy.io.signal_from_flimlabs_json` function is used to
 read a TCSPC histogram from the `Convallaria FLIM LABS dataset
 <https://zenodo.org/records/15007900>`_, which contains a single channel:
 
-.. GENERATED FROM PYTHON SOURCE LINES 447-457
+.. GENERATED FROM PYTHON SOURCE LINES 446-456
 
 .. code-block:: Python
 
@@ -849,14 +848,14 @@ read a TCSPC histogram from the `Convallaria FLIM LABS dataset
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 458-462
+.. GENERATED FROM PYTHON SOURCE LINES 457-461
 
 Phasor coordinates are calculated from the TCSPC histogram at three
 harmonics and calibrated using the metadata in ``signal.attrs`` and the
 TCSPC histogram from the measurement of a Fluorescein solution of known
 lifetime:
 
-.. GENERATED FROM PYTHON SOURCE LINES 462-488
+.. GENERATED FROM PYTHON SOURCE LINES 461-487
 
 .. code-block:: Python
 
@@ -893,11 +892,11 @@ lifetime:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 489-490
+.. GENERATED FROM PYTHON SOURCE LINES 488-489
 
 Plot the second harmonic phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 490-499
+.. GENERATED FROM PYTHON SOURCE LINES 489-498
 
 .. code-block:: Python
 
@@ -922,13 +921,13 @@ Plot the second harmonic phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 500-503
+.. GENERATED FROM PYTHON SOURCE LINES 499-502
 
 Newer versions of the FLIM LABS JSON files may also contain calibrated
 phasor coordinates, possibly at multiple harmonics, which can be read
 using the :py:func:`phasorpy.io.phasor_from_flimlabs_json` function:
 
-.. GENERATED FROM PYTHON SOURCE LINES 503-515
+.. GENERATED FROM PYTHON SOURCE LINES 502-514
 
 .. code-block:: Python
 
@@ -951,12 +950,12 @@ using the :py:func:`phasorpy.io.phasor_from_flimlabs_json` function:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 516-518
+.. GENERATED FROM PYTHON SOURCE LINES 515-517
 
 The reference phase, modulation, and lifetime used to calibrate the phasor
 coordinates may also be found in an accompanying JSON file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 518-533
+.. GENERATED FROM PYTHON SOURCE LINES 517-532
 
 .. code-block:: Python
 
@@ -982,7 +981,7 @@ coordinates may also be found in an accompanying JSON file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 534-549
+.. GENERATED FROM PYTHON SOURCE LINES 533-548
 
 ISS IFLI
 --------
@@ -1000,7 +999,7 @@ The :py:func:`phasorpy.io.phasor_from_ifli` function is used to read
 calibrated phasor coordinates from a measurement of mouse liver fed with
 Western diet. Select the second channel and first three harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 549-562
+.. GENERATED FROM PYTHON SOURCE LINES 548-561
 
 .. code-block:: Python
 
@@ -1029,12 +1028,12 @@ Western diet. Select the second channel and first three harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 563-565
+.. GENERATED FROM PYTHON SOURCE LINES 562-564
 
 The first channel in the file contains an SHG image with phasor coordinates
 about zero:
 
-.. GENERATED FROM PYTHON SOURCE LINES 565-573
+.. GENERATED FROM PYTHON SOURCE LINES 564-572
 
 .. code-block:: Python
 
@@ -1053,13 +1052,13 @@ about zero:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 574-577
+.. GENERATED FROM PYTHON SOURCE LINES 573-576
 
 The ``attrs`` dictionary holds metadata including the fundamental laser
 frequency, the harmonics in the phasor coordinates, and the reference phasor
 coordinates used for calibration:
 
-.. GENERATED FROM PYTHON SOURCE LINES 577-583
+.. GENERATED FROM PYTHON SOURCE LINES 576-582
 
 .. code-block:: Python
 
@@ -1076,11 +1075,11 @@ coordinates used for calibration:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 584-585
+.. GENERATED FROM PYTHON SOURCE LINES 583-584
 
 Plot the first harmonic phasor coordinates after applying a median filter:
 
-.. GENERATED FROM PYTHON SOURCE LINES 585-593
+.. GENERATED FROM PYTHON SOURCE LINES 584-592
 
 .. code-block:: Python
 
@@ -1104,13 +1103,13 @@ Plot the first harmonic phasor coordinates after applying a median filter:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 594-597
+.. GENERATED FROM PYTHON SOURCE LINES 593-596
 
 Three main lifetime components are expected in the sample: free
 NADH (~0.4 ns), bound NADH (3.4 ns), and a long lifetime species (~8 ns).
 It appears the calibration is off in this sample.
 
-.. GENERATED FROM PYTHON SOURCE LINES 599-613
+.. GENERATED FROM PYTHON SOURCE LINES 598-612
 
 SimFCS REF and R64
 ------------------
@@ -1127,7 +1126,7 @@ The :py:func:`phasorpy.io.phasor_from_simfcs_referenced` function is used
 to read calibrated phasor coordinates from a REF file
 from the `LFD workshop dataset <https://zenodo.org/records/8411056>`_:
 
-.. GENERATED FROM PYTHON SOURCE LINES 613-624
+.. GENERATED FROM PYTHON SOURCE LINES 612-623
 
 .. code-block:: Python
 
@@ -1154,13 +1153,13 @@ from the `LFD workshop dataset <https://zenodo.org/records/8411056>`_:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 625-628
+.. GENERATED FROM PYTHON SOURCE LINES 624-627
 
 Plot the first harmonic phasor coordinates after applying a median filter.
 Since SimFCS Referenced files do not contain metadata, the frequency and
 harmonics must be known by the user:
 
-.. GENERATED FROM PYTHON SOURCE LINES 628-643
+.. GENERATED FROM PYTHON SOURCE LINES 627-642
 
 .. code-block:: Python
 
@@ -1191,7 +1190,7 @@ harmonics must be known by the user:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 644-650
+.. GENERATED FROM PYTHON SOURCE LINES 643-649
 
 The :py:func:`phasorpy.io.phasor_to_simfcs_referenced` function is used
 to write calibrated phasor coordinates to R64 files in a temporary directory.
@@ -1200,7 +1199,7 @@ chunked to square-sized images and saved to separate files.
 Images or chunks with less than two dimensions or smaller than square size
 are padded with NaN values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 650-671
+.. GENERATED FROM PYTHON SOURCE LINES 649-670
 
 .. code-block:: Python
 
@@ -1241,7 +1240,7 @@ are padded with NaN values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 672-692
+.. GENERATED FROM PYTHON SOURCE LINES 671-691
 
 PhasorPy OME-TIFF
 -----------------
@@ -1264,7 +1263,7 @@ The :py:func:`phasorpy.io.phasor_to_ometiff` and
 :py:func:`phasorpy.io.phasor_from_ometiff` functions are used to write and
 read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:
 
-.. GENERATED FROM PYTHON SOURCE LINES 692-715
+.. GENERATED FROM PYTHON SOURCE LINES 691-714
 
 .. code-block:: Python
 
@@ -1298,7 +1297,7 @@ read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 716-730
+.. GENERATED FROM PYTHON SOURCE LINES 715-729
 
 Alternative import methods
 --------------------------
@@ -1315,7 +1314,7 @@ TIFF files.
 The `tifffile <https://github.com/cgohlke/tifffile/>`_ library is used to
 read a TCSPC histogram exported to a TIFF file by ImSpector software:
 
-.. GENERATED FROM PYTHON SOURCE LINES 730-737
+.. GENERATED FROM PYTHON SOURCE LINES 729-736
 
 .. code-block:: Python
 
@@ -1333,14 +1332,14 @@ read a TCSPC histogram exported to a TIFF file by ImSpector software:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 738-742
+.. GENERATED FROM PYTHON SOURCE LINES 737-741
 
 Since the image stack array contains no domain-specific metadata, the
 fundamental frequency and the axis over which to calculate phasor
 coordinates must be known. In this case, the TCSPC histogram bins are in
 the first array dimension:
 
-.. GENERATED FROM PYTHON SOURCE LINES 742-747
+.. GENERATED FROM PYTHON SOURCE LINES 741-746
 
 .. code-block:: Python
 
@@ -1361,11 +1360,11 @@ the first array dimension:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 748-749
+.. GENERATED FROM PYTHON SOURCE LINES 747-748
 
 Plot the uncalibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 749-752
+.. GENERATED FROM PYTHON SOURCE LINES 748-751
 
 .. code-block:: Python
 
@@ -1384,7 +1383,7 @@ Plot the uncalibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 753-756
+.. GENERATED FROM PYTHON SOURCE LINES 752-755
 
 sphinx_gallery_thumbnail_number = 3
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -1393,7 +1392,7 @@ mypy: disable-error-code="arg-type"
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 16.861 seconds)
+   **Total running time of the script:** (0 minutes 15.807 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_io.py:
