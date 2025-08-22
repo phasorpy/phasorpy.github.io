@@ -39,9 +39,9 @@ lifetime imaging microscopy (FLIM) and hyperspectral imaging (HSI) of LAURDAN
 fluorescence as presented in:
 
   Malacrida L, Jameson D, and Gratton E.
-  A multidimensional phasor approach reveals LAURDAN photophysics in NIH-3T3
-  cell membranes.
-  *Sci Rep*, 7: 9215 (2017). https://doi.org/10.1038/s41598-017-08564-z
+  `A multidimensional phasor approach reveals LAURDAN photophysics in NIH-3T3
+  cell membranes <https://doi.org/10.1038/s41598-017-08564-z>`_.
+  *Sci Rep*, 7: 9215 (2017).
 
 The dataset is available at https://zenodo.org/records/16894639.
 
@@ -109,12 +109,12 @@ channels are stored in separate files:
     reference_signal = numpy.stack(
         [
             signal_from_fbd(
-                fetch(f'cumarinech{ch}_780LAURDAN_000$CC0Z.fbd'),
+                fetch(f'cumarinech{ch + 1}_780LAURDAN_000$CC0Z.fbd'),
                 frame=-1,
-                channel=ch - 1,
+                channel=ch,
                 laser_factor=0.99168,
             )
-            for ch in (1, 2)
+            for ch in (0, 1)
         ],
     )
 
@@ -216,14 +216,14 @@ Plot the spectral phasor coordinates:
         xlim=(-0.5, 1.05),
         ylim=(-0.1, 1.05),
         allquadrants=True,
-        title='Spectral phasor coordinates',
+        title='Spectral phasor',
     )
 
 
 
 
 .. image-sg:: /tutorials/applications/images/sphx_glr_phasorpy_multidimensional_001.png
-   :alt: Spectral phasor coordinates
+   :alt: Spectral phasor
    :srcset: /tutorials/applications/images/sphx_glr_phasorpy_multidimensional_001.png
    :class: sphx-glr-single-img
 
@@ -235,21 +235,26 @@ Plot the spectral phasor coordinates:
 
 Plot the FLIM phasor coordinates of channel 1 (blue) and 2 (orange):
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-155
+.. GENERATED FROM PYTHON SOURCE LINES 149-160
 
 .. code-block:: Python
 
 
-    plot = PhasorPlot(frequency=frequency, title='FLIM phasor coordinates')
-    plot.hist2d(flim_real[0], flim_imag[0], cmap='Blues')
-    plot.hist2d(flim_real[1], flim_imag[1], cmap='Oranges', alpha=0.5)
+    fig, axs = pyplot.subplots(2, 1, figsize=(6.4, 9))
+    fig.suptitle('FLIM phasor')
+    for ch in (0, 1):
+        plot = PhasorPlot(
+            ax=axs[ch], frequency=frequency, title=f'Channel {ch + 1}'
+        )
+        plot.hist2d(flim_real[ch], flim_imag[ch])
+    fig.tight_layout()
     plot.show()
 
 
 
 
 .. image-sg:: /tutorials/applications/images/sphx_glr_phasorpy_multidimensional_002.png
-   :alt: FLIM phasor coordinates
+   :alt: FLIM phasor, Channel 1, Channel 2
    :srcset: /tutorials/applications/images/sphx_glr_phasorpy_multidimensional_002.png
    :class: sphx-glr-single-img
 
@@ -257,7 +262,7 @@ Plot the FLIM phasor coordinates of channel 1 (blue) and 2 (orange):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-164
+.. GENERATED FROM PYTHON SOURCE LINES 161-169
 
 Mask spectral phasor using cursors
 ----------------------------------
@@ -268,7 +273,7 @@ The spectral dimension serves as the "main" dimension, meaning that
 spectral cursors control the classification that will be applied to
 correlate with the FLIM dimension.
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-177
+.. GENERATED FROM PYTHON SOURCE LINES 169-182
 
 .. code-block:: Python
 
@@ -277,7 +282,7 @@ correlate with the FLIM dimension.
     spectral_cursor_imag = [0.74, 0.70, 0.72]
     spectral_cursor_radius = 0.05
 
-    spectral_masks = mask_from_circular_cursor(
+    spectral_mask = mask_from_circular_cursor(
         spectral_real,
         spectral_imag,
         spectral_cursor_real,
@@ -292,11 +297,11 @@ correlate with the FLIM dimension.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-179
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
 Plot the spectral phasor and main cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-204
+.. GENERATED FROM PYTHON SOURCE LINES 184-208
 
 .. code-block:: Python
 
@@ -320,7 +325,6 @@ Plot the spectral phasor and main cursors:
         spectral_cursor_imag,
         radius=spectral_cursor_radius,
         color=CATEGORICAL[:3],
-        linestyle='-',
         linewidth=2,
     )
     plot.show()
@@ -337,7 +341,7 @@ Plot the spectral phasor and main cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-210
+.. GENERATED FROM PYTHON SOURCE LINES 209-214
 
 Spectral pseudo-color image
 ---------------------------
@@ -345,12 +349,12 @@ Spectral pseudo-color image
 Create a pseudo-colored image where each pixel is colored according to
 its spectral classification based on the main cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-214
+.. GENERATED FROM PYTHON SOURCE LINES 214-218
 
 .. code-block:: Python
 
 
-    spectral_pseudo_color = pseudo_color(*spectral_masks)
+    spectral_pseudo_color = pseudo_color(*spectral_mask)
     plot_image(spectral_pseudo_color, title='Spectral pseudo-color image')
 
 
@@ -365,7 +369,7 @@ its spectral classification based on the main cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-223
+.. GENERATED FROM PYTHON SOURCE LINES 219-227
 
 Spectral classified FLIM phasor
 -------------------------------
@@ -376,22 +380,22 @@ This shows how pixels with different spectral properties distribute in
 the FLIM phasor space and reveals the correlation between spectral and
 lifetime characteristics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-242
+.. GENERATED FROM PYTHON SOURCE LINES 227-246
 
 .. code-block:: Python
 
 
-    fig, axs = pyplot.subplots(2, 1, figsize=(6.4, 8))
+    fig, axs = pyplot.subplots(2, 1, figsize=(6.4, 9))
     fig.suptitle('Spectral classified FLIM phasor')
 
-    for ch in range(2):
+    for ch in (0, 1):
         plot = PhasorPlot(
             ax=axs[ch], frequency=frequency, title=f'Channel {ch + 1}'
         )
-        for i in range(spectral_masks.shape[0]):
+        for i in range(spectral_mask.shape[0]):
             plot.plot(
-                flim_real[ch][spectral_masks[i]],
-                flim_imag[ch][spectral_masks[i]],
+                flim_real[ch][spectral_mask[i]],
+                flim_imag[ch][spectral_mask[i]],
                 color=CATEGORICAL[i],
                 alpha=0.05,
                 markersize=0.5,
@@ -411,7 +415,7 @@ lifetime characteristics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 243-251
+.. GENERATED FROM PYTHON SOURCE LINES 247-255
 
 FLIM classified spectral phasor
 -------------------------------
@@ -422,7 +426,7 @@ phasor space.
 
 Mask the FLIM phasor coordinates of the first channel using cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 251-264
+.. GENERATED FROM PYTHON SOURCE LINES 255-268
 
 .. code-block:: Python
 
@@ -431,7 +435,7 @@ Mask the FLIM phasor coordinates of the first channel using cursors:
     flim_cursor_imag = [0.44, 0.38, 0.41]
     flim_cursor_radius = 0.05
 
-    flim_ch1_masks = mask_from_circular_cursor(
+    flim_mask = mask_from_circular_cursor(
         flim_real[0],
         flim_imag[0],
         flim_cursor_real,
@@ -446,11 +450,11 @@ Mask the FLIM phasor coordinates of the first channel using cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-266
+.. GENERATED FROM PYTHON SOURCE LINES 269-270
 
 Plot the FLIM phasor and cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-282
+.. GENERATED FROM PYTHON SOURCE LINES 270-285
 
 .. code-block:: Python
 
@@ -465,7 +469,6 @@ Plot the FLIM phasor and cursors:
         flim_cursor_imag,
         radius=flim_cursor_radius,
         color=CATEGORICAL[:3],
-        linestyle='-',
         linewidth=2,
     )
     plot.show()
@@ -482,18 +485,17 @@ Plot the FLIM phasor and cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 286-287
 
 Display the FLIM pseudo-color image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-290
+.. GENERATED FROM PYTHON SOURCE LINES 287-292
 
 .. code-block:: Python
 
 
     plot_image(
-        pseudo_color(*flim_ch1_masks),
-        title='FLIM pseudo-color image (first channel)',
+        pseudo_color(*flim_mask), title='FLIM pseudo-color image (first channel)'
     )
 
 
@@ -508,11 +510,11 @@ Display the FLIM pseudo-color image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-292
+.. GENERATED FROM PYTHON SOURCE LINES 293-294
 
 Plot the FLIM classified spectral phasor:
 
-.. GENERATED FROM PYTHON SOURCE LINES 292-311
+.. GENERATED FROM PYTHON SOURCE LINES 294-313
 
 .. code-block:: Python
 
@@ -524,10 +526,10 @@ Plot the FLIM classified spectral phasor:
         title='FLIM classified spectral phasor',
     )
 
-    for i in range(flim_ch1_masks.shape[0]):
+    for i in range(flim_mask.shape[0]):
         plot.plot(
-            spectral_real[flim_ch1_masks[i]],
-            spectral_imag[flim_ch1_masks[i]],
+            spectral_real[flim_mask[i]],
+            spectral_imag[flim_mask[i]],
             color=CATEGORICAL[i],
             alpha=0.05,
             markersize=1,
@@ -547,7 +549,7 @@ Plot the FLIM classified spectral phasor:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 312-314
+.. GENERATED FROM PYTHON SOURCE LINES 314-316
 
 sphinx_gallery_thumbnail_number = 4
 mypy: allow-untyped-defs, allow-untyped-calls
@@ -555,7 +557,7 @@ mypy: allow-untyped-defs, allow-untyped-calls
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.287 seconds)
+   **Total running time of the script:** (0 minutes 6.255 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_multidimensional.py:
