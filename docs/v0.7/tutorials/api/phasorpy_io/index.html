@@ -1,0 +1,1397 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>File input/output &#8212; PhasorPy 0.7 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=77f0d059"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/tabs.js?v=3ee01567"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/api/phasorpy_io';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.7';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Phasor coordinates from lifetimes" href="../phasorpy_phasor_from_lifetime/" />
+    <link rel="prev" title="Programming interface" href="../" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.7" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/phasorpy_logo.svg" class="logo__image only-light" alt="PhasorPy"/>
+    <img src="../../../_static/phasorpy_logo.svg" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../release/">
+    Release notes
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../license/">
+    MIT License
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../release/">
+    Release notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../license/">
+    MIT License
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_introduction/">Introduction to PhasorPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_lifetime_geometry/">Geometrical interpretation of lifetimes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_lfd_workshop/">LFD Workshop FLIM tutorial</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">File input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_multi_harmonic/">Multi-harmonic phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_filter/">Filter phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasorplot/">Phasor plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_cursor/">Cursors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_component/">Component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_pca/">Principal component analysis</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../applications/">Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_component_fit/">Multi-component fit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_fret_efficiency/">FRET efficiency image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_multidimensional/">Multidimensional phasor approach</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_logo/">PhasorPy logo</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../" class="nav-link">Tutorials</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../" class="nav-link">Programming interface</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">File input/output</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="sphx-glr-example-title" id="file-input-output">
+<span id="sphx-glr-tutorials-api-phasorpy-io-py"></span><h1>File input/output<a class="headerlink" href="#file-input-output" title="Link to this heading">#</a></h1>
+<p>Read and write phasor-related data from and to various file formats.</p>
+<p>The <a class="reference internal" href="../../../api/io/#module-phasorpy.io" title="phasorpy.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">phasorpy.io</span></code></a> module provides functions to read phasor
+coordinates, TCSPC time-delay histograms, cross-correlation phase histograms,
+hyperspectral image stacks, lifetime images, and relevant metadata from
+various file formats used in bio-imaging.
+The module also includes functions to write phasor coordinates to OME-TIFF
+and SimFCS Referenced files.</p>
+<p>Import required modules and functions:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_allclose</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">phasor_calibrate</span><span class="p">,</span>
+    <span class="n">phasor_to_apparent_lifetime</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">phasor_filter_median</span><span class="p">,</span>
+    <span class="n">phasor_from_signal</span><span class="p">,</span>
+    <span class="n">phasor_threshold</span><span class="p">,</span>
+    <span class="n">phasor_transform</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">plot_histograms</span><span class="p">,</span>
+    <span class="n">plot_phasor</span><span class="p">,</span>
+    <span class="n">plot_phasor_image</span><span class="p">,</span>
+    <span class="n">plot_signal_image</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="sample-files">
+<h2>Sample files<a class="headerlink" href="#sample-files" title="Link to this heading">#</a></h2>
+<p>PhasorPy provides access to curated sample files in various formats
+that are shared publicly on Zenodo, Figshare, and GitHub repositories.
+The files can be accessed using the <a class="reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.datasets.fetch()</span></code></a>
+function, which transparently downloads files and caches them locally.
+The function returns the path to the downloaded file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch</span>  <span class="c1"># isort: skip</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;FLIM_testdata.lif&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/runner/.cache/phasorpy/FLIM_testdata.lif
+</pre></div>
+</div>
+<p>Consider contributing datasets to the <a class="reference external" href="https://zenodo.org/communities/phasorpy/">PhasorPy Community on Zenodo</a>.</p>
+</section>
+<section id="leica-lif-and-xlef">
+<h2>Leica LIF and XLEF<a class="headerlink" href="#leica-lif-and-xlef" title="Link to this heading">#</a></h2>
+<p>Leica image files (LIF and XLEF) are written by Leica LAS X software.
+They contain collections of multi-dimensional images and metadata from
+a variety of microscopy acquisition and analysis modes.</p>
+<p>PhasorPy currently supports reading hyperspectral images,
+phasor coordinates, and lifetime images from Leica image files via the
+<a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
+<section id="lif-flim">
+<h3>LIF FLIM<a class="headerlink" href="#lif-flim" title="Link to this heading">#</a></h3>
+<p>Leica image files, acquired on a FALCON microscope and analyzed with LAS X
+software, contain calculated phasor coordinates, lifetime images, and
+relevant metadata. The <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_from_lif" title="phasorpy.io.phasor_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_lif()</span></code></a> and
+<a class="reference internal" href="../../../api/io/#phasorpy.io.lifetime_from_lif" title="phasorpy.io.lifetime_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.lifetime_from_lif()</span></code></a> functions are used to read those
+data from the <a class="reference external" href="https://dx.doi.org/10.6084/m9.figshare.22336594.v1">FLIM_testdata dataset</a>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">lifetime_from_lif</span><span class="p">,</span> <span class="n">phasor_from_lif</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;FLIM_testdata.lif&#39;</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_001.png" srcset="../../../_images/sphx_glr_phasorpy_io_001.png" alt="FLIM_testdata.lif, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>The returned mean intensity and uncalibrated phasor coordinates are
+NumPy arrays. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a dictionary holding metadata, including the
+auto-reference phase (in degrees) and modulation for all image channels,
+as well as the fundamental laser frequency (in MHz):</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="n">channel_0</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_phasor_channels&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">reference_phase</span> <span class="o">=</span> <span class="n">channel_0</span><span class="p">[</span><span class="s1">&#39;AutomaticReferencePhase&#39;</span><span class="p">]</span>
+<span class="n">reference_modulation</span> <span class="o">=</span> <span class="n">channel_0</span><span class="p">[</span><span class="s1">&#39;AutomaticReferenceAmplitude&#39;</span><span class="p">]</span>
+<span class="n">intensity_min</span> <span class="o">=</span> <span class="n">channel_0</span><span class="p">[</span><span class="s1">&#39;IntensityThreshold&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>These metadata are used to calibrate and threshold the phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_transform</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">reference_phase</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">reference_modulation</span>
+<span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="n">intensity_min</span><span class="p">)</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_002.png" srcset="../../../_images/sphx_glr_phasorpy_io_002.png" alt="FLIM_testdata.lif (19.505 MHz)" class = "sphx-glr-single-img"/><p>Apparent single lifetimes are calculated from the calibrated phasor
+coordinates and compared to the “Fast FLIM” lifetimes (average photon
+arrival times) calculated by LAS X software:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">phase_lifetime</span><span class="p">,</span> <span class="n">modulation_lifetime</span> <span class="o">=</span> <span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span>
+<span class="p">)</span>
+
+<span class="n">fastflim_lifetime</span> <span class="o">=</span> <span class="n">lifetime_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">fastflim_lifetime</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mean</span><span class="p">)]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="n">plot_histograms</span><span class="p">(</span>
+    <span class="n">phase_lifetime</span><span class="p">,</span>
+    <span class="n">modulation_lifetime</span><span class="p">,</span>
+    <span class="n">fastflim_lifetime</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.66</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Lifetime (ns)&#39;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;Phase lifetime&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Modulation lifetime&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Fast FLIM lifetime from LIF&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Lifetime histograms&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_003.png" srcset="../../../_images/sphx_glr_phasorpy_io_003.png" alt="Lifetime histograms" class = "sphx-glr-single-img"/><p>The apparent single lifetimes from phase and modulation do not exactly match.
+Most likely there is more than one lifetime component in the sample.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reading of FLIM/TCSPC histograms from LIF-FLIM files is currently not
+supported because the storage scheme is undocumented or patent-pending.
+However, TTTR records can be exported to PTU format using LAS X software.</p>
+</div>
+</section>
+<section id="lif-hyperspectral">
+<h3>LIF hyperspectral<a class="headerlink" href="#lif-hyperspectral" title="Link to this heading">#</a></h3>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_lif" title="phasorpy.io.signal_from_lif"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_lif()</span></code></a> function is used to read an
+image stack from the <a class="reference external" href="https://zenodo.org/records/14976703">Convallaria hyperspectral dataset</a> acquired at 29 emission wavelengths:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_lif</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Convalaria_LambdaScan.lif&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lif</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;wavelength (nm)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_004.png" srcset="../../../_images/sphx_glr_phasorpy_io_004.png" alt="Convalaria_LambdaScan.lif, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Emission wavelengths (in nm) are available in the coordinates of the
+channel axis:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[420 430 440 450 460 470 480 489 500 510 520 530 540 550 560 570 580 590
+ 600 610 620 630 640 650 660 670 680 690 700]
+</pre></div>
+</div>
+<p>Plot the first harmonic phasor coordinates after applying a median filter:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_threshold</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_005.png" srcset="../../../_images/sphx_glr_phasorpy_io_005.png" alt="Convalaria_LambdaScan.lif" class = "sphx-glr-single-img"/></section>
+</section>
+<section id="picoquant-ptu">
+<h2>PicoQuant PTU<a class="headerlink" href="#picoquant-ptu" title="Link to this heading">#</a></h2>
+<p>PicoQuant PTU files are written by PicoQuant SymPhoTime, Leica LAS X, and
+other software. The files contain time-correlated single-photon
+counting (TCSPC) measurement data and instrumentation parameters.</p>
+<p>PhasorPy supports reading TCSPC histograms from PTU files acquired in T3
+imaging mode via the <a class="reference external" href="https://github.com/cgohlke/ptufile/">ptufile</a>
+library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_ptu" title="phasorpy.io.signal_from_ptu"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_ptu()</span></code></a> function is used to read
+the TCSPC histogram from a PTU file exported from the <a class="reference external" href="https://dx.doi.org/10.6084/m9.figshare.22336594.v1">FLIM_testdata LIF
+dataset</a>.
+For phasor analysis, periods containing multiple photons must have all
+their photons discarded before exporting to PTU format. In the Leica
+LAS X software, select the “FLIM” tab, click on the “Phasor” button,
+and under “Specialist Settings” select the option “Standard (High Speed)”.
+The first channel in the first frame is read from the PTU file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_ptu</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;FLIM_testdata.lif.filtered.ptu&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_ptu</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;delay-time (ns)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_006.png" srcset="../../../_images/sphx_glr_phasorpy_io_006.png" alt="FLIM_testdata.lif.filtered.ptu, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>The returned <code class="docutils literal notranslate"><span class="pre">signal</span></code> is an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html">xarray.DataArray</a>
+holding the TCSPC histogram as a NumPy array, and metadata as a
+dictionary in the <code class="docutils literal notranslate"><span class="pre">attrs</span></code> property.
+The metadata includes all PTU tags and the fundamental laser frequency,
+which is needed to interpret the phasor coordinates.
+The reference phase and modulation previously loaded from the LIF-FLIM file
+are again used to calibrate the phasor coordinates. The same intensity
+threshold is applied:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">frequency</span> <span class="o">==</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>  <span class="c1"># frequency matches LIF metadata</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_transform</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">reference_phase</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">reference_modulation</span>
+<span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="n">intensity_min</span><span class="p">)</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_007.png" srcset="../../../_images/sphx_glr_phasorpy_io_007.png" alt="FLIM_testdata.lif.filtered.ptu (19.505 MHz)" class = "sphx-glr-single-img"/><p>Compare the apparent single lifetimes calculated from the PTU file with the
+lifetimes previously read from the LIF-FLIM file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_histograms</span><span class="p">(</span>
+    <span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">phase_lifetime</span><span class="p">,</span>
+    <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.66</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Lifetime (ns)&#39;</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Phase lifetime from PTU&#39;</span><span class="p">,</span> <span class="s1">&#39;Phase lifetime from LIF&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Lifetime histograms&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_008.png" srcset="../../../_images/sphx_glr_phasorpy_io_008.png" alt="Lifetime histograms" class = "sphx-glr-single-img"/></section>
+<section id="zeiss-czi">
+<h2>Zeiss CZI<a class="headerlink" href="#zeiss-czi" title="Link to this heading">#</a></h2>
+<p>Carl Zeiss image files (CZI) are written by Zeiss ZEN software.
+They contain images and metadata from a variety of microscopy acquisition
+and analysis modes, including hyperspectral imaging.</p>
+<p>PhasorPy does not currently support reading CZI files.
+However, hyperspectral images can be read from CZI files using, for example,
+the <a class="reference external" href="https://github.com/ZEISS/pylibczirw/">pylibCZIrw</a> or
+<a class="reference external" href="https://github.com/bioio-devs/bioio">BioIO</a> libraries. Another option is
+to export CZI files as LSM using the ZEN software.</p>
+</section>
+<section id="zeiss-lsm">
+<h2>Zeiss LSM<a class="headerlink" href="#zeiss-lsm" title="Link to this heading">#</a></h2>
+<p>Carl Zeiss LSM files, a predecessor of the CZI format, are written by
+Zeiss ZEN software. They contain images and metadata from laser-scanning
+microscopy.</p>
+<p>PhasorPy supports reading hyperspectral image data from Zeiss LSM files
+via the <a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_lsm" title="phasorpy.io.signal_from_lsm"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_lsm()</span></code></a> function is used to read
+a hyperspectral dataset with 30 emission wavelengths:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_lsm</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;paramecium.lsm&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_lsm</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;paramecium.lsm&#39;</span><span class="p">))</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;wavelength (nm)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_009.png" srcset="../../../_images/sphx_glr_phasorpy_io_009.png" alt="paramecium.lsm, axis=0 'C', mean" class = "sphx-glr-single-img"/><p>Emission wavelengths (in nm) are available in the coordinates of the
+channel axis:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[423 433 443 453 463 473 483 493 503 513 523 533 543 553 563 573 583 593
+ 603 613 623 633 643 653 663 673 683 693 703 713]
+</pre></div>
+</div>
+<p>Plot the first harmonic phasor coordinates after applying a median filter:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_threshold</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_010.png" srcset="../../../_images/sphx_glr_phasorpy_io_010.png" alt="paramecium.lsm" class = "sphx-glr-single-img"/></section>
+<section id="becker-hickl-sdt">
+<h2>Becker &amp; Hickl SDT<a class="headerlink" href="#becker-hickl-sdt" title="Link to this heading">#</a></h2>
+<p>SDT files are written by Becker &amp; Hickl software.
+They may contain TCSPC histograms and metadata from laser-scanning
+microscopy.</p>
+<p>PhasorPy supports reading TCSPC histograms from SDT files via the
+<a class="reference external" href="https://github.com/cgohlke/sdtfile/">sdtfile</a> library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_sdt" title="phasorpy.io.signal_from_sdt"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_sdt()</span></code></a> function is used to read a
+TCSPC histogram from a SDT file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_sdt</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;tcspc.sdt&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_sdt</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;delay-time (ns)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_011.png" srcset="../../../_images/sphx_glr_phasorpy_io_011.png" alt="tcspc.sdt, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>Plot the uncalibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">style</span><span class="o">=</span><span class="s1">&#39;hist2d&#39;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_012.png" srcset="../../../_images/sphx_glr_phasorpy_io_012.png" alt="tcspc.sdt (80.0 MHz)" class = "sphx-glr-single-img"/><div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>No accompanying IRF dataset is available to calibrate the phasor
+coordinates.</p>
+</div>
+</section>
+<section id="flimbox-fbd">
+<h2>FLIMbox FBD<a class="headerlink" href="#flimbox-fbd" title="Link to this heading">#</a></h2>
+<p>FLIMbox data files, FBD, are written by SimFCS and ISS software.
+They contain encoded cross-correlation phase histograms from digital
+frequency-domain measurements acquired with a FLIMbox device.
+Newer file versions also contain metadata.</p>
+<p>The FBD file format is undocumented, not standardized, and files are
+frequently found corrupted. Therefore, it is recommended to export FLIMbox
+files to another format from the software used to acquire the data.</p>
+<p>PhasorPy supports reading some FLIMbox FBD files via the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_fbd()</span></code></a> function is used to read
+a phase histograms from the
+<a class="reference external" href="https://zenodo.org/records/14026720">Convallaria FBD dataset</a>, which was
+acquired at the second harmonic. The dataset is a time series of two
+channels. Since the photon count is low and the second channel empty,
+only the first channel is read and the time-axis integrated:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_fbd</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Convallaria_$EI0S.fbd&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_fbd</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;cross-correlation phase (rad)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_013.png" srcset="../../../_images/sphx_glr_phasorpy_io_013.png" alt="Convallaria_$EI0S.fbd, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>The measurement of a solution of Rhodamine 110 with known lifetime of 4 ns
+is used as a calibration reference:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_filename</span> <span class="o">=</span> <span class="s1">&#39;Calibration_Rhodamine110_$EI0S.fbd&#39;</span>
+
+<span class="n">reference_signal</span> <span class="o">=</span> <span class="n">signal_from_fbd</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="n">reference_filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<span class="n">reference_lifetime</span> <span class="o">=</span> <span class="mf">4.0</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span>
+    <span class="n">reference_signal</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;cross-correlation phase (rad)&#39;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="n">reference_filename</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_014.png" srcset="../../../_images/sphx_glr_phasorpy_io_014.png" alt="Calibration_Rhodamine110_$EI0S.fbd, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>Phasor coordinates are calculated from the signal and calibrated with
+the reference signal:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">reference_signal</span><span class="p">),</span>
+    <span class="n">frequency</span><span class="p">,</span>
+    <span class="n">reference_lifetime</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_threshold</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_015.png" srcset="../../../_images/sphx_glr_phasorpy_io_015.png" alt="Convallaria_$EI0S.fbd (80.0 MHz)" class = "sphx-glr-single-img"/></section>
+<section id="flim-labs-json">
+<h2>FLIM LABS JSON<a class="headerlink" href="#flim-labs-json" title="Link to this heading">#</a></h2>
+<p>FLIM LABS JSON files are written by FLIM Studio software.
+They contain multi-channel TCSPC histogram images, optional calibrated
+multi-harmonic phasor coordinates, and metadata from digital frequency-domain
+measurements.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.signal_from_flimlabs_json" title="phasorpy.io.signal_from_flimlabs_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.signal_from_flimlabs_json()</span></code></a> function is used to
+read a TCSPC histogram from the <a class="reference external" href="https://zenodo.org/records/15007900">Convallaria FLIM LABS dataset</a>, which contains a single channel:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_flimlabs_json</span>
+
+<span class="n">channel</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Convallaria_m2_1740751781_phasor_ch1.json&#39;</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">signal_from_flimlabs_json</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">)</span>
+
+<span class="n">plot_signal_image</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;delay-time (ns)&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_016.png" srcset="../../../_images/sphx_glr_phasorpy_io_016.png" alt="Convallaria_m2_1740751781_phasor_ch1.json, axis=2 'H', mean" class = "sphx-glr-single-img"/><p>Phasor coordinates are calculated from the TCSPC histogram at three
+harmonics and calibrated using the metadata in <code class="docutils literal notranslate"><span class="pre">signal.attrs</span></code> and the
+TCSPC histogram from the measurement of a Fluorescein solution of known
+lifetime:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="n">reference_lifetime</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flimlabs_header&#39;</span><span class="p">][</span><span class="s1">&#39;tau_ns&#39;</span><span class="p">]</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">)</span>
+
+<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
+    <span class="n">signal_from_flimlabs_json</span><span class="p">(</span>
+        <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Calibration_m2_1740751189_imaging.json&#39;</span><span class="p">),</span>
+        <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span>
+    <span class="n">imag</span><span class="p">,</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">,</span>
+    <span class="n">reference_lifetime</span><span class="p">,</span>
+    <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the second harmonic phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="n">real</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">imag</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_017.png" srcset="../../../_images/sphx_glr_phasorpy_io_017.png" alt="Convallaria_m2_1740751781_phasor_ch1.json (80.0 MHz)" class = "sphx-glr-single-img"/><p>Newer versions of the FLIM LABS JSON files may also contain calibrated
+phasor coordinates, possibly at multiple harmonics, which can be read
+using the <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_from_flimlabs_json" title="phasorpy.io.phasor_from_flimlabs_json"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_flimlabs_json()</span></code></a> function:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_flimlabs_json</span>
+
+<span class="n">mean_fromfile</span><span class="p">,</span> <span class="n">real_fromfile</span><span class="p">,</span> <span class="n">imag_fromfile</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_flimlabs_json</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
+<span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">assert_allclose</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">mean_fromfile</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="n">assert_allclose</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">real_fromfile</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">assert_allclose</span><span class="p">(</span><span class="n">imag</span><span class="p">,</span> <span class="n">imag_fromfile</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The reference phase, modulation, and lifetime used to calibrate the phasor
+coordinates may also be found in an accompanying JSON file:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;Fluorescein_Calibration_m2_1740751189_imaging_calibration.json&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;rb&#39;</span><span class="p">,</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+
+<span class="n">calibration</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;calibrations&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">])</span>
+<span class="n">reference_phase</span> <span class="o">=</span> <span class="o">-</span><span class="n">calibration</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">reference_modulation</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">calibration</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">reference_lifetime</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;tau_ns&#39;</span><span class="p">]</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency_mhz&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="iss-ifli">
+<h2>ISS IFLI<a class="headerlink" href="#iss-ifli" title="Link to this heading">#</a></h2>
+<p>IFLI files are written by ISS VistaVision software. They contain calibrated
+phasor coordinates from analog or digital frequency-domain fluorescence
+lifetime measurements.
+IFLI datasets can be up to 9-dimensional in the order of mean/real/imag,
+frequency, position, emission wavelength, time, channel, Z, Y, and X.</p>
+<p>PhasorPy supports reading ISS IFLI files via the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_from_ifli" title="phasorpy.io.phasor_from_ifli"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_ifli()</span></code></a> function is used to read
+calibrated phasor coordinates from a measurement of mouse liver fed with
+Western diet. Select the second channel and first three harmonics:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_ifli</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;NADHandSHG.ifli&#39;</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_ifli</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span>
+    <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
+    <span class="n">channel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># NADH channel</span>
+<span class="p">)</span>
+
+<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_018.png" srcset="../../../_images/sphx_glr_phasorpy_io_018.png" alt="NADHandSHG.ifli, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>The first channel in the file contains an SHG image with phasor coordinates
+about zero:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="p">(</span>
+    <span class="n">phasor_from_ifli</span><span class="p">(</span>
+        <span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># SHG channel</span>
+    <span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">&lt;</span> <span class="mf">1e-2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">attrs</span></code> dictionary holds metadata including the fundamental laser
+frequency, the harmonics in the phasor coordinates, and the reference phasor
+coordinates used for calibration:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="n">harmonic</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
+<span class="n">reference_phasor</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ifli_header&#39;</span><span class="p">][</span><span class="s1">&#39;RefDCPhasor&#39;</span><span class="p">]</span>
+<span class="n">reference_lifetime</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ifli_header&#39;</span><span class="p">][</span><span class="s1">&#39;RefLifetime&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Plot the first harmonic phasor coordinates after applying a median filter:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_019.png" srcset="../../../_images/sphx_glr_phasorpy_io_019.png" alt="NADHandSHG.ifli (79.99 MHz)" class = "sphx-glr-single-img"/><p>Three main lifetime components are expected in the sample: free
+NADH (~0.4 ns), bound NADH (3.4 ns), and a long lifetime species (~8 ns).
+It appears the calibration is off in this sample.</p>
+</section>
+<section id="simfcs-ref-and-r64">
+<h2>SimFCS REF and R64<a class="headerlink" href="#simfcs-ref-and-r64" title="Link to this heading">#</a></h2>
+<p>Referenced files, REF and R64, are written by the SimFCS software and
+supported in several other software.
+The files most commonly contain a square-sized average intensity image and
+the calibrated phasor coordinates of the first two harmonics.</p>
+<p>PhasorPy supports reading and writing SimFCS Referenced files via the
+<a class="reference external" href="https://github.com/cgohlke/lfdfiles/">lfdfiles</a> library.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_simfcs_referenced()</span></code></a> function is used
+to read calibrated phasor coordinates from a REF file
+from the <a class="reference external" href="https://zenodo.org/records/8411056">LFD workshop dataset</a>:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_simfcs_referenced</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;capillaries1001.ref&#39;</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_simfcs_referenced</span><span class="p">(</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span>
+<span class="p">)</span>
+
+<span class="n">plot_phasor_image</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_020.png" srcset="../../../_images/sphx_glr_phasorpy_io_020.png" alt="capillaries1001.ref, mean, G, real, S, imag" class = "sphx-glr-single-img"/><p>Plot the first harmonic phasor coordinates after applying a median filter.
+Since SimFCS Referenced files do not contain metadata, the frequency and
+harmonics must be known by the user:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
+<span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="n">plot_phasor</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">phasor_threshold</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="n">mean_min</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">real_min</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+    <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">cmin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">frequency</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_021.png" srcset="../../../_images/sphx_glr_phasorpy_io_021.png" alt="capillaries1001.ref (80.00 MHz)" class = "sphx-glr-single-img"/><p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_to_simfcs_referenced" title="phasorpy.io.phasor_to_simfcs_referenced"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_to_simfcs_referenced()</span></code></a> function is used
+to write calibrated phasor coordinates to R64 files in a temporary directory.
+Images with more than two dimensions or larger than square size are
+chunked to square-sized images and saved to separate files.
+Images or chunks with less than two dimensions or smaller than square size
+are padded with NaN values:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_to_simfcs_referenced</span>
+
+<span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;capillaries1001.r64&#39;</span><span class="p">)</span>
+    <span class="n">phasor_to_simfcs_referenced</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">160</span><span class="p">)</span>
+
+    <span class="c1"># print file names</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># verify the first harmonic phasor coordinates in the last file</span>
+    <span class="n">assert_allclose</span><span class="p">(</span>
+        <span class="n">phasor_from_simfcs_referenced</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="n">filenames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">160</span><span class="p">:,</span> <span class="mi">160</span><span class="p">:],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">constant_values</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+        <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>capillaries1001_0_000_000.r64
+capillaries1001_0_000_160.r64
+capillaries1001_0_160_000.r64
+capillaries1001_0_160_160.r64
+</pre></div>
+</div>
+</section>
+<section id="phasorpy-ome-tiff">
+<h2>PhasorPy OME-TIFF<a class="headerlink" href="#phasorpy-ome-tiff" title="Link to this heading">#</a></h2>
+<p>PhasorPy can store phasor coordinates and select metadata in
+<a class="reference external" href="https://ome-model.readthedocs.io/en/stable/ome-tiff/">OME-TIFF</a>
+formatted files, which are compatible with Bio-Formats, Fiji, and other
+software. The implementation is based on the
+<a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library.</p>
+<p>Compared to the SimFCS R64 format, OME-TIFF offers several advantages.
+It can store higher-dimensional, higher-precision images of any size,
+any number of harmonics, and selected metadata.</p>
+<p>PhasorPy OME-TIFF files are intended for temporarily exchanging phasor
+coordinates with other software, not as a long-term storage solution.
+Always preserve original data files in their native formats.</p>
+<p>The <a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_to_ometiff" title="phasorpy.io.phasor_to_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_to_ometiff()</span></code></a> and
+<a class="reference internal" href="../../../api/io/#phasorpy.io.phasor_from_ometiff" title="phasorpy.io.phasor_from_ometiff"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.io.phasor_from_ometiff()</span></code></a> functions are used to write and
+read back calibrated phasor coordinates to/from PhasorPy OME-TIFF files:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_ometiff</span><span class="p">,</span> <span class="n">phasor_to_ometiff</span>
+
+<span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmpdir</span><span class="p">:</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">,</span> <span class="s1">&#39;capillaries1001.ome.tif&#39;</span><span class="p">)</span>
+
+    <span class="n">phasor_to_ometiff</span><span class="p">(</span>
+        <span class="n">filename</span><span class="p">,</span>
+        <span class="n">mean</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">,</span>
+        <span class="n">imag</span><span class="p">,</span>
+        <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+        <span class="n">dims</span><span class="o">=</span><span class="s1">&#39;YX&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Written by PhasorPy&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">mean1</span><span class="p">,</span> <span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">phasor_from_ometiff</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+    <span class="n">assert_allclose</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">mean1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
+    <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Written by PhasorPy&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="alternative-import-methods">
+<h2>Alternative import methods<a class="headerlink" href="#alternative-import-methods" title="Link to this heading">#</a></h2>
+<p>While PhasorPy provides many functions to read phasor-related data and
+metadata from file formats commonly used in the field, it is by no means
+required to use those functions.
+Instead, any other means that yields image stacks in NumPy array compatible
+form can be used (for example) for advanced use cases, or when a file
+format is not supported by PhasorPy.</p>
+<p>For example, most imaging software can export image data to generic
+TIFF files.
+The <a class="reference external" href="https://github.com/cgohlke/tifffile/">tifffile</a> library is used to
+read a TCSPC histogram exported to a TIFF file by ImSpector software:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tifffile</span><span class="w"> </span><span class="kn">import</span> <span class="n">imread</span>
+
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Embryo.tif&#39;</span>
+
+<span class="n">image_stack</span> <span class="o">=</span> <span class="n">imread</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Since the image stack array contains no domain-specific metadata, the
+fundamental frequency and the axis over which to calculate phasor
+coordinates must be known. In this case, the TCSPC histogram bins are in
+the first array dimension:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_signal_image</span><span class="p">(</span><span class="n">image_stack</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">image_stack</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_022.png" srcset="../../../_images/sphx_glr_phasorpy_io_022.png" alt="Embryo.tif, axis=0, mean" class = "sphx-glr-single-img"/><p>Plot the uncalibrated phasor coordinates:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_io_023.png" srcset="../../../_images/sphx_glr_phasorpy_io_023.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 3
+mypy: allow-untyped-defs, allow-untyped-calls
+mypy: disable-error-code=”arg-type”</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.214 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/7a852d16dd787759c626e759efa1dd52/phasorpy_io.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_io.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/e88924b0d167362e9430dd00fd8a619c/phasorpy_io.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">phasorpy_io.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Programming interface</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../phasorpy_phasor_from_lifetime/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Phasor coordinates from lifetimes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-files">Sample files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leica-lif-and-xlef">Leica LIF and XLEF</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lif-flim">LIF FLIM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lif-hyperspectral">LIF hyperspectral</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#picoquant-ptu">PicoQuant PTU</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zeiss-czi">Zeiss CZI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zeiss-lsm">Zeiss LSM</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#becker-hickl-sdt">Becker &amp; Hickl SDT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flimbox-fbd">FLIMbox FBD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flim-labs-json">FLIM LABS JSON</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#iss-ifli">ISS IFLI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simfcs-ref-and-r64">SimFCS REF and R64</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy-ome-tiff">PhasorPy OME-TIFF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-import-methods">Alternative import methods</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
