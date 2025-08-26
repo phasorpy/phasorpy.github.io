@@ -1,6 +1,6 @@
 :orphan:
 
-Documentation versions
+PhasorPy documentation
 ======================
 
 - `Development <dev/>`_
