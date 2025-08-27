@@ -662,12 +662,13 @@ For example, the laser repetition frequency of a time-resolved measurement.</p>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.lifetime_from_lif">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">lifetime_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L134-L236"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.lifetime_from_lif" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">lifetime_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L115-L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.lifetime_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return lifetime image and metadata from Leica image file.</p>
 <p>Leica image files may contain fluorescence lifetime images and metadata
 from the analysis of FLIM measurements.
 The lifetimes are average photon arrival times (“Fast FLIM”) according to
-the LAS X FLIM/FCS documentation.</p>
+the LAS X FLIM/FCS documentation. They are not corrected for the IRF
+position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -707,6 +708,7 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 <p>The implementation is based on the
 <a class="reference external" href="https://github.com/cgohlke/liffile/">liffile</a> library.</p>
 <p class="rubric">Examples</p>
+<p>Read Fast FLIM lifetime and related images from a Leica image file:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lifetime</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">lifetime_from_lif</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;FLIM_testdata.lif&#39;</span><span class="p">)</span>
 <span class="gp">... </span><span class="p">)</span>
@@ -716,6 +718,12 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 <span class="go">(&#39;Y&#39;, &#39;X&#39;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
 <span class="go">19.505</span>
+</pre></div>
+</div>
+<p>Calibrate the Fast FLIM lifetime for IRF position:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frequency</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reference</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flim_phasor_channels&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;AutomaticReferencePhase&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lifetime</span> <span class="o">-=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="n">frequency</span> <span class="o">*</span> <span class="mi">1000</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -890,7 +898,7 @@ Metadata from IFLI file header.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_lif">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L17-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_lif" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L17-L112"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates and metadata from Leica image file.</p>
 <p>Leica image files may contain uncalibrated phasor coordinate images and
 metadata from the analysis of FLIM measurements.</p>
@@ -1554,7 +1562,7 @@ type <code class="docutils literal notranslate"><span class="pre">uint16</span><
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_lif">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L239-L331"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L241-L333"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Leica image file.</p>
 <p>Leica image files may contain hyperspectral images and metadata from laser
 scanning microscopy measurements.</p>
