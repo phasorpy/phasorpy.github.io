@@ -91,6 +91,11 @@ Events
 
 The PhasorPy project is presented at the following events:
 
+- Bruno Pannunzio, Bruno Schüty, and Leonel Malacrida.
+  `6th Workshop in Advanced Microscopy and Biophotonics
+  <https://pasteur.uy/cursos-y-charlas/6th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
+  November 23-28, 2025. Institut Pasteur de Montevideo, Uruguay.
+
 - Leonel Malacrida.
   PhasorPy library for open-source phasor analysis of FLIM and HSI: present, future and some applications in biological fluorescence.
   `12th International Weber Symposium
@@ -116,10 +121,11 @@ The PhasorPy project is presented at the following events:
   `Recording <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__
 
 - Bruno Schüty.
-  Introduction to PhasorPy.
+  Phasor Analysis in fluorescence lifetime imaging and spectral imaging with PhasoPy.
   `GloBIAS Bioimage Analysts Workshop
-  <https://www.globias.org/activities/annual-workshop-gothenburg-2024>`_.
+  <https://www.globias.org/activities/past-activties/annual-workshop-gothenburg-2024>`_.
   November 5-8, 2024. Gothenburg, Sweden.
+  `Recording <https://www.youtube.com/watch?v=5qURI2NVkzg/>`__
 
 - Bruno Pannunzio.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
@@ -206,7 +212,7 @@ The PhasorPy project is presented at the following events:
 
 - Bruno Schüty, Bruno Pannunzio, and Leonel Malacrida.
   Practical section 3: PhasorPy and Napari plugin for FLIM & HSI analysis.
-  `5th Annual Workshop in Advanced Microscopy and Biophotonics
+  `5th Workshop in Advanced Microscopy and Biophotonics
   <https://pasteur.uy/2023/5th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
   November 19-24, 2023. Institut Pasteur de Montevideo, Uruguay.
 
