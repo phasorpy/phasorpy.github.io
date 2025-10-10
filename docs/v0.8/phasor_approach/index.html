@@ -1,0 +1,883 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Phasor approach &#8212; PhasorPy 0.8 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=9d9384cf"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/tabs.js?v=3ee01567"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'phasor_approach';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.8';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script src="../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Tutorials" href="../tutorials/" />
+    <link rel="prev" title="PhasorPy documentation" href="../" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.8" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/phasorpy_logo.svg" class="logo__image only-light" alt="PhasorPy"/>
+    <img src="../_static/phasorpy_logo.svg" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release/">
+    Release notes
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../license/">
+    MIT License
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorials/">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release/">
+    Release notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../acknowledgments/">
+    Acknowledgments
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../license/">
+    MIT License
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-pypi fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Phasor approach</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="phasor-approach">
+<h1>Phasor approach<a class="headerlink" href="#phasor-approach" title="Link to this heading">#</a></h1>
+<p>“The phasor approach to fluorescence lifetime imaging, and more recently
+hyperspectral fluorescence imaging, has increased the use of these
+techniques, and improved the ease and intuitiveness of the data analysis.
+The fit-free nature of the phasor plots increases the speed of the analysis
+and reduces the dimensionality, optimization of data handling and storage.
+The reciprocity principle between the real and imaginary space—where the
+phasor and the pixel that the phasor originated from are linked and can be
+converted from one another—has helped the expansion of this method.
+The phasor coordinates calculated from a pixel, where multiple fluorescent
+species are present, depends on the phasor positions of those components.
+The relative positions are governed by the linear combination properties of
+the phasor space. According to this principle, the phasor position of a
+pixel with multiple components lies inside the polygon whose vertices are
+occupied by the phasor positions of these individual components and the
+distance between the image phasor to any of the vertices is inversely
+proportional to the fractional intensity contribution of that component to
+the total fluorescence from that image pixel.
+The higher the fractional intensity contribution of a vertex, the closer is
+the resultant phasor. The linear additivity in the phasor space can be
+exploited to obtain the fractional intensity contribution from multiple
+species and quantify their contribution.”
+(quoted from <a class="reference internal" href="#malacrida-2021"><span class="std std-ref">Malacrida et al., 2021</span></a>)</p>
+<p>The following resources provide an overview of the history, theory,
+applications, and implementations of the phasor approach:</p>
+<section id="wiki">
+<h2>Wiki<a class="headerlink" href="#wiki" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Phasor_approach_to_fluorescence_lifetime_and_spectral_imaging">Phasor approach to fluorescence lifetime and spectral imaging</a>.
+<em>Wikipedia</em> (2023)</p></li>
+</ul>
+</section>
+<section id="talks">
+<h2>Talks<a class="headerlink" href="#talks" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Enrico Gratton.
+<a class="reference external" href="https://www.lfd.uci.edu/workshop/2021/">The phasor approach to FLIM and FRET</a>.
+<em>15th LFD Workshop</em> (2021)</p></li>
+<li><p>Leonel Malacrida.
+<a class="reference external" href="https://www.lfd.uci.edu/workshop/2021/">Spectral phasors</a>.
+<em>15th LFD Workshop</em> (2021)</p></li>
+<li><p>Alexander Vallmitjana Lees.
+<a class="reference external" href="https://www.lfd.uci.edu/workshop/2021/">Clustering and unmixing in the phasor space</a>.
+<em>15th LFD Workshop</em> (2021)</p></li>
+<li><p>David Jameson.
+<a class="reference external" href="https://www.lfd.uci.edu/workshop/2019/">Introduction to phasors</a>.
+<em>14th LFD Workshop</em> (2019)</p></li>
+<li><p>David Jameson.
+<a class="reference external" href="https://www.lfd.uci.edu/colloquium/">A brief history of phasors</a>.
+<em>LFD Colloquium</em> (2020)</p></li>
+</ul>
+</section>
+<section id="articles">
+<h2>Articles<a class="headerlink" href="#articles" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p id="vallmitjana-2022">Vallmitjana A, Lepanto P, Irigoin F, Malacrida L.
+<a class="reference external" href="https://doi.org/10.1088/2050-6120/ac9ae9">Phasor-based multi-harmonic unmixing for in-vivo hyperspectral imaging</a>.
+<em>Methods Appl Fluoresc</em>. 11(1): 014001 (2022)</p>
+</li>
+<li><p id="torrado-2022">Torrado B, Malacrida L, Ranjit S.
+<a class="reference external" href="https://doi.org/10.3390/s22030999">Linear combination properties of the phasor space in fluorescence imaging</a>.
+<em>Sensors</em>. 22(3): 999 (2022)</p>
+</li>
+<li><p id="malacrida-2021">Malacrida L, Ranjit S, Jameson DM, Gratton E.
+<a class="reference external" href="https://doi.org/10.1146/annurev-biophys-062920-063631">The phasor plot: a universal circle to advance fluorescence lifetime
+analysis and interpretation</a>.
+<em>Annu Rev Biophys</em>. 50:575-593 (2021)</p>
+</li>
+<li><p id="ranjit-2018">Ranjit S, Malacrida L, Jameson DM, Gratton E.
+<a class="reference external" href="https://doi.org/10.1038/s41596-018-0026-5">Fit-free analysis of fluorescence lifetime imaging data using the phasor
+approach</a>.
+<em>Nat Protoc</em>. 13(9): 1979-2004 (2018)</p>
+</li>
+<li><p id="malacrida-2017">Malacrida L, Jameson DM, Gratton E.
+<a class="reference external" href="https://doi.org/10.1038/s41598-017-08564-z">A multidimensional phasor approach reveals LAURDAN photophysics in NIH-3T3
+cell membranes</a>.
+<em>Sci Rep</em>. 7(1): 9215 (2017)</p>
+</li>
+<li><p id="fereidouni-2012">Fereidouni F, Bader AN, Gerritsen HC.
+<a class="reference external" href="https://doi.org/10.1364/OE.20.012729">Spectral phasor analysis allows rapid and reliable unmixing of fluorescence
+microscopy spectral images</a>.
+<em>Opt Express</em>. 20(12): 12729-41 (2012)</p>
+</li>
+<li><p id="digman-2008">Digman MA, Caiolfa VR, Zamai M, Gratton E.
+<a class="reference external" href="https://doi.org/10.1529/biophysj.107.120154">The phasor approach to fluorescence lifetime imaging analysis</a>.
+<em>Biophys J</em>. 94(2): L14-16 (2008)</p>
+</li>
+<li><p id="redford-clegg-2005">Redford GI, Clegg RM.
+<a class="reference external" href="https://doi.org/10.1007/s10895-005-2990-8">Polar plot representation for frequency-domain analysis of fluorescence
+lifetimes</a>.
+<em>J Fluoresc</em>. 15(5): 805-15 (2005)</p>
+</li>
+<li><p id="clayton-2004">Clayton AHA, Hanley QS, Verveer PJ.
+<a class="reference external" href="https://doi.org/10.1111/j.1365-2818.2004.01265.x">Graphical representation and multicomponent analysis of single-frequency
+fluorescence lifetime imaging microscopy data</a>.
+<em>J Microscopy</em>. 213(1): 1-5 (2004)</p>
+</li>
+</ul>
+</section>
+<section id="software">
+<h2>Software<a class="headerlink" href="#software" title="Link to this heading">#</a></h2>
+<p>Besides the PhasorPy library, several other software implemented the phasor
+approach to analyze fluorescence time-resolved or spectral images:</p>
+<ul class="simple">
+<li><p id="simfcs"><a class="reference external" href="https://www.lfd.uci.edu/globals/">Globals for Images · SimFCS</a>
+is a free, closed-source, Windows desktop application for fluorescence image
+analysis, visualization, simulation, and acquisition.
+The software was developed by Enrico Gratton during 1998-2022 at the
+Laboratory for Fluorescence Dynamics. It provides the most comprehensive
+set of features for phasor analysis of fluorescence lifetime and
+hyperspectral images.
+Many <a class="reference external" href="https://www.lfd.uci.edu/globals/tutorials/">tutorials</a> are available.</p>
+</li>
+<li><p id="phasor-plugins"><a class="reference external" href="http://spechron.com/Spectral%20Phasor-Download.aspx">Spectral Phasor PlugIn</a>
+and
+<a class="reference external" href="http://spechron.com/Time%20gated%20Phasor-Download.aspx">Time Gated Phasor PlugIn</a>
+are open-source ImageJ plugins by Farzad Fereidouni, which provide
+visualization, segmentation, and unmixing of time-resolved and spectral
+images using the phasor approach. The software is distributed under an
+unknown license and was last updated in 2013.</p>
+</li>
+<li><p id="napari-phasors"><a class="reference external" href="https://github.com/napari-phasors/napari-phasors">Napari-phasors</a>
+is a napari plugin for phasor analysis based on PhasorPy.
+The plugin is distributed under the BSD-3-Clause license.</p>
+</li>
+<li><p id="napari-flim-phasor-plotter"><a class="reference external" href="https://github.com/zoccoler/napari-flim-phasor-plotter">Napari-flim-phasor-plotter</a>
+is a napari plugin to interactively load and show raw FLIM single images
+and series and generate phasor plots.
+The plugin is distributed under the BSD-3-Clause license.</p>
+</li>
+<li><p id="napari-live-flim"><a class="reference external" href="https://github.com/uw-loci/napari-live-flim">Napari-live-flim</a>
+is a napari plugin for real-time TCSPC-FLIM analysis based on FLIMLib.
+The plugin is distributed under the GPLv3 license.</p>
+</li>
+<li><p><a class="reference external" href="https://bioimage.usc.edu/software.html#HySP">HySP</a>
+is a free, closed-source, multi-platform desktop application developed by
+Francesco Cutrale for the analysis of multi-dimensional, hyper- and
+multi-spectral data using the phasor approach.</p></li>
+<li><p><a class="reference external" href="https://github.com/LaboratoryOpticsBiosciences/FLUTE">FLUTE</a>,
+the Fluorescence Lifetime Ultimate Explorer, is an open-source Python GUI
+for interactive phasor analysis of FLIM data developed by Chiara Stringari
+and others. The software is distributed under the BSD-3-Clause license.</p></li>
+<li><p><a class="reference external" href="https://github.com/SofiaKapsiani/FLIMPA">FLIMPA</a>
+is an open-source GUI software designed for the phasor plot analysis of
+raw TCSPC-FLIM data. The software is written in Python and distributed
+under the BSD-3-Clause license.</p></li>
+<li><p><a class="reference external" href="https://figshare.com/articles/software/GSLab_Open-Source_Platform_for_Advanced_Phasor_Analysis_in_Fluorescence_Microscopy/27921966">GSLab</a>
+is an open-source platform for advanced phasor analysis in fluorescence
+microscopy written in MATLAB by Alexander Vallmitjana, released under
+the CC BY 4.0 license.</p></li>
+<li><p><a class="reference external" href="https://github.com/smXplorer/AlliGator">AlliGator</a>
+is an open-source software for fluorescence lifetime image data
+analysis using the phasor approach and standard nonlinear fitting.
+The software is written in LabVIEW for Windows by Xavier Michalet.</p></li>
+<li><p><a class="reference external" href="https://github.com/VicidominiLab">BrightEyes</a>
+is a collection of open-source software for the acquisition, analysis,
+and simulation of image-scanning microscopy data, including FLIM-phasor
+analysis of time-resolved images. The software is written in Python/VHDL
+by the lab of Giuseppe Vicidomini and distributed under the GPL3 license.</p></li>
+<li><p><a class="reference external" href="https://github.com/jayunruh/FLIM_tools">FLIM_tools</a>
+is an open-source Python library for linear unmixing and phasor tools for
+FLIM analysis developed by Jay Unruh. The library is distributed under
+the GPL2 license.</p></li>
+<li><p><a class="reference external" href="https://github.com/Fluorescence-Tools/tttrlib">tttrlib</a>
+is an open-source C++ and Python library to read, write, and process
+time-tagged time-resolved (TTTR) data. It includes functions for computing
+and correcting phasor coordinates. The library is distributed under the
+BSD license.</p></li>
+<li><p id="phasor-identifier"><a class="reference external" href="https://github.com/Mariochem92/PhasorIdentifier">PhasorIdentifier</a>
+is a Jupyter notebook to analyze FLIM files, including masking, cell
+segmentation, pH correlation, nanoscale effects, and precise quantification.
+The notebook is distributed under CC BY-NC 4.0.</p>
+</li>
+<li><p id="phasorplots-for-dummies"><a class="reference external" href="https://github.com/Jalink-lab/phasor-plots">PhasorPlots for dummies</a>
+is a Jupyter notebook to teach the analysis of FLIM/FRET by phasor plots.
+The notebook is implemented in R and licensed under the GPL v3.</p>
+</li>
+<li><p><a class="reference external" href="https://flimlib.github.io">FLIMLib</a> is an exponential curve fitting
+library used for Fluorescent Lifetime Imaging (FLIM). It includes a function
+to calculate phasor coordinates from time-resolved signals.
+FLIMLib is licensed under the GPL v3.</p></li>
+<li><p><a class="reference external" href="https://flimfit.org/">FLIMfit</a>  is an open-source, MATLAB-based tool
+to analyse and visualize time-resolved data from FLIM measurements
+including TCSPC and wide-field time-gated imaging.
+It includes a segmentation tool based on the phasor approach.
+The affiliated <a class="reference external" href="https://github.com/flimfit/FlimReader">FlimReader</a> library
+provides file readers for FLIM data including TTTR.
+FLIMfit is licensed under the GPL v2.</p></li>
+<li><p><a class="reference external" href="https://pam.readthedocs.io/en/latest/phasor.html">PAM</a>
+is an open-source GUI-based MATLAB package for the analysis of fluorescence
+experiments. The phasor analysis includes region of interests, fractions,
+triangular mixtures, and FRET estimation. PAM is licensed under the GPL v3.</p></li>
+<li><p id="instant-flim-analysis"><a class="reference external" href="https://github.com/yzhang34/Instant-FLIM-Analysis">Instant-FLIM-Analysis</a>
+is an open-source MATLAB-based program that analyzes data acquired with an
+“instant FLIM” system. It supports image segmentation based on phasor plot
+regions of interest and K-means clustering.</p>
+</li>
+<li id="cell-analysis-tools"><p><a class="reference external" href="https://github.com/skalalab/cell-analysis-tools">Cell-analysis-tools</a>
+is an open-source Python library for the analysis of single cell imaging
+data, including phasor analysis of FLIM data.
+The library is distributed under the GPL v3.</p></li>
+<li><p id="flim-studio"><a class="reference external" href="https://www.flimlabs.com/software/">FLIM Studio</a>
+is a commercial software by FLIM LABS, a vendor of portable devices for
+fluorescence lifetime imaging and spectroscopy. The software provides
+real-time FLIM phasor-plot analysis, AI-driven phasor-plot analysis
+techniques, and an application programming interface. Python modules
+by FLIM LABS are available on <a class="reference external" href="https://github.com/FLIMLABS">GitHub</a>.</p>
+</li>
+<li><p><a class="reference external" href="https://iss.com/software/vistavision">VistaVision</a>
+is a commercial Windows desktop software by ISS, Inc., for confocal
+microscopy applications, including instrument control, data acquisition,
+and data processing. It performs image segmentation of FLIM images via
+the phasor plot.</p></li>
+<li><p><a class="reference external" href="https://www.becker-hickl.com/literature/documents/flim/spcimage-ng/">SPCImage</a>
+is a commercial Windows desktop software by Becker &amp; Hickl (tm) for
+TCSPC-FLIM data analysis. It performs image segmentation of time-resolved
+data via the phasor plot.</p></li>
+<li><p id="lasx"><a class="reference external" href="https://www.leica-microsystems.com/science-lab/phasor-analysis-for-flim-fluorescence-lifetime-imaging-microscopy/">LAS X</a>
+is a commercial Windows desktop software by Leica Microsystems.
+The software allows, by using phasors, to follow microenvironmental changes,
+select components to multiplex signal, and determine FRET efficiency.</p>
+</li>
+<li><p><a class="reference external" href="https://www.picoquant.com/products/category/fluorescence-microscopes/luminosa-single-photon-counting-confocal-microscope#documents">Luminosa</a>
+is a commercial Windows desktop software by PicoQuant GmbH, which includes
+single molecule detection, FCS, and time-resolved imaging methods.
+The InstaFLIM module allows simultaneous TCSPC and phasor analysis
+options for ROI determination.</p></li>
+<li><p><a class="reference external" href="https://www.horiba.com/int/scientific/products/detail/action/show/Product/eztime-software-6283/">EzTime</a>
+is a commercial software by HORIBA Scientific. It allows real-time TCSPC
+image analysis and visualization, including phasor plots, in conjunction
+with the FLIMera wide-field camera.</p></li>
+<li><p><a class="reference external" href="https://lambertinstruments.com/lifa-software">LIFA</a>
+is a commercial software by Lambert Instruments to record and analyze
+fluorescence lifetime images, integrating all Lambert hardware.</p></li>
+<li><p><a class="reference external" href="https://www.cgohlke.com/flimfast/">FlimFast</a>
+was a research-grade Windows desktop software for frequency-domain,
+full-field, fluorescence lifetime imaging at video rate, developed by
+Christoph Gohlke during 2000-2002 at UIUC. It enabled phasor vs intensity
+plots of FLIM images during real-time acquisition.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">PhasorPy documentation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../tutorials/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Tutorials</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wiki">Wiki</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#talks">Talks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#articles">Articles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software">Software</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2025 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
