@@ -91,7 +91,8 @@ Events
 
 The PhasorPy project is presented at the following events:
 
-- Bruno Pannunzio, Bruno Schüty, and Leonel Malacrida.
+- Bruno Pannunzio and Leonel Malacrida.
+  The PhasorPy library for FLIM and HSI phasor analysis.
   `6th Workshop in Advanced Microscopy and Biophotonics
   <https://pasteur.uy/cursos-y-charlas/6th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
   November 23-28, 2025. Institut Pasteur de Montevideo, Uruguay.
