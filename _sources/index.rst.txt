@@ -91,6 +91,12 @@ Events
 
 The PhasorPy project is presented at the following events:
 
+- Bruno Schüty.
+  PhasorPy hands-on training.
+  `LFD/AIM Workshop on Fluorescence Advanced Imaging Research (FLAIR)
+  <https://sites.uci.edu/aimlfdworkshop/>`_.
+  January 12-15, 2026. University of California, Irvine, USA.
+
 - Bruno Pannunzio and Leonel Malacrida.
   The PhasorPy library for FLIM and HSI phasor analysis.
   `6th Workshop in Advanced Microscopy and Biophotonics
