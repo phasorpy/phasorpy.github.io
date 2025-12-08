@@ -4,7 +4,7 @@ PhasorPy homepage
 
 Welcome to the homepage of the PhasorPy project.
 
-PhasorPy is an open-source Python library for the analysis of fluorescence
+PhasorPy is an open-source Python library for the analysis of luminescence
 lifetime and hyperspectral images using the phasor approach.
 
 Documentation
@@ -82,7 +82,7 @@ News
 
 - July 1, 2023: `Christoph Gohlke <https://github.com/cgohlke>`_ joins the PhasorPy project.
 
-- Sept, 2022: A `grant from the Chan Zuckerberg Initiative
+- Sept 2022: A `grant from the Chan Zuckerberg Initiative
   <https://chanzuckerberg.com/eoss/proposals/phasorpy-a-python-library-for-phasor-analysis-of-flim-and-spectral-imaging/>`_
   is awarded to Leonel Malacrida and Enrico Gratton for the development of the PhasorPy library and community.
 
@@ -125,28 +125,28 @@ The PhasorPy project is presented at the following events:
   `Optica Webinar Series
   <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`_.
   November 25, 2024. Online.
-  `Recording <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__
+  `Recording <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__.
 
 - Bruno Schüty.
-  Phasor Analysis in fluorescence lifetime imaging and spectral imaging with PhasoPy.
+  Phasor Analysis in fluorescence lifetime imaging and spectral imaging with PhasorPy.
   `GloBIAS Bioimage Analysts Workshop
   <https://www.globias.org/activities/past-activties/annual-workshop-gothenburg-2024>`_.
   November 5-8, 2024. Gothenburg, Sweden.
-  `Recording <https://www.youtube.com/watch?v=5qURI2NVkzg/>`__
+  `Recording <https://www.youtube.com/watch?v=5qURI2NVkzg/>`__.
 
 - Bruno Pannunzio.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
   `Virtual I2K 2024: Online tutorials on image analysis
   <https://www.i2kconference.org/workshops>`_.
   October 29, 2024. Online.
-  `Recording <https://www.youtube.com/watch?v=VGKGF8Zj3tY>`__
+  `Recording <https://www.youtube.com/watch?v=VGKGF8Zj3tY>`__.
 
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
   `Euro-Bioimaging Virtual Pub
   <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
   October 25, 2024. Online.
-  `Recording <https://www.youtube.com/watch?v=cI7WydgIG00>`__
+  `Recording <https://www.youtube.com/watch?v=cI7WydgIG00>`__.
 
 - Bruno Schüty.
   PhasorPy hands-on training.
@@ -197,7 +197,7 @@ The PhasorPy project is presented at the following events:
   `Latin American Hub for Bioimaging Through Open Hardware (LIBRE Hub) Seminars
   <https://librehub.github.io/2024/04/03/leonel-malacrida.html>`_.
   May 15, 2024. Online.
-  `Recording <https://www.youtube.com/watch?v=CbmDNjwo_sg>`__
+  `Recording <https://www.youtube.com/watch?v=CbmDNjwo_sg>`__.
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library as SimFCS legacy for phasor analysis of FLIM and HSI data.
@@ -234,7 +234,7 @@ Cite
 ====
 
 Please cite `doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`_
-if PhasorPy contributes to a project that leads to a publication.
+if PhasorPy contributes to research that leads to a publication.
 
 Contact
 =======
@@ -245,7 +245,7 @@ PhasorPy is a community-maintained project.
 in the form of bug reports, bug fixes, feature implementations, documentation,
 datasets, and enhancement proposals are welcome.
 
-Questions regarding the PhasorPy library are answered on the GitHub
+Report issues and ask questions about PhasorPy on the GitHub
 `issue tracker <https://github.com/phasorpy/phasorpy/issues>`_.
 
 Alternatively, contact the
