@@ -483,7 +483,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_cursor/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_component/">Component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_fret/">Förster resonance energy transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_pca/">Principal component analysis</a></li>
 </ul>
@@ -496,6 +496,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_apps/">Interactive apps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_logo/">PhasorPy logo</a></li>
 </ul>
 </details></li>
@@ -566,14 +567,15 @@
 <span id="sphx-glr-tutorials-applications-phasorpy-multidimensional-py"></span><h1>Multidimensional phasor approach<a class="headerlink" href="#multidimensional-phasor-approach" title="Link to this heading">#</a></h1>
 <p>Simultaneous phasor analysis of lifetime and spectral data.</p>
 <p>Multidimensional phasor analysis enables the correlation and classification
-of pixels based on multiple fluorescence characteristics simultaneously.
+of pixels based on multiple signal characteristics simultaneously.
 This approach combines phasor coordinates from different measurement domains
 to provide enhanced discrimination and identification of molecular species
 or cellular components that may appear similar in single-domain analysis.</p>
 <p>Phasor coordinates in one dimension can be mapped to other dimensions by masks
 (or cursors) that define regions of interest in the phasor space. The dimension
-where cursors are defined serves as the “main” dimension, controlling the
-classification that is then applied to correlate with other dimensions.</p>
+where cursors are defined serves as the “main” dimension, controlling which
+regions of interest are selected and determining the classification that is
+then applied to correlate with other dimensions.</p>
 <p>This analysis method is demonstrated using a dataset combining fluorescence
 lifetime imaging microscopy (FLIM) and hyperspectral imaging (HSI) of LAURDAN
 fluorescence as presented in:</p>
@@ -592,36 +594,36 @@ properties of LAURDAN fluorescence.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.color</span><span class="w"> </span><span class="kn">import</span> <span class="n">CATEGORICAL</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.cursor</span><span class="w"> </span><span class="kn">import</span> <span class="n">mask_from_circular_cursor</span><span class="p">,</span> <span class="n">pseudo_color</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">fetch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_filter_median</span><span class="p">,</span> <span class="n">phasor_threshold</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal_from_fbd</span><span class="p">,</span> <span class="n">signal_from_lsm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_calibrate</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhasorPlot</span><span class="p">,</span> <span class="n">plot_image</span><span class="p">,</span> <span class="n">plot_phasor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.color</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.cursor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/cursor/#phasorpy.cursor.mask_from_circular_cursor" title="phasorpy.cursor.mask_from_circular_cursor" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">mask_from_circular_cursor</span></a><span class="p">,</span> <a href="../../../api/cursor/#phasorpy.cursor.pseudo_color" title="phasorpy.cursor.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.filter</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">,</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">,</span> <a href="../../../api/io/#phasorpy.io.signal_from_lsm" title="phasorpy.io.signal_from_lsm" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_lsm</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a>
 </pre></div>
 </div>
 <section id="read-spectral-and-flim-signals">
 <h2>Read spectral and FLIM signals<a class="headerlink" href="#read-spectral-and-flim-signals" title="Link to this heading">#</a></h2>
-<p>Read hyperspectral and FLIM signals and metadata from the Zenodo dataset
+<p>Read hyperspectral and FLIM signals and metadata from a Zenodo dataset
 of NIH-3T3 fibroblast cells stained with the membrane probe LAURDAN.
 The spectral data is stored in Zeiss LSM format, while the two-channel
 FLIM data is in FLIMbox FBD format. The calibration data for both FLIM
 channels are stored in separate files:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_signal</span> <span class="o">=</span> <span class="n">signal_from_lsm</span><span class="p">(</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;04 NIH3T3LAURDAN8meanspectra.lsm&#39;</span><span class="p">))</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_lsm" title="phasorpy.io.signal_from_lsm" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_lsm</span></a><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;04 NIH3T3LAURDAN8meanspectra.lsm&#39;</span><span class="p">))</span>
 
-<span class="n">flim_signal</span> <span class="o">=</span> <span class="n">signal_from_fbd</span><span class="p">(</span>
-    <span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;04NIH3T3_LAURDAN_000$CC0Z.fbd&#39;</span><span class="p">),</span>
-    <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># integrate all frames</span>
+<span class="n">flim_signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">(</span>
+    <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;04NIH3T3_LAURDAN_000$CC0Z.fbd&#39;</span><span class="p">),</span>
+    <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># integrate all time frames</span>
     <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># load all channels</span>
     <span class="n">laser_factor</span><span class="o">=</span><span class="mf">0.99168</span><span class="p">,</span>  <span class="c1"># override incorrect metadata in FBD file</span>
 <span class="p">)</span>
 
 <span class="n">reference_signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
     <span class="p">[</span>
-        <span class="n">signal_from_fbd</span><span class="p">(</span>
-            <span class="n">fetch</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cumarinech</span><span class="si">{</span><span class="n">ch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">_780LAURDAN_000$CC0Z.fbd&#39;</span><span class="p">),</span>
+        <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">(</span>
+            <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cumarinech</span><span class="si">{</span><span class="n">ch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">_780LAURDAN_000$CC0Z.fbd&#39;</span><span class="p">),</span>
             <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">channel</span><span class="o">=</span><span class="n">ch</span><span class="p">,</span>
             <span class="n">laser_factor</span><span class="o">=</span><span class="mf">0.99168</span><span class="p">,</span>
@@ -637,21 +639,21 @@ channels are stored in separate files:</p>
 <section id="phasor-transform">
 <h2>Phasor transform<a class="headerlink" href="#phasor-transform" title="Link to this heading">#</a></h2>
 <p>Compute phasor coordinates from the spectral and FLIM signals. Calibrate
-the FLIM phasor coordinates with the reference coordinates of known lifetime
-(2.5 ns, Coumarin 6 in ethanol):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_mean</span><span class="p">,</span> <span class="n">spectral_real</span><span class="p">,</span> <span class="n">spectral_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span>
+the FLIM phasor coordinates using reference measurements with a known
+lifetime of 2.5 ns (Coumarin 6 in ethanol):</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_mean</span><span class="p">,</span> <span class="n">spectral_real</span><span class="p">,</span> <span class="n">spectral_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span>
     <span class="n">spectral_signal</span>
 <span class="p">)</span>
 
-<span class="n">flim_mean</span><span class="p">,</span> <span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">flim_signal</span><span class="p">)</span>
+<span class="n">flim_mean</span><span class="p">,</span> <span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">flim_signal</span><span class="p">)</span>
 
-<span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <span class="n">phasor_calibrate</span><span class="p">(</span>
+<span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
     <span class="n">flim_real</span><span class="p">,</span>
     <span class="n">flim_imag</span><span class="p">,</span>
-    <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">reference_signal</span><span class="p">),</span>
+    <span class="o">*</span><a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">),</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
-    <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># calibrate each channel separately</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -661,15 +663,15 @@ the FLIM phasor coordinates with the reference coordinates of known lifetime
 <p>Apply median filtering to reduce noise and threshold based on minimum
 intensity to remove low signal pixels. Different thresholds are used
 for FLIM and spectral data due to their different intensity ranges:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_mean</span><span class="p">,</span> <span class="n">spectral_real</span><span class="p">,</span> <span class="n">spectral_imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_mean</span><span class="p">,</span> <span class="n">spectral_real</span><span class="p">,</span> <span class="n">spectral_imag</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">(</span>
         <span class="n">spectral_mean</span><span class="p">,</span> <span class="n">spectral_real</span><span class="p">,</span> <span class="n">spectral_imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span>
     <span class="p">),</span>
     <span class="n">mean_min</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">flim_mean</span><span class="p">,</span> <span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <span class="n">phasor_threshold</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_filter_median</span><span class="p">(</span>
+<span class="n">flim_mean</span><span class="p">,</span> <span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">(</span>
         <span class="n">flim_mean</span><span class="p">,</span> <span class="n">flim_real</span><span class="p">,</span> <span class="n">flim_imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">),</span>
     <span class="n">mean_min</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
@@ -680,7 +682,7 @@ for FLIM and spectral data due to their different intensity ranges:</p>
 <section id="plot-phasor-coordinates">
 <h2>Plot phasor coordinates<a class="headerlink" href="#plot-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Plot the spectral phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_phasor</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
     <span class="n">spectral_real</span><span class="p">,</span>
     <span class="n">spectral_imag</span><span class="p">,</span>
     <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span>
@@ -694,12 +696,12 @@ for FLIM and spectral data due to their different intensity ranges:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;FLIM phasor&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
         <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">ch</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Channel </span><span class="si">{</span><span class="n">ch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="p">)</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">flim_real</span><span class="p">[</span><span class="n">ch</span><span class="p">],</span> <span class="n">flim_imag</span><span class="p">[</span><span class="n">ch</span><span class="p">])</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">flim_real</span><span class="p">[</span><span class="n">ch</span><span class="p">],</span> <span class="n">flim_imag</span><span class="p">[</span><span class="n">ch</span><span class="p">])</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_002.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_002.png" alt="FLIM phasor, Channel 1, Channel 2" class = "sphx-glr-single-img"/></section>
@@ -707,14 +709,14 @@ for FLIM and spectral data due to their different intensity ranges:</p>
 <h2>Mask spectral phasor using cursors<a class="headerlink" href="#mask-spectral-phasor-using-cursors" title="Link to this heading">#</a></h2>
 <p>Create circular masks on the spectral phasor plot to define regions of
 interest corresponding to different spectral characteristics.
-The spectral dimension serves as the “main” dimension, meaning that
+The spectral dimension serves as the “main” dimension, meaning that the
 spectral cursors control the classification that will be applied to
 correlate with the FLIM dimension.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_cursor_real</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.24</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">]</span>
 <span class="n">spectral_cursor_imag</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.74</span><span class="p">,</span> <span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.72</span><span class="p">]</span>
 <span class="n">spectral_cursor_radius</span> <span class="o">=</span> <span class="mf">0.05</span>
 
-<span class="n">spectral_mask</span> <span class="o">=</span> <span class="n">mask_from_circular_cursor</span><span class="p">(</span>
+<span class="n">spectral_mask</span> <span class="o">=</span> <a href="../../../api/cursor/#phasorpy.cursor.mask_from_circular_cursor" title="phasorpy.cursor.mask_from_circular_cursor" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">mask_from_circular_cursor</span></a><span class="p">(</span>
     <span class="n">spectral_real</span><span class="p">,</span>
     <span class="n">spectral_imag</span><span class="p">,</span>
     <span class="n">spectral_cursor_real</span><span class="p">,</span>
@@ -724,7 +726,7 @@ correlate with the FLIM dimension.</p>
 </pre></div>
 </div>
 <p>Plot the spectral phasor and main cursors:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span>
     <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span>
     <span class="n">xticks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -732,20 +734,20 @@ correlate with the FLIM dimension.</p>
     <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spectral phasor and cursors&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span>
     <span class="n">spectral_real</span><span class="p">,</span>
     <span class="n">spectral_imag</span><span class="p">,</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Grays&#39;</span><span class="p">,</span>
     <span class="n">bins</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span>
     <span class="n">spectral_cursor_real</span><span class="p">,</span>
     <span class="n">spectral_cursor_imag</span><span class="p">,</span>
     <span class="n">radius</span><span class="o">=</span><span class="n">spectral_cursor_radius</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><a href="../../../api/color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[:</span><span class="mi">3</span><span class="p">],</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_003.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_003.png" alt="Spectral phasor and cursors" class = "sphx-glr-single-img"/></section>
@@ -753,8 +755,8 @@ correlate with the FLIM dimension.</p>
 <h2>Spectral pseudo-color image<a class="headerlink" href="#spectral-pseudo-color-image" title="Link to this heading">#</a></h2>
 <p>Create a pseudo-colored image where each pixel is colored according to
 its spectral classification based on the main cursors:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_pseudo_color</span> <span class="o">=</span> <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">spectral_mask</span><span class="p">)</span>
-<span class="n">plot_image</span><span class="p">(</span><span class="n">spectral_pseudo_color</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spectral pseudo-color image&#39;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">spectral_pseudo_color</span> <span class="o">=</span> <a href="../../../api/cursor/#phasorpy.cursor.pseudo_color" title="phasorpy.cursor.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">spectral_mask</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span><span class="n">spectral_pseudo_color</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spectral pseudo-color image&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_004.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_004.png" alt="Spectral pseudo-color image" class = "sphx-glr-single-img"/></section>
@@ -762,40 +764,40 @@ its spectral classification based on the main cursors:</p>
 <h2>Spectral classified FLIM phasor<a class="headerlink" href="#spectral-classified-flim-phasor" title="Link to this heading">#</a></h2>
 <p>Apply the spectral classification masks (from the main dimension) to
 the phasor coordinates of both FLIM channels.
-This shows how pixels with different spectral properties distribute in
-the FLIM phasor space and reveals the correlation between spectral and
-lifetime characteristics:</p>
+This visualization shows how pixels with different spectral properties
+distribute in the FLIM phasor space and reveals the correlation between
+spectral and lifetime characteristics:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Spectral classified FLIM phasor&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
         <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">ch</span><span class="p">],</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Channel </span><span class="si">{</span><span class="n">ch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">spectral_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
             <span class="n">flim_real</span><span class="p">[</span><span class="n">ch</span><span class="p">][</span><span class="n">spectral_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
             <span class="n">flim_imag</span><span class="p">[</span><span class="n">ch</span><span class="p">][</span><span class="n">spectral_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-            <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="n">color</span><span class="o">=</span><a href="../../../api/color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span>
             <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
             <span class="n">markersize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_005.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_005.png" alt="Spectral classified FLIM phasor, Channel 1, Channel 2" class = "sphx-glr-single-img"/></section>
 <section id="flim-classified-spectral-phasor">
 <h2>FLIM classified spectral phasor<a class="headerlink" href="#flim-classified-spectral-phasor" title="Link to this heading">#</a></h2>
-<p>The inverse analysis can also be performed: select regions in the
-FLIM phasor space as the “main” dimension and correlate with the spectral
-phasor space.</p>
-<p>Mask the FLIM phasor coordinates of the first channel using cursors:</p>
+<p>Perform the inverse analysis by selecting regions in the FLIM phasor space
+as the “main” dimension and correlating with the spectral phasor space.</p>
+<p>Create circular masks on the FLIM phasor coordinates of the first channel
+using cursors:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">flim_cursor_real</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.19</span><span class="p">,</span> <span class="mf">0.27</span><span class="p">]</span>
 <span class="n">flim_cursor_imag</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.44</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">,</span> <span class="mf">0.41</span><span class="p">]</span>
 <span class="n">flim_cursor_radius</span> <span class="o">=</span> <span class="mf">0.05</span>
 
-<span class="n">flim_mask</span> <span class="o">=</span> <span class="n">mask_from_circular_cursor</span><span class="p">(</span>
+<span class="n">flim_mask</span> <span class="o">=</span> <a href="../../../api/cursor/#phasorpy.cursor.mask_from_circular_cursor" title="phasorpy.cursor.mask_from_circular_cursor" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">mask_from_circular_cursor</span></a><span class="p">(</span>
     <span class="n">flim_real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">flim_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">flim_cursor_real</span><span class="p">,</span>
@@ -805,29 +807,29 @@ phasor space.</p>
 </pre></div>
 </div>
 <p>Plot the FLIM phasor and cursors:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FLIM phasor and cursors (first channel)&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">flim_real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flim_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Grays&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">flim_real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flim_imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Grays&#39;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span>
     <span class="n">flim_cursor_real</span><span class="p">,</span>
     <span class="n">flim_cursor_imag</span><span class="p">,</span>
     <span class="n">radius</span><span class="o">=</span><span class="n">flim_cursor_radius</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><a href="../../../api/color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[:</span><span class="mi">3</span><span class="p">],</span>
     <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_006.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_006.png" alt="FLIM phasor and cursors (first channel)" class = "sphx-glr-single-img"/><p>Display the FLIM pseudo-color image:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_image</span><span class="p">(</span>
-    <span class="n">pseudo_color</span><span class="p">(</span><span class="o">*</span><span class="n">flim_mask</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FLIM pseudo-color image (first channel)&#39;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
+    <a href="../../../api/cursor/#phasorpy.cursor.pseudo_color" title="phasorpy.cursor.pseudo_color" class="sphx-glr-backref-module-phasorpy-cursor sphx-glr-backref-type-py-function"><span class="n">pseudo_color</span></a><span class="p">(</span><span class="o">*</span><span class="n">flim_mask</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;FLIM pseudo-color image (first channel)&#39;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_multidimensional_007.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_007.png" alt="FLIM pseudo-color image (first channel)" class = "sphx-glr-single-img"/><p>Plot the FLIM classified spectral phasor:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span>
     <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span>
     <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -835,20 +837,18 @@ phasor space.</p>
 <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">flim_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
         <span class="n">spectral_real</span><span class="p">[</span><span class="n">flim_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
         <span class="n">spectral_imag</span><span class="p">[</span><span class="n">flim_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">CATEGORICAL</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><a href="../../../api/color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL" class="sphx-glr-backref-module-phasorpy-color sphx-glr-backref-type-py-data"><span class="n">CATEGORICAL</span></a><span class="p">[</span><span class="n">i</span><span class="p">],</span>
         <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
         <span class="n">markersize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
 
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_multidimensional_008.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_008.png" alt="FLIM classified spectral phasor" class = "sphx-glr-single-img"/><p>sphinx_gallery_thumbnail_number = 4
-mypy: allow-untyped-defs, allow-untyped-calls</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.508 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_multidimensional_008.png" srcset="../../../_images/sphx_glr_phasorpy_multidimensional_008.png" alt="FLIM classified spectral phasor" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.820 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-multidimensional-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/19abb37e5abbed9bd2dd4b38aeb4ea74/phasorpy_multidimensional.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_multidimensional.ipynb</span></code></a></p>

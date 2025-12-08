@@ -18,7 +18,7 @@
 .. _sphx_glr_tutorials_api_phasorpy_fret.py:
 
 
-Förster Resonance Energy Transfer
+Förster resonance energy transfer
 =================================
 
 Calculate and plot phasor coordinates of FRET donor and acceptor channels.
@@ -27,7 +27,7 @@ The :py:func:`phasorpy.lifetime.phasor_from_fret_donor`,
 :py:func:`phasorpy.lifetime.phasor_from_fret_acceptor`, and
 :py:class:`phasorpy.plot.PhasorPlotFret` functions and classes
 are used to calculate and plot phasor coordinates of
-FRET (Förster Resonance Energy Transfer) donor and acceptor channels
+Förster resonance energy transfer (FRET) donor and acceptor channels
 as a function of:
 
 - laser pulse or modulation frequency
@@ -35,8 +35,8 @@ as a function of:
 - FRET efficiency
 - fraction of donors undergoing FRET
 - fraction of directly excited acceptors (acceptor bleedthrough)
-- fraction of donor fluorescence in acceptor channel (donor bleedthrough)
-- fraction of background fluorescence
+- fraction of donor signal in acceptor channel (donor bleedthrough)
+- fraction of background signal
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-26
 
@@ -67,23 +67,23 @@ Define FRET model settings used throughout this tutorial:
 FRET efficiency trajectories
 ----------------------------
 
-The lifetime :math:`\tau_{DA}` and fluorescence intensity :math:`F_{DA}`
-of a FRET donor quenched by energy transfer of efficiency :math:`E` is given
+The lifetime :math:`\tau_{DA}` and signal intensity :math:`F_{DA}`
+of a FRET donor quenched by energy transfer of efficiency :math:`E` are given
 by :math:`\tau_{DA} = \tau_{D} (1 - E)` and :math:`F_{DA} = F_{D} (1 - E)`,
 where :math:`\tau_{D}` and :math:`F_{D}` are the donor lifetime and
 intensity in the absence of energy transfer.
 
-Hence, in the absence of background fluorescence and donors not undergoing
+Hence, in the absence of background signal and donors not undergoing
 energy transfer, the phasor coordinates of the donor channel at different
 FRET efficiencies lie on the universal semicircle.
-At 100% energy transfer, the donor lifetime and fluorescence intensity are
+At 100% energy transfer, the donor lifetime and signal intensity are
 zero.
 
 The sensitized emission of a FRET acceptor is phase-shifted and demodulated
-relative to the FRET donor because of the duration of, and dissipation
-during, relaxation and energy transfer processes.
+relative to the FRET donor due to time delays and energy dissipation
+during relaxation and energy transfer processes.
 Hence, in the absence of directly excited acceptor, donor bleedthrough,
-and background fluorescence, the phasor coordinates of the acceptor channel
+and background signal, the phasor coordinates of the acceptor channel
 at different FRET efficiencies lie outside the universal semicircle of
 the donor.
 
@@ -117,10 +117,10 @@ the donor.
 Fractions not fretting
 ----------------------
 
-Adding fractions of donors not participating in FRET and fractions
-of directly excited acceptors (acceptor bleedthrough) pulls the
-FRET trajectories of the donor and acceptor channels towards the
-phasor coordinates of the donor and acceptor without FRET:
+Adding fractions of donors not participating in FRET (not fretting)
+and fractions of directly excited acceptors (acceptor bleedthrough)
+pulls the FRET trajectories of the donor and acceptor channels towards
+the phasor coordinates of the donor and acceptor without FRET:
 
 .. GENERATED FROM PYTHON SOURCE LINES 75-84
 
@@ -152,7 +152,7 @@ phasor coordinates of the donor and acceptor without FRET:
 Donor bleedthrough
 ------------------
 
-When the acceptor channel contains fractions of donor fluorescence
+When the acceptor channel contains fractions of donor signal
 (donor bleedthrough), the FRET efficiency trajectory of the acceptor
 channel shifts towards the phasor coordinates of the donor channel:
 
@@ -182,15 +182,15 @@ channel shifts towards the phasor coordinates of the donor channel:
 
 .. GENERATED FROM PYTHON SOURCE LINES 100-109
 
-Background fluorescence
------------------------
+Background signal
+-----------------
 
-In the presence of background fluorescence, the FRET efficiency trajectories
+In the presence of background signal, the FRET efficiency trajectories
 are linear combinations with the background phasor coordinates.
 At 100% energy transfer, the donor channel only contains background
-fluorescence if all donors participate in FRET.
+signal if all donors participate in FRET.
 At 0% energy transfer, in the absence of donor bleedthrough and directly
-excited acceptor, the acceptor channel only contains background fluorescence:
+excited acceptor, the acceptor channel only contains background signal:
 
 .. GENERATED FROM PYTHON SOURCE LINES 109-121
 
@@ -229,14 +229,14 @@ The phasor coordinates of the donor channel may contain fractions of:
 
 - donor not undergoing energy transfer
 - donor quenched by energy transfer
-- background fluorescence
+- background signal
 
 The phasor coordinates of the acceptor channel may contain fractions of:
 
 - acceptor sensitized by energy transfer
 - directly excited acceptor
 - donor bleedthrough
-- background fluorescence
+- background signal
 
 .. GENERATED FROM PYTHON SOURCE LINES 137-151
 
@@ -270,63 +270,23 @@ The phasor coordinates of the acceptor channel may contain fractions of:
 
 .. GENERATED FROM PYTHON SOURCE LINES 152-160
 
-Interactive plot
-----------------
-
-Run the FRET phasor plot interactively::
-
-    $ python -m phasorpy fret
-
-or
-
-.. GENERATED FROM PYTHON SOURCE LINES 160-170
-
-.. code-block:: Python
-
-
-    PhasorPlotFret(
-        **settings,
-        donor_fretting=0.9,
-        donor_bleedthrough=0.1,
-        interactive=True,
-        title='Interactive FRET phasor plot',
-    ).show()
-
-
-
-
-
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_fret_006.png
-   :alt: Interactive FRET phasor plot
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_fret_006.png
-   :class: sphx-glr-single-img
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 171-179
-
 Multi-frequency plot
 --------------------
 
 Since each component of the FRET model has a distinct frequency response,
 the multi-frequency plots of donor and acceptor channels reveal
 complex patterns.
-Background fluorescence is omitted from this example to model an
-in vitro experiment:
+Background signal is omitted from this example to model an in vitro
+experiment:
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-222
+.. GENERATED FROM PYTHON SOURCE LINES 160-200
 
 .. code-block:: Python
 
 
     import numpy
 
-    from phasorpy.lifetime import (
-        phasor_from_fret_acceptor,
-        phasor_from_fret_donor,
-    )
+    from phasorpy.lifetime import phasor_from_fret_acceptor, phasor_from_fret_donor
     from phasorpy.phasor import phasor_to_polar
     from phasorpy.plot import plot_polar_frequency
 
@@ -338,6 +298,7 @@ in vitro experiment:
     donor_bleedthrough = 0.1
     acceptor_bleedthrough = 0.1
 
+    # phasor of donor channel
     donor_real, donor_imag = phasor_from_fret_donor(
         frequency,
         donor_lifetime,
@@ -358,24 +319,23 @@ in vitro experiment:
 
     plot_polar_frequency(
         frequency,
-        phasor_to_polar(donor_real, donor_imag)[0],
-        phasor_to_polar(donor_real, donor_imag)[1],
+        *phasor_to_polar(donor_real, donor_imag),
         title='Donor channel',
     )
 
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_fret_007.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_fret_006.png
    :alt: Donor channel
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_fret_007.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_fret_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-230
+.. GENERATED FROM PYTHON SOURCE LINES 201-208
 
 .. code-block:: Python
 
@@ -389,25 +349,19 @@ in vitro experiment:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_fret_008.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_fret_007.png
    :alt: Acceptor channel
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_fret_008.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_fret_007.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 231-234
-
-sphinx_gallery_thumbnail_number = 5
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.736 seconds)
+   **Total running time of the script:** (0 minutes 0.656 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_fret.py:

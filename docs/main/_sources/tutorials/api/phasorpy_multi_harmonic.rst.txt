@@ -62,10 +62,10 @@ Import required modules and functions:
 Read signal from file
 ---------------------
 
-Read a time-correlated single photon counting (TCSPC) histogram,
-acquired at 80.11 MHz, from a file:
+Read a time-correlated single photon counting (TCSPC) histogram with
+56 time bins, acquired at 80.11 MHz, from a file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-40
+.. GENERATED FROM PYTHON SOURCE LINES 36-42
 
 .. code-block:: Python
 
@@ -73,46 +73,61 @@ acquired at 80.11 MHz, from a file:
     signal = signal_from_imspector_tiff(fetch('Embryo.tif'))
     frequency = signal.attrs['frequency']
 
+    print(signal.shape)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    (56, 512, 512)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-48
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 43-50
 
 Calculate phasor coordinates
 ----------------------------
 
 Phasor coordinates at multiple harmonics can be calculated at once
-from the signal. The histogram samples are in the first dimension of the
-signal (`axis=0`).
-The first and second harmonics are calculated in this example:
+from the signal. The histogram bins are in the first dimension of
+the signal (`axis=0`).
+Calculate all possible harmonics by specifying `harmonic='all'`:
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-51
+.. GENERATED FROM PYTHON SOURCE LINES 50-53
 
 .. code-block:: Python
 
+
+    mean, real, imag = phasor_from_signal(signal, harmonic='all', axis=0)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 54-56
+
+There are 28 (56/2) harmonics in the first dimension of the phasor
+coordinates, `real` and `imag`:
+
+.. GENERATED FROM PYTHON SOURCE LINES 56-66
+
+.. code-block:: Python
+
+
+    print(mean.shape, real.shape, imag.shape)
+
+    # For the remainder of the tutorial, only the first and second harmonics
+    # are used. They are calculated by specifying `harmonic=[1, 2]`:
 
     mean, real, imag = phasor_from_signal(signal, harmonic=[1, 2], axis=0)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 52-54
-
-The two harmonics are in the first dimension of the phasor coordinates,
-`real` and `imag`:
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-57
-
-.. code-block:: Python
-
 
     print(mean.shape, real.shape, imag.shape)
 
@@ -124,16 +139,17 @@ The two harmonics are in the first dimension of the phasor coordinates,
 
  .. code-block:: none
 
+    (512, 512) (28, 512, 512) (28, 512, 512)
     (512, 512) (2, 512, 512) (2, 512, 512)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot the calculated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-64
+.. GENERATED FROM PYTHON SOURCE LINES 68-73
 
 .. code-block:: Python
 
@@ -154,25 +170,7 @@ Plot the calculated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
-
-To calculate all harmonics, use ``harmonic='all'``:
-
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
-
-.. code-block:: Python
-
-
-    _ = phasor_from_signal(signal, harmonic='all', axis=0)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 Calibrate phasor coordinates
 ----------------------------
@@ -180,7 +178,7 @@ Calibrate phasor coordinates
 A homogeneous solution of Fluorescein with a fluorescence lifetime of 4.2 ns
 was imaged as a reference for calibration:
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-79
+.. GENERATED FROM PYTHON SOURCE LINES 79-83
 
 .. code-block:: Python
 
@@ -195,12 +193,12 @@ was imaged as a reference for calibration:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 84-86
 
 Calculate phasor coordinates from the measured reference signal at
 the first and second harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-87
+.. GENERATED FROM PYTHON SOURCE LINES 86-91
 
 .. code-block:: Python
 
@@ -216,13 +214,13 @@ the first and second harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 92-95
 
-Calibration can be performed at all harmonics simultaneously. Calibrate the
-raw phasor coordinates with the reference coordinates of known lifetime
-(4.2 ns), at the first and second harmonics:
+Calibration can be performed at multiple harmonics simultaneously.
+Calibrate the raw phasor coordinates with the reference coordinates
+of known lifetime (4.2 ns), at the first and second harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-103
+.. GENERATED FROM PYTHON SOURCE LINES 95-107
 
 .. code-block:: Python
 
@@ -245,12 +243,12 @@ raw phasor coordinates with the reference coordinates of known lifetime
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-106
+.. GENERATED FROM PYTHON SOURCE LINES 108-110
 
 If necessary, the calibration can be undone/reversed using the
 same reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-125
+.. GENERATED FROM PYTHON SOURCE LINES 110-130
 
 .. code-block:: Python
 
@@ -267,10 +265,11 @@ same reference:
         reverse=True,
     )
 
-    numpy.testing.assert_allclose(
+    assert numpy.allclose(
         (uncalibrated_real, uncalibrated_imag),
         phasor_from_signal(signal, harmonic=[1, 2], axis=0)[1:],
         atol=1e-3,
+        equal_nan=True,
     )
 
 
@@ -280,17 +279,17 @@ same reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-133
+.. GENERATED FROM PYTHON SOURCE LINES 131-138
 
 Filter phasor coordinates
 -------------------------
 
-Applying median filter to the calibrated phasor coordinates,
+Applying a median filter to the calibrated phasor coordinates,
 often multiple times, improves contrast and reduces noise.
 The filter is applied independently to the real and imaginary components
 of the harmonics, but not to the average signal:
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-136
+.. GENERATED FROM PYTHON SOURCE LINES 138-141
 
 .. code-block:: Python
 
@@ -304,12 +303,12 @@ of the harmonics, but not to the average signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-139
+.. GENERATED FROM PYTHON SOURCE LINES 142-144
 
 Pixels with low intensities are commonly excluded from analysis and
 visualization of phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-142
+.. GENERATED FROM PYTHON SOURCE LINES 144-147
 
 .. code-block:: Python
 
@@ -323,11 +322,11 @@ visualization of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 148-149
 
 Show the calibrated, filtered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-154
 
 .. code-block:: Python
 
@@ -348,15 +347,15 @@ Show the calibrated, filtered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-155
+.. GENERATED FROM PYTHON SOURCE LINES 155-160
 
 Store phasor coordinates
 ------------------------
 
-Write the calibrated and filtered phasor coordinates at multiple harmonics,
+Write the calibrated and filtered phasor coordinates at multiple harmonics
 and the fundamental frequency to an OME-TIFF file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 155-169
+.. GENERATED FROM PYTHON SOURCE LINES 160-174
 
 .. code-block:: Python
 
@@ -367,7 +366,7 @@ and the fundamental frequency to an OME-TIFF file:
         real,
         imag,
         frequency=frequency,
-        harmonic=[1, 2],
+        harmonic=[1, 2],  # real and imag contain 1st and 2nd harmonics
         description=(
             'Phasor coordinates at first and second harmonics of a zebrafish '
             'embryo at day 3, calibrated, median-filtered, and thresholded.'
@@ -381,23 +380,24 @@ and the fundamental frequency to an OME-TIFF file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-171
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 Read the phasor coordinates and metadata back from the OME-TIFF file:
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-184
+.. GENERATED FROM PYTHON SOURCE LINES 176-190
 
 .. code-block:: Python
 
 
     mean_, real_, imag_, attrs = phasor_from_ometiff(
-        'phasors.ome.tif', harmonic='all'
+        'phasors.ome.tif',
+        harmonic='all',  # read all harmonics stored in the file
     )
 
-    numpy.allclose(real_, real)
+    assert numpy.allclose(real_, real, atol=1e-3, equal_nan=True)
     assert real_.dtype == numpy.float32
     assert attrs['frequency'] == frequency
-    assert attrs['harmonic'] == [1, 2]
+    assert attrs['harmonic'] == [1, 2]  # the file contains only two harmonics
     assert attrs['description'].startswith(
         'Phasor coordinates at first and second harmonics'
     )
@@ -409,7 +409,7 @@ Read the phasor coordinates and metadata back from the OME-TIFF file:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-190
+.. GENERATED FROM PYTHON SOURCE LINES 191-196
 
 Plot phasor coordinates
 -----------------------
@@ -417,7 +417,7 @@ Plot phasor coordinates
 Visualize the two-dimensional histogram of the calibrated and filtered
 phasor coordinates at the second harmonic:
 
-.. GENERATED FROM PYTHON SOURCE LINES 190-198
+.. GENERATED FROM PYTHON SOURCE LINES 196-204
 
 .. code-block:: Python
 
@@ -441,12 +441,12 @@ phasor coordinates at the second harmonic:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-201
+.. GENERATED FROM PYTHON SOURCE LINES 205-207
 
 For comparison, the uncalibrated, unfiltered phasor coordinates at the
 second harmonic:
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-210
+.. GENERATED FROM PYTHON SOURCE LINES 207-217
 
 .. code-block:: Python
 
@@ -462,6 +462,7 @@ second harmonic:
 
 
 
+
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_multi_harmonic_004.png
    :alt: Raw phasor coordinates at second harmonic
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_multi_harmonic_004.png
@@ -471,35 +472,10 @@ second harmonic:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-213
-
-Component analysis
-------------------
-
-.. GENERATED FROM PYTHON SOURCE LINES 213-216
-
-.. code-block:: Python
-
-
-    # TODO
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 217-220
-
-sphinx_gallery_thumbnail_number = -1
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.782 seconds)
+   **Total running time of the script:** (0 minutes 1.798 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_multi_harmonic.py:

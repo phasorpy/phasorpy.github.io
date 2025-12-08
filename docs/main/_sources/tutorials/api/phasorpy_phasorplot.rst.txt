@@ -44,7 +44,7 @@ Import required modules, functions, and classes:
 
     from phasorpy.plot import PhasorPlot
 
-    numpy.random.seed(42)
+    rng = numpy.random.default_rng(42)  # initialize random number generator
 
 
 
@@ -159,7 +159,7 @@ Add a second, transformed universal semicircle for FRET acceptor coordinates:
 Scatter and line plots
 ----------------------
 
-Plot phasor coordinates as scatter or lines:
+Plot phasor coordinates as scattered points or lines:
 
 .. GENERATED FROM PYTHON SOURCE LINES 78-85
 
@@ -281,7 +281,7 @@ Highlight specific ranges of Cartesian or polar coordinates:
 
 .. GENERATED FROM PYTHON SOURCE LINES 145-146
 
-Multiple cursors sharing the same style may be plotted at once:
+Multiple cursors sharing the same style can be plotted at once:
 
 .. GENERATED FROM PYTHON SOURCE LINES 146-159
 
@@ -396,14 +396,14 @@ Show linear combinations of phasor coordinates or ranges thereof:
 Two-dimensional histogram
 -------------------------
 
-Plot large number of phasor coordinates as a two-dimensional histogram:
+Plot a large number of phasor coordinates as a two-dimensional histogram:
 
 .. GENERATED FROM PYTHON SOURCE LINES 207-215
 
 .. code-block:: Python
 
 
-    real, imag = numpy.random.multivariate_normal(
+    real, imag = rng.multivariate_normal(
         [0.6, 0.4], [[3e-3, -1e-3], [-1e-3, 1e-3]], (256, 256)
     ).T
     plot = PhasorPlot(frequency=80.0, title='Two-dimensional histogram')
@@ -450,14 +450,15 @@ Plot the contours of the density of phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-230
+.. GENERATED FROM PYTHON SOURCE LINES 226-231
 
 Image
 -----
 
-Plot a custom-colored image of a two-dimensional histogram (not implemented):
+Plot a custom-colored image of a two-dimensional histogram (this
+functionality is planned for a future release):
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-235
+.. GENERATED FROM PYTHON SOURCE LINES 231-236
 
 .. code-block:: Python
 
@@ -478,19 +479,19 @@ Plot a custom-colored image of a two-dimensional histogram (not implemented):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-240
+.. GENERATED FROM PYTHON SOURCE LINES 237-241
 
 Combined plots
 --------------
 
 Multiple plots can be combined:
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-258
+.. GENERATED FROM PYTHON SOURCE LINES 241-259
 
 .. code-block:: Python
 
 
-    real2, imag2 = numpy.random.multivariate_normal(
+    real2, imag2 = rng.multivariate_normal(
         [0.9, 0.2], [[2e-4, -1e-4], [-1e-4, 2e-4]], 4096
     ).T
 
@@ -519,14 +520,14 @@ Multiple plots can be combined:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 259-263
+.. GENERATED FROM PYTHON SOURCE LINES 260-264
 
 All quadrants
 -------------
 
 Create an empty phasor plot showing all four quadrants:
 
-.. GENERATED FROM PYTHON SOURCE LINES 263-268
+.. GENERATED FROM PYTHON SOURCE LINES 264-269
 
 .. code-block:: Python
 
@@ -547,14 +548,14 @@ Create an empty phasor plot showing all four quadrants:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 269-273
+.. GENERATED FROM PYTHON SOURCE LINES 270-274
 
 Custom grid
 -----------
 
 Customize the polar grid of an all-quadrants plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 273-288
+.. GENERATED FROM PYTHON SOURCE LINES 274-289
 
 .. code-block:: Python
 
@@ -585,16 +586,16 @@ Customize the polar grid of an all-quadrants plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-295
+.. GENERATED FROM PYTHON SOURCE LINES 290-296
 
 Matplotlib axes
 ---------------
 
-The PhasorPlot class can use an existing matlotlib axes.
+The PhasorPlot class can use an existing matplotlib axes.
 The `PhasorPlot.ax` attribute provides access to the underlying
-matplotlib axes, for example, to add annotations:
+matplotlib axes object, for example, to add annotations:
 
-.. GENERATED FROM PYTHON SOURCE LINES 295-309
+.. GENERATED FROM PYTHON SOURCE LINES 296-310
 
 .. code-block:: Python
 
@@ -624,7 +625,7 @@ matplotlib axes, for example, to add annotations:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 310-315
+.. GENERATED FROM PYTHON SOURCE LINES 311-316
 
 plot_phasor function
 --------------------
@@ -632,7 +633,7 @@ plot_phasor function
 The :py:func:`phasorpy.plot.plot_phasor` function provides a simpler
 alternative to plot phasor coordinates in a single statement:
 
-.. GENERATED FROM PYTHON SOURCE LINES 315-326
+.. GENERATED FROM PYTHON SOURCE LINES 316-327
 
 .. code-block:: Python
 
@@ -659,16 +660,10 @@ alternative to plot phasor coordinates in a single statement:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 327-330
-
-sphinx_gallery_thumbnail_number = -5
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.097 seconds)
+   **Total running time of the script:** (0 minutes 1.109 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_phasorplot.py:

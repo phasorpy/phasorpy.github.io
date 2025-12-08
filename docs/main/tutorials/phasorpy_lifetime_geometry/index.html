@@ -480,7 +480,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_cursor/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_component/">Component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_fret/">Förster resonance energy transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/phasorpy_pca/">Principal component analysis</a></li>
 </ul>
@@ -493,6 +493,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../misc/phasorpy_apps/">Interactive apps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../misc/phasorpy_logo/">PhasorPy logo</a></li>
 </ul>
 </details></li>
@@ -558,12 +559,11 @@
                   
   <section class="sphx-glr-example-title" id="geometrical-interpretation-of-lifetimes">
 <span id="sphx-glr-tutorials-phasorpy-lifetime-geometry-py"></span><h1>Geometrical interpretation of lifetimes<a class="headerlink" href="#geometrical-interpretation-of-lifetimes" title="Link to this heading">#</a></h1>
-<p>Demonstrate the geometrical interpretation of fluorescence lifetimes in the
-phasor plot.</p>
-<p>The PhasorPy library is used to demonstrate the geometrical interpretation
-of fluorescence lifetimes and other quantities in the phasor plot:</p>
+<p>Demonstrate the geometrical interpretation of lifetimes in the phasor plot.</p>
+<p>The PhasorPy library is used to illustrate the geometrical interpretation
+of lifetimes and other quantities in the phasor plot:</p>
 <ul class="simple">
-<li><p>single exponential lifetimes</p></li>
+<li><p>single-exponential lifetimes</p></li>
 <li><p>fractional intensities of lifetime components</p></li>
 <li><p>apparent single lifetime from phase and modulation</p></li>
 <li><p>normal lifetime</p></li>
@@ -574,12 +574,12 @@ of fluorescence lifetimes and other quantities in the phasor plot:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">phasor_from_lifetime</span><span class="p">,</span>
-    <span class="n">phasor_to_apparent_lifetime</span><span class="p">,</span>
-    <span class="n">phasor_to_normal_lifetime</span><span class="p">,</span>
+    <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span>
+    <a href="../../api/lifetime/#phasorpy.lifetime.phasor_to_apparent_lifetime" title="phasorpy.lifetime.phasor_to_apparent_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_apparent_lifetime</span></a><span class="p">,</span>
+    <a href="../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_to_polar</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhasorPlot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/phasor/#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a>
 </pre></div>
 </div>
 <p>Calculate phasor coordinates, polar coordinates, and apparent lifetimes
@@ -587,19 +587,20 @@ from a set of lifetimes and their fractional intensities at a given
 frequency:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
 <span class="n">lifetime</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>  <span class="c1"># ns</span>
-<span class="n">fraction</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
+<span class="n">fraction</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>  <span class="c1"># alpha_0 and alpha_1</span>
 
-<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
-<span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span> <span class="o">=</span> <span class="n">phasor_to_polar</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
-<span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">)</span>
-<span class="n">tau_phi</span><span class="p">,</span> <span class="n">tau_mod</span> <span class="o">=</span> <span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
-<span class="n">tau_norm</span> <span class="o">=</span> <span class="n">phasor_to_normal_lifetime</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
-<span class="n">tau_phi_re</span><span class="p">,</span> <span class="n">tau_phi_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_phi</span><span class="p">)</span>
-<span class="n">tau_mod_re</span><span class="p">,</span> <span class="n">tau_mod_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_mod</span><span class="p">)</span>
-<span class="n">tau_norm_re</span><span class="p">,</span> <span class="n">tau_norm_im</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_norm</span><span class="p">)</span>
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
+<span class="n">phase</span><span class="p">,</span> <span class="n">modulation</span> <span class="o">=</span> <a href="../../api/phasor/#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_polar</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<span class="n">component_real</span><span class="p">,</span> <span class="n">component_imag</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">)</span>
+<span class="n">tau_phi</span><span class="p">,</span> <span class="n">tau_mod</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_to_apparent_lifetime" title="phasorpy.lifetime.phasor_to_apparent_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_apparent_lifetime</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
+<span class="n">tau_norm</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
+<span class="n">tau_phi_re</span><span class="p">,</span> <span class="n">tau_phi_im</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_phi</span><span class="p">)</span>
+<span class="n">tau_mod_re</span><span class="p">,</span> <span class="n">tau_mod_im</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_mod</span><span class="p">)</span>
+<span class="n">tau_norm_re</span><span class="p">,</span> <span class="n">tau_norm_im</span> <span class="o">=</span> <a href="../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">tau_norm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Plot the phasor coordinates and lifetimes, and annotate the plot:</p>
+<p>Plot the phasor coordinates and lifetimes, and annotate the plot
+with text and arrows:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">color_phasor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
 <span class="n">color_component</span> <span class="o">=</span> <span class="s1">&#39;tab:orange&#39;</span>
 <span class="n">color_phase</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span>
@@ -609,7 +610,7 @@ frequency:</p>
 <span class="n">linewidth</span> <span class="o">=</span> <span class="mf">3.0</span>
 <span class="n">textoffset</span> <span class="o">=</span> <span class="mf">0.01</span>
 
-<span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">),</span>
     <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span>
@@ -621,16 +622,16 @@ frequency:</p>
     <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Geometrical interpretation of lifetimes in the phasor plot&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">fontsize</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span></a><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="n">fontsize</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">spines</span></a><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">spines</span></a><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># plot.ax.spines[&#39;left&#39;].set_linewidth(linewidth)</span>
 <span class="c1"># plot.ax.spines[&#39;bottom&#39;].set_linewidth(linewidth)</span>
 
-<span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.semicircle" title="phasorpy.plot.PhasorPlot.semicircle" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span></a><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># line to G coordinate</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">real</span><span class="p">],</span>
     <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
@@ -640,7 +641,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># line to S coordinate</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="p">[</span><span class="n">imag</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span>
@@ -653,7 +654,7 @@ frequency:</p>
 <span class="n">component_imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">component_imag</span><span class="p">)</span>
 
 <span class="c1"># arc indicating phase angle</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">modulation</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="p">[</span><span class="n">real</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="n">imag</span> <span class="o">/</span> <span class="mi">4</span><span class="p">],</span>
     <span class="n">angle</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
@@ -663,7 +664,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># phase line</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_phase</span><span class="p">,</span>
@@ -673,7 +674,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># modulation arc</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">modulation</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="n">angle</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
@@ -683,7 +684,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># normal lifetime line</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_normal</span><span class="p">,</span>
@@ -693,7 +694,7 @@ frequency:</p>
 
 <span class="c1"># arrows to single lifetimes</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lifetime</span><span class="p">)):</span>
-    <span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+    <a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
         <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
         <span class="p">[</span><span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
         <span class="n">color</span><span class="o">=</span><span class="n">color_component</span><span class="p">,</span>
@@ -701,7 +702,7 @@ frequency:</p>
     <span class="p">)</span>
 
 <span class="c1"># arrow to phase lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="p">[</span><span class="n">tau_phi_re</span><span class="p">,</span> <span class="n">tau_phi_im</span><span class="p">],</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_phase</span><span class="p">,</span>
@@ -709,7 +710,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># arced arrow to modulation lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="p">[</span><span class="n">tau_mod_re</span><span class="p">,</span> <span class="n">tau_mod_im</span><span class="p">],</span>
     <span class="n">angle</span><span class="o">=</span><span class="n">phase</span><span class="p">,</span>
@@ -718,7 +719,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># arrow to normal lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
     <span class="p">[</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">],</span>
     <span class="p">[</span><span class="n">tau_norm_re</span><span class="p">,</span> <span class="n">tau_norm_im</span><span class="p">],</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_normal</span><span class="p">,</span>
@@ -726,7 +727,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># mark phasor coordinate</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
@@ -738,7 +739,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label G</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span>
     <span class="o">-</span><span class="n">textoffset</span><span class="p">,</span>
     <span class="s1">&#39;$G$&#39;</span><span class="p">,</span>
@@ -749,7 +750,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label S</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
     <span class="o">-</span><span class="n">textoffset</span><span class="p">,</span>
     <span class="n">imag</span><span class="p">,</span>
     <span class="s1">&#39;$S$&#39;</span><span class="p">,</span>
@@ -760,7 +761,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label phase</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
     <span class="n">modulation</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">textoffset</span><span class="p">,</span>
     <span class="n">imag</span> <span class="o">/</span> <span class="mi">8</span><span class="p">,</span>
     <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">varphi$&#39;</span><span class="p">,</span>
@@ -771,7 +772,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label modulation</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
     <span class="n">modulation</span><span class="p">,</span>
     <span class="o">-</span><span class="n">textoffset</span><span class="p">,</span>
     <span class="s1">&#39;$M$&#39;</span><span class="p">,</span>
@@ -782,23 +783,23 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label single lifetimes</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.components" title="phasorpy.plot.PhasorPlot.components" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">components</span></a><span class="p">(</span>
     <span class="n">component_real</span><span class="p">,</span>
     <span class="n">component_imag</span><span class="p">,</span>
     <span class="n">fraction</span><span class="o">=</span><span class="n">fraction</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_component</span><span class="p">,</span>
     <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
     <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span>
-    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">tau_{</span><span class="si">%d</span><span class="s1">}$&#39;</span> <span class="o">%</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lifetime</span><span class="p">))],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">tau_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">$&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lifetime</span><span class="p">))],</span>
 <span class="p">)</span>
 
 <span class="c1"># label fractions of single lifetimes</span>
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lifetime</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lifetime</span><span class="p">)):</span>
-        <span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <a href="../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span>
             <span class="n">real</span> <span class="o">+</span> <span class="p">(</span><span class="n">component_real</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">real</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
             <span class="n">imag</span> <span class="o">+</span> <span class="p">(</span><span class="n">component_imag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">imag</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">textoffset</span><span class="p">,</span>
-            <span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">alpha_{</span><span class="si">%i</span><span class="s1">}$&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">alpha_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color_component</span><span class="p">,</span>
             <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
             <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
@@ -806,7 +807,7 @@ frequency:</p>
         <span class="p">)</span>
 
 <span class="c1"># label phase lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.components" title="phasorpy.plot.PhasorPlot.components" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">components</span></a><span class="p">(</span>
     <span class="n">tau_phi_re</span><span class="p">,</span>
     <span class="n">tau_phi_im</span><span class="p">,</span>
     <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
@@ -815,7 +816,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label modulation lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.components" title="phasorpy.plot.PhasorPlot.components" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">components</span></a><span class="p">(</span>
     <span class="n">tau_mod_re</span><span class="p">,</span>
     <span class="n">tau_mod_im</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_modulation</span><span class="p">,</span>
@@ -824,7 +825,7 @@ frequency:</p>
 <span class="p">)</span>
 
 <span class="c1"># label normal lifetime</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">components</span><span class="p">(</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.components" title="phasorpy.plot.PhasorPlot.components" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">components</span></a><span class="p">(</span>
     <span class="n">tau_norm_re</span><span class="p">,</span>
     <span class="n">tau_norm_im</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="n">color_normal</span><span class="p">,</span>
@@ -832,41 +833,38 @@ frequency:</p>
     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">tau_</span><span class="si">{N}</span><span class="s1">$&#39;</span><span class="p">],</span>
 <span class="p">)</span>
 
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_phasorpy_lifetime_geometry_001.png" srcset="../../_images/sphx_glr_phasorpy_lifetime_geometry_001.png" alt="Geometrical interpretation of lifetimes in the phasor plot" class = "sphx-glr-single-img"/><p>The figure demonstrates:</p>
 <ul class="simple">
-<li><p><strong>single exponential lifetimes</strong> <span class="math notranslate nohighlight">\(\tau_{i}\)</span> correspond to
-phasor coordinates on the <strong>universal semicircle</strong>.</p></li>
+<li><p>the <strong>single-exponential lifetimes</strong> <span class="math notranslate nohighlight">\(\tau_{0}\)</span> and <span class="math notranslate nohighlight">\(\tau_{1}\)</span>
+correspond to phasor coordinates on the <strong>universal semicircle</strong>.</p></li>
 <li><p>the <strong>phasor coordinates</strong> <span class="math notranslate nohighlight">\(G\)</span> and <span class="math notranslate nohighlight">\(S\)</span> of a mixture of
 two components with single-exponential lifetimes, weighted by their
-<strong>fractional intensities</strong> <span class="math notranslate nohighlight">\(\alpha_{i}\)</span>, lie on a line between the
-phasor coordinates of the single components.</p></li>
+<strong>fractional intensities</strong> <span class="math notranslate nohighlight">\(\alpha_{0}\)</span> and <span class="math notranslate nohighlight">\(\alpha_{1}\)</span>,
+lie on a line between the phasor coordinates of the single components.</p></li>
 <li><p>the <strong>phase</strong> <span class="math notranslate nohighlight">\(\varphi\)</span> of the phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> and
 <span class="math notranslate nohighlight">\(S\)</span> is the angle of the phasor coordinates with respect to the
 origin.</p></li>
 <li><p>the <strong>modulation</strong> <span class="math notranslate nohighlight">\(M\)</span> of the phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> and
 <span class="math notranslate nohighlight">\(S\)</span> is the distance from the origin to the phasor coordinates.</p></li>
 <li><p>the <strong>apparent single lifetime from phase</strong> <span class="math notranslate nohighlight">\(\tau_{\varphi}\)</span>
-of the component mixture is the single exponential lifetime corresponding
+of the component mixture is the single-exponential lifetime corresponding
 to the intersection of the universal circle with a line through the origin
 and the phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> and <span class="math notranslate nohighlight">\(S\)</span>.</p></li>
 <li><p>the <strong>apparent single lifetime from modulation</strong> <span class="math notranslate nohighlight">\(\tau_{M}\)</span>
-of the component mixture is the single exponential lifetime corresponding
+of the component mixture is the single-exponential lifetime corresponding
 to the intersection of the universal circle with a circle around the origin
 of radius equal to the modulation <span class="math notranslate nohighlight">\(M\)</span>.</p></li>
 <li><p>the <strong>normal lifetime</strong> <span class="math notranslate nohighlight">\(\tau_{N}\)</span> of the component mixture
-is the single exponential lifetime corresponding to the nearest point on
+is the single-exponential lifetime corresponding to the nearest point on
 the universal circle to the phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> and <span class="math notranslate nohighlight">\(S\)</span>,
 which is the intersection of the universal circle with the line through the
 center of the universal circle and the phasor coordinates <span class="math notranslate nohighlight">\(G\)</span> and
 <span class="math notranslate nohighlight">\(S\)</span>.</p></li>
 </ul>
-<p>sphinx_gallery_thumbnail_number = -1
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code=”arg-type, assignment”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.161 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.163 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-phasorpy-lifetime-geometry-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/567dcfcb2b5873e3266d29074b6a1428/phasorpy_lifetime_geometry.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_lifetime_geometry.ipynb</span></code></a></p>

@@ -23,17 +23,22 @@ FRET efficiency image
 
 Estimate FRET efficiencies in an image using a phasor-based model.
 
+Förster resonance energy transfer (FRET) is a distance-dependent interaction
+between two luminescing molecules where energy is transferred from a donor
+to an acceptor molecule. FRET efficiency is sensitive to donor-acceptor
+distances, making it useful for studying molecular interactions.
+
 The :py:func:`phasorpy.lifetime.phasor_from_fret_donor` function is used to
 calculate a theoretical FRET efficiency trajectory and the
 :py:func:`phasorpy.phasor.phasor_nearest_neighbor` function is then used
 to estimate the FRET efficiencies of measured phasor coordinates in an image
 from the trajectory.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Import required modules, functions, and classes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-32
+.. GENERATED FROM PYTHON SOURCE LINES 22-37
 
 .. code-block:: Python
 
@@ -59,7 +64,7 @@ Import required modules, functions, and classes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-41
+.. GENERATED FROM PYTHON SOURCE LINES 38-46
 
 Read dataset
 ------------
@@ -70,7 +75,7 @@ containing fixed samples of CFP and CFP-YFP expressing cells.
 The data were acquired using a Lambert frequency-domain FLIM instrument
 at 80 MHz. The phasor coordinates are already referenced:
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-57
+.. GENERATED FROM PYTHON SOURCE LINES 46-62
 
 .. code-block:: Python
 
@@ -83,7 +88,7 @@ at 80 MHz. The phasor coordinates are already referenced:
     plot_phasor_image(mean, real, imag, title=filename)
 
     # Filter the phasor coordinates and set the intensity threshold
-    # to 9000 counts to remove background:
+    # to 9000 counts to remove low-intensity background pixels:
 
     mean, real, imag = phasor_filter_median(mean, real, imag, repeat=2)
     mean, real, imag = phasor_threshold(
@@ -102,15 +107,17 @@ at 80 MHz. The phasor coordinates are already referenced:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-63
+.. GENERATED FROM PYTHON SOURCE LINES 63-70
 
 FRET efficiency trajectory
 --------------------------
 
-Calculate a theoretical FRET efficiency trajectory of phasor coordinates
-for the CFP FRET donor:
+Calculate the theoretical FRET efficiency trajectory in phasor space
+for the CFP FRET donor.
+The trajectory represents the path phasor coordinates follow as FRET
+efficiency increases from 0% (donor only) to 100% (complete energy transfer):
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-117
+.. GENERATED FROM PYTHON SOURCE LINES 70-124
 
 .. code-block:: Python
 
@@ -125,8 +132,8 @@ for the CFP FRET donor:
         frequency,
         donor_lifetime,
         fret_efficiency=fret_efficiency_range,
-        donor_fretting=1.0,
-        donor_background=0.1,  # 10% background signal
+        donor_fretting=1.0,  # all donor molecules can undergo FRET
+        donor_background=0.1,  # 10% background signal contribution
         background_real=background_real,
         background_imag=background_imag,
     )
@@ -180,15 +187,16 @@ for the CFP FRET donor:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-123
+.. GENERATED FROM PYTHON SOURCE LINES 125-131
 
 Estimate FRET efficiency
 ------------------------
 
 Estimate FRET efficiencies for each pixel in the image by finding
-the closest phasor coordinates in the FRET efficiency trajectory:
+the nearest point on the FRET efficiency trajectory to each measured
+phasor coordinate:
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-133
+.. GENERATED FROM PYTHON SOURCE LINES 131-141
 
 .. code-block:: Python
 
@@ -199,7 +207,7 @@ the closest phasor coordinates in the FRET efficiency trajectory:
         *fret_trajectory,
         values=fret_efficiency_range,
         dtype=real.dtype,
-        num_threads=4,
+        num_threads=4,  # use multiple threads for faster computation
     )
 
 
@@ -209,11 +217,11 @@ the closest phasor coordinates in the FRET efficiency trajectory:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-135
+.. GENERATED FROM PYTHON SOURCE LINES 142-143
 
 Visualize the spatial distribution of FRET efficiencies:
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-138
+.. GENERATED FROM PYTHON SOURCE LINES 143-146
 
 .. code-block:: Python
 
@@ -232,11 +240,11 @@ Visualize the spatial distribution of FRET efficiencies:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-140
+.. GENERATED FROM PYTHON SOURCE LINES 147-148
 
 Visualize the distribution of FRET efficiencies as a histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-150
+.. GENERATED FROM PYTHON SOURCE LINES 148-158
 
 .. code-block:: Python
 
@@ -262,15 +270,23 @@ Visualize the distribution of FRET efficiencies as a histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-153
+.. GENERATED FROM PYTHON SOURCE LINES 159-169
 
-sphinx_gallery_thumbnail_number = -2
-mypy: allow-untyped-defs, allow-untyped-calls
+Conclusions
+-----------
+
+The FRET efficiency image shows spatial heterogeneity in donor-acceptor
+interactions across the sample. Higher FRET efficiencies (warmer colors)
+indicate closer proximity between CFP and YFP molecules, suggesting
+successful FRET pair formation. Lower efficiencies (cooler colors) may
+represent cells expressing primarily CFP donor without acceptor, or
+regions where CFP and YFP are too far apart for efficient energy transfer.
+The histogram reveals the distribution of FRET states in the population.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.700 seconds)
+   **Total running time of the script:** (0 minutes 0.704 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_fret_efficiency.py:

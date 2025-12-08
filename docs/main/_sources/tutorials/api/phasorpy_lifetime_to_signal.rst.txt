@@ -67,7 +67,7 @@ Define common parameters used throughout the tutorial:
     frequency = 80.0  # fundamental frequency in MHz
     reference_lifetime = 4.2  # lifetime of reference signal in ns
 
-    lifetimes = [0.5, 1.0, 2.0, 4.0]  # lifetime in ns
+    lifetimes = [0.5, 1.0, 2.0, 4.0]  # lifetimes in ns
     fractions = [0.25, 0.25, 0.25, 0.25]  # fractional intensities
 
     settings = {
@@ -87,7 +87,7 @@ Define common parameters used throughout the tutorial:
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-51
 
-Time-domain, multi-exponential
+Time domain, multi exponential
 ------------------------------
 
 Synthesize a time-domain signal of a multi-component lifetime system with
@@ -111,13 +111,13 @@ given fractional intensities, convolved with an instrument response function:
 
 .. GENERATED FROM PYTHON SOURCE LINES 57-62
 
-A reference signal of known lifetime, obtained with the same instrument
-and sampling parameters, is required to correct/calibrate the
-phasor coordinates of signals.
+A reference signal of known lifetime is required to calibrate the phasor
+coordinates. The reference signal must be obtained with the same instrument
+and sampling parameters.
 The calibrated phasor coordinates match the theoretical phasor coordinates
 expected for the lifetimes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-83
+.. GENERATED FROM PYTHON SOURCE LINES 62-85
 
 .. code-block:: Python
 
@@ -129,7 +129,7 @@ expected for the lifetimes:
 
     def verify_signal(fractions):
         """Verify calibrated phasor coordinates match expected results."""
-        numpy.testing.assert_allclose(
+        assert numpy.allclose(
             phasor_calibrate(
                 *phasor_from_signal(signal)[1:],
                 *phasor_from_signal(reference_signal),
@@ -137,6 +137,8 @@ expected for the lifetimes:
                 reference_lifetime,
             ),
             phasor_from_lifetime(frequency, lifetimes, fractions),
+            atol=1e-3,
+            equal_nan=True,
         )
 
 
@@ -149,11 +151,12 @@ expected for the lifetimes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-85
+.. GENERATED FROM PYTHON SOURCE LINES 86-88
 
-Plot the synthesized signal, the instrument response, and reference signal:
+Plot the synthesized signals (multi-exponential, reference, and
+instrument response):
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-98
+.. GENERATED FROM PYTHON SOURCE LINES 88-101
 
 .. code-block:: Python
 
@@ -182,15 +185,15 @@ Plot the synthesized signal, the instrument response, and reference signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-104
+.. GENERATED FROM PYTHON SOURCE LINES 102-107
 
-Time-domain, single-exponential
+Time domain, single exponential
 -------------------------------
 
 To synthesize separate signals for each lifetime component at once,
 omit the lifetime fractions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-109
+.. GENERATED FROM PYTHON SOURCE LINES 107-112
 
 .. code-block:: Python
 
@@ -206,11 +209,11 @@ omit the lifetime fractions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 113-114
 
-Plot the synthesized signal:
+Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-122
+.. GENERATED FROM PYTHON SOURCE LINES 114-125
 
 .. code-block:: Python
 
@@ -237,19 +240,19 @@ Plot the synthesized signal:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-124
+.. GENERATED FROM PYTHON SOURCE LINES 126-127
 
 As expected, the shorter the lifetime, the faster the decay.
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-131
+.. GENERATED FROM PYTHON SOURCE LINES 129-134
 
-Frequency-domain, multi-exponential
+Frequency domain, multi exponential
 -----------------------------------
 
-To synthesize a frequency-domain, homodyne signal, limit the
+To synthesize a frequency-domain homodyne signal, limit the
 synthesis to the fundamental frequency (``harmonic=1``):
 
-.. GENERATED FROM PYTHON SOURCE LINES 131-142
+.. GENERATED FROM PYTHON SOURCE LINES 134-145
 
 .. code-block:: Python
 
@@ -271,11 +274,11 @@ synthesis to the fundamental frequency (``harmonic=1``):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-144
+.. GENERATED FROM PYTHON SOURCE LINES 146-147
 
 Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 144-160
+.. GENERATED FROM PYTHON SOURCE LINES 147-163
 
 .. code-block:: Python
 
@@ -307,15 +310,15 @@ Plot the synthesized signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-166
+.. GENERATED FROM PYTHON SOURCE LINES 164-169
 
-Frequency-domain, single-exponential
+Frequency domain, single exponential
 ------------------------------------
 
 To synthesize separate signals for each lifetime component at once,
 omit the lifetime fractions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-171
+.. GENERATED FROM PYTHON SOURCE LINES 169-174
 
 .. code-block:: Python
 
@@ -331,11 +334,11 @@ omit the lifetime fractions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-173
+.. GENERATED FROM PYTHON SOURCE LINES 175-176
 
 Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-185
+.. GENERATED FROM PYTHON SOURCE LINES 176-188
 
 .. code-block:: Python
 
@@ -363,24 +366,15 @@ Plot the synthesized signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-188
+.. GENERATED FROM PYTHON SOURCE LINES 189-191
 
-As expected, the shorter the lifetime, the smaller the phase-shift and
-de-modulation.
-
-.. GENERATED FROM PYTHON SOURCE LINES 190-196
-
-TODO: generate digitized image from lifetime distributions with background
-and noise.
-
-sphinx_gallery_thumbnail_number = -1
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
+As expected, the shorter the lifetime, the smaller the phase shift and
+demodulation.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.314 seconds)
+   **Total running time of the script:** (0 minutes 0.321 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_lifetime_to_signal.py:

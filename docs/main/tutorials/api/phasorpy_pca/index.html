@@ -483,7 +483,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_cursor/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_component/">Component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster resonance energy transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Principal component analysis</a></li>
 </ul>
@@ -496,6 +496,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_apps/">Interactive apps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_logo/">PhasorPy logo</a></li>
 </ul>
 </details></li>
@@ -564,47 +565,47 @@
                   
   <section class="sphx-glr-example-title" id="principal-component-analysis">
 <span id="sphx-glr-tutorials-api-phasorpy-pca-py"></span><h1>Principal component analysis<a class="headerlink" href="#principal-component-analysis" title="Link to this heading">#</a></h1>
-<p>Project multi-harmonic phasor coordinates onto principal plane.</p>
-<p>The <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_to_principal_plane()</span></code></a> function is used
-to project multi-harmonic phasor coordinates onto a plane, along which
-coordinate axes the phasor coordinates have the largest variations
-(the first two axes of a Principal Component Analysis).</p>
+<p>Project multi-harmonic phasor coordinates onto the principal plane.</p>
+<p>The <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_to_principal_plane()</span></code></a> function is
+used to project multi-harmonic phasor coordinates onto a plane whose
+two coordinate axes (the first two principal components) capture the
+largest variance.</p>
 <p>Import required modules, functions, and classes. Define a helper function:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">phasor_from_lifetime</span><span class="p">,</span>
-    <span class="n">phasor_semicircle</span><span class="p">,</span>
-    <span class="n">phasor_to_apparent_lifetime</span><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle" title="phasorpy.lifetime.phasor_semicircle" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_semicircle</span></a><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_apparent_lifetime" title="phasorpy.lifetime.phasor_to_apparent_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_apparent_lifetime</span></a><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_to_principal_plane</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhasorPlot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_principal_plane</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># initialize random number generator</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">distribution</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return normally distributed samples around each value in values.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+            <span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">stddev</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
         <span class="p">)</span><span class="o">.</span><span class="n">T</span>
     <span class="p">)</span>
-
-
-<span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="overlapping-phasor-distributions">
 <h2>Overlapping phasor distributions<a class="headerlink" href="#overlapping-phasor-distributions" title="Link to this heading">#</a></h2>
 <p>The phasor coordinates of different multi-exponential decays may be
-overlapping, indistinguishable at a certain frequency:</p>
+overlapping and indistinguishable at a given frequency:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">400</span><span class="p">]</span>
 
 <span class="c1"># create two distributions of phasor coordinates overlapping at 80 MHz</span>
-<span class="n">real0</span><span class="p">,</span> <span class="n">imag0</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="n">real0</span><span class="p">,</span> <span class="n">imag0</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="n">distribution</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]),</span>
     <span class="n">fraction</span><span class="o">=</span><span class="n">distribution</span><span class="p">([</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]),</span>
 <span class="p">)</span>
-<span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+<span class="n">real1</span><span class="p">,</span> <span class="n">imag1</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span>
     <span class="n">lifetime</span><span class="o">=</span><span class="n">distribution</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]),</span>
     <span class="n">fraction</span><span class="o">=</span><span class="n">distribution</span><span class="p">([</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]),</span>
@@ -613,91 +614,86 @@ overlapping, indistinguishable at a certain frequency:</p>
 <span class="n">real</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">real0</span><span class="p">,</span> <span class="n">real1</span><span class="p">])</span>
 <span class="n">imag</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">imag0</span><span class="p">,</span> <span class="n">imag1</span><span class="p">])</span>
 
-<span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Overlapping phasor distributions (</span><span class="si">{</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_pca_001.png" srcset="../../../_images/sphx_glr_phasorpy_pca_001.png" alt="Overlapping phasor distributions (80 MHz)" class = "sphx-glr-single-img"/><p>The distributions are better distinguishable at other frequencies:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Phasor distributions (</span><span class="si">{</span><span class="n">frequency</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">imag</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_pca_002.png" srcset="../../../_images/sphx_glr_phasorpy_pca_002.png" alt="Phasor distributions (240 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="project-onto-principal-plane">
 <h2>Project onto principal plane<a class="headerlink" href="#project-onto-principal-plane" title="Link to this heading">#</a></h2>
 <p>The projection of the multi-harmonic phasor coordinates onto the
-principal plane should give an overall good representation of the
+principal plane provides a good overall representation of the
 distribution.</p>
 <p>The transformation matrix can be used to project other multi-harmonic
 phasor coordinates onto the same plane, for example the universal
 semicircle:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">phasor_to_principal_plane</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">transformation_matrix</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_principal_plane</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
 
-<span class="n">lifetimes</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">phasor_to_apparent_lifetime</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">phasor_semicircle</span><span class="p">(),</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lifetimes</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_apparent_lifetime" title="phasorpy.lifetime.phasor_to_apparent_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_apparent_lifetime</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle" title="phasorpy.lifetime.phasor_semicircle" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_semicircle</span></a><span class="p">(),</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="p">)</span>
-<span class="n">lifetimes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e9</span>
+<span class="n">lifetimes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e9</span>  <span class="c1"># avoid infinite lifetime</span>
 <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
     <span class="n">transformation_matrix</span><span class="p">,</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">)),</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">)),</span>
 <span class="p">)</span>
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
     <span class="n">transformation_matrix</span><span class="p">,</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">])),</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">])),</span>
 <span class="p">)</span>
 
-<span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Projection on principal plane&#39;</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Phasor distributions&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Universal semicircle&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Phasor distributions&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Universal semicircle&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_pca_003.png" srcset="../../../_images/sphx_glr_phasorpy_pca_003.png" alt="Projection on principal plane" class = "sphx-glr-single-img"/><p>For single harmonic input, the projected, reoriented coordinates
-match the original, single harmonics phasor coordinates
+<img src="../../../_images/sphx_glr_phasorpy_pca_003.png" srcset="../../../_images/sphx_glr_phasorpy_pca_003.png" alt="Projection on principal plane" class = "sphx-glr-single-img"/><p>For single-harmonic input, the projected, reoriented coordinates
+match the original single-harmonic phasor coordinates
 (compare to the first figure):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">transformation_matrix</span> <span class="o">=</span> <span class="n">phasor_to_principal_plane</span><span class="p">(</span><span class="n">real</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">imag</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">transformation_matrix</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_principal_plane</span></a><span class="p">(</span><span class="n">real</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">imag</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
     <span class="n">transformation_matrix</span><span class="p">,</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+    <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
 <span class="p">)</span>
 <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
     <span class="n">transformation_matrix</span><span class="p">,</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
-        <span class="n">phasor_from_lifetime</span><span class="p">(</span>
+        <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span>
             <span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">],</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
     <span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">plot</span> <span class="o">=</span> <span class="n">PhasorPlot</span><span class="p">(</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
     <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
     <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Projection on principal plane (</span><span class="si">{</span><span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Phasor distributions&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Universal semicircle&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">)</span>
-<span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Phasor distributions&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Universal semicircle&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_pca_004.png" srcset="../../../_images/sphx_glr_phasorpy_pca_004.png" alt="Projection on principal plane (80 MHz)" class = "sphx-glr-single-img"/><p>TODO: demonstrate on real data that linearity is preserved and
-visualization by cursors is applicable.</p>
-<p>sphinx_gallery_thumbnail_number = -2
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.236 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_pca_004.png" srcset="../../../_images/sphx_glr_phasorpy_pca_004.png" alt="Projection on principal plane (80 MHz)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.241 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-pca-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/58410ec17717b2272b4198c418657a59/phasorpy_pca.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_pca.ipynb</span></code></a></p>

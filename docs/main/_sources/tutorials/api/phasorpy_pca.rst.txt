@@ -21,18 +21,18 @@
 Principal component analysis
 ============================
 
-Project multi-harmonic phasor coordinates onto principal plane.
+Project multi-harmonic phasor coordinates onto the principal plane.
 
-The :py:func:`phasorpy.phasor.phasor_to_principal_plane` function is used
-to project multi-harmonic phasor coordinates onto a plane, along which
-coordinate axes the phasor coordinates have the largest variations
-(the first two axes of a Principal Component Analysis).
+The :py:func:`phasorpy.phasor.phasor_to_principal_plane` function is
+used to project multi-harmonic phasor coordinates onto a plane whose
+two coordinate axes (the first two principal components) capture the
+largest variance.
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Import required modules, functions, and classes. Define a helper function:
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-38
+.. GENERATED FROM PYTHON SOURCE LINES 16-39
 
 .. code-block:: Python
 
@@ -47,16 +47,18 @@ Import required modules, functions, and classes. Define a helper function:
     from phasorpy.phasor import phasor_to_principal_plane
     from phasorpy.plot import PhasorPlot
 
+    rng = numpy.random.default_rng(42)  # initialize random number generator
+
 
     def distribution(values, stddev=0.05, samples=100):
+        """Return normally distributed samples around each value in values."""
         return numpy.ascontiguousarray(
             numpy.vstack(
-                [numpy.random.normal(value, stddev, samples) for value in values]
+                [rng.normal(value, stddev, samples) for value in values]
             ).T
         )
 
 
-    numpy.random.seed(42)
 
 
 
@@ -64,16 +66,15 @@ Import required modules, functions, and classes. Define a helper function:
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 39-44
+.. GENERATED FROM PYTHON SOURCE LINES 40-45
 
 Overlapping phasor distributions
 --------------------------------
 
 The phasor coordinates of different multi-exponential decays may be
-overlapping, indistinguishable at a certain frequency:
+overlapping and indistinguishable at a given frequency:
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-69
+.. GENERATED FROM PYTHON SOURCE LINES 45-70
 
 .. code-block:: Python
 
@@ -114,11 +115,11 @@ overlapping, indistinguishable at a certain frequency:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 The distributions are better distinguishable at other frequencies:
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-79
+.. GENERATED FROM PYTHON SOURCE LINES 72-80
 
 .. code-block:: Python
 
@@ -142,20 +143,20 @@ The distributions are better distinguishable at other frequencies:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-90
+.. GENERATED FROM PYTHON SOURCE LINES 81-91
 
 Project onto principal plane
 ----------------------------
 
 The projection of the multi-harmonic phasor coordinates onto the
-principal plane should give an overall good representation of the
+principal plane provides a good overall representation of the
 distribution.
 
 The transformation matrix can be used to project other multi-harmonic
 phasor coordinates onto the same plane, for example the universal
 semicircle:
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-114
+.. GENERATED FROM PYTHON SOURCE LINES 91-115
 
 .. code-block:: Python
 
@@ -165,7 +166,7 @@ semicircle:
     lifetimes, _ = phasor_to_apparent_lifetime(
         *phasor_semicircle(), frequency=frequency[0]
     )
-    lifetimes[0] = 1e9
+    lifetimes[0] = 1e9  # avoid infinite lifetime
     x1, y1 = numpy.dot(
         transformation_matrix,
         numpy.vstack(phasor_from_lifetime(frequency, lifetimes)),
@@ -195,13 +196,13 @@ semicircle:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 115-118
+.. GENERATED FROM PYTHON SOURCE LINES 116-119
 
-For single harmonic input, the projected, reoriented coordinates
-match the original, single harmonics phasor coordinates
+For single-harmonic input, the projected, reoriented coordinates
+match the original single-harmonic phasor coordinates
 (compare to the first figure):
 
-.. GENERATED FROM PYTHON SOURCE LINES 118-144
+.. GENERATED FROM PYTHON SOURCE LINES 119-146
 
 .. code-block:: Python
 
@@ -234,6 +235,7 @@ match the original, single harmonics phasor coordinates
 
 
 
+
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_pca_004.png
    :alt: Projection on principal plane (80 MHz)
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_pca_004.png
@@ -243,19 +245,10 @@ match the original, single harmonics phasor coordinates
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-151
-
-TODO: demonstrate on real data that linearity is preserved and
-visualization by cursors is applicable.
-
-sphinx_gallery_thumbnail_number = -2
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.236 seconds)
+   **Total running time of the script:** (0 minutes 0.241 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_pca.py:

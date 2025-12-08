@@ -24,8 +24,8 @@ Filter phasor coordinates
 Functions for filtering phasor coordinates.
 
 Filtering phasor coordinates improves signal quality by reducing noise while
-preserving relevant features. Two of the most common methods for filtering
-include the median and wavelet filtering.
+preserving relevant features. Two of the most common filtering methods are
+median filtering and wavelet filtering.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-15
 
@@ -150,9 +150,9 @@ Median filter
 
 Median filtering replaces each pixel value with the median of its
 neighboring values, reducing noise while preserving edges.
-The function :py:func:`phasorpy.phasor.phasor_filter_median` applies a
-median filter to phasor coordinates. Typically, applying a 3×3 kernel
-one to three times is sufficient to remove noise while maintaining
+The function :py:func:`phasorpy.filter.phasor_filter_median` applies a
+median filter to phasor coordinates. Typically, applying a 3x3 kernel
+once to three times is sufficient to remove noise while maintaining
 important features:
 
 .. GENERATED FROM PYTHON SOURCE LINES 82-87
@@ -283,19 +283,20 @@ real components of the filtered and unfiltered phasor coordinates as images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-142
+.. GENERATED FROM PYTHON SOURCE LINES 133-143
 
 pawFLIM wavelet filter
 ----------------------
 
 Filtering based on wavelet decomposition is another method to reduce noise.
-The function :py:func:`phasorpy.phasor.phasor_filter_pawflim` is based
+The function :py:func:`phasorpy.filter.phasor_filter_pawflim` is based
 on the `pawFLIM <https://github.com/maurosilber/pawflim>`_ library.
 While the median filter is applicable to any type of phasor coordinates,
 the pawFLIM filter requires calibrated phasor coordinates from FLIM
-measurements and at least one harmonic and its corresponding double:
+measurements and at least one harmonic and its corresponding second harmonic
+(the 1st and 2nd harmonic in this example):
 
-.. GENERATED FROM PYTHON SOURCE LINES 142-162
+.. GENERATED FROM PYTHON SOURCE LINES 143-163
 
 .. code-block:: Python
 
@@ -326,11 +327,11 @@ measurements and at least one harmonic and its corresponding double:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-164
+.. GENERATED FROM PYTHON SOURCE LINES 164-165
 
 Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-169
+.. GENERATED FROM PYTHON SOURCE LINES 165-170
 
 .. code-block:: Python
 
@@ -346,11 +347,11 @@ Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-171
+.. GENERATED FROM PYTHON SOURCE LINES 171-172
 
 Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-179
+.. GENERATED FROM PYTHON SOURCE LINES 172-180
 
 .. code-block:: Python
 
@@ -374,12 +375,13 @@ Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-182
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
 
-Increasing the significance level of the comparison between phasor
-coordinates or the maximum averaging area can further reduce noise:
+Increasing the significance level ``sigma`` of the comparison between
+phasor coordinates or the maximum averaging area ``levels`` can reduce noise
+further:
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-198
+.. GENERATED FROM PYTHON SOURCE LINES 184-200
 
 .. code-block:: Python
 
@@ -389,7 +391,7 @@ coordinates or the maximum averaging area can further reduce noise:
     )
 
     mean_filtered, real_filtered, imag_filtered = phasor_threshold(
-        mean_filtered, real_filtered, imag_filtered, 1
+        mean_filtered, real_filtered, imag_filtered, mean_min=1
     )
 
     plot_phasor(
@@ -411,12 +413,12 @@ coordinates or the maximum averaging area can further reduce noise:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-201
+.. GENERATED FROM PYTHON SOURCE LINES 201-203
 
 Plot the real components of the filtered and unfiltered phasor coordinates
 as images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-211
+.. GENERATED FROM PYTHON SOURCE LINES 203-213
 
 .. code-block:: Python
 
@@ -442,16 +444,10 @@ as images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 212-215
-
-sphinx_gallery_thumbnail_number = -2
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.181 seconds)
+   **Total running time of the script:** (0 minutes 3.283 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_filter.py:

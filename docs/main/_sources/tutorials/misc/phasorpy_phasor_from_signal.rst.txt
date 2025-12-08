@@ -23,8 +23,9 @@ Benchmark phasor_from_signal
 
 Benchmark the ``phasor_from_signal`` function.
 
-The :py:func:`phasorpy.phasor.phasor_from_signal` function to calculate phasor
-coordinates from time-resolved or spectral signals can operate in two modes:
+The :py:func:`phasorpy.phasor.phasor_from_signal` function used to calculate
+phasor coordinates from time-resolved or spectral signals can operate in
+two modes:
 
 - using an internal Cython function optimized for calculating a small number
   of harmonics, optionally using multiple threads.
@@ -37,7 +38,7 @@ This tutorial compares the performance of the two modes.
 
 Import required modules and functions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-41
+.. GENERATED FROM PYTHON SOURCE LINES 23-44
 
 .. code-block:: Python
 
@@ -45,9 +46,9 @@ Import required modules and functions:
     from timeit import timeit
 
     import numpy
-    from numpy.fft import rfft as numpy_fft  # noqa
+    from numpy.fft import rfft as numpy_fft  # noqa: F401
 
-    from phasorpy.phasor import phasor_from_signal  # noqa
+    from phasorpy.phasor import phasor_from_signal  # noqa: F401
     from phasorpy.utils import number_threads
 
     try:
@@ -60,6 +61,7 @@ Import required modules and functions:
     except ImportError:
         mkl_fft = None
 
+    rng = numpy.random.default_rng(42)  # initialize random number generator
 
 
 
@@ -67,19 +69,20 @@ Import required modules and functions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-46
+
+.. GENERATED FROM PYTHON SOURCE LINES 45-49
 
 Run benchmark
 -------------
 
-Create a random signal with a size and dtype similar to real world data:
+Create a random signal with a size and dtype similar to real-world data:
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-53
+.. GENERATED FROM PYTHON SOURCE LINES 49-56
 
 .. code-block:: Python
 
 
-    signal = numpy.random.default_rng(1).random((384, 384, 384))
+    signal = rng.random((384, 384, 384))
     signal += 1.1
     signal *= 3723  # ~12 bit
     signal = signal.astype(numpy.uint16)  # 108 MB
@@ -92,12 +95,12 @@ Create a random signal with a size and dtype similar to real world data:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-56
+.. GENERATED FROM PYTHON SOURCE LINES 57-59
 
 Print execution times depending on FFT function, axis, number of harmonics,
 and number of threads:
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-92
+.. GENERATED FROM PYTHON SOURCE LINES 59-95
 
 .. code-block:: Python
 
@@ -147,44 +150,44 @@ and number of threads:
 
     harmonics 1
       axis -1
-        not_fft              0.055s   1.00
-        not_fft (2 threads)  0.030s   0.53
-        numpy_fft            0.219s   3.96
-        scipy_fft            0.228s   4.12
+        not_fft              0.057s   1.00
+        not_fft (2 threads)  0.029s   0.51
+        numpy_fft            0.228s   4.00
+        scipy_fft            0.235s   4.13
       axis 0
-        not_fft              0.183s   3.31
-        not_fft (2 threads)  0.091s   1.65
-        numpy_fft            0.484s   8.73
-        scipy_fft            0.344s   6.21
+        not_fft              0.170s   2.98
+        not_fft (2 threads)  0.085s   1.48
+        numpy_fft            0.473s   8.30
+        scipy_fft            0.354s   6.22
       axis 2
-        not_fft              0.055s   1.00
-        not_fft (2 threads)  0.030s   0.53
-        numpy_fft            0.287s   5.17
-        scipy_fft            0.227s   4.10
+        not_fft              0.057s   1.00
+        not_fft (2 threads)  0.029s   0.51
+        numpy_fft            0.232s   4.06
+        scipy_fft            0.236s   4.15
     harmonics 8
       axis -1
-        not_fft              0.438s   7.91
-        not_fft (2 threads)  0.272s   4.91
-        numpy_fft            0.228s   4.12
-        scipy_fft            0.236s   4.25
+        not_fft              0.454s   7.96
+        not_fft (2 threads)  0.229s   4.01
+        numpy_fft            0.240s   4.22
+        scipy_fft            0.245s   4.31
       axis 0
-        not_fft              1.452s  26.22
-        not_fft (2 threads)  0.761s  13.75
-        numpy_fft            0.489s   8.83
-        scipy_fft            0.351s   6.34
+        not_fft              1.350s  23.69
+        not_fft (2 threads)  0.690s  12.12
+        numpy_fft            0.472s   8.28
+        scipy_fft            0.358s   6.29
       axis 2
-        not_fft              0.438s   7.91
-        not_fft (2 threads)  0.233s   4.22
-        numpy_fft            0.230s   4.15
-        scipy_fft            0.236s   4.26
+        not_fft              0.453s   7.96
+        not_fft (2 threads)  0.229s   4.01
+        numpy_fft            0.238s   4.17
+        scipy_fft            0.245s   4.30
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-134
+.. GENERATED FROM PYTHON SOURCE LINES 96-137
 
 For reference, the results on a Core i7-14700K CPU, Windows 11,
-Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl-fft 2.1.1::
+Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl_fft 2.1.1::
 
     harmonics 1
       axis -1
@@ -225,51 +228,37 @@ Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl-fft 2.1.1::
         scipy_fft            0.255s   7.49
         mkl_fft              0.155s   4.56
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-151
+.. GENERATED FROM PYTHON SOURCE LINES 139-154
 
 Results
 -------
 
 - Using the Cython implementation is significantly faster than using the
-  ``numpy.fft`` based implementation for single harmonics.
+  ``numpy.fft``-based implementation for single harmonics.
 - Using multiple threads can significantly speed up the Cython mode.
-- The FFT functions from ``scipy`` and ``mkl_fft`` outperform numpy.fft.
-  Specifically, ``mkl_fft`` is very performant.
-- Using FFT becomes more competitive when calculating larger number of
+- The FFT functions from ``scipy`` and ``mkl_fft`` outperform the
+  ``numpy.fft`` function. Specifically, ``mkl_fft`` is very performant.
+- Using FFT becomes more competitive when calculating a larger number of
   harmonics.
 - Computing over the last axis is significantly faster compared to the first
-  axis. That is because the samples in the last dimension are contiguous,
-  closer together in memory.
+  axis. That is because the samples in the last dimension are contiguous in
+  memory.
 
 Note that these results were obtained on a single dataset of random numbers.
 
-.. GENERATED FROM PYTHON SOURCE LINES 153-159
+.. GENERATED FROM PYTHON SOURCE LINES 156-162
 
 Conclusions
 -----------
 
 Using the Cython implementation is a reasonable default when calculating
-a few harmonics. Using FFT is a better choice when computing large number
+a few harmonics. Using FFT is a better choice when computing a large number
 of harmonics, especially with an optimized FFT function.
-
-.. GENERATED FROM PYTHON SOURCE LINES 159-162
-
-.. code-block:: Python
-
-
-    # mypy: allow-untyped-defs, allow-untyped-calls
-    # mypy: disable-error-code="arg-type"
-
-
-
-
-
-
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.910 seconds)
+   **Total running time of the script:** (0 minutes 7.772 seconds)
 
 
 .. _sphx_glr_download_tutorials_misc_phasorpy_phasor_from_signal.py:

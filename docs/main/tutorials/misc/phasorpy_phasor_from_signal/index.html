@@ -62,7 +62,7 @@
     <link rel="icon" href="../../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
-    <link rel="next" title="PhasorPy logo" href="../phasorpy_logo/" />
+    <link rel="next" title="Interactive apps" href="../phasorpy_apps/" />
     <link rel="prev" title="Miscellaneous" href="../" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -483,7 +483,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_cursor/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_component/">Component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_fret/">Förster resonance energy transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_lifetime_to_signal/">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_pca/">Principal component analysis</a></li>
 </ul>
@@ -496,6 +496,7 @@
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_apps/">Interactive apps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_logo/">PhasorPy logo</a></li>
 </ul>
 </details></li>
@@ -565,8 +566,9 @@
   <section class="sphx-glr-example-title" id="benchmark-phasor-from-signal">
 <span id="sphx-glr-tutorials-misc-phasorpy-phasor-from-signal-py"></span><h1>Benchmark phasor_from_signal<a class="headerlink" href="#benchmark-phasor-from-signal" title="Link to this heading">#</a></h1>
 <p>Benchmark the <code class="docutils literal notranslate"><span class="pre">phasor_from_signal</span></code> function.</p>
-<p>The <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal()</span></code></a> function to calculate phasor
-coordinates from time-resolved or spectral signals can operate in two modes:</p>
+<p>The <a class="reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal()</span></code></a> function used to calculate
+phasor coordinates from time-resolved or spectral signals can operate in
+two modes:</p>
 <ul class="simple">
 <li><p>using an internal Cython function optimized for calculating a small number
 of harmonics, optionally using multiple threads.</p></li>
@@ -579,10 +581,10 @@ or <code class="docutils literal notranslate"><span class="pre">mkl_fft.interfac
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeit</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa: F401</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">number_threads</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.utils</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
@@ -593,12 +595,14 @@ or <code class="docutils literal notranslate"><span class="pre">mkl_fft.interfac
     <span class="kn">from</span><span class="w"> </span><span class="nn">mkl_fft.interfaces.numpy_fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># initialize random number generator</span>
 </pre></div>
 </div>
 <section id="run-benchmark">
 <h2>Run benchmark<a class="headerlink" href="#run-benchmark" title="Link to this heading">#</a></h2>
-<p>Create a random signal with a size and dtype similar to real world data:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">))</span>
+<p>Create a random signal with a size and dtype similar to real-world data:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">))</span>
 <span class="n">signal</span> <span class="o">+=</span> <span class="mf">1.1</span>
 <span class="n">signal</span> <span class="o">*=</span> <span class="mi">3723</span>  <span class="c1"># ~12 bit</span>
 <span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>  <span class="c1"># 108 MB</span>
@@ -628,7 +632,7 @@ and number of threads:</p>
             <span class="n">ref</span> <span class="o">=</span> <span class="n">t</span>
         <span class="n">print_</span><span class="p">(</span><span class="s1">&#39;not_fft&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
-        <span class="n">num_threads</span> <span class="o">=</span> <span class="n">number_threads</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">num_threads</span> <span class="o">=</span> <a href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;use_fft&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;num_threads&#39;</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">}</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
@@ -645,40 +649,40 @@ and number of threads:</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
   axis -1
-    not_fft              0.055s   1.00
-    not_fft (2 threads)  0.030s   0.53
-    numpy_fft            0.219s   3.96
-    scipy_fft            0.228s   4.12
+    not_fft              0.057s   1.00
+    not_fft (2 threads)  0.029s   0.51
+    numpy_fft            0.228s   4.00
+    scipy_fft            0.235s   4.13
   axis 0
-    not_fft              0.183s   3.31
-    not_fft (2 threads)  0.091s   1.65
-    numpy_fft            0.484s   8.73
-    scipy_fft            0.344s   6.21
+    not_fft              0.170s   2.98
+    not_fft (2 threads)  0.085s   1.48
+    numpy_fft            0.473s   8.30
+    scipy_fft            0.354s   6.22
   axis 2
-    not_fft              0.055s   1.00
-    not_fft (2 threads)  0.030s   0.53
-    numpy_fft            0.287s   5.17
-    scipy_fft            0.227s   4.10
+    not_fft              0.057s   1.00
+    not_fft (2 threads)  0.029s   0.51
+    numpy_fft            0.232s   4.06
+    scipy_fft            0.236s   4.15
 harmonics 8
   axis -1
-    not_fft              0.438s   7.91
-    not_fft (2 threads)  0.272s   4.91
-    numpy_fft            0.228s   4.12
-    scipy_fft            0.236s   4.25
+    not_fft              0.454s   7.96
+    not_fft (2 threads)  0.229s   4.01
+    numpy_fft            0.240s   4.22
+    scipy_fft            0.245s   4.31
   axis 0
-    not_fft              1.452s  26.22
-    not_fft (2 threads)  0.761s  13.75
-    numpy_fft            0.489s   8.83
-    scipy_fft            0.351s   6.34
+    not_fft              1.350s  23.69
+    not_fft (2 threads)  0.690s  12.12
+    numpy_fft            0.472s   8.28
+    scipy_fft            0.358s   6.29
   axis 2
-    not_fft              0.438s   7.91
-    not_fft (2 threads)  0.233s   4.22
-    numpy_fft            0.230s   4.15
-    scipy_fft            0.236s   4.26
+    not_fft              0.453s   7.96
+    not_fft (2 threads)  0.229s   4.01
+    numpy_fft            0.238s   4.17
+    scipy_fft            0.245s   4.30
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU, Windows 11,
-Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl-fft 2.1.1:</p>
+Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl_fft 2.1.1:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">harmonics</span> <span class="mi">1</span>
   <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">not_fft</span>              <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
@@ -724,28 +728,24 @@ Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl-fft 2.1.1:</p>
 <h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Using the Cython implementation is significantly faster than using the
-<code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code> based implementation for single harmonics.</p></li>
+<code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code>-based implementation for single harmonics.</p></li>
 <li><p>Using multiple threads can significantly speed up the Cython mode.</p></li>
-<li><p>The FFT functions from <code class="docutils literal notranslate"><span class="pre">scipy</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> outperform numpy.fft.
-Specifically, <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> is very performant.</p></li>
-<li><p>Using FFT becomes more competitive when calculating larger number of
+<li><p>The FFT functions from <code class="docutils literal notranslate"><span class="pre">scipy</span></code> and <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> outperform the
+<code class="docutils literal notranslate"><span class="pre">numpy.fft</span></code> function. Specifically, <code class="docutils literal notranslate"><span class="pre">mkl_fft</span></code> is very performant.</p></li>
+<li><p>Using FFT becomes more competitive when calculating a larger number of
 harmonics.</p></li>
 <li><p>Computing over the last axis is significantly faster compared to the first
-axis. That is because the samples in the last dimension are contiguous,
-closer together in memory.</p></li>
+axis. That is because the samples in the last dimension are contiguous in
+memory.</p></li>
 </ul>
 <p>Note that these results were obtained on a single dataset of random numbers.</p>
 </section>
 <section id="conclusions">
 <h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
 <p>Using the Cython implementation is a reasonable default when calculating
-a few harmonics. Using FFT is a better choice when computing large number
+a few harmonics. Using FFT is a better choice when computing a large number
 of harmonics, especially with an optimized FFT function.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># mypy: allow-untyped-defs, allow-untyped-calls</span>
-<span class="c1"># mypy: disable-error-code=&quot;arg-type&quot;</span>
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.910 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.772 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/08c44fd02fe5378fc05e9aecf2e433ce/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>
@@ -781,11 +781,11 @@ of harmonics, especially with an optimized FFT function.</p>
       </div>
     </a>
     <a class="right-next"
-       href="../phasorpy_logo/"
+       href="../phasorpy_apps/"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">PhasorPy logo</p>
+        <p class="prev-next-title">Interactive apps</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

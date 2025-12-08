@@ -54,7 +54,7 @@ Import required modules, functions, and classes:
 
 .. GENERATED FROM PYTHON SOURCE LINES 26-27
 
-Open a hyperspectral dataset used throughout this tutorial:
+Load a hyperspectral dataset used throughout this tutorial:
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-34
 
@@ -74,14 +74,16 @@ Open a hyperspectral dataset used throughout this tutorial:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-39
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 Circular cursors
 ----------------
 
-Use circular cursors to mask regions of interest in the phasor space:
+Use circular cursors to mask regions of interest in the phasor space.
+Define two cursors by specifying their real and imaginary coordinates
+and radii:
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-48
+.. GENERATED FROM PYTHON SOURCE LINES 41-50
 
 .. code-block:: Python
 
@@ -101,11 +103,11 @@ Use circular cursors to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Show the circular cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-62
+.. GENERATED FROM PYTHON SOURCE LINES 52-64
 
 .. code-block:: Python
 
@@ -133,11 +135,12 @@ Show the circular cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 65-67
 
-The cursor masks can be blended to produce a pseudo-colored image:
+The cursor masks can be blended to produce a pseudo-colored image.
+Each cursor's region is assigned a different color:
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-72
+.. GENERATED FROM PYTHON SOURCE LINES 68-75
 
 .. code-block:: Python
 
@@ -160,21 +163,27 @@ The cursor masks can be blended to produce a pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-78
+.. GENERATED FROM PYTHON SOURCE LINES 76-78
 
-Elliptic cursors
-----------------
+The pseudo-color image is numpy array with values between 0 and 1 (RGB)
+that can be further processed or saved as needed.
 
-Use elliptic cursors to mask more defined regions of interest in the
-phasor space:
+.. GENERATED FROM PYTHON SOURCE LINES 80-86
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-91
+Elliptical cursors
+------------------
+
+Use elliptical cursors to mask better-defined regions of interest in the
+phasor space. Elliptical cursors allow independent control of the radii,
+which can better match elongated clusters in phasor space:
+
+.. GENERATED FROM PYTHON SOURCE LINES 86-99
 
 .. code-block:: Python
 
 
-    radius = [0.1, 0.06]
-    radius_minor = [0.3, 0.25]
+    radius = [0.1, 0.06]  # major axis
+    radius_minor = [0.3, 0.25]  # minor axis
 
     elliptic_mask = mask_from_elliptic_cursor(
         real,
@@ -192,16 +201,16 @@ phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
-Show the elliptic cursors in a phasor plot:
+Show the elliptical cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-106
+.. GENERATED FROM PYTHON SOURCE LINES 101-114
 
 .. code-block:: Python
 
 
-    plot = PhasorPlot(allquadrants=True, title='Elliptic cursors')
+    plot = PhasorPlot(allquadrants=True, title='Elliptical cursors')
     plot.hist2d(real, imag, cmap='Greys')
     plot.cursor(
         cursor_real,
@@ -217,7 +226,7 @@ Show the elliptic cursors in a phasor plot:
 
 
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_cursor_003.png
-   :alt: Elliptic cursors
+   :alt: Elliptical cursors
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_cursor_003.png
    :class: sphx-glr-single-img
 
@@ -225,12 +234,12 @@ Show the elliptic cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-109
+.. GENERATED FROM PYTHON SOURCE LINES 115-117
 
 The mean intensity image can be used as a base layer to overlay
-the masks from the elliptic cursors:
+the masks from the elliptical cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-118
+.. GENERATED FROM PYTHON SOURCE LINES 118-126
 
 .. code-block:: Python
 
@@ -239,14 +248,14 @@ the masks from the elliptic cursors:
 
     plot_image(
         pseudo_color_image,
-        title='Pseudo-color image from elliptic cursors and intensity',
+        title='Pseudo-color image from elliptical cursors and intensity',
     )
 
 
 
 
 .. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_cursor_004.png
-   :alt: Pseudo-color image from elliptic cursors and intensity
+   :alt: Pseudo-color image from elliptical cursors and intensity
    :srcset: /tutorials/api/images/sphx_glr_phasorpy_cursor_004.png
    :class: sphx-glr-single-img
 
@@ -254,14 +263,15 @@ the masks from the elliptic cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+.. GENERATED FROM PYTHON SOURCE LINES 127-132
 
 Polar cursors
 -------------
 
-Create a mask with two ranges of phase and modulation values:
+Use polar cursors to select regions of interest in the phasor space based
+on phase and modulation ranges:
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-133
+.. GENERATED FROM PYTHON SOURCE LINES 132-142
 
 .. code-block:: Python
 
@@ -282,11 +292,11 @@ Create a mask with two ranges of phase and modulation values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-135
+.. GENERATED FROM PYTHON SOURCE LINES 143-144
 
 Show the polar cursors in a phasor plot:
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-148
+.. GENERATED FROM PYTHON SOURCE LINES 144-157
 
 .. code-block:: Python
 
@@ -298,7 +308,7 @@ Show the polar cursors in a phasor plot:
         phase_limit=phase_max,
         modulation=modulation_min,
         modulation_limit=modulation_max,
-        color=CATEGORICAL[2:4],
+        color=CATEGORICAL[2:4],  # use different colors
         label=['cursor 0', 'cursor 1'],
     )
     plot.show()
@@ -315,13 +325,13 @@ Show the polar cursors in a phasor plot:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-152
+.. GENERATED FROM PYTHON SOURCE LINES 158-161
 
 The thresholded mean intensity image can be used as a base layer to
 overlay the masks from the polar cursors. Values below the threshold are
 transparent (white):
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-162
+.. GENERATED FROM PYTHON SOURCE LINES 161-171
 
 .. code-block:: Python
 
@@ -347,16 +357,10 @@ transparent (white):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-166
-
-sphinx_gallery_thumbnail_number = 1
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code="arg-type"
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.900 seconds)
+   **Total running time of the script:** (0 minutes 0.889 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_cursor.py:

@@ -24,15 +24,16 @@ Multidimensional phasor approach
 Simultaneous phasor analysis of lifetime and spectral data.
 
 Multidimensional phasor analysis enables the correlation and classification
-of pixels based on multiple fluorescence characteristics simultaneously.
+of pixels based on multiple signal characteristics simultaneously.
 This approach combines phasor coordinates from different measurement domains
 to provide enhanced discrimination and identification of molecular species
 or cellular components that may appear similar in single-domain analysis.
 
 Phasor coordinates in one dimension can be mapped to other dimensions by masks
 (or cursors) that define regions of interest in the phasor space. The dimension
-where cursors are defined serves as the "main" dimension, controlling the
-classification that is then applied to correlate with other dimensions.
+where cursors are defined serves as the "main" dimension, controlling which
+regions of interest are selected and determining the classification that is
+then applied to correlate with other dimensions.
 
 This analysis method is demonstrated using a dataset combining fluorescence
 lifetime imaging microscopy (FLIM) and hyperspectral imaging (HSI) of LAURDAN
@@ -50,11 +51,11 @@ detection channels with spectral phasor coordinates, enabling enhanced
 classification of cellular regions based on both lifetime and spectral
 properties of LAURDAN fluorescence.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Import required modules, functions, and classes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-51
+.. GENERATED FROM PYTHON SOURCE LINES 39-52
 
 .. code-block:: Python
 
@@ -78,18 +79,18 @@ Import required modules, functions, and classes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-60
+.. GENERATED FROM PYTHON SOURCE LINES 53-61
 
 Read spectral and FLIM signals
 ------------------------------
 
-Read hyperspectral and FLIM signals and metadata from the Zenodo dataset
+Read hyperspectral and FLIM signals and metadata from a Zenodo dataset
 of NIH-3T3 fibroblast cells stained with the membrane probe LAURDAN.
 The spectral data is stored in Zeiss LSM format, while the two-channel
 FLIM data is in FLIMbox FBD format. The calibration data for both FLIM
 channels are stored in separate files:
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-84
+.. GENERATED FROM PYTHON SOURCE LINES 61-85
 
 .. code-block:: Python
 
@@ -98,7 +99,7 @@ channels are stored in separate files:
 
     flim_signal = signal_from_fbd(
         fetch('04NIH3T3_LAURDAN_000$CC0Z.fbd'),
-        frame=-1,  # integrate all frames
+        frame=-1,  # integrate all time frames
         channel=None,  # load all channels
         laser_factor=0.99168,  # override incorrect metadata in FBD file
     )
@@ -124,16 +125,16 @@ channels are stored in separate files:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-91
+.. GENERATED FROM PYTHON SOURCE LINES 86-92
 
 Phasor transform
 ----------------
 
 Compute phasor coordinates from the spectral and FLIM signals. Calibrate
-the FLIM phasor coordinates with the reference coordinates of known lifetime
-(2.5 ns, Coumarin 6 in ethanol):
+the FLIM phasor coordinates using reference measurements with a known
+lifetime of 2.5 ns (Coumarin 6 in ethanol):
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-107
+.. GENERATED FROM PYTHON SOURCE LINES 92-108
 
 .. code-block:: Python
 
@@ -150,7 +151,7 @@ the FLIM phasor coordinates with the reference coordinates of known lifetime
         *phasor_from_signal(reference_signal),
         frequency=frequency,
         lifetime=2.5,
-        skip_axis=0,
+        skip_axis=0,  # calibrate each channel separately
     )
 
 
@@ -160,7 +161,7 @@ the FLIM phasor coordinates with the reference coordinates of known lifetime
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 108-114
+.. GENERATED FROM PYTHON SOURCE LINES 109-115
 
 Preprocess phasor coordinates
 -----------------------------
@@ -169,7 +170,7 @@ Apply median filtering to reduce noise and threshold based on minimum
 intensity to remove low signal pixels. Different thresholds are used
 for FLIM and spectral data due to their different intensity ranges:
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-129
+.. GENERATED FROM PYTHON SOURCE LINES 115-130
 
 .. code-block:: Python
 
@@ -195,14 +196,14 @@ for FLIM and spectral data due to their different intensity ranges:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-134
+.. GENERATED FROM PYTHON SOURCE LINES 131-135
 
 Plot phasor coordinates
 -----------------------
 
 Plot the spectral phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-144
+.. GENERATED FROM PYTHON SOURCE LINES 135-145
 
 .. code-block:: Python
 
@@ -228,11 +229,11 @@ Plot the spectral phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-146
+.. GENERATED FROM PYTHON SOURCE LINES 146-147
 
 Plot the FLIM phasor coordinates of channel 1 (blue) and 2 (orange):
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-157
+.. GENERATED FROM PYTHON SOURCE LINES 147-158
 
 .. code-block:: Python
 
@@ -259,18 +260,18 @@ Plot the FLIM phasor coordinates of channel 1 (blue) and 2 (orange):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-166
+.. GENERATED FROM PYTHON SOURCE LINES 159-167
 
 Mask spectral phasor using cursors
 ----------------------------------
 
 Create circular masks on the spectral phasor plot to define regions of
 interest corresponding to different spectral characteristics.
-The spectral dimension serves as the "main" dimension, meaning that
+The spectral dimension serves as the "main" dimension, meaning that the
 spectral cursors control the classification that will be applied to
 correlate with the FLIM dimension.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-179
+.. GENERATED FROM PYTHON SOURCE LINES 167-180
 
 .. code-block:: Python
 
@@ -294,11 +295,11 @@ correlate with the FLIM dimension.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-181
+.. GENERATED FROM PYTHON SOURCE LINES 181-182
 
 Plot the spectral phasor and main cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-205
+.. GENERATED FROM PYTHON SOURCE LINES 182-206
 
 .. code-block:: Python
 
@@ -338,7 +339,7 @@ Plot the spectral phasor and main cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-211
+.. GENERATED FROM PYTHON SOURCE LINES 207-212
 
 Spectral pseudo-color image
 ---------------------------
@@ -346,7 +347,7 @@ Spectral pseudo-color image
 Create a pseudo-colored image where each pixel is colored according to
 its spectral classification based on the main cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-215
+.. GENERATED FROM PYTHON SOURCE LINES 212-216
 
 .. code-block:: Python
 
@@ -366,18 +367,18 @@ its spectral classification based on the main cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-224
+.. GENERATED FROM PYTHON SOURCE LINES 217-225
 
 Spectral classified FLIM phasor
 -------------------------------
 
 Apply the spectral classification masks (from the main dimension) to
 the phasor coordinates of both FLIM channels.
-This shows how pixels with different spectral properties distribute in
-the FLIM phasor space and reveals the correlation between spectral and
-lifetime characteristics:
+This visualization shows how pixels with different spectral properties
+distribute in the FLIM phasor space and reveals the correlation between
+spectral and lifetime characteristics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 224-243
+.. GENERATED FROM PYTHON SOURCE LINES 225-244
 
 .. code-block:: Python
 
@@ -412,18 +413,18 @@ lifetime characteristics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-252
+.. GENERATED FROM PYTHON SOURCE LINES 245-253
 
 FLIM classified spectral phasor
 -------------------------------
 
-The inverse analysis can also be performed: select regions in the
-FLIM phasor space as the "main" dimension and correlate with the spectral
-phasor space.
+Perform the inverse analysis by selecting regions in the FLIM phasor space
+as the "main" dimension and correlating with the spectral phasor space.
 
-Mask the FLIM phasor coordinates of the first channel using cursors:
+Create circular masks on the FLIM phasor coordinates of the first channel
+using cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 252-265
+.. GENERATED FROM PYTHON SOURCE LINES 253-266
 
 .. code-block:: Python
 
@@ -447,11 +448,11 @@ Mask the FLIM phasor coordinates of the first channel using cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 266-267
+.. GENERATED FROM PYTHON SOURCE LINES 267-268
 
 Plot the FLIM phasor and cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 267-282
+.. GENERATED FROM PYTHON SOURCE LINES 268-283
 
 .. code-block:: Python
 
@@ -482,11 +483,11 @@ Plot the FLIM phasor and cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-284
+.. GENERATED FROM PYTHON SOURCE LINES 284-285
 
 Display the FLIM pseudo-color image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 284-289
+.. GENERATED FROM PYTHON SOURCE LINES 285-290
 
 .. code-block:: Python
 
@@ -507,11 +508,11 @@ Display the FLIM pseudo-color image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-291
+.. GENERATED FROM PYTHON SOURCE LINES 291-292
 
 Plot the FLIM classified spectral phasor:
 
-.. GENERATED FROM PYTHON SOURCE LINES 291-310
+.. GENERATED FROM PYTHON SOURCE LINES 292-311
 
 .. code-block:: Python
 
@@ -546,15 +547,10 @@ Plot the FLIM classified spectral phasor:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 311-313
-
-sphinx_gallery_thumbnail_number = 4
-mypy: allow-untyped-defs, allow-untyped-calls
-
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.508 seconds)
+   **Total running time of the script:** (0 minutes 6.820 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_multidimensional.py:

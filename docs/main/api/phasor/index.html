@@ -486,7 +486,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../utils/">phasorpy.utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_utils/">phasorpy._utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_phasorpy/">phasorpy._phasorpy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cli/">Command line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/">Command-line interface</a></li>
 </ul>
 </div>
 </nav></div>
@@ -549,8 +549,8 @@
                   
   <section id="module-phasorpy.phasor">
 <span id="phasorpy-phasor"></span><h1>phasorpy.phasor<a class="headerlink" href="#module-phasorpy.phasor" title="Link to this heading">#</a></h1>
-<p>Calculate, convert, and reduce phasor coordinates.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.phasor</span></code> module provides functions to:</p>
+<p>Process phasor coordinates.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">phasorpy.phasor</span></code> module provides fundamental functions to:</p>
 <ul class="simple">
 <li><p>calculate phasor coordinates from time-resolved and spectral signals:</p>
 <ul>
@@ -562,10 +562,15 @@
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_signal()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>convert to and from polar coordinates (phase and modulation):</p>
+<li><p>convert between phasor and polar coordinates (phase and modulation):</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_from_polar" title="phasorpy.phasor.phasor_from_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_polar()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_polar" title="phasorpy.phasor.phasor_to_polar"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_polar()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>convert phasor coordinates to complex number representation:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_complex" title="phasorpy.phasor.phasor_to_complex"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_complex()</span></code></a></p></li>
 </ul>
 </li>
 <li><p>transform phasor coordinates:</p>
@@ -581,13 +586,13 @@
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_combine" title="phasorpy.phasor.phasor_combine"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_combine()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>reduce dimensionality of arrays of phasor coordinates:</p>
+<li><p>reduce the dimensionality of arrays of phasor coordinates:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_center()</span></code></a></p></li>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_to_principal_plane" title="phasorpy.phasor.phasor_to_principal_plane"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_principal_plane()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>find nearest neighbor phasor coordinates from other phasor coordinates:</p>
+<li><p>find nearest-neighbor phasor coordinates to other phasor coordinates:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_nearest_neighbor()</span></code></a></p></li>
 </ul>
@@ -595,7 +600,7 @@
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_center">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_safe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1365-L1466"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_center" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_center</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_safe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1371-L1469"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_center" title="Link to this definition">#</a></dt>
 <dd><p>Return center of phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -603,7 +608,7 @@
 <li><p><strong>mean</strong> (<em>array_like</em>) – Intensity of phasor coordinates.</p></li>
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>mean</cite> to excluded from center calculation.
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Axes in <cite>mean</cite> to be excluded from center calculation.
 By default, all axes except harmonics are included.</p></li>
 <li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – <p>Method used for center calculation:</p>
 <ul>
@@ -611,10 +616,10 @@ By default, all axes except harmonics are included.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code>: Spatial median of phasor coordinates.</p></li>
 </ul>
 </p></li>
-<li><p><strong>nan_safe</strong> (<em>bool</em><em>, </em><em>optional</em>) – Ensure <cite>method</cite> is applied to same elements of input arrays.
-By default, distribute NaNs among input arrays before applying
-<cite>method</cite>. May be disabled if phasor coordinates were filtered by
-<code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code>.</p></li>
+<li><p><strong>nan_safe</strong> (<em>bool</em><em>, </em><em>optional</em>) – Ensure that <cite>method</cite> is applied to same elements of input arrays.
+By default, NaNs are distributed among input arrays before applying
+<cite>method</cite>. This may be disabled if the phasor coordinates were
+previously filtered by <code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_threshold()</span></code>.</p></li>
 <li><p><strong>**kwargs</strong> – Optional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nanmean()</span></code> or
 <code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.nanmedian()</span></code>.</p></li>
 </ul>
@@ -651,7 +656,7 @@ By default, distribute NaNs among input arrays before applying
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_combine">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">int0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L760-L854"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_combine" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">int0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L767-L861"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_combine" title="Link to this definition">#</a></dt>
 <dd><p>Return linear combination of two phasor coordinates.</p>
 <p>Combine two sets of phasor coordinates using intensity-weighted mixing.
 This simulates the phasor coordinates that would result from a mixture
@@ -667,8 +672,8 @@ of two components with known individual phasor coordinates.</p>
 <li><p><strong>imag1</strong> (<em>array_like</em>) – Imaginary component of second phasor coordinates.</p></li>
 <li><p><strong>fraction0</strong> (<em>array_like</em>) – Fraction of first phasor coordinates.</p></li>
 <li><p><strong>fraction1</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Fraction of second phasor coordinates.
-The default is <cite>1 - fraction0</cite>.</p></li>
-<li><p><strong>**kwargs</strong> – Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p></li>
+By default, <cite>fraction1</cite> is set to <cite>1 - fraction0</cite>.</p></li>
+<li><p><strong>**kwargs</strong> – Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -680,6 +685,10 @@ The default is <cite>1 - fraction0</cite>.</p></li>
 </p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../component/#phasorpy.component.phasor_from_component" title="phasorpy.component.phasor_from_component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.component.phasor_from_component</span></code></a></p>
+</div>
 <p class="rubric">Notes</p>
 <p>The phasor coordinates (<span class="math notranslate nohighlight">\(I\)</span>, <span class="math notranslate nohighlight">\(G\)</span>, <span class="math notranslate nohighlight">\(S\)</span>) of the linear
 combination of two phasor coordinates (<span class="math notranslate nohighlight">\(I_{0}\)</span>, <span class="math notranslate nohighlight">\(G_{0}\)</span>,
@@ -690,12 +699,8 @@ coordinates are:</p>
 \[ \begin{align}\begin{aligned}f'_{0} &amp;= f_{0} / (f_{0} + f_{1})\\f'_{1} &amp;= 1 - f'_{0}\\I &amp;= I_{0} \cdot f'_{0} + I_{1} \cdot f'_{1}\\G &amp;= (G_{0} \cdot I_{0} \cdot f'_{0}
      + G_{1} \cdot I_{1} \cdot f'_{1}) / I\\S &amp;= (S_{0} \cdot I_{0} \cdot f'_{0}
      + S_{1} \cdot I_{1} \cdot f'_{1}) / I\end{aligned}\end{align} \]</div>
-<p>If the intensity <span class="math notranslate nohighlight">\(I\)</span> is zero, the linear combined phasor coordinates
-are undefined (NaN).</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="../component/#phasorpy.component.phasor_from_component" title="phasorpy.component.phasor_from_component"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.component.phasor_from_component</span></code></a></p>
-</div>
+<p>If the intensity <span class="math notranslate nohighlight">\(I\)</span> is zero, the linearly combined phasor
+coordinates are undefined (NaN).</p>
 <p class="rubric">Examples</p>
 <p>Calculate the linear combination of two phasor coordinates with equal
 intensities at three fractional intensities:</p>
@@ -707,9 +712,9 @@ intensities at three fractional intensities:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_divide">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_divide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L604-L666"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_divide" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_divide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L611-L673"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_divide" title="Link to this definition">#</a></dt>
 <dd><p>Return complex division of two phasors.</p>
-<p>Complex division can be used, for example, to deconvolve two signals
+<p>Complex division can be used, for example, to deconvolve two signals,
 such as exponential decay and instrument response functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -718,7 +723,7 @@ such as exponential decay and instrument response functions.</p>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to divide.</p></li>
 <li><p><strong>divisor_real</strong> (<em>array_like</em>) – Real component of phasor coordinates to divide by.</p></li>
 <li><p><strong>divisor_imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to divide by.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
@@ -746,14 +751,14 @@ and <cite>divisor_imag</cite> (<span class="math notranslate nohighlight">\(s\)<
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_polar">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L993-L1046"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_polar" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L999-L1052"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_polar" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from polar coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>phase</strong> (<em>array_like</em>) – Angular component of polar coordinates in radians.</p></li>
 <li><p><strong>modulation</strong> (<em>array_like</em>) – Radial component of polar coordinates.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
@@ -787,7 +792,7 @@ are converted to phasor coordinates <cite>real</cite> (<span class="math notrans
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_from_signal">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L90-L337"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_from_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L94-L342"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_from_signal" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -796,9 +801,9 @@ are converted to phasor coordinates <cite>real</cite> (<span class="math notrans
 A minimum of three samples are required along <cite>axis</cite>.
 The samples must be uniformly spaced.</p></li>
 <li><p><strong>axis</strong> (<em>int</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – Axis over which to compute phasor coordinates.
-By default, the ‘H’ or ‘C’ axes if signal contains such dimension
+By default, the ‘H’ or ‘C’ axis if <cite>signal</cite> contains such dimension
 names, else the last axis (-1).</p></li>
-<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonics to return.
+<li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonics for which to return phasor coordinates.
 If <cite>‘all’</cite>, return all harmonics for <cite>signal</cite> samples along <cite>axis</cite>.
 Else, harmonics must be at least one and no larger than half the
 number of <cite>signal</cite> samples along <cite>axis</cite>.
@@ -806,30 +811,31 @@ The default is the first harmonic (fundamental frequency).
 A minimum of <cite>harmonic * 2 + 1</cite> samples are required along <cite>axis</cite>
 to calculate correct phasor coordinates at <cite>harmonic</cite>.</p></li>
 <li><p><strong>sample_phase</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Phase values (in radians) of <cite>signal</cite> samples along <cite>axis</cite>.
-If None (default), samples are assumed to be uniformly spaced along
+By default, samples are assumed to be uniformly spaced along
 one period.
-The array size must equal the number of samples along <cite>axis</cite>.
+The array length must equal the number of samples along <cite>axis</cite>.
 Cannot be used with <cite>harmonic!=1</cite> or <cite>use_fft=True</cite>.</p></li>
-<li><p><strong>use_fft</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, use a real forward Fast Fourier Transform (FFT).
-If false, use a Cython implementation that is optimized (faster and
-resource saving) for calculating few harmonics.
+<li><p><strong>use_fft</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use a real-valued forward Fast Fourier Transform (FFT).
+Else, use a Cython implementation that is optimized (faster and
+memory-efficient) for calculating few harmonics.
 By default, FFT is only used when all or at least 8 harmonics are
 calculated, or <cite>rfft</cite> is specified.</p></li>
 <li><p><strong>rfft</strong> (<em>callable</em><em>, </em><em>optional</em>) – Drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.rfft</span></code>.
 For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.rfft</span></code> or
 <code class="docutils literal notranslate"><span class="pre">mkl_fft.interfaces.numpy_fft.rfft</span></code>.
 Used to calculate the real forward FFT.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
-The default is float64 unless the <cite>signal</cite> is float32.</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return normalized phasor coordinates.
-If true (default), return average of <cite>signal</cite> along <cite>axis</cite> and
-Fourier coefficients divided by sum of <cite>signal</cite> along <cite>axis</cite>.
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either <cite>float32</cite> or <cite>float64</cite>.
+The default is <cite>float64</cite> unless the <cite>signal</cite> is <cite>float32</cite>.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – Return normalized phasor coordinates.
+Return average of <cite>signal</cite> along <cite>axis</cite> and Fourier coefficients
+divided by sum of <cite>signal</cite> along <cite>axis</cite>.
 Else, return sum of <cite>signal</cite> along <cite>axis</cite> and unscaled Fourier
 coefficients.
-Un-normalized phasor coordinates cannot be used with most of PhasorPy’s
-functions but may be required for intermediate processing.</p></li>
+Unnormalized phasor coordinates cannot be used with most of PhasorPy’s
+functions (which expect normalized coordinates) but may be required
+for intermediate processing.</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization when not using FFT.
-By default, multi-threading is disabled.
+By default, multithreading is disabled.
 If zero, up to half of logical CPUs are used.
 OpenMP may not be available on all platforms.</p></li>
 </ul>
@@ -869,9 +875,9 @@ according to:</p>
 <p>If <span class="math notranslate nohighlight">\(F_{DC} = 0\)</span>, the phasor coordinates are undefined
 (resulting in NaN or infinity).
 Use NaN-aware software to further process the phasor coordinates.</p>
-<p>The phasor coordinates may be zero, for example, in case of only constant
-background in time-resolved signals, or as the result of linear
-combination of non-zero spectral phasors coordinates.</p>
+<p>The phasor coordinates may be zero, for example, in the case of only
+constant background in time-resolved signals, or as the result of a
+linear combination of non-zero spectral phasor coordinates.</p>
 <p class="rubric">Examples</p>
 <p>Calculate phasor coordinates of a phase-shifted sinusoidal waveform:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -889,9 +895,9 @@ combination of non-zero spectral phasors coordinates.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_multiply">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L541-L601"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_multiply" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L548-L608"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_multiply" title="Link to this definition">#</a></dt>
 <dd><p>Return complex multiplication of two phasors.</p>
-<p>Complex multiplication can be used, for example, to convolve two signals
+<p>Complex multiplication can be used, for example, to convolve two signals,
 such as exponential decay and instrument response functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -900,7 +906,7 @@ such as exponential decay and instrument response functions.</p>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to multiply.</p></li>
 <li><p><strong>factor_real</strong> (<em>array_like</em>) – Real component of phasor coordinates to multiply by.</p></li>
 <li><p><strong>factor_imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to multiply by.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
@@ -928,14 +934,14 @@ and <cite>factor_imag</cite> (<span class="math notranslate nohighlight">\(s\)</
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_nearest_neighbor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_nearest_neighbor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1217-L1362"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_nearest_neighbor" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_nearest_neighbor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1223-L1368"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_nearest_neighbor" title="Link to this definition">#</a></dt>
 <dd><p>Return indices or values of nearest neighbors from other coordinates.</p>
 <p>For each phasor coordinate, find the nearest neighbor in another set of
 phasor coordinates and return its flat index. If more than one neighbor
 has the same distance, return the smallest index.</p>
-<p>For phasor coordinates that are NaN, or have a distance to the nearest
+<p>For phasor coordinates that are NaN or have a distance to the nearest
 neighbor that is larger than <cite>distance_max</cite>, return an index of -1.</p>
-<p>If <cite>values</cite> are provided, return the values corresponding to the nearest
+<p>If <cite>values</cite> is provided, return the values corresponding to the nearest
 neighbor coordinates instead of indices. Return NaN values for indices
 that are -1.</p>
 <p>This function does not support multi-harmonic, multi-channel, or
@@ -955,7 +961,7 @@ By default, all neighbors are considered.</p></li>
 <li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Floating point data type used for calculation and output values.
 Either <cite>float32</cite> or <cite>float64</cite>. The default is <cite>float64</cite>.</p></li>
 <li><p><strong>num_threads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of OpenMP threads to use for parallelization.
-By default, multi-threading is disabled.
+By default, multithreading is disabled.
 If zero, up to half of logical CPUs are used.
 OpenMP may not be available on all platforms.</p></li>
 </ul>
@@ -979,11 +985,11 @@ neighbor coordinates.</p>
 <p><a class="reference internal" href="../../tutorials/applications/phasorpy_fret_efficiency/#sphx-glr-tutorials-applications-phasorpy-fret-efficiency-py"><span class="std std-ref">FRET efficiency image</span></a></p>
 </div>
 <p class="rubric">Notes</p>
-<p>This function uses linear search, which is inefficient for large
+<p>This function uses a linear search, which is inefficient for a large
 number of coordinates or neighbors.
 <code class="docutils literal notranslate"><span class="pre">scipy.spatial.KDTree.query()</span></code> would be more efficient in those cases.
-However, KDTree is known to return non-deterministic results in case of
-multiple neighbors with the same distance.</p>
+However, KDTree is known to return non-deterministic results when
+multiple neighbors have the same distance.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_nearest_neighbor</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
@@ -999,9 +1005,9 @@ multiple neighbors with the same distance.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_normalize">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_unnormalized</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L669-L757"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_normalize" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_unnormalized</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag_unnormalized</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L676-L764"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_normalize" title="Link to this definition">#</a></dt>
 <dd><p>Return normalized phasor coordinates.</p>
-<p>Use to normalize the phasor coordinates returned by
+<p>Use this to normalize the phasor coordinates returned by
 <code class="docutils literal notranslate"><span class="pre">phasor_from_signal(...,</span> <span class="pre">normalize=False)</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1009,9 +1015,9 @@ multiple neighbors with the same distance.</p>
 <li><p><strong>mean_unnormalized</strong> (<em>array_like</em>) – Unnormalized intensity of phasor coordinates.</p></li>
 <li><p><strong>real_unnormalized</strong> (<em>array_like</em>) – Unnormalized real component of phasor coordinates.</p></li>
 <li><p><strong>imag_unnormalized</strong> (<em>array_like</em>) – Unnormalized imaginary component of phasor coordinates.</p></li>
-<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>default: 1</em>) – Number of signal samples over which <cite>mean</cite> was integrated.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either float32 or float64.
-The default is float64 unless the <cite>real</cite> is float32.</p></li>
+<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Number of signal samples over which <cite>mean_unnormalized</cite> was integrated.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output arrays. Either <cite>float32</cite> or <cite>float64</cite>.
+The default is <cite>float64</cite> unless <cite>real_unnormalized</cite> is <cite>float32</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1026,13 +1032,13 @@ The default is float64 unless the <cite>real</cite> is float32.</p></li>
 <p class="rubric">Notes</p>
 <p>The average intensity <cite>mean</cite> (<span class="math notranslate nohighlight">\(F_{DC}\)</span>) and normalized phasor
 coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>) are calculated from
-the signal <cite>intensity</cite> (<span class="math notranslate nohighlight">\(F\)</span>), the  number of <cite>samples</cite> (<span class="math notranslate nohighlight">\(K\)</span>),
-<cite>real_unnormalized</cite> (<span class="math notranslate nohighlight">\(G'\)</span>), and <cite>imag_unnormalized</cite> (<span class="math notranslate nohighlight">\(S'\)</span>)
-according to:</p>
+the signal intensity <cite>mean_unnormalized</cite> (<span class="math notranslate nohighlight">\(F\)</span>), the number of
+<cite>samples</cite> (<span class="math notranslate nohighlight">\(K\)</span>), <cite>real_unnormalized</cite> (<span class="math notranslate nohighlight">\(G'\)</span>), and
+<cite>imag_unnormalized</cite> (<span class="math notranslate nohighlight">\(S'\)</span>) according to:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}F_{DC} &amp;= F / K\\G &amp;= G' / F\\S &amp;= S' / F\end{aligned}\end{align} \]</div>
-<p>If <span class="math notranslate nohighlight">\(F = 0\)</span>, the normalized phasor coordinates (<span class="math notranslate nohighlight">\(G\)</span>)
-and (<span class="math notranslate nohighlight">\(S\)</span>) are undefined (NaN or infinity).</p>
+<p>If <span class="math notranslate nohighlight">\(F = 0\)</span>, the normalized phasor coordinates <span class="math notranslate nohighlight">\(G\)</span>
+and <span class="math notranslate nohighlight">\(S\)</span> are undefined (NaN or infinity).</p>
 <p class="rubric">Examples</p>
 <p>Normalize phasor coordinates with intensity integrated over 10 samples:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_normalize</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -1048,16 +1054,16 @@ and (<span class="math notranslate nohighlight">\(S\)</span>) are undefined (NaN
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_complex">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L490-L538"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_complex" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L497-L545"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_complex" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates as complex numbers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output array. Either complex64 or complex128.
-By default, complex64 if <cite>real</cite> and <cite>imag</cite> are float32,
-else complex128.</p></li>
+<li><p><strong>dtype</strong> (<em>dtype_like</em><em>, </em><em>optional</em>) – Data type of output array. Either <cite>complex64</cite> or <cite>complex128</cite>.
+By default, <cite>complex64</cite> if <cite>real</cite> and <cite>imag</cite> are <cite>float32</cite>,
+else <cite>complex128</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1068,7 +1074,7 @@ else complex128.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Convert phasor coordinates to complex number arrays:</p>
+<p>Convert phasor coordinates to an array of complex numbers:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_complex</span><span class="p">([</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
 <span class="go">array([0.4+0.2j, 0.5+0.3j])</span>
 </pre></div>
@@ -1077,27 +1083,19 @@ else complex128.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_polar">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L938-L990"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_polar" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_polar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L944-L996"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_polar" title="Link to this definition">#</a></dt>
 <dd><p>Return polar coordinates from phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>)
-are converted to polar coordinates <cite>phase</cite> (<span class="math notranslate nohighlight">\(\phi\)</span>) and
-<cite>modulation</cite> (<span class="math notranslate nohighlight">\(M\)</span>) according to:</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\phi &amp;= \arctan(S / G)\\M &amp;= \sqrt{G^2 + S^2}\end{aligned}\end{align} \]</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>phase</strong> (<em>ndarray</em>) – Angular component of polar coordinates in radians.</p></li>
 <li><p><strong>modulation</strong> (<em>ndarray</em>) – Radial component of polar coordinates.</p></li>
 </ul>
@@ -1108,6 +1106,12 @@ are converted to polar coordinates <cite>phase</cite> (<span class="math notrans
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#phasorpy.phasor.phasor_from_polar" title="phasorpy.phasor.phasor_from_polar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_polar</span></code></a>, <a class="reference internal" href="../../tutorials/phasorpy_lifetime_geometry/#sphx-glr-tutorials-phasorpy-lifetime-geometry-py"><span class="std std-ref">Geometrical interpretation of lifetimes</span></a></p>
 </div>
+<p class="rubric">Notes</p>
+<p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>)
+are converted to polar coordinates <cite>phase</cite> (<span class="math notranslate nohighlight">\(\phi\)</span>) and
+<cite>modulation</cite> (<span class="math notranslate nohighlight">\(M\)</span>) according to:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\phi &amp;= \operatorname{atan2}(S, G)\\M &amp;= \sqrt{G^2 + S^2}\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>
 <p>Calculate polar coordinates from three phasor coordinates:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_polar</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
@@ -1118,36 +1122,37 @@ are converted to polar coordinates <cite>phase</cite> (<span class="math notrans
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_principal_plane">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_principal_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1049-L1214"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_principal_plane" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_principal_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reorient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L1055-L1220"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_principal_plane" title="Link to this definition">#</a></dt>
 <dd><p>Return multi-harmonic phasor coordinates projected onto principal plane.</p>
-<p>Principal component analysis (PCA) is used to project
-multi-harmonic phasor coordinates onto a plane, along which
-coordinate axes the phasor coordinates have the largest variations.</p>
-<p>The transformed coordinates are not phasor coordinates. However, the
-coordinates can be used in visualization and cursor analysis since
-the transformation is affine (preserving collinearity and ratios
-of distances).</p>
+<p>Principal component analysis (PCA) is used to project multi-harmonic
+phasor coordinates onto a plane whose two coordinate axes (the first
+two principal components) capture the largest variance.</p>
+<p>The transformed coordinates are no longer phasor coordinates.
+However, they can be used for visualization and cursor analysis because
+the transformation is affine (it preserves collinearity and distance
+ratios).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of multi-harmonic phasor coordinates.
 The first axis is the frequency dimension.
-If less than 2-dimensional, size-1 dimensions are prepended.</p></li>
+If less than two-dimensional, length-1 dimensions are prepended.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of multi-harmonic phasor coordinates.
-Must be of same shape as <cite>real</cite>.</p></li>
+Must have the same shape as <cite>real</cite>.</p></li>
 <li><p><strong>reorient</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: True</em>) – Reorient coordinates for easier visualization.
 The projected coordinates are rotated and scaled, such that
-the center lies in same quadrant and the projection
+the center lies in the same quadrant and the projection
 of [1, 0] lies at [1, 0].</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>x</strong> (<em>ndarray</em>) – X-coordinates of projected phasor coordinates.
-If not <cite>reorient</cite>, this is the coordinate on the first principal axis.
-The shape is <code class="docutils literal notranslate"><span class="pre">real.shape[1:]</span></code>.</p></li>
+If <cite>reorient</cite> is False, this is the coordinate on the first principal
+component axis. The shape is <code class="docutils literal notranslate"><span class="pre">real.shape[1:]</span></code>.</p></li>
 <li><p><strong>y</strong> (<em>ndarray</em>) – Y-coordinates of projected phasor coordinates.
-If not <cite>reorient</cite>, this is the coordinate on the second principal axis.</p></li>
+If <cite>reorient</cite> is False, this is the coordinate on the second principal
+component axis. The shape is <code class="docutils literal notranslate"><span class="pre">real.shape[1:]</span></code>.</p></li>
 <li><p><strong>transformation_matrix</strong> (<em>ndarray</em>) – Affine transformation matrix used to project phasor coordinates.
 The shape is <code class="docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">real.shape[0])</span></code>.</p></li>
 </ul>
@@ -1160,7 +1165,7 @@ The shape is <code class="docutils literal notranslate"><span class="pre">(2,</s
 </div>
 <p class="rubric">Notes</p>
 <p>This implementation does not work with coordinates containing
-undefined NaN values.</p>
+undefined values (NaN).</p>
 <p>The transformation matrix can be used to project multi-harmonic phasor
 coordinates, where the first axis is the frequency:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span>
@@ -1173,7 +1178,7 @@ coordinates, where the first axis is the frequency:</p>
 </pre></div>
 </div>
 <p>An application of PCA to full-harmonic phasor coordinates from MRI signals
-can be found in <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+is described in <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id6" role="doc-footnote">
@@ -1201,7 +1206,7 @@ projection on the principal plane:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_to_signal">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L340-L487"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_signal" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_to_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irfft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L345-L494"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_to_signal" title="Link to this definition">#</a></dt>
 <dd><p>Return signal from phasor coordinates using inverse Fourier transform.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1212,18 +1217,18 @@ If not scalar, shape must match the last dimensions of <cite>real</cite>.</p></l
 Multiple harmonics, if any, must be in the first axis.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.
 Must be same shape as <cite>real</cite>.</p></li>
-<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>default: 64</em>) – Number of signal samples to return. Must be at least three.</p></li>
+<li><p><strong>samples</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 64</em>) – Number of signal samples to return. Must be at least three.</p></li>
 <li><p><strong>harmonic</strong> (<em>int</em><em>, </em><em>sequence</em><em> of </em><em>int</em><em>, or </em><em>'all'</em><em>, </em><em>optional</em>) – Harmonics included in first axis of <cite>real</cite> and <cite>imag</cite>.
-If None, lower harmonics are inferred from the shapes of phasor
+By default, lower harmonics are inferred from the shapes of phasor
 coordinates (most commonly, lower harmonics are present if the number
 of dimensions of <cite>mean</cite> is one less than <cite>real</cite>).
 If <cite>‘all’</cite>, the harmonics in the first axis of phasor coordinates are
 the lower harmonics necessary to synthesize <cite>samples</cite>.
 Else, harmonics must be at least one and no larger than half of
 <cite>samples</cite>.
-The phasor coordinates of missing harmonics are zeroed
+The phasor coordinates of missing harmonics are set to zero
 if <cite>samples</cite> is greater than twice the number of harmonics.</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – Axis at which to return signal samples.
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: -1</em>) – Axis at which to return signal samples.
 The default is the last axis (-1).</p></li>
 <li><p><strong>irfft</strong> (<em>callable</em><em>, </em><em>optional</em>) – Drop-in replacement function for <code class="docutils literal notranslate"><span class="pre">numpy.fft.irfft</span></code>.
 For example, <code class="docutils literal notranslate"><span class="pre">scipy.fft.irfft</span></code> or
@@ -1243,10 +1248,10 @@ Used to calculate the real inverse FFT.</p></li>
 <p><a class="reference internal" href="#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.phasor.phasor_from_signal</span></code></a></p>
 </div>
 <p class="rubric">Notes</p>
-<p>The reconstructed signal may be undefined if the input phasor coordinates,
-or signal mean contain NaN values.</p>
+<p>The reconstructed signal may be undefined if the input phasor coordinates
+or the signal mean contain NaN values.</p>
 <p class="rubric">Examples</p>
-<p>Reconstruct exact signal from phasor coordinates at all harmonics:</p>
+<p>Reconstruct the exact signal from phasor coordinates at all harmonics:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_phase</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span> <span class="o">=</span> <span class="mf">1.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sample_phase</span> <span class="o">-</span> <span class="mf">0.785398</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">0.707107</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span>
@@ -1259,7 +1264,7 @@ or signal mean contain NaN values.</p>
 <span class="go">array([2.2, 2.486, 0.8566, -0.4365, 0.3938])</span>
 </pre></div>
 </div>
-<p>Reconstruct a single-frequency waveform from phasor coordinates at
+<p>Reconstruct a single-frequency waveform from phasor coordinates at the
 first harmonic:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_to_signal</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="go">array([2.2, 2.486, 0.8566, -0.4365, 0.3938])</span>
@@ -1269,7 +1274,7 @@ first harmonic:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.phasor.phasor_transform">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L857-L935"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_transform" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.phasor.</span></span><span class="sig-name descname"><span class="pre">phasor_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/phasor.py#L864-L941"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.phasor.phasor_transform" title="Link to this definition">#</a></dt>
 <dd><p>Return rotated and scaled phasor coordinates.</p>
 <p>This function rotates and uniformly scales phasor coordinates around the
 origin.
@@ -1279,9 +1284,9 @@ It can be used, for example, to calibrate phasor coordinates.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates to transform.</p></li>
 <li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates to transform.</p></li>
-<li><p><strong>phase</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default: 0.0</em>) – Rotation angle in radians.</p></li>
-<li><p><strong>modulation</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default: 1.0</em>) – Uniform scale factor.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Optional <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">arguments passed to numpy universal functions</a>.</p>
+<li><p><strong>phase</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default: 0</em>) – Rotation angle in radians.</p></li>
+<li><p><strong>modulation</strong> (<em>array_like</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Uniform scale factor.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#ufuncs-kwargs">numpy universal functions</a>.</p>
 </p></li>
 </ul>
 </dd>
@@ -1296,8 +1301,7 @@ It can be used, for example, to calibrate phasor coordinates.</p>
 <p class="rubric">Notes</p>
 <p>The phasor coordinates <cite>real</cite> (<span class="math notranslate nohighlight">\(G\)</span>) and <cite>imag</cite> (<span class="math notranslate nohighlight">\(S\)</span>)
 are rotated by <cite>phase</cite> (<span class="math notranslate nohighlight">\(\phi\)</span>)
-and scaled by <cite>modulation_zero</cite> (<span class="math notranslate nohighlight">\(M\)</span>)
-around the origin according to:</p>
+and scaled by <cite>modulation</cite> (<span class="math notranslate nohighlight">\(M\)</span>) about the origin according to:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}g &amp;= M \cdot \cos{\phi}\\s &amp;= M \cdot \sin{\phi}\\G' &amp;= G \cdot g - S \cdot s\\S' &amp;= G \cdot s + S \cdot g\end{aligned}\end{align} \]</div>
 <p class="rubric">Examples</p>

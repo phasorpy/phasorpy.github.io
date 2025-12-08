@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
     <link rel="next" title="Principal component analysis" href="../phasorpy_pca/" />
-    <link rel="prev" title="Förster Resonance Energy Transfer" href="../phasorpy_fret/" />
+    <link rel="prev" title="Förster resonance energy transfer" href="../phasorpy_fret/" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.9.dev0" />
@@ -483,7 +483,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_phasorplot/">Phasor plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_cursor/">Cursors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_component/">Component analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster Resonance Energy Transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret/">Förster resonance energy transfer</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Synthesize signals from lifetimes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_pca/">Principal component analysis</a></li>
 </ul>
@@ -496,6 +496,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_apps/">Interactive apps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_logo/">PhasorPy logo</a></li>
 </ul>
 </details></li>
@@ -575,18 +576,18 @@ response function (IRF) peak location and width.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">lifetime_to_signal</span><span class="p">,</span>
-    <span class="n">phasor_calibrate</span><span class="p">,</span>
-    <span class="n">phasor_from_lifetime</span><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">,</span>
+    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>
 </pre></div>
 </div>
 <p>Define common parameters used throughout the tutorial:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># fundamental frequency in MHz</span>
 <span class="n">reference_lifetime</span> <span class="o">=</span> <span class="mf">4.2</span>  <span class="c1"># lifetime of reference signal in ns</span>
 
-<span class="n">lifetimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>  <span class="c1"># lifetime in ns</span>
+<span class="n">lifetimes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>  <span class="c1"># lifetimes in ns</span>
 <span class="n">fractions</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>  <span class="c1"># fractional intensities</span>
 
 <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
@@ -599,41 +600,44 @@ response function (IRF) peak location and width.</p>
 </pre></div>
 </div>
 <section id="time-domain-multi-exponential">
-<h2>Time-domain, multi-exponential<a class="headerlink" href="#time-domain-multi-exponential" title="Link to this heading">#</a></h2>
+<h2>Time domain, multi exponential<a class="headerlink" href="#time-domain-multi-exponential" title="Link to this heading">#</a></h2>
 <p>Synthesize a time-domain signal of a multi-component lifetime system with
 given fractional intensities, convolved with an instrument response function:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">instrument_response</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">instrument_response</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>A reference signal of known lifetime, obtained with the same instrument
-and sampling parameters, is required to correct/calibrate the
-phasor coordinates of signals.
+<p>A reference signal of known lifetime is required to calibrate the phasor
+coordinates. The reference signal must be obtained with the same instrument
+and sampling parameters.
 The calibrated phasor coordinates match the theoretical phasor coordinates
 expected for the lifetimes:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">reference_lifetime</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span>
 <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">verify_signal</span><span class="p">(</span><span class="n">fractions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify calibrated phasor coordinates match expected results.&quot;&quot;&quot;</span>
-    <span class="n">numpy</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span>
-        <span class="n">phasor_calibrate</span><span class="p">(</span>
-            <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
-            <span class="o">*</span><span class="n">phasor_from_signal</span><span class="p">(</span><span class="n">reference_signal</span><span class="p">),</span>
+    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span>
+        <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
+            <span class="o">*</span><a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+            <span class="o">*</span><a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">),</span>
             <span class="n">frequency</span><span class="p">,</span>
             <span class="n">reference_lifetime</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">phasor_from_lifetime</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span><span class="p">),</span>
+        <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span><span class="p">),</span>
+        <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">equal_nan</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
 
 <span class="n">verify_signal</span><span class="p">(</span><span class="n">fractions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Plot the synthesized signal, the instrument response, and reference signal:</p>
+<p>Plot the synthesized signals (multi-exponential, reference, and
+instrument response):</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Time-domain signals (</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
@@ -649,15 +653,15 @@ expected for the lifetimes:</p>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_001.png" srcset="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_001.png" alt="Time-domain signals (80.0 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="time-domain-single-exponential">
-<h2>Time-domain, single-exponential<a class="headerlink" href="#time-domain-single-exponential" title="Link to this heading">#</a></h2>
+<h2>Time domain, single exponential<a class="headerlink" href="#time-domain-single-exponential" title="Link to this heading">#</a></h2>
 <p>To synthesize separate signals for each lifetime component at once,
 omit the lifetime fractions:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
 
 <span class="n">verify_signal</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Plot the synthesized signal:</p>
+<p>Plot the synthesized signals:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
     <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Time-domain signals (</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> MHz)&#39;</span><span class="p">,</span>
@@ -672,14 +676,14 @@ omit the lifetime fractions:</p>
 <img src="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_002.png" srcset="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_002.png" alt="Time-domain signals (80.0 MHz)" class = "sphx-glr-single-img"/><p>As expected, the shorter the lifetime, the faster the decay.</p>
 </section>
 <section id="frequency-domain-multi-exponential">
-<h2>Frequency-domain, multi-exponential<a class="headerlink" href="#frequency-domain-multi-exponential" title="Link to this heading">#</a></h2>
-<p>To synthesize a frequency-domain, homodyne signal, limit the
+<h2>Frequency domain, multi exponential<a class="headerlink" href="#frequency-domain-multi-exponential" title="Link to this heading">#</a></h2>
+<p>To synthesize a frequency-domain homodyne signal, limit the
 synthesis to the fundamental frequency (<code class="docutils literal notranslate"><span class="pre">harmonic=1</span></code>):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">instrument_response</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">instrument_response</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span>
 <span class="p">)</span>
 
-<span class="n">reference_signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span>
+<span class="n">reference_signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span>
     <span class="n">frequency</span><span class="p">,</span> <span class="n">reference_lifetime</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span>
 <span class="p">)</span>
 
@@ -705,10 +709,10 @@ synthesis to the fundamental frequency (<code class="docutils literal notranslat
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_003.png" srcset="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_003.png" alt="Frequency-domain signals (80.0 MHz)" class = "sphx-glr-single-img"/></section>
 <section id="frequency-domain-single-exponential">
-<h2>Frequency-domain, single-exponential<a class="headerlink" href="#frequency-domain-single-exponential" title="Link to this heading">#</a></h2>
+<h2>Frequency domain, single exponential<a class="headerlink" href="#frequency-domain-single-exponential" title="Link to this heading">#</a></h2>
 <p>To synthesize separate signals for each lifetime component at once,
 omit the lifetime fractions:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lifetime_to_signal</span><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetimes</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
 
 <span class="n">verify_signal</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
@@ -726,14 +730,9 @@ omit the lifetime fractions:</p>
 <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_004.png" srcset="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_004.png" alt="Frequency-domain signals (80.0 MHz)" class = "sphx-glr-single-img"/><p>As expected, the shorter the lifetime, the smaller the phase-shift and
-de-modulation.</p>
-<p>TODO: generate digitized image from lifetime distributions with background
-and noise.</p>
-<p>sphinx_gallery_thumbnail_number = -1
-mypy: allow-untyped-defs, allow-untyped-calls
-mypy: disable-error-code=”arg-type”</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.314 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_004.png" srcset="../../../_images/sphx_glr_phasorpy_lifetime_to_signal_004.png" alt="Frequency-domain signals (80.0 MHz)" class = "sphx-glr-single-img"/><p>As expected, the shorter the lifetime, the smaller the phase shift and
+demodulation.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.321 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-lifetime-to-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/483ac62e4fd2fa93d7d2f1227952eb2b/phasorpy_lifetime_to_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_lifetime_to_signal.ipynb</span></code></a></p>
@@ -765,7 +764,7 @@ mypy: disable-error-code=”arg-type”</p>
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Förster Resonance Energy Transfer</p>
+        <p class="prev-next-title">Förster resonance energy transfer</p>
       </div>
     </a>
     <a class="right-next"
@@ -796,10 +795,10 @@ mypy: disable-error-code=”arg-type”</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-domain-multi-exponential">Time-domain, multi-exponential</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-domain-single-exponential">Time-domain, single-exponential</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-domain-multi-exponential">Frequency-domain, multi-exponential</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-domain-single-exponential">Frequency-domain, single-exponential</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-domain-multi-exponential">Time domain, multi exponential</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-domain-single-exponential">Time domain, single exponential</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-domain-multi-exponential">Frequency domain, multi exponential</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-domain-single-exponential">Frequency domain, single exponential</a></li>
 </ul>
   </nav></div>
 
