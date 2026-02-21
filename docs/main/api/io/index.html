@@ -45,8 +45,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=f5615c1b"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/tabs.js?v=3ee01567"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=30646c52"></script>
@@ -663,7 +663,7 @@ and the tifffile library are used as <code class="docutils literal notranslate">
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.lifetime_from_lif">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">lifetime_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L114-L212"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.lifetime_from_lif" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">lifetime_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L114-L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.lifetime_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return lifetime image and metadata from Leica image file.</p>
 <p>Leica image files may contain fluorescence lifetime images and metadata
 from the analysis of FLIM measurements.
@@ -692,6 +692,9 @@ Laser pulse frequency in MHz. May not be present in all files.</p></li>
 Number of bins in TCSPC histogram. May not be present in all files.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'flim_rawdata'</span></code> (dict):
 Settings from SingleMoleculeDetection/RawData XML element.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'flim_phasor_channels'</span></code> (list of dict):
+Settings from SingleMoleculeDetection/…/PhasorData/Channels XML
+elements.</p></li>
 </ul>
 </li>
 </ul>
@@ -699,8 +702,8 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>liffile.LifFileError</strong> – File is not a Leica image file.</p></li>
-<li><p><strong>ValueError</strong> – File or <cite>image</cite> does not contain lifetime image and metadata.</p></li>
+<li><p><strong>liffile.LifFileError</strong> – If file is not a Leica image file.</p></li>
+<li><p><strong>ValueError</strong> – If file or <cite>image</cite> does not contain lifetime image and metadata.</p></li>
 </ul>
 </dd>
 </dl>
@@ -730,7 +733,7 @@ Settings from SingleMoleculeDetection/RawData XML element.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_flimlabs_json">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_flimlabs.py#L27-L221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_flimlabs_json" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_flimlabs.py#L27-L228"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_flimlabs_json" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates and metadata from FLIM LABS JSON phasor file.</p>
 <p>FLIM LABS JSON files may contain calibrated phasor coordinates
 (possibly for multiple channels and harmonics) and metadata from
@@ -778,8 +781,8 @@ FLIM LABS file header.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ValueError</strong> – File is not a FLIM LABS JSON file containing phasor coordinates.</p></li>
-<li><p><strong>IndexError</strong> – Harmonic or channel not found in file.</p></li>
+<li><p><strong>ValueError</strong> – If file is not a FLIM LABS JSON file containing phasor coordinates.</p></li>
+<li><p><strong>IndexError</strong> – If <cite>harmonic</cite> or <cite>channel</cite> is not found in file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -864,8 +867,8 @@ Metadata from IFLI file header.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lfdfiles.LfdFileError</strong> – File is not an ISS IFLI file.</p></li>
-<li><p><strong>IndexError</strong> – Harmonic is not found in file.</p></li>
+<li><p><strong>lfdfiles.LfdFileError</strong> – If file is not an ISS IFLI file.</p></li>
+<li><p><strong>IndexError</strong> – If channel or harmonic is not found in file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -931,8 +934,8 @@ elements.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>liffile.LifFileError</strong> – File is not a Leica image file.</p></li>
-<li><p><strong>ValueError</strong> – File or <cite>image</cite> does not contain phasor coordinates and metadata.</p></li>
+<li><p><strong>liffile.LifFileError</strong> – If file is not a Leica image file.</p></li>
+<li><p><strong>ValueError</strong> – If file or <cite>image</cite> does not contain phasor coordinates and metadata.</p></li>
 </ul>
 </dd>
 </dl>
@@ -953,7 +956,7 @@ elements.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_from_ometiff">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_ometiff.py#L240-L449"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_ometiff" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_from_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_ometiff.py#L246-L455"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_from_ometiff" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates and metadata from PhasorPy OME-TIFF file.</p>
 <p>PhasorPy OME-TIFF files contain phasor mean intensity, real and imaginary
 components, along with frequency and harmonic information.</p>
@@ -982,7 +985,7 @@ harmonic and have the same shape as <cite>mean</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'harmonic'</span></code> (int or list of int):
 Harmonic(s) present in <cite>real</cite> and <cite>imag</cite>.
 If a scalar, <cite>real</cite> and <cite>imag</cite> are single harmonic and contain no
-harmonic axes.
+harmonic axis.
 If a list, <cite>real</cite> and <cite>imag</cite> contain one or more harmonics in the
 first axis.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'frequency'</span></code> (float, optional):
@@ -996,9 +999,9 @@ OME dataset plain-text description.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tifffile.TiffFileError</strong> – File is not a TIFF file.</p></li>
-<li><p><strong>ValueError</strong> – File is not an OME-TIFF containing phasor coordinates.</p></li>
-<li><p><strong>IndexError</strong> – Harmonic is not found in file.</p></li>
+<li><p><strong>tifffile.TiffFileError</strong> – If file is not a TIFF file.</p></li>
+<li><p><strong>ValueError</strong> – If file is not an OME-TIFF containing phasor coordinates.</p></li>
+<li><p><strong>IndexError</strong> – If <cite>harmonic</cite> is not found in file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1070,7 +1073,7 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS REF, R64, or RE&lt;n&gt; file.</p>
+<dd class="field-odd"><p><strong>lfdfiles.LfdFileError</strong> – If file is not a SimFCS REF, R64, or RE&lt;n&gt; file.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1093,7 +1096,7 @@ Multiple harmonics, if any, are in the first axis.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.phasor_to_ometiff">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_to_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_ometiff.py#L34-L237"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_to_ometiff" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">phasor_to_ometiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">harmonic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_ometiff.py#L34-L243"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.phasor_to_ometiff" title="Link to this definition">#</a></dt>
 <dd><p>Write phasor coordinate images and metadata to OME-TIFF file.</p>
 <p>The OME-TIFF format is compatible with Bio-Formats and Fiji.</p>
 <p>By default, write phasor coordinates as single-precision floating point
@@ -1135,6 +1138,10 @@ Write to the OME dataset description.</p></li>
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">tifffile.TiffWriter.write()</span></code>.
 For example, <code class="docutils literal notranslate"><span class="pre">compression=None</span></code> writes image data uncompressed.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If data types or shapes of input arrays are incompatible.
+    If <cite>frequency</cite> is not a scalar.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1206,7 +1213,7 @@ Only used when chunking multidimensional data into multiple files.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_b64">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_b64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L436-L492"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_b64" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_b64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L438-L494"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_b64" title="Link to this definition">#</a></dt>
 <dd><p>Return intensity image and metadata from SimFCS B64 file.</p>
 <p>B64 files contain one or more square intensity image(s), a carpet
 of lines, or a stream of intensity data. B64 files contain no metadata.</p>
@@ -1215,15 +1222,15 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS B64 file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Intensity image of type <cite>int16</cite>.</p>
+<dd class="field-even"><p>Intensity image with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> and type <cite>int16</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS B64 file.</p></li>
-<li><p><strong>ValueError</strong> – File does not contain image stack.</p></li>
+<li><p><strong>lfdfiles.LfdFileError</strong> – If file is not a SimFCS B64 file.</p></li>
+<li><p><strong>ValueError</strong> – If file does not contain image stack.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1246,7 +1253,7 @@ of lines, or a stream of intensity data. B64 files contain no metadata.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_bh">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L549-L603"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_bh" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L551-L605"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_bh" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from SimFCS B&amp;H file.</p>
 <p>B&amp;H files contain TCSPC histograms acquired from Becker &amp; Hickl
 cards, or converted from other data sources. B&amp;H files contain no metadata.</p>
@@ -1262,7 +1269,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS B&amp;H file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – If file is not a SimFCS B&amp;H file.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1284,7 +1291,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_bhz">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bhz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L606-L660"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_bhz" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_bhz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L608-L662"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_bhz" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from SimFCS BHZ file.</p>
 <p>BHZ files contain TCSPC histograms acquired from Becker &amp; Hickl
 cards, or converted from other data sources. BHZ files contain no metadata.</p>
@@ -1300,7 +1307,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS BHZ file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – If file is not a SimFCS BHZ file.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1322,7 +1329,7 @@ shape <code class="docutils literal notranslate"><span class="pre">(256,</span> 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_fbd">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_fbd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L293-L433"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_fbd" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_fbd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">laser_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L293-L435"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_fbd" title="Link to this definition">#</a></dt>
 <dd><p>Return phase histogram and metadata from FLIMbox FBD file.</p>
 <p>FBD files contain encoded cross-correlation phase histograms from
 digital frequency-domain measurements using a FLIMbox device.
@@ -1364,7 +1371,10 @@ type <cite>uint16</cite>, and selected metadata:</p>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – File is not a FLIMbox FBD file.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If file is not a FLIMbox FBD file.</p></li>
+<li><p><strong>IndexError</strong> – If frame or channel index is out of bounds.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1417,7 +1427,7 @@ type <cite>uint16</cite>, and selected metadata:</p>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a FlimFast FLIF file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – If file is not a FlimFast FLIF file.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1443,7 +1453,7 @@ type <cite>uint16</cite>, and selected metadata:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_flimlabs_json">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_flimlabs.py#L224-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_flimlabs_json" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_flimlabs_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_flimlabs.py#L231-L387"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_flimlabs_json" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from FLIM LABS JSON imaging file.</p>
 <p>FLIM LABS JSON imaging files contain encoded, multi-channel TCSPC
 histograms and metadata from digital frequency-domain measurements.</p>
@@ -1533,8 +1543,8 @@ type <cite>uint16</cite>, and selected metadata:</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>tifffile.TiffFileError</strong> – File is not a TIFF file.</p></li>
-<li><p><strong>ValueError</strong> – File is not an ImSpector FLIM TIFF file.</p></li>
+<li><p><strong>tifffile.TiffFileError</strong> – If file is not a TIFF file.</p></li>
+<li><p><strong>ValueError</strong> – If file is not an ImSpector FLIM TIFF file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1561,7 +1571,7 @@ type <cite>uint16</cite>, and selected metadata:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_lif">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L242-L333"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'λ'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_leica.py#L244-L336"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lif" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Leica image file.</p>
 <p>Leica image files may contain hyperspectral images and metadata from laser
 scanning microscopy measurements.</p>
@@ -1576,7 +1586,8 @@ Either <cite>‘λ’</cite> for emission (default) or <cite>‘Λ’</cite> for
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Hyperspectral image and selected metadata:</p>
+<dd class="field-even"><p><p>Hyperspectral image with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> and
+selected metadata:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: excitation or emission wavelengths in nm.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['T']</span></code>: time coordinates in s, if any.</p></li>
@@ -1588,8 +1599,8 @@ Either <cite>‘λ’</cite> for emission (default) or <cite>‘Λ’</cite> for
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>liffile.LifFileError</strong> – File is not a Leica image file.</p></li>
-<li><p><strong>ValueError</strong> – File is not a Leica image file or does not contain hyperspectral image.</p></li>
+<li><p><strong>liffile.LifFileError</strong> – If file is not a Leica image file.</p></li>
+<li><p><strong>ValueError</strong> – If file or <cite>image</cite> does not contain hyperspectral image.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1614,7 +1625,7 @@ because the compression scheme is patent-pending.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_lsm">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lsm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L269-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lsm" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_lsm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L270-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_lsm" title="Link to this definition">#</a></dt>
 <dd><p>Return hyperspectral image and metadata from Zeiss LSM file.</p>
 <p>Zeiss LSM files contain multidimensional images and metadata from laser
 scanning microscopy measurements. The file format is based on TIFF.</p>
@@ -1623,9 +1634,8 @@ scanning microscopy measurements. The file format is based on TIFF.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of Zeiss LSM file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Hyperspectral image data.
-Usually, a 3-to-5-dimensional array of type <cite>uint8</cite> or <cite>uint16</cite>,
-and selected metadata:</p>
+<dd class="field-even"><p><p>Hyperspectral image with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> and
+type <cite>uint8</cite> or <cite>uint16</cite>, and selected metadata:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['C']</span></code>: wavelengths in nm.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">coords['T']</span></code>: time coordinates in s, if any.</p></li>
@@ -1637,8 +1647,8 @@ and selected metadata:</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>tifffile.TiffFileError</strong> – File is not a TIFF file.</p></li>
-<li><p><strong>ValueError</strong> – File is not an LSM file or does not contain hyperspectral image.</p></li>
+<li><p><strong>tifffile.TiffFileError</strong> – If file is not a TIFF file.</p></li>
+<li><p><strong>ValueError</strong> – If file is not an LSM file or does not contain hyperspectral image.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1684,7 +1694,7 @@ This assumes that the histogram contains exactly one period.</p></li>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – File is not a PicoQuant BIN file.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If file is not a PicoQuant BIN file.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1707,7 +1717,7 @@ This assumes that the histogram contains exactly one period.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_ptu">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_ptu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trimdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L121-L266"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_ptu" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_ptu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">trimdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L122-L267"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_ptu" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from PicoQuant PTU T3 mode file.</p>
 <p>PTU files contain TCSPC measurement data and instrument parameters,
 which are decoded to a multidimensional TCSPC histogram.</p>
@@ -1761,8 +1771,8 @@ broadcastable to image data.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ptufile.PqFileError</strong> – File is not a PicoQuant PTU file or is corrupted.</p></li>
-<li><p><strong>ValueError</strong> – File is not a PicoQuant PTU T3 mode file containing TCSPC data.</p></li>
+<li><p><strong>ptufile.PqFileError</strong> – If file is not a PicoQuant PTU file or is corrupted.</p></li>
+<li><p><strong>ValueError</strong> – If file is not a PicoQuant PTU T3 mode file containing TCSPC data.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1789,7 +1799,7 @@ broadcastable to image data.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_sdt">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_sdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L38-L118"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_sdt" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_sdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_other.py#L38-L119"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_sdt" title="Link to this definition">#</a></dt>
 <dd><p>Return TCSPC histogram and metadata from Becker &amp; Hickl SDT file.</p>
 <p>SDT files contain TCSPC measurement data and instrument parameters.</p>
 <dl class="field-list simple">
@@ -1814,7 +1824,7 @@ Dimensions <cite>‘Q’</cite> and <cite>‘C’</cite> are optional detector c
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – File is not an SDT file containing TCSPC histogram.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If file is not an SDT file containing TCSPC histogram.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1840,7 +1850,7 @@ Dimensions <cite>‘Q’</cite> and <cite>‘C’</cite> are optional detector c
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.io.signal_from_z64">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_z64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L495-L546"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_z64" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.io.</span></span><span class="sig-name descname"><span class="pre">signal_from_z64</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/io/_simfcs.py#L497-L548"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.io.signal_from_z64" title="Link to this definition">#</a></dt>
 <dd><p>Return image stack and metadata from SimFCS Z64 file.</p>
 <p>Z64 files commonly contain stacks of square images, such as intensity
 volumes or TCSPC histograms. Z64 files contain no metadata.</p>
@@ -1849,13 +1859,13 @@ volumes or TCSPC histograms. Z64 files contain no metadata.</p>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>Path</em>) – Name of SimFCS Z64 file to read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Image stack of type <cite>float32</cite>.</p>
+<dd class="field-even"><p>Image stack with <a class="reference internal" href="#axes"><span class="std std-ref">axes codes</span></a> and type <cite>float32</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray.DataArray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – File is not a SimFCS Z64 file.</p>
+<dd class="field-even"><p><strong>lfdfiles.LfdFileError</strong> – If file is not a SimFCS Z64 file.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1982,7 +1992,7 @@ volumes or TCSPC histograms. Z64 files contain no metadata.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
     <br/>
   </p>
 </div>
