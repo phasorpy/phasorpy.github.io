@@ -575,14 +575,146 @@ or more components (<a class="reference internal" href="#phasorpy.component.phas
 information (<code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_blind()</span></code>, not implemented yet)</p></li>
 <li><p>calculate phasor coordinates from fractional intensities of
 components (<a class="reference internal" href="#phasorpy.component.phasor_from_component" title="phasorpy.component.phasor_from_component"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_from_component()</span></code></a>)</p></li>
+<li><p>calculate absolute concentrations of two components from phasor
+coordinates and calibration (<a class="reference internal" href="#phasorpy.component.phasor_component_concentration" title="phasorpy.component.phasor_component_concentration"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_concentration()</span></code></a>)</p></li>
 </ul>
 <dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.component.phasor_component_concentration">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_concentration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_concentration</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L682-L965"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_concentration" title="Link to this definition">#</a></dt>
+<dd><p>Return concentrations of two components from phasor coordinates.</p>
+<p>Calculate the absolute concentration of the first component and,
+optionally, the second component of a two-component system from
+phasor coordinates, using an intensity calibration based on a solution
+of known concentration according to <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+<p>The algorithm uses geometric line-line intersections in phasor space
+to determine fractional contributions and scale them to absolute
+concentrations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>array_like</em>) – Mean intensity of phasor coordinates.</p></li>
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>component_real</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Real coordinates of the two components.
+The first component is the calibrated component, whose pure solution
+is used as the reference;</p></li>
+<li><p><strong>component_imag</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Imaginary coordinates of the two components.</p></li>
+<li><p><strong>reference_mean</strong> (<em>float</em>) – Mean fluorescence intensity of calibration solution.
+The calibration solution must contain only the first component at a
+known concentration.</p></li>
+<li><p><strong>reference_real</strong> (<em>float</em>) – Real coordinate of calibration solution phasor.</p></li>
+<li><p><strong>reference_imag</strong> (<em>float</em>) – Imaginary coordinate of calibration solution phasor.</p></li>
+<li><p><strong>reference_concentration</strong> (<em>float</em>) – Known concentration of calibration solution.
+Same units as the returned concentrations.</p></li>
+<li><p><strong>brightness_ratio</strong> (<em>float</em><em>, </em><em>optional</em>) – Ratio of molecular brightness of second to first component.
+If provided, the second-component concentration is also returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>conc_first</strong> (<em>ndarray</em>) – Absolute concentration of first component.</p></li>
+<li><p><strong>conc_second</strong> (<em>ndarray</em>) – Absolute concentration of second component.
+Only returned when <cite>brightness_ratio</cite> is provided.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>component_real</cite> values are equal (degenerate component line).
+    If <cite>component_real</cite> or <cite>component_imag</cite> do not have shape <code class="docutils literal notranslate"><span class="pre">(2,)</span></code>.
+    If <cite>reference_mean</cite> is zero (cannot normalize).
+    If <cite>reference_concentration</cite> is not positive.
+    If <cite>brightness_ratio</cite> is not positive.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phasorpy.component.phasor_component_fraction</span></code></a>, <a class="reference internal" href="../../tutorials/applications/phasorpy_nadh_concentration/#sphx-glr-tutorials-applications-phasorpy-nadh-concentration-py"><span class="std std-ref">NADH absolute concentration</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The algorithm is based on the <code class="docutils literal notranslate"><span class="pre">concandfrac</span></code> procedure from SimFCS and
+the method described in <a class="footnote-reference brackets" href="#id3" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.
+The implementation has been validated against the published cellular NADH
+concentration, but no independent theoretical or cross-instrument
+validation has been performed.
+Users applying the method to other analytes or instrument platforms
+are encouraged to verify results against known standards.</p>
+<p>The calibration solution must contain only component 0 (no component 1)
+at a precisely known concentration (<cite>reference_concentration</cite>).
+It must be acquired under identical instrument settings as the sample
+(same laser power, detector gain, acquisition time, and objective),
+because the algorithm relates pixel mean intensities directly to the
+calibration mean intensity. The mean intensity of the calibration solution
+should be comparable to the typical pixel mean intensities of the sample.</p>
+<p>The calibration factor <span class="math notranslate nohighlight">\(k\)</span> relates the component-0 phasor
+position to an absolute concentration:</p>
+<div class="math notranslate nohighlight">
+\[k = c_\text{ref} \cdot \frac{g_0 - g_\text{cal}}
+    {g_\text{cal}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(g_0\)</span> is the real coordinate of the component-0 phasor,
+<span class="math notranslate nohighlight">\(g_\text{cal}\)</span> is the intersection of the line from <span class="math notranslate nohighlight">\(g_0\)</span>
+through the origin with the line connecting the component-1 phasor
+scaled by <span class="math notranslate nohighlight">\(m=0.5\)</span> and the calibration phasor scaled by
+<span class="math notranslate nohighlight">\(m=0.5\)</span>, and <span class="math notranslate nohighlight">\(c_\text{ref}\)</span> is the reference concentration.</p>
+<p>For each pixel, a normalized intensity is computed:</p>
+<div class="math notranslate nohighlight">
+\[m = \frac{I}{I_\text{ref} + I}\]</div>
+<p>where <span class="math notranslate nohighlight">\(I\)</span> is the pixel mean intensity and
+<span class="math notranslate nohighlight">\(I_\text{ref} = 2 \cdot \text{reference_mean}\)</span> is twice the
+fluorescence-only mean intensity of the calibration solution.</p>
+<p>The component-0 concentration is then:</p>
+<div class="math notranslate nohighlight">
+\[c_0 = \left|
+    \frac{g_\text{pix} \cdot k}{g_0 - g_\text{pix}} \right|\]</div>
+<p>where <span class="math notranslate nohighlight">\(g_\text{pix}\)</span> is the real coordinate of the intersection of
+the line from <span class="math notranslate nohighlight">\(g_0\)</span> through the origin with the line from the
+intensity-scaled component-1 phasor <span class="math notranslate nohighlight">\(g_1 \cdot m\)</span> through
+the measured phasor.
+Note: The absolute value in the <span class="math notranslate nohighlight">\(c_0\)</span> formula is required for phasor
+geometries where <span class="math notranslate nohighlight">\(g_\text{pix}\)</span> falls outside the interval
+<span class="math notranslate nohighlight">\([0, g_0]\)</span> (as is typical for NADH), but has not been validated
+for other analytes or geometries.</p>
+<p>When <cite>brightness_ratio</cite> <span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_1 / \varepsilon_0\)</span>
+is provided, the component-0 fraction <span class="math notranslate nohighlight">\(f_0\)</span> at each pixel is
+determined by the intersection <span class="math notranslate nohighlight">\(g_\text{frac}\)</span> of the line from
+the origin through the measured phasor with the component line:</p>
+<div class="math notranslate nohighlight">
+\[f_0 = \frac{g_1 - g_\text{frac}}
+    {g_1 - g_0}\]</div>
+<p>The component-1 concentration and total concentration are then:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}c_1 &amp;= c_0 \cdot
+    \frac{1 - f_0}{f_0 \cdot \varepsilon}\\c_\text{total} &amp;= c_0 + c_1\end{aligned}\end{align} \]</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
+<p>Ma N, Digman M A, Malacrida L, and Gratton E.
+<a class="reference external" href="https://doi.org/10.1364/BOE.7.002441">Measurements of absolute concentrations of NADH in cells using
+the phasor FLIM method</a>.
+<em>Biomed Opt Express</em>, 7(7): 2441-2452 (2016)</p>
+</aside>
+</aside>
+<p class="rubric">Examples</p>
+<p>Verify the calibration self-consistency:
+when <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">reference_mean</span></code> (intensity modulation <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">0.5</span></code>)
+and the pixel phasor equals the reference phasor scaled by 0.5, the
+result equals <code class="docutils literal notranslate"><span class="pre">reference_concentration</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phasor_component_concentration</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span> <span class="mf">500.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">100.0</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">array(100)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.component.phasor_component_fit">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L461-L640"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_fit" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L466-L645"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_fit" title="Link to this definition">#</a></dt>
 <dd><p>Return fractions of multiple components from phasor coordinates.</p>
 <p>Component fractions are obtained from the least-squares solution of a
 linear matrix equation that relates phasor coordinates from one or
-multiple harmonics to component fractions according to <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+multiple harmonics to component fractions according to <a class="footnote-reference brackets" href="#id5" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <p>Up to <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">number</span> <span class="pre">harmonics</span> <span class="pre">+</span> <span class="pre">1</span></code> components can be fitted to
 multi-harmonic phasor coordinates, that is up to three components
 for single harmonic phasor coordinates.</p>
@@ -634,8 +766,8 @@ phasor coordinates in the mixture. The least-squares solution of this
 linear matrix equation yields the fractions.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">2</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">2</a><span class="fn-bracket">]</span></span>
 <p>Vallmitjana A, Lepanto P, Irigoin F, and Malacrida L.
 <a class="reference external" href="https://doi.org/10.1088/2050-6120/ac9ae9">Phasor-based multi-harmonic unmixing for in-vivo hyperspectral
 imaging</a>.
@@ -654,7 +786,7 @@ imaging</a>.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.component.phasor_component_fraction">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L161-L246"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_fraction" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L166-L251"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_fraction" title="Link to this definition">#</a></dt>
 <dd><p>Return fraction of first of two components from phasor coordinates.</p>
 <p>Return the relative distance (normalized by the distance between the two
 components) to the second component for each phasor coordinate projected
@@ -701,7 +833,7 @@ can be analyzed and is broadcast to all channels/frequencies.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.component.phasor_component_graphical">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_graphical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fractions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L249-L458"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_graphical" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_graphical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fractions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L254-L463"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_graphical" title="Link to this definition">#</a></dt>
 <dd><p>Return fractions of two or three components from phasor coordinates.</p>
 <p>The graphical method is based on moving circular cursors along the line
 between pairs of components and quantifying the phasors for each
@@ -749,7 +881,7 @@ Shaped <code class="docutils literal notranslate"><span class="pre">(number</spa
 <p>Calculation of fractions of components from different channels
 or frequencies is not supported yet. Only one set of components
 can be analyzed and is broadcast to all channels/frequencies.</p>
-<p>The graphical method was first introduced in <a class="footnote-reference brackets" href="#id4" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>The graphical method was first introduced in <a class="footnote-reference brackets" href="#id7" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <p>If no <cite>fractions</cite> are provided, the number of fractions (<span class="math notranslate nohighlight">\(N\)</span>) used
 is determined from the longest distance between any pair of components
 (<span class="math notranslate nohighlight">\(D\)</span>) and the radius of the cursor (<span class="math notranslate nohighlight">\(R\)</span>):</p>
@@ -761,8 +893,8 @@ is determined from the longest distance between any pair of components
 </div>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id4" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">1</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">1</a><span class="fn-bracket">]</span></span>
 <p>Ranjit S, Datta R, Dvornikov A, and Gratton E.
 <a class="reference external" href="https://doi.org/10.1021/acs.jpca.9b07880">Multicomponent analysis of phasor plot in a single pixel to
 calculate changes of metabolic trajectory in biological systems</a>.
@@ -794,11 +926,11 @@ calculate changes of metabolic trajectory in biological systems</a>.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.component.phasor_component_mvc">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_mvc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L643-L775"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_mvc" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_component_mvc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L968-L1100"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_component_mvc" title="Link to this definition">#</a></dt>
 <dd><p>Return mean value coordinates of phasor coordinates from components.</p>
 <p>The mean value coordinates of phasor coordinates with respect to three or
 more components spanning an arbitrary simple polygon are computed using
-the stable method described in <a class="footnote-reference brackets" href="#id6" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.
+the stable method described in <a class="footnote-reference brackets" href="#id9" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.
 For three components, mean value coordinates are equivalent to
 barycentric coordinates.</p>
 <dl class="field-list simple">
@@ -840,8 +972,8 @@ value coordinates make them particularly useful for interpolating and
 visualizing multi-component data.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id6" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">3</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="id9" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">3</a><span class="fn-bracket">]</span></span>
 <p>Fuda C and Hormann K.
 <a class="reference external" href="https://doi.org/10.1016/j.cagd.2024.102310">A new stable method to compute mean value coordinates</a>.
 <em>Computer Aided Geometric Design</em>, 111: 102310 (2024)</p>
@@ -864,7 +996,7 @@ defined by the components may be outside the range [0.0, 1.0]:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.component.phasor_from_component">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_from_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L60-L158"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_from_component" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.component.</span></span><span class="sig-name descname"><span class="pre">phasor_from_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component_imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/component.py#L65-L163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.component.phasor_from_component" title="Link to this definition">#</a></dt>
 <dd><p>Return phasor coordinates from fractional intensities of components.</p>
 <p>Return the dot products of the fractional intensities with the real and
 imaginary phasor coordinates of the components.</p>
@@ -961,6 +1093,7 @@ intensities:</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.component.phasor_component_concentration"><code class="docutils literal notranslate"><span class="pre">phasor_component_concentration()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.component.phasor_component_fit"><code class="docutils literal notranslate"><span class="pre">phasor_component_fit()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.component.phasor_component_fraction"><code class="docutils literal notranslate"><span class="pre">phasor_component_fraction()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.component.phasor_component_graphical"><code class="docutils literal notranslate"><span class="pre">phasor_component_graphical()</span></code></a></li>
