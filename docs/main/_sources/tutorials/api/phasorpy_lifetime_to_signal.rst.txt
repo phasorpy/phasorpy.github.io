@@ -74,8 +74,8 @@ Define common parameters used throughout the tutorial:
         'samples': 256,  # number of samples to synthesize
         'mean': 1.0,  # average intensity
         'background': 0.0,  # no signal from background
-        'zero_phase': None,  # location of IRF peak in the phase
-        'zero_stdev': None,  # standard deviation of IRF in radians
+        'zero_phase': None,  # automatic location of IRF peak in the phase
+        'zero_stdev': None,  # standard deviation of time-domain IRF in radians
     }
 
 
@@ -127,7 +127,7 @@ expected for the lifetimes:
     )
 
 
-    def verify_signal(fractions):
+    def verify_signal(reference_signal, fractions=None):
         """Verify calibrated phasor coordinates match expected results."""
         assert numpy.allclose(
             phasor_calibrate(
@@ -142,7 +142,7 @@ expected for the lifetimes:
         )
 
 
-    verify_signal(fractions)
+    verify_signal(reference_signal, fractions)
 
 
 
@@ -156,7 +156,7 @@ expected for the lifetimes:
 Plot the synthesized signals (multi-exponential, reference, and
 instrument response):
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-101
+.. GENERATED FROM PYTHON SOURCE LINES 88-108
 
 .. code-block:: Python
 
@@ -167,9 +167,16 @@ instrument response):
         xlabel='Times [ns]',
         ylabel='Intensity [au]',
     )
+    ax.plot(
+        times,
+        # scale IRF peak to match signal peak
+        instrument_response * (signal.max() / instrument_response.max()),
+        linewidth=0.8,
+        color='tab:grey',
+        label='Instrument response',
+    )
     ax.plot(times, signal, label='Multi-exponential')
     ax.plot(times, reference_signal, label='Reference')
-    ax.plot(times, instrument_response, label='Instrument response')
     ax.legend()
     pyplot.show()
 
@@ -185,7 +192,7 @@ instrument response):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-107
+.. GENERATED FROM PYTHON SOURCE LINES 109-114
 
 Time domain, single exponential
 -------------------------------
@@ -193,14 +200,14 @@ Time domain, single exponential
 To synthesize separate signals for each lifetime component at once,
 omit the lifetime fractions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-112
+.. GENERATED FROM PYTHON SOURCE LINES 114-119
 
 .. code-block:: Python
 
 
     signal, _, times = lifetime_to_signal(frequency, lifetimes, **settings)
 
-    verify_signal(None)
+    verify_signal(reference_signal)
 
 
 
@@ -209,11 +216,11 @@ omit the lifetime fractions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-114
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
 Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-125
+.. GENERATED FROM PYTHON SOURCE LINES 121-132
 
 .. code-block:: Python
 
@@ -240,11 +247,11 @@ Plot the synthesized signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 126-127
+.. GENERATED FROM PYTHON SOURCE LINES 133-134
 
 As expected, the shorter the lifetime, the faster the decay.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-134
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
 
 Frequency domain, multi exponential
 -----------------------------------
@@ -252,7 +259,7 @@ Frequency domain, multi exponential
 To synthesize a frequency-domain homodyne signal, limit the
 synthesis to the fundamental frequency (``harmonic=1``):
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-145
+.. GENERATED FROM PYTHON SOURCE LINES 141-152
 
 .. code-block:: Python
 
@@ -265,7 +272,7 @@ synthesis to the fundamental frequency (``harmonic=1``):
         frequency, reference_lifetime, harmonic=1, **settings
     )
 
-    verify_signal(fractions)
+    verify_signal(reference_signal, fractions)
 
 
 
@@ -274,11 +281,11 @@ synthesis to the fundamental frequency (``harmonic=1``):
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-147
+.. GENERATED FROM PYTHON SOURCE LINES 153-154
 
 Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-163
+.. GENERATED FROM PYTHON SOURCE LINES 154-176
 
 .. code-block:: Python
 
@@ -292,9 +299,15 @@ Plot the synthesized signals:
         ylabel='Intensity [au]',
         xticks=[0, 90, 180, 270, 360],
     )
+    ax.plot(
+        phase,
+        instrument_response,
+        linewidth=0.8,
+        color='tab:grey',
+        label='Instrument response',
+    )
     ax.plot(phase, signal, label='Multi-exponential')
     ax.plot(phase, reference_signal, label='Reference')
-    ax.plot(phase, instrument_response, label='Instrument response')
     ax.legend()
     pyplot.show()
 
@@ -310,22 +323,34 @@ Plot the synthesized signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-169
+.. GENERATED FROM PYTHON SOURCE LINES 177-179
+
+The homodyne signal can contain negative values since the modulation depth
+of the excitation source is 1.
+
+.. GENERATED FROM PYTHON SOURCE LINES 181-187
 
 Frequency domain, single exponential
 ------------------------------------
 
-To synthesize separate signals for each lifetime component at once,
-omit the lifetime fractions:
+To synthesize separate signals for each lifetime component at once, omit the
+lifetime fractions. Halving the modulation depth of the excitation source
+(``zero_modulation=0.5``) guarantees a non-negative signal for any lifetime:
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-174
+.. GENERATED FROM PYTHON SOURCE LINES 187-198
 
 .. code-block:: Python
 
 
-    signal, _, _ = lifetime_to_signal(frequency, lifetimes, harmonic=1, **settings)
+    signal, _, _ = lifetime_to_signal(
+        frequency, lifetimes, harmonic=1, zero_modulation=0.5, **settings
+    )
 
-    verify_signal(None)
+    reference_signal, _, _ = lifetime_to_signal(
+        frequency, reference_lifetime, harmonic=1, zero_modulation=0.5, **settings
+    )
+
+    verify_signal(reference_signal)
 
 
 
@@ -334,11 +359,11 @@ omit the lifetime fractions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-176
+.. GENERATED FROM PYTHON SOURCE LINES 199-200
 
 Plot the synthesized signals:
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-188
+.. GENERATED FROM PYTHON SOURCE LINES 200-212
 
 .. code-block:: Python
 
@@ -366,7 +391,7 @@ Plot the synthesized signals:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 189-191
+.. GENERATED FROM PYTHON SOURCE LINES 213-215
 
 As expected, the shorter the lifetime, the smaller the phase shift and
 demodulation.
@@ -374,7 +399,7 @@ demodulation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.309 seconds)
+   **Total running time of the script:** (0 minutes 0.285 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_lifetime_to_signal.py:
