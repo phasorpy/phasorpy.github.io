@@ -31,7 +31,7 @@ median filtering and wavelet filtering.
 
 Import required modules and functions:
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-27
+.. GENERATED FROM PYTHON SOURCE LINES 15-28
 
 .. code-block:: Python
 
@@ -41,6 +41,7 @@ Import required modules and functions:
         phasor_filter_median,
         phasor_filter_pawflim,
         phasor_threshold,
+        signal_filter_median,
     )
     from phasorpy.io import signal_from_imspector_tiff
     from phasorpy.lifetime import phasor_calibrate
@@ -54,7 +55,7 @@ Import required modules and functions:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-33
+.. GENERATED FROM PYTHON SOURCE LINES 29-34
 
 Get calibrated phasor coordinates
 ---------------------------------
@@ -62,7 +63,7 @@ Get calibrated phasor coordinates
 Read a time-correlated single photon counting (TCSPC) histogram from a file.
 A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 34-41
 
 .. code-block:: Python
 
@@ -80,29 +81,21 @@ A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Calculate and calibrate phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-59
+.. GENERATED FROM PYTHON SOURCE LINES 43-52
 
 .. code-block:: Python
 
 
     mean, real, imag = phasor_from_signal(signal, axis=0)
 
-    reference_mean, reference_real, reference_imag = phasor_from_signal(
-        reference_signal, axis=0
-    )
+    reference = phasor_from_signal(reference_signal, axis=0)
 
     real, imag = phasor_calibrate(
-        real,
-        imag,
-        reference_mean,
-        reference_real,
-        reference_imag,
-        frequency=frequency,
-        lifetime=4.2,
+        real, imag, *reference, frequency=frequency, lifetime=4.2
     )
 
 
@@ -112,7 +105,7 @@ Calculate and calibrate phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
+.. GENERATED FROM PYTHON SOURCE LINES 53-58
 
 Unfiltered
 ----------
@@ -120,7 +113,7 @@ Unfiltered
 Plot the unfiltered, calibrated phasor coordinates after applying a
 threshold based on the mean intensity to remove background values:
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-72
+.. GENERATED FROM PYTHON SOURCE LINES 58-65
 
 .. code-block:: Python
 
@@ -143,7 +136,7 @@ threshold based on the mean intensity to remove background values:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-82
+.. GENERATED FROM PYTHON SOURCE LINES 66-75
 
 Median filter
 -------------
@@ -155,7 +148,7 @@ median filter to phasor coordinates. Typically, applying a 3x3 kernel
 once to three times is sufficient to remove noise while maintaining
 important features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-87
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. code-block:: Python
 
@@ -171,11 +164,11 @@ important features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 81-82
 
 Thresholds should be applied after filtering:
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-94
+.. GENERATED FROM PYTHON SOURCE LINES 82-87
 
 .. code-block:: Python
 
@@ -191,11 +184,11 @@ Thresholds should be applied after filtering:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Plot the median-filtered and thresholded phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-104
+.. GENERATED FROM PYTHON SOURCE LINES 89-97
 
 .. code-block:: Python
 
@@ -219,12 +212,12 @@ Plot the median-filtered and thresholded phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-107
+.. GENERATED FROM PYTHON SOURCE LINES 98-100
 
 Increasing the number of repetitions or the filter kernel size can further
 reduce noise, but may also remove relevant features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-119
+.. GENERATED FROM PYTHON SOURCE LINES 100-112
 
 .. code-block:: Python
 
@@ -252,12 +245,12 @@ reduce noise, but may also remove relevant features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-122
+.. GENERATED FROM PYTHON SOURCE LINES 113-115
 
 The smoothing effect of median-filtering is demonstrated by plotting the
 real components of the filtered and unfiltered phasor coordinates as images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-132
+.. GENERATED FROM PYTHON SOURCE LINES 115-125
 
 .. code-block:: Python
 
@@ -283,7 +276,56 @@ real components of the filtered and unfiltered phasor coordinates as images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 133-143
+.. GENERATED FROM PYTHON SOURCE LINES 126-128
+
+For comparison, the function :py:func:`phasorpy.filter.signal_filter_median`
+applies a median filter to the signal before phasor transformation:
+
+.. GENERATED FROM PYTHON SOURCE LINES 128-148
+
+.. code-block:: Python
+
+
+    signal_filtered = signal_filter_median(signal, skip_axis=0, repeat=1, size=3)
+
+    mean, real, imag = phasor_from_signal(signal_filtered, axis=0)
+
+    real, imag = phasor_calibrate(
+        real, imag, *reference, frequency=frequency, lifetime=4.2
+    )
+
+    mean_filtered, real_filtered, imag_filtered = phasor_threshold(
+        mean, real, imag, mean_min=1
+    )
+
+    plot_phasor(
+        real_filtered,
+        imag_filtered,
+        frequency=frequency,
+        title='Phasor coordinates of median-filtered signal',
+    )
+
+
+
+
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_005.png
+   :alt: Phasor coordinates of median-filtered signal
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_005.png
+   :class: sphx-glr-single-img
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 149-154
+
+Note that the resulting phasor coordinates are displaced from the true
+distribution. Signal-space filtering does not commute with the phasor
+transform: for heterogeneous samples, the spatial median of neighboring
+signals does not produce a physically meaningful signal.
+Use :py:func:`phasorpy.filter.phasor_filter_median` instead.
+
+.. GENERATED FROM PYTHON SOURCE LINES 156-166
 
 pawFLIM wavelet filter
 ----------------------
@@ -296,7 +338,7 @@ the pawFLIM filter requires calibrated phasor coordinates from FLIM
 measurements and at least one harmonic and its corresponding second harmonic
 (the 1st and 2nd harmonic in this example):
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-163
+.. GENERATED FROM PYTHON SOURCE LINES 166-182
 
 .. code-block:: Python
 
@@ -305,16 +347,12 @@ measurements and at least one harmonic and its corresponding second harmonic
 
     mean, real, imag = phasor_from_signal(signal, axis=0, harmonic=harmonic)
 
-    reference_mean, reference_real, reference_imag = phasor_from_signal(
-        reference_signal, axis=0, harmonic=harmonic
-    )
+    reference = phasor_from_signal(reference_signal, axis=0, harmonic=harmonic)
 
     real, imag = phasor_calibrate(
         real,
         imag,
-        reference_mean,
-        reference_real,
-        reference_imag,
+        *reference,
         frequency=frequency,
         lifetime=4.2,
         harmonic=harmonic,
@@ -327,11 +365,11 @@ measurements and at least one harmonic and its corresponding second harmonic
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 164-165
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
 Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-170
+.. GENERATED FROM PYTHON SOURCE LINES 184-189
 
 .. code-block:: Python
 
@@ -347,11 +385,11 @@ Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-172
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-180
+.. GENERATED FROM PYTHON SOURCE LINES 191-199
 
 .. code-block:: Python
 
@@ -366,22 +404,22 @@ Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_005.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_006.png
    :alt: pawFLIM-filtered phasor coordinates (sigma=2, levels=1)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_005.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_006.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-184
+.. GENERATED FROM PYTHON SOURCE LINES 200-203
 
 Increasing the significance level ``sigma`` of the comparison between
 phasor coordinates or the maximum averaging area ``levels`` can reduce noise
 further:
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-200
+.. GENERATED FROM PYTHON SOURCE LINES 203-219
 
 .. code-block:: Python
 
@@ -404,21 +442,21 @@ further:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_006.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_007.png
    :alt: pawFLIM-filtered phasor coordinates (sigma=5, levels=3)
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_006.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_007.png
    :class: sphx-glr-single-img
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-203
+.. GENERATED FROM PYTHON SOURCE LINES 220-222
 
 Plot the real components of the filtered and unfiltered phasor coordinates
 as images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-213
+.. GENERATED FROM PYTHON SOURCE LINES 222-232
 
 .. code-block:: Python
 
@@ -435,9 +473,9 @@ as images:
 
 
 
-.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_007.png
+.. image-sg:: /tutorials/api/images/sphx_glr_phasorpy_filter_008.png
    :alt: Real component of phasor coordinates, Unfiltered, pawFLIM-filtered
-   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_007.png
+   :srcset: /tutorials/api/images/sphx_glr_phasorpy_filter_008.png
    :class: sphx-glr-single-img
 
 
@@ -447,7 +485,7 @@ as images:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.307 seconds)
+   **Total running time of the script:** (0 minutes 4.533 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_filter.py:
