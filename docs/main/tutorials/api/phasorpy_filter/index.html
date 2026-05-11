@@ -577,14 +577,16 @@
 <span id="sphx-glr-tutorials-api-phasorpy-filter-py"></span><h1>Filter phasor coordinates<a class="headerlink" href="#filter-phasor-coordinates" title="Link to this heading">#</a></h1>
 <p>Functions for filtering phasor coordinates.</p>
 <p>Filtering phasor coordinates improves signal quality by reducing noise while
-preserving relevant features. Two of the most common filtering methods are
-median filtering and wavelet filtering.</p>
+preserving relevant features. Common methods include thresholding, median,
+Gaussian, and wavelet-based filtering.</p>
 <p>Import required modules and functions:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.filter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <a href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_gaussian</span></a><span class="p">,</span>
     <a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">,</span>
     <a href="../../../api/filter/#phasorpy.filter.phasor_filter_pawflim" title="phasorpy.filter.phasor_filter_pawflim" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_pawflim</span></a><span class="p">,</span>
     <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">,</span>
+    <a href="../../../api/filter/#phasorpy.filter.signal_filter_gaussian" title="phasorpy.filter.signal_filter_gaussian" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">signal_filter_gaussian</span></a><span class="p">,</span>
     <a href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">signal_filter_median</span></a><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/io/#phasorpy.io.signal_from_imspector_tiff" title="phasorpy.io.signal_from_imspector_tiff" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_imspector_tiff</span></a>
@@ -593,8 +595,8 @@ median filtering and wavelet filtering.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a>
 </pre></div>
 </div>
-<section id="get-calibrated-phasor-coordinates">
-<h2>Get calibrated phasor coordinates<a class="headerlink" href="#get-calibrated-phasor-coordinates" title="Link to this heading">#</a></h2>
+<section id="calibrated-phasor-coordinates">
+<h2>Calibrated phasor coordinates<a class="headerlink" href="#calibrated-phasor-coordinates" title="Link to this heading">#</a></h2>
 <p>Read a time-correlated single photon counting (TCSPC) histogram from a file.
 A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_imspector_tiff" title="phasorpy.io.signal_from_imspector_tiff" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_imspector_tiff</span></a><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;Embryo.tif&#39;</span><span class="p">))</span>
@@ -604,7 +606,7 @@ A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:</p>
 <span class="k">assert</span> <span class="n">reference_signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">frequency</span>
 </pre></div>
 </div>
-<p>Calculate and calibrate phasor coordinates:</p>
+<p>Calculate, calibrate, and plot the phasor coordinates:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">reference</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -612,21 +614,29 @@ A homogeneous solution of Fluorescein (4.2 ns) was imaged as a reference:</p>
 <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
     <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">*</span><span class="n">reference</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="unfiltered">
-<h2>Unfiltered<a class="headerlink" href="#unfiltered" title="Link to this heading">#</a></h2>
-<p>Plot the unfiltered, calibrated phasor coordinates after applying a
-threshold based on the mean intensity to remove background values:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
-    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Unfiltered phasor coordinates&#39;</span><span class="p">,</span>
+
+<a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Calibrated phasor coordinates&#39;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_001.png" srcset="../../../_images/sphx_glr_phasorpy_filter_001.png" alt="Unfiltered phasor coordinates" class = "sphx-glr-single-img"/></section>
+<img src="../../../_images/sphx_glr_phasorpy_filter_001.png" srcset="../../../_images/sphx_glr_phasorpy_filter_001.png" alt="Calibrated phasor coordinates" class = "sphx-glr-single-img"/></section>
+<section id="threshold">
+<h2>Threshold<a class="headerlink" href="#threshold" title="Link to this heading">#</a></h2>
+<p>Thresholding with <a class="reference internal" href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.phasor_threshold()</span></code></a> sets phasor
+coordinates to NaN (not a number) wherever the mean intensity, real or
+imaginary coordinates, phase or modulation fall outside specified bounds.
+Such coordinates are excluded from plots and calculations. Thresholding is
+typically performed after noise filtering.
+Use a minimum mean intensity to remove background:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Thresholded phasor coordinates&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filter_002.png" srcset="../../../_images/sphx_glr_phasorpy_filter_002.png" alt="Thresholded phasor coordinates" class = "sphx-glr-single-img"/></section>
 <section id="median-filter">
 <h2>Median filter<a class="headerlink" href="#median-filter" title="Link to this heading">#</a></h2>
 <p>Median filtering replaces each pixel value with the median of its
@@ -640,7 +650,7 @@ important features:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Thresholds should be applied after filtering:</p>
+<p>Thresholds should be applied after noise filtering:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
     <span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
@@ -655,7 +665,7 @@ important features:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_002.png" srcset="../../../_images/sphx_glr_phasorpy_filter_002.png" alt="Median-filtered phasor coordinates (3x3 kernel, 3 repetitions)" class = "sphx-glr-single-img"/><p>Increasing the number of repetitions or the filter kernel size can further
+<img src="../../../_images/sphx_glr_phasorpy_filter_003.png" srcset="../../../_images/sphx_glr_phasorpy_filter_003.png" alt="Median-filtered phasor coordinates (3x3 kernel, 3 repetitions)" class = "sphx-glr-single-img"/><p>Increasing the number of repetitions or the filter kernel size can further
 reduce noise, but may also remove relevant features:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
     <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
@@ -669,7 +679,7 @@ reduce noise, but may also remove relevant features:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_003.png" srcset="../../../_images/sphx_glr_phasorpy_filter_003.png" alt="Median-filtered phasor coordinates (5x5 kernel, 6 repetitions)" class = "sphx-glr-single-img"/><p>The smoothing effect of median-filtering is demonstrated by plotting the
+<img src="../../../_images/sphx_glr_phasorpy_filter_004.png" srcset="../../../_images/sphx_glr_phasorpy_filter_004.png" alt="Median-filtered phasor coordinates (5x5 kernel, 6 repetitions)" class = "sphx-glr-single-img"/><p>The smoothing effect of median-filtering is demonstrated by plotting the
 real components of the filtered and unfiltered phasor coordinates as images:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
     <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
@@ -681,7 +691,7 @@ real components of the filtered and unfiltered phasor coordinates as images:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_004.png" srcset="../../../_images/sphx_glr_phasorpy_filter_004.png" alt="Real component of phasor coordinates, Unfiltered, Median-filtered" class = "sphx-glr-single-img"/><p>For comparison, the function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.signal_filter_median()</span></code></a>
+<img src="../../../_images/sphx_glr_phasorpy_filter_005.png" srcset="../../../_images/sphx_glr_phasorpy_filter_005.png" alt="Real component of phasor coordinates, Unfiltered, Median-filtered" class = "sphx-glr-single-img"/><p>For comparison, the function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.signal_filter_median()</span></code></a>
 applies a median filter to the signal before phasor transformation:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">signal_filter_median</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -703,11 +713,94 @@ applies a median filter to the signal before phasor transformation:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_005.png" srcset="../../../_images/sphx_glr_phasorpy_filter_005.png" alt="Phasor coordinates of median-filtered signal" class = "sphx-glr-single-img"/><p>Note that the resulting phasor coordinates are displaced from the true
+<img src="../../../_images/sphx_glr_phasorpy_filter_006.png" srcset="../../../_images/sphx_glr_phasorpy_filter_006.png" alt="Phasor coordinates of median-filtered signal" class = "sphx-glr-single-img"/><p>Note that the resulting phasor coordinates are displaced from the true
 distribution. Signal-space filtering does not commute with the phasor
 transform: for heterogeneous samples, the spatial median of neighboring
 signals does not produce a physically meaningful signal.
 Use <a class="reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.phasor_filter_median()</span></code></a> instead.</p>
+</section>
+<section id="gaussian-filter">
+<h2>Gaussian filter<a class="headerlink" href="#gaussian-filter" title="Link to this heading">#</a></h2>
+<p>Gaussian filtering replaces each pixel value with a weighted average of its
+neighbors, where weights follow a Gaussian distribution.
+Unlike median filtering, it is linear and smooths more gradually.
+The function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.phasor_filter_gaussian()</span></code></a> applies a
+Gaussian filter to phasor coordinates. By default, a 3x3 kernel with sigma
+of about 0.8 is used:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">*</span><span class="n">reference</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span>
+<span class="p">)</span>
+
+<span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_gaussian</span></a><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+
+<span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">imag_filtered</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Gaussian-filtered phasor coordinates (3x3 kernel, 3 repetitions)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filter_007.png" srcset="../../../_images/sphx_glr_phasorpy_filter_007.png" alt="Gaussian-filtered phasor coordinates (3x3 kernel, 3 repetitions)" class = "sphx-glr-single-img"/><p>Increasing the number of repetitions or the kernel size can further reduce
+noise, but may also blur relevant features:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_gaussian</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">imag_filtered</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Gaussian-filtered phasor coordinates (5x5 kernel, 6 repetitions)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filter_008.png" srcset="../../../_images/sphx_glr_phasorpy_filter_008.png" alt="Gaussian-filtered phasor coordinates (5x5 kernel, 6 repetitions)" class = "sphx-glr-single-img"/><p>The smoothing effect of Gaussian filtering is demonstrated by plotting the
+real components of the filtered and unfiltered phasor coordinates as images:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
+    <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Unfiltered&#39;</span><span class="p">,</span> <span class="s1">&#39;Gaussian-filtered&#39;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Real component of phasor coordinates&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filter_009.png" srcset="../../../_images/sphx_glr_phasorpy_filter_009.png" alt="Real component of phasor coordinates, Unfiltered, Gaussian-filtered" class = "sphx-glr-single-img"/><p>For comparison, the function
+<a class="reference internal" href="../../../api/filter/#phasorpy.filter.signal_filter_gaussian" title="phasorpy.filter.signal_filter_gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasorpy.filter.signal_filter_gaussian()</span></code></a> applies a Gaussian filter
+to the signal before phasor transformation:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.signal_filter_gaussian" title="phasorpy.filter.signal_filter_gaussian" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">signal_filter_gaussian</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal_filtered</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
+    <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="o">*</span><span class="n">reference</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="mf">4.2</span>
+<span class="p">)</span>
+
+<span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span>
+    <span class="n">real_filtered</span><span class="p">,</span>
+    <span class="n">imag_filtered</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Phasor coordinates of Gaussian-filtered signal&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_filter_010.png" srcset="../../../_images/sphx_glr_phasorpy_filter_010.png" alt="Phasor coordinates of Gaussian-filtered signal" class = "sphx-glr-single-img"/><p>Unlike median filtering, Gaussian filtering is a linear operation, so the
+phasor coordinates of the Gaussian-filtered signal are close to those
+obtained by filtering the phasor coordinates directly.</p>
 </section>
 <section id="pawflim-wavelet-filter">
 <h2>pawFLIM wavelet filter<a class="headerlink" href="#pawflim-wavelet-filter" title="Link to this heading">#</a></h2>
@@ -749,7 +842,7 @@ measurements and at least one harmonic and its corresponding second harmonic
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_006.png" srcset="../../../_images/sphx_glr_phasorpy_filter_006.png" alt="pawFLIM-filtered phasor coordinates (sigma=2, levels=1)" class = "sphx-glr-single-img"/><p>Increasing the significance level <code class="docutils literal notranslate"><span class="pre">sigma</span></code> of the comparison between
+<img src="../../../_images/sphx_glr_phasorpy_filter_011.png" srcset="../../../_images/sphx_glr_phasorpy_filter_011.png" alt="pawFLIM-filtered phasor coordinates (sigma=2, levels=1)" class = "sphx-glr-single-img"/><p>Increasing the significance level <code class="docutils literal notranslate"><span class="pre">sigma</span></code> of the comparison between
 phasor coordinates or the maximum averaging area <code class="docutils literal notranslate"><span class="pre">levels</span></code> can reduce noise
 further:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean_filtered</span><span class="p">,</span> <span class="n">real_filtered</span><span class="p">,</span> <span class="n">imag_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_pawflim" title="phasorpy.filter.phasor_filter_pawflim" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_pawflim</span></a><span class="p">(</span>
@@ -768,7 +861,7 @@ further:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_007.png" srcset="../../../_images/sphx_glr_phasorpy_filter_007.png" alt="pawFLIM-filtered phasor coordinates (sigma=5, levels=3)" class = "sphx-glr-single-img"/><p>Plot the real components of the filtered and unfiltered phasor coordinates
+<img src="../../../_images/sphx_glr_phasorpy_filter_012.png" srcset="../../../_images/sphx_glr_phasorpy_filter_012.png" alt="pawFLIM-filtered phasor coordinates (sigma=5, levels=3)" class = "sphx-glr-single-img"/><p>Plot the real components of the filtered and unfiltered phasor coordinates
 as images:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
     <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
@@ -780,7 +873,7 @@ as images:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_008.png" srcset="../../../_images/sphx_glr_phasorpy_filter_008.png" alt="Real component of phasor coordinates, Unfiltered, pawFLIM-filtered" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.533 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_filter_013.png" srcset="../../../_images/sphx_glr_phasorpy_filter_013.png" alt="Real component of phasor coordinates, Unfiltered, pawFLIM-filtered" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.510 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-filter-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/db0591fedee5fa8e3e4082105dc51b37/phasorpy_filter.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_filter.ipynb</span></code></a></p>
@@ -843,9 +936,10 @@ as images:</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-calibrated-phasor-coordinates">Get calibrated phasor coordinates</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unfiltered">Unfiltered</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calibrated-phasor-coordinates">Calibrated phasor coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#threshold">Threshold</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#median-filter">Median filter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaussian-filter">Gaussian filter</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pawflim-wavelet-filter">pawFLIM wavelet filter</a></li>
 </ul>
   </nav></div>
