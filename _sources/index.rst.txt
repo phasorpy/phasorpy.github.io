@@ -34,6 +34,8 @@ Resources
 News
 ====
 
+- May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+
 - Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Oct 10, 2025: `PhasorPy 0.8 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
@@ -92,6 +94,12 @@ Events
 ======
 
 The PhasorPy project is presented at the following events:
+
+- Bruno Pannunzio.
+  PhasorPy and napari-phasors: open source tools for FLIM-phasor analysis.
+  `F-Techniques Worskhop Series: FLIM
+  <https://ppbi.pt/wordpress/index.php/f-techniques-worskhop-series-flim-january-13-15-2026/>`_.
+  January 13-15, 2026. Portuguese Platform of BioImaging (PPBI), Portugal.
 
 - Bruno Schüty.
   PhasorPy hands-on training.
