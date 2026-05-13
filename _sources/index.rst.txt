@@ -2,10 +2,43 @@
 PhasorPy homepage
 =================
 
-Welcome to the homepage of the PhasorPy project.
-
 PhasorPy is an open-source Python library for the analysis of luminescence
 lifetime and hyperspectral images using the phasor approach.
+
+.. container:: sphx-glr-thumbnails
+
+  .. gallery-tile:: phasorpy_introduction
+    :title: Introduction to PhasorPy
+    :description: An introduction to using the PhasorPy library.
+
+  .. gallery-tile:: phasorpy_lifetime_geometry
+    :title: Geometrical interpretation of lifetimes
+    :description: Demonstrate the geometrical interpretation of lifetimes in the phasor plot.
+
+  .. gallery-tile:: api/phasorpy_io
+    :title: File input/output
+    :description: Read and write phasor-related data from and to various file formats.
+
+  .. gallery-tile:: api/phasorpy_fret
+    :title: Förster resonance energy transfer
+    :description: Calculate and plot phasor coordinates of FRET donor and acceptor channels.
+
+  .. gallery-tile:: misc/phasorpy_apps
+    :title: Interactive apps
+    :description: Interactive educational applications.
+
+  .. gallery-tile:: applications/phasorpy_component_fit
+    :title: Multi-component fit
+    :description: Spectral unmixing using multi-component analysis in phasor space.
+
+  .. gallery-tile:: applications/phasorpy_nadh_concentration
+    :title: NADH absolute concentration
+    :description: Determine absolute NADH concentration using intensity-calibrated phasor FLIM.
+
+  .. gallery-tile:: https://www.phasorpy.org/docs/stable/tutorials/
+    :title: All tutorials...
+    :img: https://www.phasorpy.org/docs/stable/_images/sphx_glr_phasorpy_logo_thumb.png
+    :description: Browse all PhasorPy tutorials.
 
 Documentation
 =============
