@@ -10,13 +10,12 @@ coordinates derived from normalized Fourier coefficients for intuitive
 visualization and analysis.
 
 PhasorPy enables reproducible phasor-based fluorescence lifetime imaging
-(FLIM) and hyperspectral imaging (HSI) workflows in the scientific Python
-ecosystem, providing tools to read microscopy data in many file formats
-and to calculate, calibrate, filter, visualize, and interconvert phasor
-coordinates, lifetimes, and signals. Phasor coordinates can be exported to
-standard formats and analyzed through cursor-based region-of-interest
-selection, cluster detection, multi-component unmixing, and FRET efficiency
-estimation.
+(FLIM) and hyperspectral imaging (HSI) workflows in scientific Python.
+It provides tools to read microscopy data in many file formats and to
+calculate, calibrate, filter, visualize, and interconvert phasor coordinates,
+lifetimes, and signals. Phasor coordinates can be exported to standard
+formats and analyzed through cursor-based region-of-interest selection,
+cluster detection, multi-component unmixing, and FRET efficiency estimation.
 
 .. container:: sphx-glr-thumbnails
 
