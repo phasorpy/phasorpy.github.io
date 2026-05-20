@@ -15,36 +15,37 @@ It provides tools to read microscopy data in many file formats and to
 calculate, calibrate, filter, visualize, and interconvert phasor coordinates,
 lifetimes, and signals. Phasor coordinates can be exported to standard
 formats and analyzed through cursor-based region-of-interest selection,
-cluster detection, multi-component unmixing, and FRET efficiency estimation.
+cluster detection, multi-component unmixing, FRET efficiency and concentration
+estimation.
 
 .. container:: sphx-glr-thumbnails
 
   .. gallery-tile:: phasorpy_introduction
     :title: Introduction to PhasorPy
-    :description: An introduction to using the PhasorPy library.
+    :description: Demonstrate key features of the PhasorPy library.
 
   .. gallery-tile:: phasorpy_lifetime_geometry
-    :title: Geometrical interpretation of lifetimes
-    :description: Demonstrate the geometrical interpretation of lifetimes in the phasor plot.
+    :title: Geometric interpretation of lifetimes
+    :description: Illustrate the geometric interpretation of lifetimes in the phasor plot.
 
   .. gallery-tile:: api/phasorpy_io
     :title: File input/output
-    :description: Read and write phasor-related data from and to various file formats.
+    :description: Read and write phasor-related data in various file formats.
 
   .. gallery-tile:: api/phasorpy_fret
     :title: Förster resonance energy transfer
     :description: Calculate and plot phasor coordinates of FRET donor and acceptor channels.
 
   .. gallery-tile:: misc/phasorpy_apps
-    :title: Interactive apps
-    :description: Interactive educational applications.
+    :title: Interactive applications
+    :description: Explore phasor concepts using interactive educational applications.
 
   .. gallery-tile:: applications/phasorpy_component_fit
     :title: Multi-component fit
     :description: Spectral unmixing using multi-component analysis in phasor space.
 
   .. gallery-tile:: applications/phasorpy_nadh_concentration
-    :title: NADH absolute concentration
+    :title: Absolute NADH concentration
     :description: Determine absolute NADH concentration using intensity-calibrated phasor FLIM.
 
   .. gallery-tile:: https://www.phasorpy.org/docs/stable/tutorials/
