@@ -289,60 +289,51 @@ The PhasorPy project is presented at the following events:
 Publications
 ============
 
-**Using PhasorPy**
+Publications using PhasorPy:
 
 #. Schuty B, Garcia MJ, Khuon S, Malacrida L.
-   `Phasor analysis of RGB camera data enables fluorescence microscopy unmixing
-   and brightfield segmentation in a commercial microscope
+   `Phasor analysis of RGB camera data enables fluorescence microscopy unmixing and brightfield segmentation in a commercial microscope
    <https://doi.org/10.1016/j.sbsr.2026.101014>`__.
    *Sens Bio-Sens Res*. 52: 101014 (2026)
 
-#. Prieto D, Rehermann MI, Fabbiani G, Vitar M, Trujillo-Cenoz O, Falco MV,
-   Cuparo M, Trigo FF, et al.
-   `A filopodia-based dendritic mechanosensory compartment in CSF-contacting
-   neurons <https://doi.org/10.64898/2026.04.09.713694>`__.
+#. Prieto D, Rehermann MI, Fabbiani G, Vitar M, Trujillo-Cenoz O, Falco MV, Cuparo M, Trigo FF, et al.
+   `A filopodia-based dendritic mechanosensory compartment in CSF-contacting neurons
+   <https://doi.org/10.64898/2026.04.09.713694>`__.
    *bioRxiv* (2026)
 
-#. Halbers LP, Brennan CK, Scipioni L, Tedeschi G, Torrey ZR, Parag-Sharma K,
-   Labra B, Gohlke C, et al.
+#. Halbers LP, Brennan CK, Scipioni L, Tedeschi G, Torrey ZR, Parag-Sharma K, Labra B, Gohlke C, et al.
    `Expanded applications of bioluminescence microscopy with phasor analysis
    <https://doi.org/10.1016/j.crmeth.2026.101344>`__.
    *Cell Rep Methods*. 6(4): 101344 (2026)
 
-#. Fuller EB, Cole KH, Halbers LP, Chan CET, Ng KK, Scipioni L, Gohlke C,
-   Digman MA, et al.
+#. Fuller EB, Cole KH, Halbers LP, Chan CET, Ng KK, Scipioni L, Gohlke C, Digman MA, et al.
    `Bioluminescent probes for multiplexed RNA imaging
    <https://doi.org/10.1021/jacs.5c16597>`__.
    *J Am Chem Soc*. 148(11): 11521-11530 (2026)
 
 #. Pannunzio B, Cespedes P, Diaz M, Ali D, Rial A, Malacrida L.
-   `High-throughput single-cell spectroscopy using phasor analysis of spectral
-   flow cytometry <https://doi.org/10.64898/2026.02.27.708623>`__.
+   `High-throughput single-cell spectroscopy using phasor analysis of spectral flow cytometry
+   <https://doi.org/10.64898/2026.02.27.708623>`__.
    *bioRxiv* (2026)
 
 #. Zhao W, Samimi K, Skala MC, Datta R.
-   `FLIM playground: an interactive, end-to-end graphical user interface for
-   analyzing single cells with fluorescence lifetime imaging microscopy
+   `FLIM playground: an interactive, end-to-end graphical user interface for analyzing single cells with fluorescence lifetime imaging microscopy
    <https://doi.org/10.1101/2025.09.30.679625>`__.
    *bioRxiv* (2025)
 
-**Mentioning PhasorPy**
+Publications mentioning PhasorPy:
 
 #. Harkhoe R, Ferrari G, Dmitriev RI, Kuhl M.
-   `Luminescence lifetime imaging: Key concepts and advances in the image
-   acquisition, processing, and analysis pipeline
+   `Luminescence lifetime imaging: Key concepts and advances in the image acquisition, processing, and analysis pipeline
    <https://doi.org/10.1021/acsmeasuresciau.5c00209>`__.
    *ACS Meas Sci Au*. acsmeasuresciau.5c00209 (2026)
 
-#. Georgakoudi I, Skala MC, Quinn KP, Stringari C, Sorrells JE, Heikal AA,
-   Li LZ, Xu HN, et al.
-   `Consensus guidelines for cellular label-free optical metabolic imaging:
-   ensuring accuracy and reproducibility in metabolic profiling
+#. Georgakoudi I, Skala MC, Quinn KP, Stringari C, Sorrells JE, Heikal AA, Li LZ, Xu HN, et al.
+   `Consensus guidelines for cellular label-free optical metabolic imaging: ensuring accuracy and reproducibility in metabolic profiling
    <https://doi.org/10.1117/1.JBO.30.S2.S23901>`__.
    *J Biomed Opt*. 30(S2): S23901 (2025)
 
-#. Wetzker C, Zoccoler ML, Iarovenko S, Okafornta CW, Nobst A, Hartmann H,
-   Muller-Reichert T, Haase R, et al.
+#. Wetzker C, Zoccoler ML, Iarovenko S, Okafornta CW, Nobst A, Hartmann H, Muller-Reichert T, Haase R, et al.
    `A fluorescence lifetime separation approach for FLIM live-cell imaging
    <https://doi.org/10.1111/jmi.70036>`__.
    *J Microscopy*. 301(1): 91-106 (2025)
@@ -353,25 +344,26 @@ Publications
    *bioRxiv* (2025)
 
 #. Kapsiani S, Laubli NF, Ward EN, Shehata M, Kaminski CF, Kaminski Schierle GS.
-   `FLIMPA: a versatile software for fluorescence lifetime imaging microscopy
-   phasor analysis <https://doi.org/10.1021/acs.analchem.5c00495>`__.
+   `FLIMPA: a versatile software for fluorescence lifetime imaging microscopy phasor analysis
+   <https://doi.org/10.1021/acs.analchem.5c00495>`__.
    *Anal Chem*. 97(22): 11382-11387 (2025)
 
 #. Vallmitjana A, Torrado B, Durkin AF, Dvornikov A, Rajil N, Ranjit S, Balu M.
-   `GSLab: open-source platform for advanced phasor analysis in fluorescence
-   microscopy <https://doi.org/10.1093/bioinformatics/btaf162>`__.
+   `GSLab: open-source platform for advanced phasor analysis in fluorescence microscopy
+   <https://doi.org/10.1093/bioinformatics/btaf162>`__.
    *Bioinformatics*. 41(4): btaf162 (2025)
 
 #. Weber F, Iskrak S, Ragaller F, Schlegel J, Plochberger B, Sezgin E,
    Andronico LA.
-   `VISION - an open-source software for automated multi-dimensional image
-   analysis of cellular biophysics <https://doi.org/10.1242/jcs.262166>`__.
+   `VISION - an open-source software for automated multi-dimensional image analysis of cellular biophysics
+   <https://doi.org/10.1242/jcs.262166>`__.
    *J Cell Sci*. 137(20): jcs262166 (2024)
 
 Cite
 ====
 
-Please cite `doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`_
+Please cite
+`doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`_
 if PhasorPy contributes to research that leads to a publication.
 
 Contact
