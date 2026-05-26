@@ -297,12 +297,6 @@ Publications
    <https://doi.org/10.1016/j.sbsr.2026.101014>`__.
    *Sensing and Bio-Sensing Research*. 52: 101014 (2026)
 
-#. Scipioni L, Torrado B, Tedeschi G, Halbers LP, Torrey ZR, Fuller EB,
-   Fersini F, Gohlke C, et al.
-   `An open, integrated platform for multiplexed bioluminescence microscopy
-   <https://doi.org/10.1021/cbmi.5c00225>`__.
-   *Chemical & Biomedical Imaging*. cbmi.5c00225 (2026)
-
 #. Prieto D, Rehermann MI, Fabbiani G, Vitar M, Trujillo-Cenoz O, Falco MV,
    Cuparo M, Trigo FF, et al.
    `A filopodia-based dendritic mechanosensory compartment in CSF-contacting
