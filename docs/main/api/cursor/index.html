@@ -575,7 +575,7 @@
 <li><p><a class="reference internal" href="#phasorpy.cursor.mask_from_polar_cursor" title="phasorpy.cursor.mask_from_polar_cursor"><code class="xref py py-func docutils literal notranslate"><span class="pre">mask_from_polar_cursor()</span></code></a></p></li>
 </ul>
 </li>
-<li><p>create pseudo-color images from average signal and cursor masks:</p>
+<li><p>create pseudo-color images from intensity images and cursor masks:</p>
 <ul>
 <li><p><a class="reference internal" href="#phasorpy.cursor.pseudo_color" title="phasorpy.cursor.pseudo_color"><code class="xref py py-func docutils literal notranslate"><span class="pre">pseudo_color()</span></code></a></p></li>
 </ul>
@@ -654,7 +654,7 @@ If <cite>‘semicircle’</cite>, align the ellipses with the universal semicirc
 <dd class="field-even"><p><strong>masks</strong> – Boolean array of shape <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">*real.shape)</span></code>.
 The first dimension is omitted if <cite>center_real</cite>, <cite>center_imag</cite>,
 <cite>radius</cite>, <cite>radius_minor</cite>, and <cite>angle</cite> are scalars.
-Values are True if phasor coordinates are inside elliptical cursor,
+Values are True if phasor coordinates are inside elliptical cursors,
 else False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -694,8 +694,8 @@ else False.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cursor.mask_from_polar_cursor">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cursor.</span></span><span class="sig-name descname"><span class="pre">mask_from_polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_max</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cursor.py#L280-L389"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursor.mask_from_polar_cursor" title="Link to this definition">#</a></dt>
-<dd><p>Return masks for polar cursor of polar coordinates.</p>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursor.</span></span><span class="sig-name descname"><span class="pre">mask_from_polar_cursor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulation_max</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cursor.py#L280-L388"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursor.mask_from_polar_cursor" title="Link to this definition">#</a></dt>
+<dd><p>Return masks for polar cursors in phasor coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -720,8 +720,7 @@ cursor, else False.</p>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the array shapes of <cite>phase</cite> and <cite>modulation</cite>, or <cite>phase_range</cite> and
-    <cite>modulation_range</cite> do not match.
+<dd class="field-even"><p><strong>ValueError</strong> – If the array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
     If the array shapes of <cite>phase_*</cite> or <cite>modulation_*</cite> have more than
     one dimension.</p>
 </dd>
@@ -753,14 +752,14 @@ cursor, else False.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cursor.pseudo_color">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cursor.</span></span><span class="sig-name descname"><span class="pre">pseudo_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cursor.py#L392-L518"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursor.pseudo_color" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cursor.</span></span><span class="sig-name descname"><span class="pre">pseudo_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cursor.py#L391-L517"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cursor.pseudo_color" title="Link to this definition">#</a></dt>
 <dd><p>Return pseudo-colored image from cursor masks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*masks</strong> (<em>array_like</em>) – Boolean mask for each cursor.</p></li>
 <li><p><strong>intensity</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Intensity used as base layer to blend cursor colors in “overlay” mode.
-By default, cursor masks are blended using “screen” mode.</p></li>
+By default, cursor masks are blended using “normal” mode.</p></li>
 <li><p><strong>colors</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>3</em><em>)</em><em>, </em><em>optional</em>) – RGB colors assigned to each cursor.
 The last dimension contains the normalized RGB floating point values.
 The default is <a class="reference internal" href="../color/#phasorpy.color.CATEGORICAL" title="phasorpy.color.CATEGORICAL"><code class="xref py py-data docutils literal notranslate"><span class="pre">CATEGORICAL</span></code></a>.</p></li>
@@ -780,7 +779,7 @@ By default, the maximum value of <cite>intensity</cite> is used.</p></li>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> – If no <cite>masks</cite> are provided.</p></li>
 <li><p><strong>ValueError</strong> – If <cite>colors</cite> is not a <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">3)</span></code> shaped floating point array.
-    If the array shapes of <cite>masks</cite> or <cite>mean</cite> cannot broadcast.
+    If the array shapes of <cite>masks</cite> or <cite>intensity</cite> cannot broadcast.
     If the number of <cite>masks</cite> exceeds number of available <cite>colors</cite>.</p></li>
 </ul>
 </dd>

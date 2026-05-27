@@ -582,7 +582,7 @@ They are intended to facilitate the development of the PhasorPy library.</p>
 <li><p><strong>chunk_shape</strong> (<em>tuple</em><em> of </em><em>int</em>) – Shape of chunks in the most significant dimensions.</p></li>
 <li><p><strong>dims</strong> (<em>sequence</em><em> of </em><em>str</em><em>, </em><em>optional</em>) – Labels for each axis in shape if <cite>pattern</cite> is None.</p></li>
 <li><p><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – String to format chunk indices.
-By default, use <code class="docutils literal notranslate"><span class="pre">_[{dims[index]}{chunk_index[index]}]</span></code> for each axis.</p></li>
+By default, use <code class="docutils literal notranslate"><span class="pre">_{dims[index]}{chunk_index[index]}</span></code> for each axis.</p></li>
 <li><p><strong>squeeze</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – Do not include length-1 chunked dimensions in label
 unless dimensions are part of <cite>chunk_shape</cite>.
 Applies only if <cite>pattern</cite> is None.</p></li>
@@ -707,7 +707,7 @@ If <cite>harmonic=’all’</cite>, a range of harmonics from 1 to <cite>harmoni
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy._utils.parse_kwargs">
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">parse_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keyvalues</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/_utils.py#L50-L93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.parse_kwargs" title="Link to this definition">#</a></dt>
-<dd><p>Return dict with keys from keys|keyvals and values from kwargs|keyvals.</p>
+<dd><p>Return dict with selected keys from kwargs and optional defaults.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -740,7 +740,7 @@ otherwise use provided default value.</p></li>
 <dt class="sig sig-object py" id="phasorpy._utils.parse_signal_axis">
 <span class="sig-prename descclassname"><span class="pre">phasorpy._utils.</span></span><span class="sig-name descname"><span class="pre">parse_signal_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/_utils.py#L340-L409"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy._utils.parse_signal_axis" title="Link to this definition">#</a></dt>
 <dd><p>Return axis over which phasor coordinates are computed.</p>
-<p>The axis parameter is not validated against the signal shape.</p>
+<p>The axis parameter is not validated against array shapes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -792,7 +792,7 @@ parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em> or </em><em>None</em>) – Axes to skip. If None, no axes are skipped.</p></li>
+<li><p><strong>skip_axis</strong> (<em>int</em><em> or </em><em>sequence</em><em> of </em><em>int</em><em> or </em><em>None</em>) – Axes to skip. If None, no axes are skipped unless <cite>prepend=True</cite>.</p></li>
 <li><p><strong>ndim</strong> (<em>int</em>) – Dimensionality of array in which to skip axes.</p></li>
 <li><p><strong>prepend</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default: False</em>) – Prepend one dimension and include in <cite>skip_axis</cite>.</p></li>
 </ul>
