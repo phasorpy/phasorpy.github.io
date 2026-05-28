@@ -700,7 +700,12 @@ real components of the filtered and unfiltered phasor coordinates as images:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_005.png" srcset="../../../_images/sphx_glr_phasorpy_filter_005.png" alt="Real component of phasor coordinates, Unfiltered, Median-filtered" class = "sphx-glr-single-img"/><p>For comparison, the function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_filter_median()</span></code></a>
+<img src="../../../_images/sphx_glr_phasorpy_filter_005.png" srcset="../../../_images/sphx_glr_phasorpy_filter_005.png" alt="Real component of phasor coordinates, Unfiltered, Median-filtered" class = "sphx-glr-single-img"/><p>Note that the median filter is a non-linear operation applied directly to
+the normalized phasor coordinates.
+As a result, operations that combine median-filtered phasor coordinates
+using intensity weighting, such as computing the mean phasor of a region
+of interest, will give incorrect results.</p>
+<p>For comparison, the function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median"><code class="xref py py-func docutils literal notranslate"><span class="pre">signal_filter_median()</span></code></a>
 applies a median filter to the signal before phasor transformation:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal_filtered</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.signal_filter_median" title="phasorpy.filter.signal_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">signal_filter_median</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">skip_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -733,9 +738,11 @@ Use <a class="reference internal" href="../../../api/filter/#phasorpy.filter.pha
 <p>Gaussian filtering replaces each pixel value with a weighted average of its
 neighbors, where weights follow a Gaussian distribution.
 Unlike median filtering, it is linear and smooths more gradually.
-The function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter_gaussian()</span></code></a> applies a
-Gaussian filter to phasor coordinates. By default, a 3x3 kernel with sigma
-of about 0.8 is used:</p>
+The function <a class="reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_gaussian" title="phasorpy.filter.phasor_filter_gaussian"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_filter_gaussian()</span></code></a> applies an
+intensity-weighted Gaussian filter to phasor coordinates: each phasor
+coordinate is weighted by the mean intensity before spatial averaging,
+which is the physically correct approach for phasor analysis.
+By default, a 3x3 kernel with sigma of about 0.8 is used:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
@@ -807,9 +814,11 @@ to the signal before phasor transformation:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_010.png" srcset="../../../_images/sphx_glr_phasorpy_filter_010.png" alt="Phasor coordinates of Gaussian-filtered signal" class = "sphx-glr-single-img"/><p>Unlike median filtering, Gaussian filtering is a linear operation, so the
-phasor coordinates of the Gaussian-filtered signal are close to those
-obtained by filtering the phasor coordinates directly.</p>
+<img src="../../../_images/sphx_glr_phasorpy_filter_010.png" srcset="../../../_images/sphx_glr_phasorpy_filter_010.png" alt="Phasor coordinates of Gaussian-filtered signal" class = "sphx-glr-single-img"/><p>Unlike median filtering, Gaussian filtering is a linear operation that
+commutes with the phasor transform.
+Consequently, the phasor coordinates of the Gaussian-filtered signal are
+identical to those obtained by intensity-weighted filtering of the phasor
+coordinates directly.</p>
 </section>
 <section id="pawflim-wavelet-filter">
 <h2>pawFLIM wavelet filter<a class="headerlink" href="#pawflim-wavelet-filter" title="Link to this heading">#</a></h2>
@@ -882,7 +891,7 @@ as images:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_filter_013.png" srcset="../../../_images/sphx_glr_phasorpy_filter_013.png" alt="Real component of phasor coordinates, Unfiltered, pawFLIM-filtered" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.998 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_filter_013.png" srcset="../../../_images/sphx_glr_phasorpy_filter_013.png" alt="Real component of phasor coordinates, Unfiltered, pawFLIM-filtered" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.602 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-filter-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/db0591fedee5fa8e3e4082105dc51b37/phasorpy_filter.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_filter.ipynb</span></code></a></p>

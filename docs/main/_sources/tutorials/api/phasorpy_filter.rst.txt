@@ -291,12 +291,20 @@ real components of the filtered and unfiltered phasor coordinates as images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-138
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
+
+Note that the median filter is a non-linear operation applied directly to
+the normalized phasor coordinates.
+As a result, operations that combine median-filtered phasor coordinates
+using intensity weighting, such as computing the mean phasor of a region
+of interest, will give incorrect results.
+
+.. GENERATED FROM PYTHON SOURCE LINES 143-145
 
 For comparison, the function :py:func:`~phasorpy.filter.signal_filter_median`
 applies a median filter to the signal before phasor transformation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-158
+.. GENERATED FROM PYTHON SOURCE LINES 145-165
 
 .. code-block:: Python
 
@@ -332,7 +340,7 @@ applies a median filter to the signal before phasor transformation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 166-171
 
 Note that the resulting phasor coordinates are displaced from the true
 distribution. Signal-space filtering does not commute with the phasor
@@ -340,7 +348,7 @@ transform: for heterogeneous samples, the spatial median of neighboring
 signals does not produce a physically meaningful signal.
 Use :py:func:`~phasorpy.filter.phasor_filter_median` instead.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-175
+.. GENERATED FROM PYTHON SOURCE LINES 173-184
 
 Gaussian filter
 ---------------
@@ -348,11 +356,13 @@ Gaussian filter
 Gaussian filtering replaces each pixel value with a weighted average of its
 neighbors, where weights follow a Gaussian distribution.
 Unlike median filtering, it is linear and smooths more gradually.
-The function :py:func:`~phasorpy.filter.phasor_filter_gaussian` applies a
-Gaussian filter to phasor coordinates. By default, a 3x3 kernel with sigma
-of about 0.8 is used:
+The function :py:func:`~phasorpy.filter.phasor_filter_gaussian` applies an
+intensity-weighted Gaussian filter to phasor coordinates: each phasor
+coordinate is weighted by the mean intensity before spatial averaging,
+which is the physically correct approach for phasor analysis.
+By default, a 3x3 kernel with sigma of about 0.8 is used:
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-197
+.. GENERATED FROM PYTHON SOURCE LINES 184-206
 
 .. code-block:: Python
 
@@ -390,12 +400,12 @@ of about 0.8 is used:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-200
+.. GENERATED FROM PYTHON SOURCE LINES 207-209
 
 Increasing the number of repetitions or the kernel size can further reduce
 noise, but may also blur relevant features:
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-212
+.. GENERATED FROM PYTHON SOURCE LINES 209-221
 
 .. code-block:: Python
 
@@ -423,12 +433,12 @@ noise, but may also blur relevant features:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-215
+.. GENERATED FROM PYTHON SOURCE LINES 222-224
 
 The smoothing effect of Gaussian filtering is demonstrated by plotting the
 real components of the filtered and unfiltered phasor coordinates as images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-225
+.. GENERATED FROM PYTHON SOURCE LINES 224-234
 
 .. code-block:: Python
 
@@ -454,13 +464,13 @@ real components of the filtered and unfiltered phasor coordinates as images:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-229
+.. GENERATED FROM PYTHON SOURCE LINES 235-238
 
 For comparison, the function
 :py:func:`~phasorpy.filter.signal_filter_gaussian` applies a Gaussian filter
 to the signal before phasor transformation:
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-249
+.. GENERATED FROM PYTHON SOURCE LINES 238-258
 
 .. code-block:: Python
 
@@ -496,13 +506,15 @@ to the signal before phasor transformation:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 250-253
+.. GENERATED FROM PYTHON SOURCE LINES 259-264
 
-Unlike median filtering, Gaussian filtering is a linear operation, so the
-phasor coordinates of the Gaussian-filtered signal are close to those
-obtained by filtering the phasor coordinates directly.
+Unlike median filtering, Gaussian filtering is a linear operation that
+commutes with the phasor transform.
+Consequently, the phasor coordinates of the Gaussian-filtered signal are
+identical to those obtained by intensity-weighted filtering of the phasor
+coordinates directly.
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-265
+.. GENERATED FROM PYTHON SOURCE LINES 266-276
 
 pawFLIM wavelet filter
 ----------------------
@@ -515,7 +527,7 @@ the pawFLIM filter requires calibrated phasor coordinates from FLIM
 measurements and at least one harmonic and its corresponding second harmonic
 (the 1st and 2nd harmonic in this example):
 
-.. GENERATED FROM PYTHON SOURCE LINES 265-281
+.. GENERATED FROM PYTHON SOURCE LINES 276-292
 
 .. code-block:: Python
 
@@ -542,11 +554,11 @@ measurements and at least one harmonic and its corresponding second harmonic
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 282-283
+.. GENERATED FROM PYTHON SOURCE LINES 293-294
 
 Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 283-288
+.. GENERATED FROM PYTHON SOURCE LINES 294-299
 
 .. code-block:: Python
 
@@ -562,11 +574,11 @@ Apply the pawFLIM wavelet filter to the calibrated phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 289-290
+.. GENERATED FROM PYTHON SOURCE LINES 300-301
 
 Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 290-298
+.. GENERATED FROM PYTHON SOURCE LINES 301-309
 
 .. code-block:: Python
 
@@ -590,13 +602,13 @@ Plot the pawFLIM-filtered and thresholded phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 299-302
+.. GENERATED FROM PYTHON SOURCE LINES 310-313
 
 Increasing the significance level ``sigma`` of the comparison between
 phasor coordinates or the maximum averaging area ``levels`` can reduce noise
 further:
 
-.. GENERATED FROM PYTHON SOURCE LINES 302-318
+.. GENERATED FROM PYTHON SOURCE LINES 313-329
 
 .. code-block:: Python
 
@@ -628,12 +640,12 @@ further:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 319-321
+.. GENERATED FROM PYTHON SOURCE LINES 330-332
 
 Plot the real components of the filtered and unfiltered phasor coordinates
 as images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 321-331
+.. GENERATED FROM PYTHON SOURCE LINES 332-342
 
 .. code-block:: Python
 
@@ -662,7 +674,7 @@ as images:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.998 seconds)
+   **Total running time of the script:** (0 minutes 7.602 seconds)
 
 
 .. _sphx_glr_download_tutorials_api_phasorpy_filter.py:
