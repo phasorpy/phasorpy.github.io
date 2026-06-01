@@ -291,6 +291,11 @@ Publications
 
 Publications using PhasorPy:
 
+#. González-Gutiérrez M, Vázquez-Enciso DM, Mateos N, Hwang W, Torres-García E, Hernández HO, Chacko JV, Coto Hernández I, et al.
+   `PSF-Driven Spatio-Temporal Blending in Fluorescence Lifetime Imaging Microscopy and Its Mitigation via Mean-Shift Super-Resolution-Based Masking
+   <https://doi.org/10.64898/2026.03.17.712453>`__.
+   *bioRxiv* (2026)
+
 #. Schuty B, Garcia MJ, Khuon S, Malacrida L.
    `Phasor analysis of RGB camera data enables fluorescence microscopy unmixing and brightfield segmentation in a commercial microscope
    <https://doi.org/10.1016/j.sbsr.2026.101014>`__.
@@ -311,6 +316,11 @@ Publications using PhasorPy:
    <https://doi.org/10.1021/jacs.5c16597>`__.
    *J Am Chem Soc*. 148(11): 11521-11530 (2026)
 
+#. Sabri E, Mangiarotti A, Dimova R.  
+   `Fluorescence-based mapping of condensate dielectric permittivity uncovers hydrophobicity-driven membrane interactions
+   <https://doi.org/10.1038/s41467-026-71273-7>`__.  
+   *Nat Commun*. 17:3155 (2026)
+
 #. Pannunzio B, Cespedes P, Diaz M, Ali D, Rial A, Malacrida L.
    `High-throughput single-cell spectroscopy using phasor analysis of spectral flow cytometry
    <https://doi.org/10.64898/2026.02.27.708623>`__.
@@ -320,6 +330,12 @@ Publications using PhasorPy:
    `FLIM playground: an interactive, end-to-end graphical user interface for analyzing single cells with fluorescence lifetime imaging microscopy
    <https://doi.org/10.1101/2025.09.30.679625>`__.
    *bioRxiv* (2025)
+
+#. Sabri E, Mangiarotti A, Schmitt CNZ, Dimova R.
+   `Seeing the chemistry of biomolecular condensates: in situ mapping of composition and water content 
+   <https://doi.org/10.1101/2025.10.20.683555>`__.
+   *bioRxiv* (2025)
+   
 
 Publications mentioning PhasorPy:
 
@@ -337,6 +353,11 @@ Publications mentioning PhasorPy:
    `A fluorescence lifetime separation approach for FLIM live-cell imaging
    <https://doi.org/10.1111/jmi.70036>`__.
    *J Microscopy*. 301(1): 91-106 (2025)
+
+#. Wetzker C, Zoccoler ML, Iarovenko S, Okafornta CW, Nobst A, Hartmann H, Müller-Reichert T, Haase R, et al.
+   `Fluorescence Lifetime Unmixing: A New Workflow for FLIM Live-Cell Imaging 
+   <https://doi.org/10.1101/2025.03.05.641717>`__.
+   *bioRxiv* (2025)
 
 #. Michalet X.
    `AlliGator: open source fluorescence lifetime imaging analysis in G
@@ -358,6 +379,11 @@ Publications mentioning PhasorPy:
    `VISION - an open-source software for automated multi-dimensional image analysis of cellular biophysics
    <https://doi.org/10.1242/jcs.262166>`__.
    *J Cell Sci*. 137(20): jcs262166 (2024)
+
+#. Mangiarotti A, Dimova R.
+   `Chapter Five - The spectral phasor approach to resolving membrane order with environmentally sensitive dyes 
+   <https://doi.org/10.1016/bs.mie.2024.01.024>`__.
+   *Methods Enzymol*. 700:105-126 (2024)
 
 Cite
 ====
