@@ -41,7 +41,7 @@ estimation.
     :description: Explore phasor concepts using interactive educational applications.
 
   .. gallery-tile:: applications/phasorpy_component_fit
-    :title: Multi-component fit
+    :title: Spectral unmixing
     :description: Spectral unmixing using multi-component analysis in phasor space.
 
   .. gallery-tile:: applications/phasorpy_nadh_concentration
@@ -292,7 +292,7 @@ Publications
 Publications using PhasorPy:
 
 #. González-Gutiérrez M, Vázquez-Enciso DM, Mateos N, Hwang W, Torres-García E, Hernández HO, Chacko JV, Coto Hernández I, et al.
-   `PSF-Driven Spatio-Temporal Blending in Fluorescence Lifetime Imaging Microscopy and Its Mitigation via Mean-Shift Super-Resolution-Based Masking
+   `PSF-driven spatio-temporal blending in fluorescence lifetime imaging microscopy and its mitigation via mean-shift super-resolution-based masking
    <https://doi.org/10.64898/2026.03.17.712453>`__.
    *bioRxiv* (2026)
 
@@ -316,9 +316,9 @@ Publications using PhasorPy:
    <https://doi.org/10.1021/jacs.5c16597>`__.
    *J Am Chem Soc*. 148(11): 11521-11530 (2026)
 
-#. Sabri E, Mangiarotti A, Dimova R.  
+#. Sabri E, Mangiarotti A, Dimova R.
    `Fluorescence-based mapping of condensate dielectric permittivity uncovers hydrophobicity-driven membrane interactions
-   <https://doi.org/10.1038/s41467-026-71273-7>`__.  
+   <https://doi.org/10.1038/s41467-026-71273-7>`__.
    *Nat Commun*. 17:3155 (2026)
 
 #. Pannunzio B, Cespedes P, Diaz M, Ali D, Rial A, Malacrida L.
@@ -332,10 +332,10 @@ Publications using PhasorPy:
    *bioRxiv* (2025)
 
 #. Sabri E, Mangiarotti A, Schmitt CNZ, Dimova R.
-   `Seeing the chemistry of biomolecular condensates: in situ mapping of composition and water content 
+   `Seeing the chemistry of biomolecular condensates: in situ mapping of composition and water content
    <https://doi.org/10.1101/2025.10.20.683555>`__.
    *bioRxiv* (2025)
-   
+
 
 Publications mentioning PhasorPy:
 
@@ -355,7 +355,7 @@ Publications mentioning PhasorPy:
    *J Microscopy*. 301(1): 91-106 (2025)
 
 #. Wetzker C, Zoccoler ML, Iarovenko S, Okafornta CW, Nobst A, Hartmann H, Müller-Reichert T, Haase R, et al.
-   `Fluorescence Lifetime Unmixing: A New Workflow for FLIM Live-Cell Imaging 
+   `Fluorescence lifetime unmixing: A new workflow for FLIM live-cell imaging
    <https://doi.org/10.1101/2025.03.05.641717>`__.
    *bioRxiv* (2025)
 
@@ -381,7 +381,7 @@ Publications mentioning PhasorPy:
    *J Cell Sci*. 137(20): jcs262166 (2024)
 
 #. Mangiarotti A, Dimova R.
-   `Chapter Five - The spectral phasor approach to resolving membrane order with environmentally sensitive dyes 
+   `Chapter five - The spectral phasor approach to resolving membrane order with environmentally sensitive dyes
    <https://doi.org/10.1016/bs.mie.2024.01.024>`__.
    *Methods Enzymol*. 700:105-126 (2024)
 
