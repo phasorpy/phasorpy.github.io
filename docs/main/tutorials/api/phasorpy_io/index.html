@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>File input/output &#8212; PhasorPy 0.11.dev0 documentation</title>
+    <title>File input/output &#8212; PhasorPy 0.11 documentation</title>
   
   
   
@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
 
-    <script src="../../../_static/documentation_options.js?v=881a0e00"></script>
+    <script src="../../../_static/documentation_options.js?v=41fe5439"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/tabs.js?v=3ee01567"></script>
@@ -68,7 +68,7 @@
     <link rel="prev" title="Programming interface" href="../" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.11.dev0" />
+  <meta name="docsearch:version" content="0.11" />
   
     
     <script src="../../../_static/searchtools.js"></script>
@@ -942,12 +942,16 @@ phase histograms from the
 <a class="reference external" href="https://zenodo.org/records/14026720">Convallaria FBD dataset</a>, which was
 acquired at the second harmonic frequency. The dataset is a time series of
 two channels. Since the photon count is low and the second channel empty,
-only the first channel is read and the time-axis integrated:</p>
+only the first channel is read and the time-axis integrated.
+A corrected <code class="docutils literal notranslate"><span class="pre">scanner_line_start</span></code> parameter is specified to account for
+additional hardware trigger latency not present in the file metadata:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a>
 
 <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;Convallaria_$EI0S.fbd&#39;</span>
 
-<span class="n">signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">(</span>
+    <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scanner_line_start</span><span class="o">=</span><span class="mi">41</span>
+<span class="p">)</span>
 
 <span class="n">frequency</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">signal</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;harmonic&#39;</span><span class="p">]</span>
 
@@ -961,7 +965,7 @@ is used as a calibration reference:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reference_filename</span> <span class="o">=</span> <span class="s1">&#39;Calibration_Rhodamine110_$EI0S.fbd&#39;</span>
 
 <span class="n">reference_signal</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.signal_from_fbd" title="phasorpy.io.signal_from_fbd" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">signal_from_fbd</span></a><span class="p">(</span>
-    <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="n">reference_filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span>
+    <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="n">reference_filename</span><span class="p">),</span> <span class="n">frame</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scanner_line_start</span><span class="o">=</span><span class="mi">41</span>
 <span class="p">)</span>
 <span class="n">reference_lifetime</span> <span class="o">=</span> <span class="mf">4.0</span>
 
@@ -1302,7 +1306,7 @@ the first array dimension:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_phasor" title="phasorpy.plot.plot_phasor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">80.0</span><span class="p">,</span> <span class="n">allquadrants</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_io_025.png" srcset="../../../_images/sphx_glr_phasorpy_io_025.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 21.025 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_io_025.png" srcset="../../../_images/sphx_glr_phasorpy_io_025.png" alt="Embryo.tif" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 19.589 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-api-phasorpy-io-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/1b3c132ff7b40bb13bb60712fdfbc4bc/phasorpy_io.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_io.ipynb</span></code></a></p>
