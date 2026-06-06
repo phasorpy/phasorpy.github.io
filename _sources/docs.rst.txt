@@ -4,7 +4,8 @@ PhasorPy documentation
 ======================
 
 - `Development <dev/>`_
-- `0.10 (stable) <stable/>`_
+- `0.11 (stable) <stable/>`_
+- `0.10 <v0.10/>`_
 - `0.9 <v0.9/>`_
 - `0.8 <v0.8/>`_
 - `0.7 <v0.7/>`_
