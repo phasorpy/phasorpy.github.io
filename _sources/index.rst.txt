@@ -80,6 +80,8 @@ Resources
 News
 ====
 
+- June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+
 - May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
