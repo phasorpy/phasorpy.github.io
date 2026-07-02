@@ -585,17 +585,17 @@
 <p>Explore phasor concepts using interactive educational applications.</p>
 <p>The PhasorPy library includes interactive applications for educational
 purposes. They open graphical user interfaces where parameters can be
-adjusted via sliders and the resulting phasor and lifetime plots are
-updated in real time. The applications can be started from the <a class="reference internal" href="../../../api/cli/"><span class="doc">Command-line interface</span></a>
-or programmatically. A matplotlib backend that supports interactive
-windows is required.</p>
+adjusted via sliders and the resulting phasor, lifetime, and spectral plots
+are updated in real time. The applications can be started from the
+<a class="reference internal" href="../../../api/cli/"><span class="doc">Command-line interface</span></a> or programmatically.
+A matplotlib backend that supports interactive windows is required.</p>
 <section id="lifetime-application">
 <h2>Lifetime application<a class="headerlink" href="#lifetime-application" title="Link to this heading">#</a></h2>
 <p>Interactively plot time-domain signals, phasor coordinates, and
 multi-frequency phase and modulation curves for a set of lifetime
 components and their mixture at given frequency and fractional intensities.</p>
-<p>Start the lifetime app from the command line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m phasorpy lifetime
+<p>Start the lifetime app with three components from the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m phasorpy lifetime 3
 </pre></div>
 </div>
 <p>or run the following code in a Python interpreter:</p>
@@ -611,6 +611,38 @@ components and their mixture at given frequency and fractional intensities.</p>
 </div>
 <img src="../../../_images/sphx_glr_phasorpy_apps_001.png" srcset="../../../_images/sphx_glr_phasorpy_apps_001.png" alt="Time domain, Phasor plot, Frequency domain" class = "sphx-glr-single-img"/><p>Change frequency, lifetimes, and fractional intensities to see how the
 phasor coordinates, phase and modulation, and decay curves respond.</p>
+</section>
+<section id="spectral-application">
+<h2>Spectral application<a class="headerlink" href="#spectral-application" title="Link to this heading">#</a></h2>
+<p>Interactively plot emission spectra and spectral phasor coordinates for
+one or more spectral components and their mixture over a selectable
+wavelength range.</p>
+<p>By default, each component is modelled as a Gaussian in wavelength space.
+Shifting the origin rotates the phasor without changing the modulation
+(provided the spectrum fits within the wavelength window), and changing
+sigma alters the modulation independently.
+Optionally, the Displaced Harmonic Oscillator (DHO) model can be used for
+more realistic fluorophore spectra with vibronic structure (<cite>dho=True</cite>).</p>
+<p>Start the spectral app with two components from the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m phasorpy spectral 2
+</pre></div>
+</div>
+<p>or run the following code in a Python interpreter:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.SpectralPlots" title="phasorpy.plot.SpectralPlots" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">SpectralPlots</span></a>
+
+<a href="../../../api/plot/#phasorpy.plot.SpectralPlots" title="phasorpy.plot.SpectralPlots" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">SpectralPlots</span></a><span class="p">(</span>
+    <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mf">500.0</span><span class="p">,</span> <span class="mf">580.0</span><span class="p">),</span>  <span class="c1"># center wavelengths in nm</span>
+    <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">),</span>  <span class="c1"># Gaussian widths (standard deviations) in nm</span>
+    <span class="n">fraction</span><span class="o">=</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">),</span>  <span class="c1"># fractional intensities</span>
+    <span class="n">wavelength_range</span><span class="o">=</span><span class="p">(</span><span class="mf">400.0</span><span class="p">,</span> <span class="mf">700.0</span><span class="p">),</span>
+    <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_apps_002.png" srcset="../../../_images/sphx_glr_phasorpy_apps_002.png" alt="Spectrum, Phasor plot" class = "sphx-glr-single-img"/><p>Change the wavelength range, number of samples, origin, and sigma sliders
+to see how the spectrum shape and phasor position respond.
+Narrow the wavelength window until a Gaussian is truncated to observe how
+clipping the spectrum reduces the modulation.</p>
 </section>
 <section id="fret-application">
 <h2>FRET application<a class="headerlink" href="#fret-application" title="Link to this heading">#</a></h2>
@@ -637,9 +669,9 @@ acceptor lifetimes, FRET efficiency, fractions of donors undergoing FRET
 <span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../../../_images/sphx_glr_phasorpy_apps_002.png" srcset="../../../_images/sphx_glr_phasorpy_apps_002.png" alt="FRET phasor plot" class = "sphx-glr-single-img"/><p>Change frequency, FRET efficiency, lifetimes, and bleedthrough fractions
+<img src="../../../_images/sphx_glr_phasorpy_apps_003.png" srcset="../../../_images/sphx_glr_phasorpy_apps_003.png" alt="FRET phasor plot" class = "sphx-glr-single-img"/><p>Change frequency, FRET efficiency, lifetimes, and bleedthrough fractions
 to see how the donor and acceptor phasor positions respond.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.737 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.872 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-apps-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/e1f942c8ac38b8f1288cd5cd3105a0c8/phasorpy_apps.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_apps.ipynb</span></code></a></p>
@@ -703,6 +735,7 @@ to see how the donor and acceptor phasor positions respond.</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lifetime-application">Lifetime application</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-application">Spectral application</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fret-application">FRET application</a></li>
 </ul>
   </nav></div>
