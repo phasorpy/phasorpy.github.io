@@ -80,6 +80,8 @@ Resources
 News
 ====
 
+- July 2, 2026: `300th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
+
 - June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
 
 - May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
