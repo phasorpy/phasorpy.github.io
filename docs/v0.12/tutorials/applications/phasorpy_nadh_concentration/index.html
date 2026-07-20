@@ -1,0 +1,1111 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Absolute NADH concentration &#8212; PhasorPy 0.12 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../_static/documentation_options.js?v=76b41017"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorials/applications/phasorpy_nadh_concentration';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://www.phasorpy.org/docs/dev/_static/switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.12';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            true;
+        </script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script defer="defer" src="../../../_static/custom-icons.js?v=74687d30"></script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../../about/" />
+    <link rel="index" title="Index" href="../../../genindex/" />
+    <link rel="search" title="Search" href="../../../search/" />
+    <link rel="next" title="Multidimensional phasor approach" href="../phasorpy_multidimensional/" />
+    <link rel="prev" title="Bound NADH fraction" href="../phasorpy_nadh_fraction/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.12" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/phasorpy_logo.svg" class="logo__image only-light" alt="PhasorPy"/>
+    <img src="../../../_static/phasorpy_logo.svg" class="logo__image only-dark pst-js-only" alt="PhasorPy"/>
+  
+  
+    <p class="title logo__title">PhasorPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../release/">
+    Release notes
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../license/">
+    MIT License
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../about/">
+    About PhasorPy
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../phasor_approach/">
+    Phasor approach
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../../">
+    Tutorials
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../release/">
+    Release notes
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributing/">
+    Contributing guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../license/">
+    MIT License
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../about/">
+    About PhasorPy
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button></div>
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.phasorpy.org" title="Home" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa fa-home fa-lg" aria-hidden="true"></i><span class="visually-hidden">Home</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/phasorpy/" title="PyPI" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-lg" data-prefix="fa-custom" data-icon="pypi" aria-hidden="true"></i><span class="visually-hidden">PyPI</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/phasorpy/phasorpy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_introduction/">Introduction to PhasorPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_lifetime_geometry/">Geometric interpretation of lifetimes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../phasorpy_lfd_workshop/">LFD Workshop FLIM tutorial</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_component_fit/">Spectral unmixing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret_efficiency/">FRET efficiency image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_nadh_fraction/">Bound NADH fraction</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Absolute NADH concentration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../phasorpy_multidimensional/">Multidimensional phasor approach</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api/">Programming interface</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_io/">File input/output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_lifetime_to_signal/">Signal synthesis from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_phasor_from_lifetime/">Phasor coordinates from lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_fret/">Förster resonance energy transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_filter/">Filter phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_multi_harmonic/">Multi-harmonic phasor coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_phasorplot/">Phasor plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_cursor/">Cursors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_component/">Multi-component analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/phasorpy_pca/">Principal component analysis</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../misc/">Miscellaneous</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_logo/">PhasorPy logo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_apps/">Interactive applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../misc/phasorpy_phasor_from_signal/">Benchmark phasor_from_signal</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../" class="nav-link">Tutorials</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../" class="nav-link">Applications</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Absolute NADH concentration</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="sphx-glr-example-title" id="absolute-nadh-concentration">
+<span id="sphx-glr-tutorials-applications-phasorpy-nadh-concentration-py"></span><h1>Absolute NADH concentration<a class="headerlink" href="#absolute-nadh-concentration" title="Link to this heading">#</a></h1>
+<p>Determine absolute NADH concentration using intensity-calibrated phasor FLIM.</p>
+<p>NADH (nicotinamide adenine dinucleotide) is an endogenous fluorophore
+present in cells in two forms, distinguishable by fluorescence lifetime:
+a short-lived free form (cytoplasmic NADH, lifetime ~0.4 ns) and a long-lived
+enzyme-bound form (lifetime ~3.4 ns).</p>
+<p>The <a class="reference internal" href="../../../api/component/#phasorpy.component.phasor_component_concentration" title="phasorpy.component.phasor_component_concentration"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_concentration()</span></code></a> function
+determines absolute free (and optionally bound) NADH concentrations per pixel
+from two pieces of information: the phasor coordinate, which encodes the
+free-to-bound ratio, and the mean fluorescence intensity, which is scaled to
+absolute concentration using a calibration solution of known concentration.</p>
+<p>This tutorial demonstrates the method based on:</p>
+<blockquote id="ma-2016">
+<div><p>Ma N, Digman MA, Malacrida L, and Gratton E.
+<a class="reference external" href="https://doi.org/10.1364/BOE.7.002441">Measurements of absolute concentrations of NADH in cells using the
+phasor FLIM method</a>.
+<em>Biomed Opt Express</em>, 7(7): 2441-2452 (2016)</p>
+</div></blockquote>
+<p>Import required modules, functions, and classes:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.component</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/component/#phasorpy.component.phasor_component_concentration" title="phasorpy.component.phasor_component_concentration" class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function"><span class="n">phasor_component_concentration</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.filter</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">,</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">phasor_from_simfcs_referenced</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a>
+</pre></div>
+</div>
+<section id="cho-k1-cell">
+<h2>CHO-K1 cell<a class="headerlink" href="#cho-k1-cell" title="Link to this heading">#</a></h2>
+<p>Determine the absolute NADH concentration in each pixel of a
+CHO-K1 cell FLIM dataset measured at 80 MHz, using a 1 mM NADH solution
+(acquired with the same instrument settings) as the calibration standard.</p>
+<p>Read the CHO-K1 cell phasor coordinate images from a SimFCS referenced file.
+Apply a median filter to reduce noise and threshold to retain only
+pixels with sufficient signal:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;NADH_cell.r64&#39;</span><span class="p">)</span>
+
+<span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+    <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">(</span>
+        <span class="o">*</span><a href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">phasor_from_simfcs_referenced</span></a><span class="p">(</span><span class="n">filename</span><span class="p">)[:</span><span class="mi">3</span><span class="p">],</span>
+        <span class="n">repeat</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">mean_min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Read the NADH reference/calibration phasor images.
+The center of the phasor distribution gives the fluorescence-only mean
+intensity and the unshifted reference phasor.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">&#39;NADH_1mM.r64&#39;</span><span class="p">)</span>
+
+<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a><span class="p">(</span>
+        <span class="o">*</span><a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
+            <span class="o">*</span><a href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">phasor_from_simfcs_referenced</span></a><span class="p">(</span><span class="n">filename</span><span class="p">)[:</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">mean_min</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">reference_concentration</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># 1 mM NADH standard</span>
+</pre></div>
+</div>
+<p>Calculate the phasor coordinates of free and enzyme-bound NADH at 80 MHz
+from their known single-exponential fluorescence lifetimes:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
+<span class="n">free_lifetime</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># ns, free cytoplasmic NADH</span>
+<span class="n">bound_lifetime</span> <span class="o">=</span> <span class="mf">3.4</span>  <span class="c1"># ns, enzyme-bound NADH</span>
+
+<span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">free_lifetime</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">bound_lifetime</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Plot the phasor distribution of the cell and the reference phasor
+coordinates. Pixels cluster along the free-bound NADH line:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;CHO-K1 cell phasor distribution&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">([</span><span class="n">free_real</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">],</span> <span class="p">[</span><span class="n">free_imag</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">rx</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span>
+    <span class="s1">&#39;Free NADH&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">,</span> <span class="s1">&#39;tab:olive&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;Bound NADH&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">,</span> <span class="s1">&#39;tab:purple&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;1 mM NADH&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span><span class="p">,</span> <span class="s1">&#39;tab:green&#39;</span><span class="p">),</span>
+<span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+        <span class="n">rx</span><span class="p">,</span>
+        <span class="n">ix</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+        <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+    <span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_concentration_001.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_concentration_001.png" alt="CHO-K1 cell phasor distribution" class = "sphx-glr-single-img"/><p>Compute the free, bound, and total NADH concentrations for each cell pixel.
+The brightness ratio (molecular brightness of bound relative to free NADH)
+is set to 1.0 to reproduce the results of <a class="reference internal" href="#ma-2016"><span class="std std-ref">Ma et al</span></a>, who
+did not apply a brightness correction. This is known to be incorrect:
+bound NADH has a ~3-5x higher quantum yield than free NADH, so accurate
+total concentrations require a measured brightness ratio:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">conc_free</span><span class="p">,</span> <span class="n">conc_bound</span> <span class="o">=</span> <a href="../../../api/component/#phasorpy.component.phasor_component_concentration" title="phasorpy.component.phasor_component_concentration" class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function"><span class="n">phasor_component_concentration</span></a><span class="p">(</span>
+    <span class="n">cell_mean</span><span class="p">,</span>
+    <span class="n">cell_real</span><span class="p">,</span>
+    <span class="n">cell_imag</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">free_real</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">free_imag</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">],</span>
+    <span class="n">reference_mean</span><span class="p">,</span>
+    <span class="n">reference_real</span><span class="p">,</span>
+    <span class="n">reference_imag</span><span class="p">,</span>
+    <span class="n">reference_concentration</span><span class="p">,</span>
+    <span class="n">brightness_ratio</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">conc_total</span> <span class="o">=</span> <span class="n">conc_free</span> <span class="o">+</span> <span class="n">conc_bound</span>
+</pre></div>
+</div>
+<p>Display the total NADH concentration image. Pixels below the intensity
+threshold are NaN.
+The total NADH concentration can be directly compared to the published
+results (Fig. 7b of <a class="reference internal" href="#ma-2016"><span class="std std-ref">Ma et al</span></a>), which show a matching
+concentration range and spatial distribution:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
+    <span class="n">conc_total</span><span class="p">[:</span><span class="mi">128</span><span class="p">],</span>  <span class="c1"># only show the cell region</span>
+    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;CHO-K1 cell total NADH concentration (mM)&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_concentration_002.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_concentration_002.png" alt="CHO-K1 cell total NADH concentration (mM)" class = "sphx-glr-single-img"/></section>
+<section id="algorithm">
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading">#</a></h2>
+<p>The geometric algorithm for computing the concentrations of two components
+from phasor coordinates is documented in detail in
+<a class="reference internal" href="../../../api/component/#phasorpy.component.phasor_component_concentration" title="phasorpy.component.phasor_component_concentration"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_concentration()</span></code></a> and works by
+intersecting lines in phasor space.</p>
+<p>The phasor diagram below shows all coordinates and lines involved in the
+algorithm:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Constants</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
+<span class="n">free_lifetime</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># ns, free NADH</span>
+<span class="n">bound_lifetime</span> <span class="o">=</span> <span class="mf">3.4</span>  <span class="c1"># ns, bound NADH</span>
+
+<span class="n">ref_real</span> <span class="o">=</span> <span class="mf">0.94</span>  <span class="c1"># reference phasor</span>
+<span class="n">ref_imag</span> <span class="o">=</span> <span class="mf">0.22</span>
+<span class="n">ref_mean</span> <span class="o">=</span> <span class="mf">3000.0</span>  <span class="c1"># approximate fluorescence-only reference mean</span>
+<span class="n">pix_mean</span> <span class="o">=</span> <span class="mf">4000.0</span>  <span class="c1"># example pixel intensity</span>
+<span class="n">bound_frac</span> <span class="o">=</span> <span class="mf">0.30</span>  <span class="c1"># example pixel: ~30 % bound fraction</span>
+
+<span class="c1"># Phasor coordinates of free and bound NADH from lifetimes</span>
+<span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">free_lifetime</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">bound_lifetime</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Example cell pixel slightly off the free-bound line.</span>
+<span class="c1"># Real pixels scatter around the F-B line due to noise and other components.</span>
+<span class="c1"># The offset is chosen so that g_pix stays within the diagram.</span>
+<span class="n">pix_real</span> <span class="o">=</span> <span class="n">free_real</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">bound_frac</span><span class="p">)</span> <span class="o">+</span> <span class="n">bound_real</span> <span class="o">*</span> <span class="n">bound_frac</span> <span class="o">+</span> <span class="mf">0.035</span>
+<span class="n">pix_imag</span> <span class="o">=</span> <span class="n">free_imag</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">bound_frac</span><span class="p">)</span> <span class="o">+</span> <span class="n">bound_imag</span> <span class="o">*</span> <span class="n">bound_frac</span> <span class="o">-</span> <span class="mf">0.035</span>
+
+<span class="c1"># Bound and reference phasors scaled to m = 0.5</span>
+<span class="c1"># (calibration condition I == I_ref)</span>
+<span class="n">b_cal_real</span> <span class="o">=</span> <span class="n">bound_real</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">b_cal_imag</span> <span class="o">=</span> <span class="n">bound_imag</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">r_cal_real</span> <span class="o">=</span> <span class="n">ref_real</span> <span class="o">*</span> <span class="mf">0.5</span>
+<span class="n">r_cal_imag</span> <span class="o">=</span> <span class="n">ref_imag</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+<span class="c1"># Bound phasor scaled to pixel intensity</span>
+<span class="n">m_pix</span> <span class="o">=</span> <span class="n">pix_mean</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">ref_mean</span> <span class="o">+</span> <span class="n">pix_mean</span><span class="p">)</span>
+<span class="n">b_pix_real</span> <span class="o">=</span> <span class="n">bound_real</span> <span class="o">*</span> <span class="n">m_pix</span>
+<span class="n">b_pix_imag</span> <span class="o">=</span> <span class="n">bound_imag</span> <span class="o">*</span> <span class="n">m_pix</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">intersect</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">):</span>
+    <span class="c1"># return intersection of line (x0,y0)-(x1,y1) and (x2,y2)-(x3,y3)</span>
+    <span class="n">det</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">y0</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x3</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">det</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">x0</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y0</span> <span class="o">*</span> <span class="n">x1</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">*</span> <span class="n">y3</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">x3</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">det</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">y0</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">det</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">oh</span><span class="o">=</span><span class="mf">0.075</span><span class="p">):</span>
+    <span class="c1"># return start exact, end extended by oh past the intersection point</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+    <span class="n">ux</span><span class="p">,</span> <span class="n">uy</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">/</span> <span class="n">d</span><span class="p">,</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="n">d</span>
+    <span class="k">return</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">oh</span> <span class="o">*</span> <span class="n">ux</span><span class="p">,</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">oh</span> <span class="o">*</span> <span class="n">uy</span>
+
+
+<span class="c1"># g_cal: line(free -&gt; origin) X line(b_cal -&gt; r_cal)</span>
+<span class="n">g_cal</span><span class="p">,</span> <span class="n">s_cal</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span>
+    <span class="n">free_real</span><span class="p">,</span>
+    <span class="n">free_imag</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">b_cal_real</span><span class="p">,</span>
+    <span class="n">b_cal_imag</span><span class="p">,</span>
+    <span class="n">r_cal_real</span><span class="p">,</span>
+    <span class="n">r_cal_imag</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># g_pix: line(free -&gt; origin) X line(b_pix -&gt; pixel)</span>
+<span class="n">g_pix</span><span class="p">,</span> <span class="n">s_pix</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span>
+    <span class="n">free_real</span><span class="p">,</span>
+    <span class="n">free_imag</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">b_pix_real</span><span class="p">,</span>
+    <span class="n">b_pix_imag</span><span class="p">,</span>
+    <span class="n">pix_real</span><span class="p">,</span>
+    <span class="n">pix_imag</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># g_frac: line(free -&gt; bound) X line(origin -&gt; pixel)</span>
+<span class="n">g_frac</span><span class="p">,</span> <span class="n">s_frac</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span>
+    <span class="n">free_real</span><span class="p">,</span>
+    <span class="n">free_imag</span><span class="p">,</span>
+    <span class="n">bound_real</span><span class="p">,</span>
+    <span class="n">bound_imag</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">pix_real</span><span class="p">,</span>
+    <span class="n">pix_imag</span><span class="p">,</span>
+<span class="p">)</span>
+
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">12.2</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">),</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">1.46</span><span class="p">),</span>
+    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">),</span>
+    <span class="n">grid</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;lifetime&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">]},</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Phasor geometry of NADH concentration algorithm&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Origin -&gt; Reference</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ref_real</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ref_imag</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Free -&gt; Bound</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">free_real</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">free_imag</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Origin -&gt; Bound</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Origin -&gt; Free</span>
+<span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">extend</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">g_pix</span><span class="p">,</span> <span class="n">s_pix</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:olive&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Origin -&gt; g_frac</span>
+<span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">extend</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">g_frac</span><span class="p">,</span> <span class="n">s_frac</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># B_cal -&gt; g_cal</span>
+<span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">extend</span><span class="p">(</span><span class="n">b_cal_real</span><span class="p">,</span> <span class="n">b_cal_imag</span><span class="p">,</span> <span class="n">g_cal</span><span class="p">,</span> <span class="n">s_cal</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># B_pix -&gt; g_pix</span>
+<span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">extend</span><span class="p">(</span><span class="n">b_pix_real</span><span class="p">,</span> <span class="n">b_pix_imag</span><span class="p">,</span> <span class="n">g_pix</span><span class="p">,</span> <span class="n">s_pix</span><span class="p">)</span>
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span>
+    <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Phasor coordinates</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">rx</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">mk</span><span class="p">,</span> <span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">))</span> <span class="ow">in</span> <span class="p">{</span>
+    <span class="s1">&#39;Pixel&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">pix_real</span><span class="p">,</span> <span class="n">pix_imag</span><span class="p">,</span> <span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.035</span><span class="p">)),</span>
+    <span class="s1">&#39;Free&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">,</span> <span class="s1">&#39;tab:olive&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">)),</span>
+    <span class="s1">&#39;Bound&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">,</span> <span class="s1">&#39;tab:purple&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="s1">&#39;Reference&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ref_real</span><span class="p">,</span> <span class="n">ref_imag</span><span class="p">,</span> <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.017</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+    <span class="s1">&#39;Origin&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;tab:gray&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.015</span><span class="p">)),</span>
+    <span class="s1">&#39;$R_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{cal}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">r_cal_real</span><span class="p">,</span>
+        <span class="n">r_cal_imag</span><span class="p">,</span>
+        <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;^&#39;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;$B_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{cal}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">b_cal_real</span><span class="p">,</span>
+        <span class="n">b_cal_imag</span><span class="p">,</span>
+        <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;^&#39;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;$B_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{pix}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">b_pix_real</span><span class="p">,</span>
+        <span class="n">b_pix_imag</span><span class="p">,</span>
+        <span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;^&#39;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.03</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;$g_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{cal}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">g_cal</span><span class="p">,</span> <span class="n">s_cal</span><span class="p">,</span> <span class="s1">&#39;tab:green&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span><span class="p">)),</span>
+    <span class="s1">&#39;$g_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{pix}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">g_pix</span><span class="p">,</span> <span class="n">s_pix</span><span class="p">,</span> <span class="s1">&#39;tab:orange&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span><span class="p">)),</span>
+    <span class="s1">&#39;$g_</span><span class="se">\\</span><span class="s1">mathrm</span><span class="si">{frac}</span><span class="s1">$&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">g_frac</span><span class="p">,</span> <span class="n">s_frac</span><span class="p">,</span> <span class="s1">&#39;tab:blue&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)),</span>
+<span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
+        <span class="n">rx</span><span class="p">,</span>
+        <span class="n">ix</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="n">mk</span><span class="p">,</span>
+        <span class="n">fillstyle</span><span class="o">=</span><span class="s1">&#39;left&#39;</span> <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;Pixel&#39;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">markerfacecolor</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+        <span class="n">markerfacecoloralt</span><span class="o">=</span><span class="s1">&#39;tab:orange&#39;</span> <span class="k">if</span> <span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;Pixel&#39;</span> <span class="k">else</span> <span class="n">col</span><span class="p">,</span>
+        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+        <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">)</span>
+    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">annotate</span></a><span class="p">(</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">rx</span><span class="p">,</span> <span class="n">ix</span><span class="p">),</span>
+        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="n">rx</span> <span class="o">+</span> <span class="n">dx</span><span class="p">,</span> <span class="n">ix</span> <span class="o">+</span> <span class="n">dy</span><span class="p">),</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_concentration_003.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_concentration_003.png" alt="Phasor geometry of NADH concentration algorithm" class = "sphx-glr-single-img"/><p>The steps below correspond to the labelled points in the phasor diagram,
+using the free phasor <span class="math notranslate nohighlight">\(F\)</span>, bound phasor <span class="math notranslate nohighlight">\(B\)</span>,
+reference phasor <span class="math notranslate nohighlight">\(R\)</span> (center of the calibration distribution),
+per-pixel phasor <span class="math notranslate nohighlight">\(P\)</span>, and the origin <span class="math notranslate nohighlight">\(O\)</span>:</p>
+<p><strong>1. Calibration factor</strong>:
+Scale bound and reference phasors by fixed intensity modulation
+<span class="math notranslate nohighlight">\(m = 0.5\)</span> to obtain <span class="math notranslate nohighlight">\(B_\text{cal} = 0.5 \cdot B\)</span>
+and <span class="math notranslate nohighlight">\(R_\text{cal} = 0.5 \cdot R\)</span>.
+Find <span class="math notranslate nohighlight">\(g_\text{cal}\)</span>, the intersection of the <span class="math notranslate nohighlight">\(F\)</span>-<span class="math notranslate nohighlight">\(O\)</span> line
+with the <span class="math notranslate nohighlight">\(B_\text{cal}\)</span>-<span class="math notranslate nohighlight">\(R_\text{cal}\)</span> line.
+The calibration factor is
+<span class="math notranslate nohighlight">\(k = c_\text{ref} \cdot (g_\text{free} - g_\text{cal}) / g_\text{cal}\)</span>,
+where <span class="math notranslate nohighlight">\(g_\text{free}\)</span> is the real/G component of the free phasor.</p>
+<p><strong>2. Per-pixel intensity modulation</strong>:
+For each pixel with mean intensity <span class="math notranslate nohighlight">\(I\)</span>, compute
+<span class="math notranslate nohighlight">\(m = I / (2 I_R + I)\)</span> where <span class="math notranslate nohighlight">\(I_R\)</span> is the reference mean.
+Scale the bound phasor: <span class="math notranslate nohighlight">\(B_\text{pix} = m \cdot B\)</span>.</p>
+<p><strong>3. Free concentration</strong>:
+Find <span class="math notranslate nohighlight">\(g_\text{pix}\)</span>, the intersection of the <span class="math notranslate nohighlight">\(F\)</span>-<span class="math notranslate nohighlight">\(O\)</span> line
+with the <span class="math notranslate nohighlight">\(B_\text{pix}\)</span>-<span class="math notranslate nohighlight">\(P\)</span> line.
+Then <span class="math notranslate nohighlight">\(c_\text{free} = |g_\text{pix} \cdot k / (g_\text{free}
+- g_\text{pix})|\)</span>.</p>
+<p><strong>4. Bound and total concentration</strong> (when brightness ratio is provided):
+Find <span class="math notranslate nohighlight">\(g_\text{frac}\)</span>, the intersection of the <span class="math notranslate nohighlight">\(F\)</span>-<span class="math notranslate nohighlight">\(B\)</span> line
+with the <span class="math notranslate nohighlight">\(O\)</span>-<span class="math notranslate nohighlight">\(P\)</span> line.
+<span class="math notranslate nohighlight">\(g_\text{frac}\)</span> determines the free fraction <span class="math notranslate nohighlight">\(f_\text{free}\)</span>,
+from which <span class="math notranslate nohighlight">\(c_\text{bound}\)</span> and <span class="math notranslate nohighlight">\(c_\text{total}\)</span> follow.</p>
+<p>Note that the diagram labels <span class="math notranslate nohighlight">\(g_\text{cal}\)</span>, <span class="math notranslate nohighlight">\(g_\text{pix}\)</span>, and
+<span class="math notranslate nohighlight">\(g_\text{frac}\)</span> as intersection points, but only the real/G component
+is used in the calculations.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.166 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-nadh-concentration-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/b6d56b7f44fa35d35903a0fe1c7016e4/phasorpy_nadh_concentration.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_nadh_concentration.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/086c3e8b8c14796b4ffe946cff32838f/phasorpy_nadh_concentration.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">phasorpy_nadh_concentration.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/78b7a8e85da79156087914fb5796f67e/phasorpy_nadh_concentration.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">phasorpy_nadh_concentration.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../phasorpy_nadh_fraction/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bound NADH fraction</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../phasorpy_multidimensional/"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multidimensional phasor approach</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cho-k1-cell">CHO-K1 cell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm">Algorithm</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2022-2026 PhasorPy Contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
