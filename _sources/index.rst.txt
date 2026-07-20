@@ -64,8 +64,8 @@ of the library, including:
 - `API reference <docs/stable/api/>`_
 - `Release notes <docs/stable/release/>`_
 - `Contributing guide <docs/stable/contributing/>`_
-- `Acknowledgments <docs/stable/acknowledgments/>`_
 - `MIT License <docs/stable/license/>`_
+- `Project info <docs/stable/about/>`_
 
 Other versions: `latest development <docs/dev>`_, :doc:`all <docs>`
 
@@ -80,39 +80,43 @@ Resources
 News
 ====
 
+- July 20, 2026: `PhasorPy 0.12 <https://pypi.org/project/phasorpy/>`_ is released.
+
+- July 16, 2026: osx-arm64 packages are available for `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`__.
+
 - July 2, 2026: `300th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
 
-- June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- Oct 10, 2025: `PhasorPy 0.8 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Oct 10, 2025: `PhasorPy 0.8 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- Aug 22, 2025: `PhasorPy 0.7 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Aug 22, 2025: `PhasorPy 0.7 <https://pypi.org/project/phasorpy/>`_ is released.
 
 - Aug 16, 2025: The new `PhasorPy logo <https://www.phasorpy.org/_static/phasorpy_logo.svg>`_ is live.
 
-- June 22, 2025: `PhasorPy 0.6 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- June 22, 2025: `PhasorPy 0.6 <https://pypi.org/project/phasorpy/>`_ is released.
 
 - June 16, 2025: `200th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
 
-- Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released.
 
 - Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ for reading Leica LIF files is released.
 
 - Jan 8, 2025: PhasorPy is available on `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`__.
 
-- Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released.
 
-- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released.
 
 - Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`_.
 
-- Sept 30, 2024: `PhasorPy 0.1 <https://pypi.org/project/phasorpy/>`_ is released to PyPI.
+- Sept 30, 2024: `PhasorPy 0.1 <https://pypi.org/project/phasorpy/>`_ is released.
 
 - Sept 23, 2024: `100th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
 
@@ -343,8 +347,13 @@ Publications using PhasorPy:
 
 Publications mentioning PhasorPy:
 
+#. Lace B, Krohn P, Batzenschlager M, Fieß V, Molina D, Ragni L, Ott T.
+   `Fluorescence lifetime imaging in plants: practical guidelines for multiplexing, label-free imaging and data analysis
+   <https://doi.org/10.64898/2026.06.11.731528 >`__.
+   *bioRxiv* (2026)
+
 #. Harkhoe R, Ferrari G, Dmitriev RI, Kuhl M.
-   `Luminescence lifetime imaging: Key concepts and advances in the image acquisition, processing, and analysis pipeline
+   `Luminescence lifetime imaging: key concepts and advances in the image acquisition, processing, and analysis pipeline
    <https://doi.org/10.1021/acsmeasuresciau.5c00209>`__.
    *ACS Meas Sci Au*. acsmeasuresciau.5c00209 (2026)
 
@@ -359,7 +368,7 @@ Publications mentioning PhasorPy:
    *J Microscopy*. 301(1): 91-106 (2025)
 
 #. Wetzker C, Zoccoler ML, Iarovenko S, Okafornta CW, Nobst A, Hartmann H, Müller-Reichert T, Haase R, et al.
-   `Fluorescence lifetime unmixing: A new workflow for FLIM live-cell imaging
+   `Fluorescence lifetime unmixing: a new workflow for FLIM live-cell imaging
    <https://doi.org/10.1101/2025.03.05.641717>`__.
    *bioRxiv* (2025)
 
