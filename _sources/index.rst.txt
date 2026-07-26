@@ -53,95 +53,100 @@ estimation.
     :img: https://www.phasorpy.org/docs/stable/_images/sphx_glr_phasorpy_logo_thumb.png
     :description: Browse all PhasorPy tutorials.
 
+  .. gallery-tile:: https://www.phasorpy.org/docs/stable/api/
+    :title: Python API reference
+    :img: https://www.phasorpy.org/_static/python-logo-only.svg
+    :description: Details on all library functions and classes.
+
 Documentation
 =============
 
-The `PhasorPy documentation <docs/stable/>`_ thoroughly documents all aspects
+The `PhasorPy documentation <docs/stable/>`__ thoroughly documents all aspects
 of the library, including:
 
-- `Phasor approach <docs/stable/phasor_approach/>`_
-- `Tutorials <docs/stable/tutorials/>`_
-- `API reference <docs/stable/api/>`_
-- `Release notes <docs/stable/release/>`_
-- `Contributing guide <docs/stable/contributing/>`_
-- `MIT License <docs/stable/license/>`_
-- `Project info <docs/stable/about/>`_
+- `Phasor approach <docs/stable/phasor_approach/>`__
+- `Tutorials <docs/stable/tutorials/>`__
+- `API reference <docs/stable/api/>`__
+- `Release notes <docs/stable/release/>`__
+- `Contributing guide <docs/stable/contributing/>`__
+- `MIT License <docs/stable/license/>`__
+- `About the project <docs/stable/about/>`__
 
-Other versions: `latest development <docs/dev>`_, :doc:`all <docs>`
+Other versions: `latest development <docs/dev>`__, :doc:`all <docs>`
 
 Resources
 =========
 
-- `Source code <https://github.com/phasorpy/phasorpy>`_ is maintained on GitHub.com.
-- `Releases <https://pypi.org/project/phasorpy/>`_ are published on PyPI.org and `conda-forge <https://anaconda.org/conda-forge/phasorpy>`_.
-- `Data files <https://zenodo.org/communities/phasorpy>`_ are shared on Zenodo.org.
-- `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`_ on the GitHub issue tracker.
+- `Source code <https://github.com/phasorpy/phasorpy>`__ is maintained on GitHub.com.
+- `Releases <https://pypi.org/project/phasorpy/>`__ are published on PyPI.org and `conda-forge <https://anaconda.org/conda-forge/phasorpy>`__.
+- `Data files <https://zenodo.org/communities/phasorpy>`__ are shared on Zenodo.org.
+- `Ask questions and report issues <https://github.com/phasorpy/phasorpy/issues>`__ on the GitHub issue tracker.
 
 News
 ====
 
-- July 20, 2026: `PhasorPy 0.12 <https://pypi.org/project/phasorpy/>`_ is released.
+- July 20, 2026: `PhasorPy 0.12 <https://pypi.org/project/phasorpy/>`__ is released.
 
 - July 16, 2026: osx-arm64 packages are available for `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`__.
 
-- July 2, 2026: `300th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
+- July 2, 2026: `300th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`__ to the PhasorPy source code.
 
-- June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`_ is released.
+- June 6, 2026: `PhasorPy 0.11 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`_ is released.
+- May 12, 2026: `PhasorPy 0.10 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`_ is released.
+- Jan 1, 2026: `PhasorPy 0.9 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Oct 10, 2025: `PhasorPy 0.8 <https://pypi.org/project/phasorpy/>`_ is released.
+- Oct 10, 2025: `PhasorPy 0.8 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Aug 22, 2025: `PhasorPy 0.7 <https://pypi.org/project/phasorpy/>`_ is released.
+- Aug 22, 2025: `PhasorPy 0.7 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Aug 16, 2025: The new `PhasorPy logo <https://www.phasorpy.org/_static/phasorpy_logo.svg>`_ is live.
+- Aug 16, 2025: The new `PhasorPy logo <https://www.phasorpy.org/_static/phasorpy_logo.svg>`__ is live.
 
-- June 22, 2025: `PhasorPy 0.6 <https://pypi.org/project/phasorpy/>`_ is released.
+- June 22, 2025: `PhasorPy 0.6 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- June 16, 2025: `200th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
+- June 16, 2025: `200th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`__ to the PhasorPy source code.
 
-- Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`_ is released.
+- Apr 11, 2025: `PhasorPy 0.5 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`_ is released.
+- Jan 30, 2025: `PhasorPy 0.4 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`_ for reading Leica LIF files is released.
+- Jan 25, 2025: The `liffile library <https://github.com/cgohlke/liffile>`__ for reading Leica LIF files is released.
 
 - Jan 8, 2025: PhasorPy is available on `conda-forge <https://anaconda.org/conda-forge/phasorpy/>`__.
 
-- Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`_ is released.
+- Dec 16, 2024: `PhasorPy 0.3 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`_ is released.
+- Nov 30, 2024: `PhasorPy 0.2 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`_.
+- Oct 22, 2024: PhasorPy project update and practical are presented at the `18th LFD Workshop <https://www.lfd.uci.edu/workshop/>`__.
 
-- Sept 30, 2024: `PhasorPy 0.1 <https://pypi.org/project/phasorpy/>`_ is released.
+- Sept 30, 2024: `PhasorPy 0.1 <https://pypi.org/project/phasorpy/>`__ is released.
 
-- Sept 23, 2024: `100th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`_ to the PhasorPy source code.
+- Sept 23, 2024: `100th commit <https://github.com/phasorpy/phasorpy/graphs/contributors>`__ to the PhasorPy source code.
 
-- June 12, 2024: PhasorPy is featured at the `CZI Open Science 2024 <https://chanzuckerberg.com/science/programs-resources/open-science/>`_ meeting.
+- June 12, 2024: PhasorPy is featured at the `CZI Open Science 2024 <https://chanzuckerberg.com/science/programs-resources/open-science/>`__ meeting.
 
-- Feb 16, 2024: First `tutorial <https://www.phasorpy.org/docs/stable/tutorials/>`_ added to the documentation.
+- Feb 16, 2024: First `tutorial <https://www.phasorpy.org/docs/stable/tutorials/>`__ added to the documentation.
 
-- Nov 1, 2023: The `ptufile library <https://github.com/cgohlke/ptufile>`_ for reading PicoQuant PTU files is released.
+- Nov 1, 2023: The `ptufile library <https://github.com/cgohlke/ptufile>`__ for reading PicoQuant PTU files is released.
 
-- Oct 26, 2023: The PhasorPy project is introduced at the `17th LFD Workshop <https://www.lfd.uci.edu/workshop/2023/>`_.
+- Oct 26, 2023: The PhasorPy project is introduced at the `17th LFD Workshop <https://www.lfd.uci.edu/workshop/2023/>`__.
 
-- Oct 5, 2023: The PhasorPy `community on Zenodo <https://zenodo.org/communities/phasorpy>`_ is used to share data files.
+- Oct 5, 2023: The PhasorPy `community on Zenodo <https://zenodo.org/communities/phasorpy>`__ is used to share data files.
 
-- Sept 1, 2023: `Bruno Pannunzio <https://github.com/bruno-pannunzio>`_ joins the PhasorPy project.
+- Sept 1, 2023: `Bruno Pannunzio <https://github.com/bruno-pannunzio>`__ joins the PhasorPy project.
 
-- Aug 22, 2023: The library documentation is published at `www.phasorpy.org <https://www.phasorpy.org/docs/stable>`_.
+- Aug 22, 2023: The library documentation is published at `www.phasorpy.org <https://www.phasorpy.org/docs/stable>`__.
 
 - Aug 21, 2023: First PhasorPy developer meeting, to be held remotely every two weeks.
 
-- July 6, 2023: PhasorPy's `organization and repository on GitHub <https://github.com/phasorpy/phasorpy>`_ are live.
+- July 6, 2023: PhasorPy's `organization and repository on GitHub <https://github.com/phasorpy/phasorpy>`__ are live.
 
-- July 1, 2023: `Christoph Gohlke <https://github.com/cgohlke>`_ joins the PhasorPy project.
+- July 1, 2023: `Christoph Gohlke <https://github.com/cgohlke>`__ joins the PhasorPy project.
 
 - Sept 2022: A `grant from the Chan Zuckerberg Initiative
-  <https://chanzuckerberg.com/eoss/proposals/phasorpy-a-python-library-for-phasor-analysis-of-flim-and-spectral-imaging/>`_
+  <https://chanzuckerberg.com/eoss/proposals/phasorpy-a-python-library-for-phasor-analysis-of-flim-and-spectral-imaging/>`__
   is awarded to Leonel Malacrida and Enrico Gratton for the development of the PhasorPy library and community.
 
 Events
@@ -152,31 +157,31 @@ The PhasorPy project is presented at the following events:
 - Bruno Pannunzio.
   PhasorPy and napari-phasors: open source tools for FLIM-phasor analysis.
   `F-Techniques Worskhop Series: FLIM
-  <https://ppbi.pt/wordpress/index.php/f-techniques-worskhop-series-flim-january-13-15-2026/>`_.
+  <https://ppbi.pt/wordpress/index.php/f-techniques-worskhop-series-flim-january-13-15-2026/>`__.
   January 13-15, 2026. Portuguese Platform of BioImaging (PPBI), Portugal.
 
 - Bruno Schüty.
   PhasorPy hands-on training.
   `LFD/AIM Workshop on Fluorescence Advanced Imaging Research (FLAIR)
-  <https://sites.uci.edu/aimlfdworkshop/>`_.
+  <https://sites.uci.edu/aimlfdworkshop/>`__.
   January 12-15, 2026. University of California, Irvine, USA.
 
 - Bruno Pannunzio and Leonel Malacrida.
   The PhasorPy library for FLIM and HSI phasor analysis.
   `6th Workshop in Advanced Microscopy and Biophotonics
-  <https://pasteur.uy/cursos-y-charlas/6th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
+  <https://pasteur.uy/cursos-y-charlas/6th-workshop-in-advanced-microscopy-and-biophotonics/>`__.
   November 23-28, 2025. Institut Pasteur de Montevideo, Uruguay.
 
 - Leonel Malacrida.
   PhasorPy library for open-source phasor analysis of FLIM and HSI: present, future and some applications in biological fluorescence.
   `12th International Weber Symposium
-  <https://www.webersymposium.com/>`_.
+  <https://www.webersymposium.com/>`__.
   June 15-20, 2025. Genoa, Italy.
 
 - Bruno Pannunzio, Bruno Schuty Teske, Michelle Digman, Christoph Gohlke, and Leonel Malacrida.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
   `69th Annual Meeting of the Biophysical Society
-  <https://biophysics.cld.bz/BPS2025-Full-Program-Abstracts/125/>`_.
+  <https://biophysics.cld.bz/BPS2025-Full-Program-Abstracts/125/>`__.
   February 15-19, 2025. Los Angeles, USA.
 
 - Leonel Malacrida.
@@ -187,110 +192,110 @@ The PhasorPy project is presented at the following events:
 - Leonel Malacrida.
   The PhasorPy library for FLIM and HSI phasor analysis.
   `Optica Webinar Series
-  <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`_.
+  <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__.
   November 25, 2024. Online.
   `Recording <https://www.optica.org/events/webinar/2024/11_november/the_phasorpy_library_for_flim_and_hsi_phasor_analysis/>`__.
 
 - Bruno Schüty.
   Phasor Analysis in fluorescence lifetime imaging and spectral imaging with PhasorPy.
   `GloBIAS Bioimage Analysts Workshop
-  <https://www.globias.org/activities/past-activties/annual-workshop-gothenburg-2024>`_.
+  <https://www.globias.org/activities/past-activties/annual-workshop-gothenburg-2024>`__.
   November 5-8, 2024. Gothenburg, Sweden.
   `Recording <https://www.youtube.com/watch?v=5qURI2NVkzg/>`__.
 
 - Bruno Pannunzio.
   PhasorPy: an open-source Python library for the analysis of fluorescence lifetime and hyperspectral images using the phasor approach.
   `Virtual I2K 2024: Online tutorials on image analysis
-  <https://www.i2kconference.org/workshops>`_.
+  <https://www.i2kconference.org/workshops>`__.
   October 29, 2024. Online.
   `Recording <https://www.youtube.com/watch?v=VGKGF8Zj3tY>`__.
 
 - Leonel Malacrida.
   Unlocking the phasor approach for FLIM and HSI: Insights from PhasorPy, a comprehensive Python library for phasor plot analysis.
   `Euro-Bioimaging Virtual Pub
-  <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`_.
+  <https://www.eurobioimaging.eu/events/phasor-plots-for-hyperspectral-imaging-and-flim/>`__.
   October 25, 2024. Online.
   `Recording <https://www.youtube.com/watch?v=cI7WydgIG00>`__.
 
 - Bruno Schüty.
   PhasorPy hands-on training.
   `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
-  <https://www.lfd.uci.edu/workshop/>`_.
+  <https://www.lfd.uci.edu/workshop/>`__.
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
 - Christoph Gohlke.
   Introduction to PhasorPy.
   `18th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
-  <https://www.lfd.uci.edu/workshop/>`_.
+  <https://www.lfd.uci.edu/workshop/>`__.
   October 21-24, 2024.
   Laboratory for Fluorescence Dynamics, University of California, Irvine, USA.
 
 - Bruno Pannunzio, Bruno Schüty, Christoph Gohlke, and Leonel Malacrida.
   PhasorPy: un nuevo software abierto para el análisis de imágenes espectrales y tiempo de vida por gráficos de fasores.
   `Semana Académica del Hospital de Clínicas
-  <https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681>`_.
+  <https://www.semanacademica.hc.edu.uy/index.php/galeria2024/681>`__.
   September 23-27, 2024. Montevideo, Uruguay.
 
 - Leonel Malacrida.
   Phasor analysis for FLIM & STED.
   `Montreal Light Microscopy Course (MLMC). In-Focus: STimulated Emission Depletion (STED) Microscopy
-  <https://www.canadabioimaging.org/mlmc-infocus-sted>`_.
+  <https://www.canadabioimaging.org/mlmc-infocus-sted>`__.
   July 22-26, 2024. Montreal, Canada.
 
 - Leonel Malacrida.
   The phasor approach for biophysical studies of condensates and membranes using DAN probes.
   `XXVII Congreso Nazionale SIBPA
-  <https://www.sibpa.it/CongressoNazionaleSIBPAGenova/>`_.
+  <https://www.sibpa.it/CongressoNazionaleSIBPAGenova/>`__.
   June 16-20, 2024. Genoa, Italy.
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library for phasor analysis of FLIM and HSI data.
   `CZI Open Science 2024
-  <https://chanzuckerberg.com/science/programs-resources/open-science/>`_.
+  <https://chanzuckerberg.com/science/programs-resources/open-science/>`__.
   June 11-14, 2024. Boston, USA.
 
 - Leonel Malacrida.
   The phasor plots for time-resolved and hyperspectral imaging: fundamentals and new developments.
   `Sociedad Argentina de Microscopia
-  <https://www.samictucuman2024.com/>`_.
+  <https://www.samictucuman2024.com/>`__.
   May 29-31, 2024. Tucuman, Argentina.
 
 - Leonel Malacrida.
   The phasor plot analysis for hyperspectral imaging and time-resolved imaging: PhasorPy developments and its applications.
   `Latin American Hub for Bioimaging Through Open Hardware (LIBRE Hub) Seminars
-  <https://librehub.github.io/2024/04/03/leonel-malacrida.html>`_.
+  <https://librehub.github.io/2024/04/03/leonel-malacrida.html>`__.
   May 15, 2024. Online.
   `Recording <https://www.youtube.com/watch?v=CbmDNjwo_sg>`__.
 
 - Leonel Malacrida.
   PhasorPy: a Python open-source library as SimFCS legacy for phasor analysis of FLIM and HSI data.
   `Frontiers in Biological Fluorescence 2024
-  <https://www.lfd.uci.edu/frontiers/>`_.
+  <https://www.lfd.uci.edu/frontiers/>`__.
   May 10, 2024. University of California, Irvine, USA.
 
 - Leonel Malacrida.
   Microscopía no lineal en Uruguay: 2P-FLIM y microscopio DIVER para estudiar procesos in vivo en la profundidad del tejido.
   `Simposio en Microscopía y Bioimágenes: avances y desafíos
-  <https://cicada.uy/simposio-en-microscopia-y-bioimagenes-avances-y-desafios/>`_.
+  <https://cicada.uy/simposio-en-microscopia-y-bioimagenes-avances-y-desafios/>`__.
   April 4-5, 2024. University of the Republic (UdelaR). Montevideo, Uruguay.
 
 - Leonel Malacrida.
   Microscopy techniques applied to the analysis of biosensors performance.
   `1st Latin-American Workshop: Development and applications of biosensors: from fluorescent proteins to synthetic biology
-  <https://pasteur.uy/cursos-y-charlas/1st-latin-american-workshop-development-and-applications-of-biosensors-from-fluorescent-proteins-to-synthetic-biology/>`_.
+  <https://pasteur.uy/cursos-y-charlas/1st-latin-american-workshop-development-and-applications-of-biosensors-from-fluorescent-proteins-to-synthetic-biology/>`__.
   Nov 27 - Dec 1, 2023. Institut Pasteur de Montevideo, Uruguay.
 
 - Bruno Schüty, Bruno Pannunzio, and Leonel Malacrida.
   Practical section 3: PhasorPy and Napari plugin for FLIM & HSI analysis.
   `5th Workshop in Advanced Microscopy and Biophotonics
-  <https://pasteur.uy/2023/5th-workshop-in-advanced-microscopy-and-biophotonics/>`_.
+  <https://pasteur.uy/2023/5th-workshop-in-advanced-microscopy-and-biophotonics/>`__.
   November 19-24, 2023. Institut Pasteur de Montevideo, Uruguay.
 
 - Christoph Gohlke and Leonel Malacrida.
   Introduction to PhasorPy.
   `17th LFD Workshop in Advanced Fluorescence Imaging and Dynamics
-  <https://www.lfd.uci.edu/workshop/>`_.
+  <https://www.lfd.uci.edu/workshop/>`__.
   October 23-27, 2023. Laboratory for Fluorescence Dynamics,
   University of California, Irvine, USA.
 
@@ -349,7 +354,7 @@ Publications mentioning PhasorPy:
 
 #. Lace B, Krohn P, Batzenschlager M, Fieß V, Molina D, Ragni L, Ott T.
    `Fluorescence lifetime imaging in plants: practical guidelines for multiplexing, label-free imaging and data analysis
-   <https://doi.org/10.64898/2026.06.11.731528 >`__.
+   <https://doi.org/10.64898/2026.06.11.731528>`__.
    *bioRxiv* (2026)
 
 #. Harkhoe R, Ferrari G, Dmitriev RI, Kuhl M.
@@ -402,7 +407,7 @@ Cite
 ====
 
 Please cite
-`doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`_
+`doi: 10.5281/zenodo.13862586 <https://dx.doi.org/10.5281/zenodo.13862586>`__
 if PhasorPy contributes to research that leads to a publication.
 
 Contact
@@ -410,12 +415,12 @@ Contact
 
 PhasorPy is a community-maintained project.
 
-`Contributions <docs/stable/contributing/>`_
+`Contributions <docs/stable/contributing/>`__
 in the form of bug reports, bug fixes, feature implementations, documentation,
 datasets, and enhancement proposals are welcome.
 
 Report issues and ask questions about PhasorPy on the GitHub
-`issue tracker <https://github.com/phasorpy/phasorpy/issues>`_.
+`issue tracker <https://github.com/phasorpy/phasorpy/issues>`__.
 
 Alternatively, contact the
-`PhasorPy developers <https://github.com/orgs/phasorpy/people>`_ directly.
+`PhasorPy developers <https://github.com/orgs/phasorpy/people>`__ directly.
