@@ -573,10 +573,15 @@ Gaussian Mixture Model (GMM):</p>
 <li><p><a class="reference internal" href="#phasorpy.cluster.phasor_cluster_gmm" title="phasorpy.cluster.phasor_cluster_gmm"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_cluster_gmm()</span></code></a></p></li>
 </ul>
 </li>
+<li><p>assign phasor coordinates to clusters using k-means clustering:</p>
+<ul>
+<li><p><a class="reference internal" href="#phasorpy.cluster.phasor_cluster_kmeans" title="phasorpy.cluster.phasor_cluster_kmeans"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_cluster_kmeans()</span></code></a></p></li>
+</ul>
+</li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="phasorpy.cluster.phasor_cluster_gmm">
-<span class="sig-prename descclassname"><span class="pre">phasorpy.cluster.</span></span><span class="sig-name descname"><span class="pre">phasor_cluster_gmm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cluster.py#L30-L231"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cluster.phasor_cluster_gmm" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cluster.</span></span><span class="sig-name descname"><span class="pre">phasor_cluster_gmm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cluster.py#L34-L225"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cluster.phasor_cluster_gmm" title="Link to this definition">#</a></dt>
 <dd><p>Return elliptical clusters in phasor coordinates using GMM.</p>
 <p>Fit a Gaussian Mixture Model (GMM) to the provided phasor coordinates and
 extract the parameters of ellipses that represent each cluster according
@@ -627,6 +632,13 @@ By default, use ‘polar’ sorting.</p>
     If <cite>sort</cite> is not a valid sorting method.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../../tutorials/api/phasorpy_cluster/#sphx-glr-tutorials-api-phasorpy-cluster-py"><span class="std std-ref">Clusters</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>This function operates on single-harmonic, single-channel data only.
+Multi-harmonic or multi-channel data must be clustered separately.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id2" role="doc-footnote">
@@ -652,6 +664,83 @@ with two clusters:</p>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">center_real</span>
 <span class="go">(0.2, 0.4)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phasorpy.cluster.phasor_cluster_kmeans">
+<span class="sig-prename descclassname"><span class="pre">phasorpy.cluster.</span></span><span class="sig-name descname"><span class="pre">phasor_cluster_kmeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imag</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/phasorpy/phasorpy/blob/main/src/phasorpy/cluster.py#L228-L365"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#phasorpy.cluster.phasor_cluster_kmeans" title="Link to this definition">#</a></dt>
+<dd><p>Return k-means clusters of phasor coordinates.</p>
+<p>Partition phasor coordinates into <cite>clusters</cite> groups using k-means
+clustering, assigning each phasor coordinate to the cluster with the
+nearest center.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>array_like</em>) – Real component of phasor coordinates.</p></li>
+<li><p><strong>imag</strong> (<em>array_like</em>) – Imaginary component of phasor coordinates.</p></li>
+<li><p><strong>clusters</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default: 1</em>) – Number of clusters to partition phasor coordinates into.</p></li>
+<li><p><strong>sort</strong> (<em>{'polar'</em><em>, </em><em>'phasor'</em><em>, </em><em>'size'}</em><em>, </em><em>optional</em>) – <p>Sorting method for output clusters.
+By default, use ‘polar’ sorting.</p>
+<ul>
+<li><p>’polar’: Sort by polar coordinates (phase, then modulation).</p></li>
+<li><p>’phasor’: Sort by phasor coordinates (imaginary, then real).</p></li>
+<li><p>’size’: Sort by decreasing number of coordinates in cluster.</p></li>
+</ul>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>Optional arguments passed to <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.cluster.KMeans</span></code> or
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">sklearn.cluster.KMeans.fit_predict()</span></code>.</p>
+<p>Common options include:</p>
+<ul>
+<li><p>init : {‘k-means++’, ‘random’}, method of initialization</p></li>
+<li><p>n_init : int, number of initializations to perform</p></li>
+<li><p>max_iter : int, maximum number of iterations</p></li>
+<li><p>random_state : int, for reproducible results</p></li>
+<li><p>sample_weight: array_like, weight of each phasor coordinate</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>center_real</strong> (<em>tuple of float</em>) – Real component of cluster centers.</p></li>
+<li><p><strong>center_imag</strong> (<em>tuple of float</em>) – Imaginary component of cluster centers.</p></li>
+<li><p><strong>labels</strong> (<em>ndarray</em>) – Zero-based index of cluster each phasor coordinate belongs to.
+Same shape as <cite>real</cite> and <cite>imag</cite>.
+Values are -1 where <cite>real</cite> or <cite>imag</cite> are NaN.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>clusters</cite> is less than 1.
+    If the array shapes of <cite>real</cite> and <cite>imag</cite> do not match.
+    If the number of valid (non-NaN) data points is less than <cite>clusters</cite>.
+    If <cite>sort</cite> is not a valid sorting method.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="../../tutorials/api/phasorpy_cluster/#sphx-glr-tutorials-api-phasorpy-cluster-py"><span class="std std-ref">Clusters</span></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>This function operates on single-harmonic, single-channel data only.
+Multi-harmonic or multi-channel data must be clustered separately.</p>
+<p>The returned coordinates are unweighted centers. Phasor coordinates are
+not weighted by intensity. Apply <code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_center()</span></code> to the
+coordinates of each cluster to obtain intensity-weighted centers.</p>
+<p class="rubric">Examples</p>
+<p>Partition phasor coordinates into two clusters, obtaining the cluster
+centers and the cluster index of each coordinate:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">phasor_cluster_kmeans</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">center_real</span>
+<span class="go">(0.15, 0.55)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span>
+<span class="go">array([ 0,  0,  1,  1, -1], dtype=int8)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -706,6 +795,7 @@ with two clusters:</p>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cluster.phasor_cluster_gmm"><code class="docutils literal notranslate"><span class="pre">phasor_cluster_gmm()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phasorpy.cluster.phasor_cluster_kmeans"><code class="docutils literal notranslate"><span class="pre">phasor_cluster_kmeans()</span></code></a></li>
 </ul>
   </nav></div>
 
