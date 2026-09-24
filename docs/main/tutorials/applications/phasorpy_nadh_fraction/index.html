@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=c83e6b79" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -600,41 +600,37 @@ ensuring accuracy and reproducibility in metabolic profiling</a>.
 <em>J Biomed Opt</em>, 30(Suppl 2): S23901 (2025)</p>
 </div></blockquote>
 <p>Import required modules, functions, and classes:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.component</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction" class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function"><span class="n">phasor_component_fraction</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">,</span>
-    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span>
-    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle_intersect" title="phasorpy.lifetime.phasor_semicircle_intersect" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_semicircle_intersect</span></a><span class="p">,</span>
-    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_lifetime_search</span></a><span class="p">,</span>
-    <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a><span class="p">,</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">,</span> <a href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_signal_image</span></a>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span><span class="w">
+</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">component</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function reference internal" href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><span class="n">phasor_component_fraction</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><span class="n">fetch</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">lifetime</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate"><span class="n">phasor_calibrate</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime"><span class="n">phasor_from_lifetime</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle_intersect" title="phasorpy.lifetime.phasor_semicircle_intersect"><span class="n">phasor_semicircle_intersect</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search"><span class="n">phasor_to_lifetime_search</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">phasor</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center"><span class="n">phasor_center</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">plot</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image"><span class="n">plot_signal_image</span></a><span class="w">
+</span></pre></div></div>
 <section id="read-dataset">
 <h2>Read dataset<a class="headerlink" href="#read-dataset" title="Link to this heading">#</a></h2>
 <p>Read the FLIM data of human breast cancer cells and the reference of
 known lifetime (Fluorescein in EtOH, 3.05 ns) acquired at 80 MHz.
 The data are in generic TIFF format containing TCSPC histogram images
 (97 time bins, 512 x 512 pixels) without metadata:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cell_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">'CellsMaskedFilt3_new3.tiff'</span><span class="p">))</span>
-<span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">'Fluor.tiff'</span><span class="p">))</span>
-
-<span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
-<span class="n">lifetime_reference</span> <span class="o">=</span> <span class="mf">3.05</span>  <span class="c1"># ns, Fluorescein</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">cell_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">'</span><span class="s1">CellsMaskedFilt3_new3.tiff</span><span class="s1">'</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="n">reference_signal</span> <span class="o">=</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><span class="n">fetch</span></a><span class="p">(</span><span class="s1">'</span><span class="s1">Fluor.tiff</span><span class="s1">'</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span><span class="w">
+</span><span class="n">lifetime_reference</span> <span class="o">=</span> <span class="mf">3.05</span>  <span class="c1"># ns, Fluorescein</span><span class="w">
+</span></pre></div></div>
 <p>Preview the TCSPC histogram images of the cell and reference:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_signal_image</span></a><span class="p">(</span><span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'Cell FLIM signal'</span><span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_001.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_001.png" alt="Cell FLIM signal, axis=0, mean" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_signal_image</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'Fluorescein reference'</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image"><span class="n">plot_signal_image</span></a><span class="p">(</span><span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Cell FLIM signal</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_001.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_001.png" alt="Cell FLIM signal, axis=0, mean" class = "sphx-glr-single-img"/><div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_signal_image" title="phasorpy.plot.plot_signal_image"><span class="n">plot_signal_image</span></a><span class="p">(</span><span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Fluorescein reference</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_002.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_002.png" alt="Fluorescein reference, axis=0, mean" class = "sphx-glr-single-img"/><p>The cell signal is apparently pre-filtered to exclude background pixels
 and improve signal quality, while the reference signal has sufficient signal.
 Hence, no further thresholding or filtering is applied.</p>
@@ -642,98 +638,92 @@ Hence, no further thresholding or filtering is applied.</p>
 <section id="single-harmonic-phasor-analysis">
 <h2>Single-harmonic phasor analysis<a class="headerlink" href="#single-harmonic-phasor-analysis" title="Link to this heading">#</a></h2>
 <p>Compute phasor coordinates from the TCSPC histograms along axis 0:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span>
-    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Calibrate the cell phasor coordinates using the Fluorescein reference
 distribution:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
-    <span class="n">cell_real</span><span class="p">,</span>
-    <span class="n">cell_imag</span><span class="p">,</span>
-    <span class="n">reference_mean</span><span class="p">,</span>
-    <span class="n">reference_real</span><span class="p">,</span>
-    <span class="n">reference_imag</span><span class="p">,</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime_reference</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate"><span class="n">phasor_calibrate</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">cell_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cell_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_mean</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime_reference</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Calculate the phasor coordinates of free NADH from its known lifetime
 (0.4 ns). The bound NADH phasor is determined from the center of the cell
 distribution: it is the second intersection of the line from the free NADH
 phasor through the data center with the universal semicircle.
 Calculate the corresponding single-exponential lifetime of bound NADH from
 that intersection:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lifetime_free</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># ns, free cytoplasmic NADH</span>
-
-<span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime_free</span><span class="p">)</span>
-
-<span class="n">_</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_center</span></a><span class="p">(</span><span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">)</span>
-
-<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle_intersect" title="phasorpy.lifetime.phasor_semicircle_intersect" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_semicircle_intersect</span></a><span class="p">(</span>
-    <span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span>
-<span class="p">)</span>
-
-<span class="n">lifetime_bound</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">(</span>
-    <span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">lifetime_free</span> <span class="o">=</span> <span class="mf">0.4</span>  <span class="c1"># ns, free cytoplasmic NADH</span><span class="w">
+</span><span class="w">
+</span><span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime_free</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">_</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_center" title="phasorpy.phasor.phasor_center"><span class="n">phasor_center</span></a><span class="p">(</span><span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_semicircle_intersect" title="phasorpy.lifetime.phasor_semicircle_intersect"><span class="n">phasor_semicircle_intersect</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">free_real</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">,</span> <span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">lifetime_bound</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">bound_real</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Plot the phasor distribution of the cell. Pixel phasors cluster along the
 line connecting the free and bound NADH phasor coordinates:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'NADH phasor distribution'</span><span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">([</span><span class="n">free_real</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">],</span> <span class="p">[</span><span class="n">free_imag</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">rx</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span>
-    <span class="sa">f</span><span class="s1">'Free NADH (</span><span class="si">{</span><span class="n">lifetime_free</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ns, fixed)'</span><span class="p">:</span> <span class="p">(</span>
-        <span class="n">free_real</span><span class="p">,</span>
-        <span class="n">free_imag</span><span class="p">,</span>
-        <span class="s1">'tab:olive'</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="s1">'Distribution center'</span><span class="p">:</span> <span class="p">(</span><span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="s1">'tab:orange'</span><span class="p">),</span>
-    <span class="sa">f</span><span class="s1">'Bound NADH (</span><span class="si">{</span><span class="n">lifetime_bound</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ns, intersection)'</span><span class="p">:</span> <span class="p">(</span>
-        <span class="n">bound_real</span><span class="p">,</span>
-        <span class="n">bound_imag</span><span class="p">,</span>
-        <span class="s1">'tab:purple'</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
-        <span class="n">rx</span><span class="p">,</span>
-        <span class="n">ix</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
-        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-        <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
-        <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-    <span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">NADH phasor distribution</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span><span class="p">[</span><span class="n">free_real</span><span class="p">,</span> <span class="n">bound_real</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="n">free_imag</span><span class="p">,</span> <span class="n">bound_imag</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">rx</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span><span class="w">
+</span>    <span class="sa">f</span><span class="s1">'</span><span class="s1">Free NADH (</span><span class="si">{</span><span class="n">lifetime_free</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ns, fixed)</span><span class="s1">'</span><span class="p">:</span> <span class="p">(</span><span class="w">
+</span>        <span class="n">free_real</span><span class="p">,</span><span class="w">
+</span>        <span class="n">free_imag</span><span class="p">,</span><span class="w">
+</span>        <span class="s1">'</span><span class="s1">tab:olive</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">Distribution center</span><span class="s1">'</span><span class="p">:</span> <span class="p">(</span><span class="n">center_real</span><span class="p">,</span> <span class="n">center_imag</span><span class="p">,</span> <span class="s1">'</span><span class="s1">tab:orange</span><span class="s1">'</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="sa">f</span><span class="s1">'</span><span class="s1">Bound NADH (</span><span class="si">{</span><span class="n">lifetime_bound</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> ns, intersection)</span><span class="s1">'</span><span class="p">:</span> <span class="p">(</span><span class="w">
+</span>        <span class="n">bound_real</span><span class="p">,</span><span class="w">
+</span>        <span class="n">bound_imag</span><span class="p">,</span><span class="w">
+</span>        <span class="s1">'</span><span class="s1">tab:purple</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="w">
+</span>        <span class="n">rx</span><span class="p">,</span><span class="w">
+</span>        <span class="n">ix</span><span class="p">,</span><span class="w">
+</span>        <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">,</span><span class="w">
+</span>        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
+</span>        <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'</span><span class="s1">black</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>        <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+</span>        <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" alt="NADH phasor distribution" class = "sphx-glr-single-img"/><p>Compute the fraction of enzyme-bound NADH per pixel.
 <a class="reference internal" href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_fraction()</span></code></a> returns the fraction
 of the first component; passing bound NADH first yields the bound fraction
 directly:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">bound_fraction</span> <span class="o">=</span> <a href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction" class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function"><span class="n">phasor_component_fraction</span></a><span class="p">(</span>
-    <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">,</span> <span class="p">[</span><span class="n">bound_real</span><span class="p">,</span> <span class="n">free_real</span><span class="p">],</span> <span class="p">[</span><span class="n">bound_imag</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">]</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">bound_fraction</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function reference internal" href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><span class="n">phasor_component_fraction</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">,</span> <span class="p">[</span><span class="n">bound_real</span><span class="p">,</span> <span class="n">free_real</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="n">bound_imag</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">]</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Display the bound NADH fraction image.
 Pixel values represent the fraction of enzyme-bound NADH.
 Background pixels with zero signal appear as NaN:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
-    <span class="n">bound_fraction</span><span class="p">,</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
-    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s1">'turbo'</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'Bound NADH fraction (single harmonic analysis)'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">bound_fraction</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cmap</span><span class="o">=</span><span class="s1">'</span><span class="s1">turbo</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH fraction (single harmonic analysis)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" alt="Bound NADH fraction (single harmonic analysis)" class = "sphx-glr-single-img"/><p>Compare to Figure 6c of <a class="reference internal" href="#georgakoudi-2025"><span class="std std-ref">Georgakoudi et al</span></a>,
 which shows significantly lower bound NADH fractions.</p>
 </section>
@@ -743,64 +733,60 @@ which shows significantly lower bound NADH fractions.</p>
 resolves two lifetime components per pixel from multi-harmonic phasor
 coordinates without any prior assumption on component lifetimes.
 Recompute and calibrate phasor coordinates at the first two harmonics:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-
-<span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span>
-    <span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span>
-<span class="p">)</span>
-
-<span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span>
-    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span>
-<span class="p">)</span>
-
-<span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_calibrate</span></a><span class="p">(</span>
-    <span class="n">cell_real</span><span class="p">,</span>
-    <span class="n">cell_imag</span><span class="p">,</span>
-    <span class="n">reference_mean</span><span class="p">,</span>
-    <span class="n">reference_real</span><span class="p">,</span>
-    <span class="n">reference_imag</span><span class="p">,</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime_reference</span><span class="p">,</span>
-    <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="w">
+</span><span class="w">
+</span><span class="n">cell_mean</span><span class="p">,</span> <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">cell_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">reference_mean</span><span class="p">,</span> <span class="n">reference_real</span><span class="p">,</span> <span class="n">reference_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">reference_signal</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_calibrate" title="phasorpy.lifetime.phasor_calibrate"><span class="n">phasor_calibrate</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">cell_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cell_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_mean</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">reference_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime_reference</span><span class="p">,</span><span class="w">
+</span>    <span class="n">harmonic</span><span class="o">=</span><span class="n">harmonic</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Decompose each pixel into two lifetime components using a graphical search
 over the universal semicircle. The search for the faster lifetime is limited
 to the range from 0.2 to 0.8 ns. Components are returned sorted by lifetime;
 the longer-lifetime (index 1) corresponds to enzyme-bound NADH:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_lifetime_search</span></a><span class="p">(</span>
-    <span class="n">cell_real</span><span class="p">,</span>
-    <span class="n">cell_imag</span><span class="p">,</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">lifetime_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">lifetimes</span><span class="p">,</span> <span class="n">fractions</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search"><span class="n">phasor_to_lifetime_search</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">cell_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cell_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">lifetime_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="n">num_threads</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Display the bound NADH fraction image from the two-harmonic decomposition.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
-    <span class="n">fractions</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
-    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s1">'turbo'</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'Bound NADH fraction (two-harmonic search)'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">fractions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cmap</span><span class="o">=</span><span class="s1">'</span><span class="s1">turbo</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH fraction (two-harmonic search)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" alt="Bound NADH fraction (two-harmonic search)" class = "sphx-glr-single-img"/><p>Display the two resolved lifetime component images:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span>
-    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">vmax</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-    <span class="n">cmap</span><span class="o">=</span><span class="s1">'turbo'</span><span class="p">,</span>
-    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Free NADH lifetime (ns)'</span><span class="p">,</span> <span class="s1">'Bound NADH lifetime (ns)'</span><span class="p">],</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'Resolved lifetime components (two-harmonic search)'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" alt="Resolved lifetime components (two-harmonic search), Free NADH lifetime (ns), Bound NADH lifetime (ns)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.722 seconds)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">,</span><span class="w">
+</span>    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+</span>    <span class="n">vmax</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="w">
+</span>    <span class="n">cmap</span><span class="o">=</span><span class="s1">'</span><span class="s1">turbo</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'</span><span class="s1">Free NADH lifetime (ns)</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'</span><span class="s1">Bound NADH lifetime (ns)</span><span class="s1">'</span><span class="p">]</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Resolved lifetime components (two-harmonic search)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" alt="Resolved lifetime components (two-harmonic search), Free NADH lifetime (ns), Bound NADH lifetime (ns)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.858 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-nadh-fraction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/dc9f3a731b26a7229fd020fb4f2d8857/phasorpy_nadh_fraction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_nadh_fraction.ipynb</span></code></a></p>

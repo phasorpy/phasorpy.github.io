@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=c83e6b79" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -595,21 +595,20 @@ calculate a theoretical FRET efficiency trajectory and the
 to estimate the FRET efficiencies of measured phasor coordinates in an image
 from the trajectory.</p>
 <p>Import required modules, functions, and classes:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.datasets</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.filter</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">,</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.io</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">phasor_from_simfcs_referenced</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_fret_donor" title="phasorpy.lifetime.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">,</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_nearest_neighbor</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">,</span>
-    <a href="../../../api/plot/#phasorpy.plot.plot_histograms" title="phasorpy.plot.plot_histograms" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_histograms</span></a><span class="p">,</span>
-    <a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">,</span>
-    <a href="../../../api/plot/#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w">
+</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">datasets</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><span class="n">fetch</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">filter</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median"><span class="n">phasor_filter_median</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function reference internal" href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold"><span class="n">phasor_threshold</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function reference internal" href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><span class="n">phasor_from_simfcs_referenced</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">lifetime</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_fret_donor" title="phasorpy.lifetime.phasor_from_fret_donor"><span class="n">phasor_from_fret_donor</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime"><span class="n">phasor_to_normal_lifetime</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">phasor</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor"><span class="n">phasor_nearest_neighbor</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">plot</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_histograms" title="phasorpy.plot.plot_histograms"><span class="n">plot_histograms</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">,</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image"><span class="n">plot_phasor_image</span></a><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <section id="read-dataset">
 <h2>Read dataset<a class="headerlink" href="#read-dataset" title="Link to this heading">#</a></h2>
 <p>Read phasor coordinates from the
@@ -617,22 +616,21 @@ from the trajectory.</p>
 containing fixed samples of CFP and CFP-YFP expressing cells.
 The data were acquired using a Lambert frequency-domain FLIM instrument
 at 80 MHz. The phasor coordinates are already referenced:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">'CFP and CFP-YFp.ref'</span>
-<span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
-
-<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <a href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced" class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function"><span class="n">phasor_from_simfcs_referenced</span></a><span class="p">(</span><a href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch" class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function"><span class="n">fetch</span></a><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
-
-<a href="../../../api/plot/#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_phasor_image</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="c1"># Filter the phasor coordinates and set the intensity threshold</span>
-<span class="c1"># to 9000 counts to remove low-intensity background pixels:</span>
-
-<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_filter_median</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold" class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function"><span class="n">phasor_threshold</span></a><span class="p">(</span>
-    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">9000</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">filename</span> <span class="o">=</span> <span class="s1">'</span><span class="s1">CFP and CFP-YFp.ref</span><span class="s1">'</span><span class="w">
+</span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span><span class="w">
+</span><span class="w">
+</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-io sphx-glr-backref-type-py-function reference internal" href="../../../api/io/#phasorpy.io.phasor_from_simfcs_referenced" title="phasorpy.io.phasor_from_simfcs_referenced"><span class="n">phasor_from_simfcs_referenced</span></a><span class="p">(</span><a class="sphx-glr-backref-module-phasorpy-datasets sphx-glr-backref-type-py-function reference internal" href="../../../api/datasets/#phasorpy.datasets.fetch" title="phasorpy.datasets.fetch"><span class="n">fetch</span></a><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_phasor_image" title="phasorpy.plot.plot_phasor_image"><span class="n">plot_phasor_image</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># Filter the phasor coordinates and set the intensity threshold</span><span class="w">
+</span><span class="c1"># to 9000 counts to remove low-intensity background pixels:</span><span class="w">
+</span><span class="w">
+</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function reference internal" href="../../../api/filter/#phasorpy.filter.phasor_filter_median" title="phasorpy.filter.phasor_filter_median"><span class="n">phasor_filter_median</span></a><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">
+</span><span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-filter sphx-glr-backref-type-py-function reference internal" href="../../../api/filter/#phasorpy.filter.phasor_threshold" title="phasorpy.filter.phasor_threshold"><span class="n">phasor_threshold</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">mean</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">,</span> <span class="n">mean_min</span><span class="o">=</span><span class="mi">9000</span><span class="p">,</span> <span class="n">real_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">imag_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">open_interval</span><span class="o">=</span><span class="kc">True</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_001.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_001.png" alt="CFP and CFP-YFp.ref, mean, G, real, S, imag" class = "sphx-glr-single-img"/></section>
 <section id="fret-efficiency-trajectory">
 <h2>FRET efficiency trajectory<a class="headerlink" href="#fret-efficiency-trajectory" title="Link to this heading">#</a></h2>
@@ -640,91 +638,87 @@ at 80 MHz. The phasor coordinates are already referenced:</p>
 for the CFP FRET donor.
 The trajectory represents the path phasor coordinates follow as FRET
 efficiency increases from 0% (donor only) to 100% (complete energy transfer):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span> <span class="o">=</span> <span class="mf">0.72</span><span class="p">,</span> <span class="mf">0.45</span>  <span class="c1"># estimated pure CFP phasor coordinates</span>
-<span class="n">background_real</span><span class="p">,</span> <span class="n">background_imag</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.41</span>  <span class="c1"># estimated background phasor</span>
-
-<span class="n">fret_efficiency_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="n">donor_lifetime</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">(</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span>
-
-<span class="n">fret_trajectory</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_fret_donor" title="phasorpy.lifetime.phasor_from_fret_donor" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_fret_donor</span></a><span class="p">(</span>
-    <span class="n">frequency</span><span class="p">,</span>
-    <span class="n">donor_lifetime</span><span class="p">,</span>
-    <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">fret_efficiency_range</span><span class="p">,</span>
-    <span class="n">donor_fretting</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># all donor molecules can undergo FRET</span>
-    <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10% background signal contribution</span>
-    <span class="n">background_real</span><span class="o">=</span><span class="n">background_real</span><span class="p">,</span>
-    <span class="n">background_imag</span><span class="o">=</span><span class="n">background_imag</span><span class="p">,</span>
-<span class="p">)</span>
-
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'FRET efficiency trajectory'</span><span class="p">,</span>
-<span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">([</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">background_real</span><span class="p">],</span> <span class="p">[</span><span class="n">donor_imag</span><span class="p">,</span> <span class="n">background_imag</span><span class="p">])</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
-    <span class="n">donor_real</span><span class="p">,</span>
-    <span class="n">donor_imag</span><span class="p">,</span>
-    <span class="s1">'o'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">'tab:green'</span><span class="p">,</span>
-    <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
-    <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">'Donor only'</span><span class="p">,</span>
-<span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
-    <span class="n">background_real</span><span class="p">,</span>
-    <span class="n">background_imag</span><span class="p">,</span>
-    <span class="s1">'o'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
-    <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">'Background'</span><span class="p">,</span>
-<span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span>
-    <span class="o">*</span><span class="n">fret_trajectory</span><span class="p">,</span>
-    <span class="s1">'-'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">'tab:orange'</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-    <span class="n">label</span><span class="o">=</span><span class="s1">'FRET trajectory'</span><span class="p">,</span>
-<span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span> <span class="o">=</span> <span class="mf">0.72</span><span class="p">,</span> <span class="mf">0.45</span>  <span class="c1"># estimated pure CFP phasor coordinates</span><span class="w">
+</span><span class="n">background_real</span><span class="p">,</span> <span class="n">background_imag</span> <span class="o">=</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.41</span>  <span class="c1"># estimated background phasor</span><span class="w">
+</span><span class="w">
+</span><span class="n">fret_efficiency_range</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="w">
+</span><span class="n">donor_lifetime</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_normal_lifetime" title="phasorpy.lifetime.phasor_to_normal_lifetime"><span class="n">phasor_to_normal_lifetime</span></a><span class="p">(</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">donor_imag</span><span class="p">,</span> <span class="n">frequency</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">fret_trajectory</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_fret_donor" title="phasorpy.lifetime.phasor_from_fret_donor"><span class="n">phasor_from_fret_donor</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">donor_lifetime</span><span class="p">,</span><span class="w">
+</span>    <span class="n">fret_efficiency</span><span class="o">=</span><span class="n">fret_efficiency_range</span><span class="p">,</span><span class="w">
+</span>    <span class="n">donor_fretting</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># all donor molecules can undergo FRET</span><span class="w">
+</span>    <span class="n">donor_background</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># 10% background signal contribution</span><span class="w">
+</span>    <span class="n">background_real</span><span class="o">=</span><span class="n">background_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">background_imag</span><span class="o">=</span><span class="n">background_imag</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">phasor_plot</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">FRET efficiency trajectory</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.hist2d" title="phasorpy.plot.PhasorPlot.hist2d"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">hist2d</span></a><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.line" title="phasorpy.plot.PhasorPlot.line"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">line</span></a><span class="p">(</span><span class="p">[</span><span class="n">donor_real</span><span class="p">,</span> <span class="n">background_real</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="n">donor_imag</span><span class="p">,</span> <span class="n">background_imag</span><span class="p">]</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">donor_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">donor_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">o</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="s1">'</span><span class="s1">tab:green</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">'</span><span class="s1">black</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
+</span>    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
+</span>    <span class="n">label</span><span class="o">=</span><span class="s1">'</span><span class="s1">Donor only</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">background_real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">background_imag</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">o</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="s1">'</span><span class="s1">black</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
+</span>    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
+</span>    <span class="n">label</span><span class="o">=</span><span class="s1">'</span><span class="s1">Background</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.plot" title="phasorpy.plot.PhasorPlot.plot"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="w">
+</span>    <span class="o">*</span><span class="n">fret_trajectory</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">-</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="s1">'</span><span class="s1">tab:orange</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="w">
+</span>    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="w">
+</span>    <span class="n">label</span><span class="o">=</span><span class="s1">'</span><span class="s1">FRET trajectory</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_002.png" alt="FRET efficiency trajectory" class = "sphx-glr-single-img"/></section>
 <section id="estimate-fret-efficiency">
 <h2>Estimate FRET efficiency<a class="headerlink" href="#estimate-fret-efficiency" title="Link to this heading">#</a></h2>
 <p>Estimate FRET efficiencies for each pixel in the image by finding
 the nearest point on the FRET efficiency trajectory to each measured
 phasor coordinate:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">fret_efficiencies</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_nearest_neighbor</span></a><span class="p">(</span>
-    <span class="n">real</span><span class="p">,</span>
-    <span class="n">imag</span><span class="p">,</span>
-    <span class="o">*</span><span class="n">fret_trajectory</span><span class="p">,</span>
-    <span class="n">values</span><span class="o">=</span><span class="n">fret_efficiency_range</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="o">=</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># use multiple threads for faster computation</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">fret_efficiencies</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_nearest_neighbor" title="phasorpy.phasor.phasor_nearest_neighbor"><span class="n">phasor_nearest_neighbor</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">real</span><span class="p">,</span><span class="w">
+</span>    <span class="n">imag</span><span class="p">,</span><span class="w">
+</span>    <span class="o">*</span><span class="n">fret_trajectory</span><span class="p">,</span><span class="w">
+</span>    <span class="n">values</span><span class="o">=</span><span class="n">fret_efficiency_range</span><span class="p">,</span><span class="w">
+</span>    <span class="n">dtype</span><span class="o">=</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span><span class="w">
+</span>    <span class="n">num_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>  <span class="c1"># use multiple threads for faster computation</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Visualize the spatial distribution of FRET efficiencies:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_image</span></a><span class="p">(</span><span class="n">fret_efficiencies</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'Estimated FRET efficiency'</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="n">fret_efficiencies</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Estimated FRET efficiency</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_003.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_003.png" alt="Estimated FRET efficiency" class = "sphx-glr-single-img"/><p>Visualize the distribution of FRET efficiencies as a histogram:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="../../../api/plot/#phasorpy.plot.plot_histograms" title="phasorpy.plot.plot_histograms" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function"><span class="n">plot_histograms</span></a><span class="p">(</span>
-    <span class="n">fret_efficiencies</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># convert to percentage</span>
-    <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">),</span>
-    <span class="n">bins</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
-    <span class="n">xlabel</span><span class="o">=</span><span class="s1">'FRET efficiency (%)'</span><span class="p">,</span>
-    <span class="n">ylabel</span><span class="o">=</span><span class="s1">'Counts'</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'FRET efficiency histogram'</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_histograms" title="phasorpy.plot.plot_histograms"><span class="n">plot_histograms</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">fret_efficiencies</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># convert to percentage</span><span class="w">
+</span>    <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>    <span class="n">bins</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span><span class="w">
+</span>    <span class="n">xlabel</span><span class="o">=</span><span class="s1">'</span><span class="s1">FRET efficiency (</span><span class="s1">%</span><span class="s1">)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">ylabel</span><span class="o">=</span><span class="s1">'</span><span class="s1">Counts</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">FRET efficiency histogram</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <img src="../../../_images/sphx_glr_phasorpy_fret_efficiency_004.png" srcset="../../../_images/sphx_glr_phasorpy_fret_efficiency_004.png" alt="FRET efficiency histogram" class = "sphx-glr-single-img"/></section>
 <section id="conclusions">
 <h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
@@ -735,7 +729,7 @@ successful FRET pair formation. Lower efficiencies (cooler colors) may
 represent cells expressing primarily CFP donor without acceptor, or
 regions where CFP and YFP are too far apart for efficient energy transfer.
 The histogram reveals the distribution of FRET states in the population.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.433 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.697 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-fret-efficiency-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/ddf2d91f49d83d0ee9e3214c07ecc7a6/phasorpy_fret_efficiency.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_fret_efficiency.ipynb</span></code></a></p>

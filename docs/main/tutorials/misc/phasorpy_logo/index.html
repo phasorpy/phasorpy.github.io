@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=c83e6b79" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -592,123 +592,120 @@ indicates the phasor transformation.
 The logo is scalable, works with light and dark backgrounds, and can be
 cropped to a circle.</p>
 <p>Import required modules, functions, and classes:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.lifetime</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">,</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">,</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_signal</span></a>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.plot</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">lifetime</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal"><span class="n">lifetime_to_signal</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime"><span class="n">phasor_from_lifetime</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">phasor</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><span class="n">phasor_to_signal</span></a><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="nn">plot</span></a><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="w">
+</span></pre></div></div>
 <p>Create signals and phasor coordinates for the logo:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span>
-<span class="n">lifetime</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]</span>  <span class="c1"># ns</span>
-<span class="n">fraction</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.66</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">]</span>
-<span class="n">samples</span> <span class="o">=</span> <span class="mi">256</span>  <span class="c1"># number of signal samples</span>
-
-<span class="n">signal</span><span class="p">,</span> <span class="n">_irf</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">lifetime_to_signal</span></a><span class="p">(</span>
-    <span class="n">frequency</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>  <span class="c1"># spread out the decay</span>
-    <span class="n">lifetime</span><span class="p">,</span>
-    <span class="n">fraction</span><span class="p">,</span>
-    <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span>
-    <span class="n">zero_phase</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
-    <span class="n">zero_stdev</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">signal</span> <span class="o">/=</span> <span class="n">signal</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-
-<span class="n">phasor</span> <span class="o">=</span> <a href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime" class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span>
-<span class="n">harmonic</span> <span class="o">=</span> <a href="../../../api/phasor/#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_to_signal</span></a><span class="p">(</span><span class="o">*</span><a href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal" class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">),</span> <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">)</span>
-<span class="n">harmonic</span> <span class="o">/=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">frequency</span> <span class="o">=</span> <span class="mf">80.0</span>  <span class="c1"># MHz</span><span class="w">
+</span><span class="n">lifetime</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]</span>  <span class="c1"># ns</span><span class="w">
+</span><span class="n">fraction</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.66</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">]</span><span class="w">
+</span><span class="n">samples</span> <span class="o">=</span> <span class="mi">256</span>  <span class="c1"># number of signal samples</span><span class="w">
+</span><span class="w">
+</span><span class="n">signal</span><span class="p">,</span> <span class="n">_irf</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.lifetime_to_signal" title="phasorpy.lifetime.lifetime_to_signal"><span class="n">lifetime_to_signal</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">frequency</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>  <span class="c1"># spread out the decay</span><span class="w">
+</span>    <span class="n">lifetime</span><span class="p">,</span><span class="w">
+</span>    <span class="n">fraction</span><span class="p">,</span><span class="w">
+</span>    <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">,</span><span class="w">
+</span>    <span class="n">zero_phase</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span><span class="w">
+</span>    <span class="n">zero_stdev</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="n">signal</span> <span class="o">/</span><span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="n">phasor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-lifetime sphx-glr-backref-type-py-function reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_from_lifetime" title="phasorpy.lifetime.phasor_from_lifetime"><span class="n">phasor_from_lifetime</span></a><span class="p">(</span><span class="n">frequency</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">fraction</span><span class="p">)</span><span class="w">
+</span><span class="n">harmonic</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_to_signal" title="phasorpy.phasor.phasor_to_signal"><span class="n">phasor_to_signal</span></a><span class="p">(</span><span class="o">*</span><a class="sphx-glr-backref-module-phasorpy-phasor sphx-glr-backref-type-py-function reference internal" href="../../../api/phasor/#phasorpy.phasor.phasor_from_signal" title="phasorpy.phasor.phasor_from_signal"><span class="n">phasor_from_signal</span></a><span class="p">(</span><span class="n">signal</span><span class="p">)</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">samples</span><span class="p">)</span><span class="w">
+</span><span class="n">harmonic</span> <span class="o">/</span><span class="o">=</span> <span class="n">harmonic</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <p>Create the PhasorPy logo and save it as a scalable vector graphics
 file (SVG):</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">semicircle_color</span> <span class="o">=</span> <span class="s1">'tab:blue'</span>
-<span class="n">cursor_color</span> <span class="o">=</span> <span class="s1">'tab:blue'</span>
-<span class="n">signal_color</span> <span class="o">=</span> <span class="s1">'tab:orange'</span>
-<span class="n">harmonic_color</span> <span class="o">=</span> <span class="s1">'tab:green'</span>
-<span class="n">arrow_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to a color to draw arrow</span>
-<span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to a color to fill circle</span>
-<span class="n">linewidth</span> <span class="o">=</span> <span class="mi">25</span>
-
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class"><span class="n">PhasorPlot</span></a><span class="p">(</span>
-    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">),</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">1.04</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span>
-
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span></a><span class="p">()</span>
-
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.semicircle" title="phasorpy.plot.PhasorPlot.semicircle" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span></a><span class="p">(</span>
-    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-    <span class="n">lifetime</span><span class="o">=</span><span class="p">[],</span>  <span class="c1"># turn off ticks</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">semicircle_color</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
-    <span class="n">capstyle</span><span class="o">=</span><span class="s1">'round'</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># draw cursor around phasor coordinates of mixture</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span><span class="o">*</span><span class="n">phasor</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cursor_color</span><span class="p">)</span>
-
-<span class="c1"># draw time-domain signal in inset</span>
-<span class="n">cax</span> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span></a><span class="p">((</span><span class="mf">0.015</span><span class="p">,</span> <span class="mf">0.325</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">))</span>
-<span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
-<span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
-<span class="n">cax</span><span class="o">.</span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a><span class="p">(</span>
-    <span class="n">times</span><span class="p">,</span>
-    <span class="n">signal</span><span class="p">,</span>
-    <span class="s1">'-'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">signal_color</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
-    <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">'round'</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># draw harmonic in second inset</span>
-<span class="n">cax</span> <span class="o">=</span> <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span></a><span class="p">((</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.113</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
-<span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.11</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">)</span>
-<span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
-<span class="n">cax</span><span class="o">.</span><a href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plot</span></a><span class="p">(</span>
-    <span class="n">times</span><span class="p">,</span>
-    <span class="n">harmonic</span><span class="p">,</span>
-    <span class="s1">'-'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">harmonic_color</span><span class="p">,</span>
-    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
-    <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">'round'</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># draw arrow indicating phasor transformation</span>
-<span class="k">if</span> <span class="n">arrow_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">point</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span>
-    <span class="n">length</span> <span class="o">=</span> <span class="mf">0.46</span><span class="p">,</span> <span class="mf">0.74</span>
-    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-        <span class="p">],</span>
-        <span class="p">[</span>
-            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-        <span class="p">],</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">arrow_color</span><span class="p">,</span>
-        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
-    <span class="p">)</span>
-
-<span class="c1"># draw circle outline</span>
-<span class="k">if</span> <span class="n">background_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <a href="../../../api/plot/#phasorpy.plot.PhasorPlot.circle" title="phasorpy.plot.PhasorPlot.circle" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">circle</span></a><span class="p">(</span>
-        <span class="mf">0.5</span><span class="p">,</span>
-        <span class="mf">0.0</span><span class="p">,</span>
-        <span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="n">background_color</span><span class="p">,</span>
-        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
-        <span class="n">linestyle</span><span class="o">=</span><span class="s1">'-'</span><span class="p">,</span>
-        <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="p">)</span>
-
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.fig" title="phasorpy.plot.PhasorPlot.fig" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property"><span class="n">plot</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-
-<span class="c1"># save the figure to an SVG file:</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.save" title="phasorpy.plot.PhasorPlot.save" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">save</span></a><span class="p">(</span><span class="s1">'phasorpy_logo.svg'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'tight'</span><span class="p">)</span>
-<a href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show" class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
-</pre></div>
-</div>
-<img src="../../../_images/sphx_glr_phasorpy_logo_001.png" srcset="../../../_images/sphx_glr_phasorpy_logo_001.png" alt="phasorpy logo" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.042 seconds)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">semicircle_color</span> <span class="o">=</span> <span class="s1">'</span><span class="s1">tab:blue</span><span class="s1">'</span><span class="w">
+</span><span class="n">cursor_color</span> <span class="o">=</span> <span class="s1">'</span><span class="s1">tab:blue</span><span class="s1">'</span><span class="w">
+</span><span class="n">signal_color</span> <span class="o">=</span> <span class="s1">'</span><span class="s1">tab:orange</span><span class="s1">'</span><span class="w">
+</span><span class="n">harmonic_color</span> <span class="o">=</span> <span class="s1">'</span><span class="s1">tab:green</span><span class="s1">'</span><span class="w">
+</span><span class="n">arrow_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to a color to draw arrow</span><span class="w">
+</span><span class="n">background_color</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># set to a color to fill circle</span><span class="w">
+</span><span class="n">linewidth</span> <span class="o">=</span> <span class="mi">25</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">plot</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-class reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot" title="phasorpy.plot.PhasorPlot"><span class="n">PhasorPlot</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">)</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">1.04</span><span class="p">)</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">)</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.semicircle" title="phasorpy.plot.PhasorPlot.semicircle"><span class="n">plot</span><span class="o">.</span><span class="n">semicircle</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span><span class="w">
+</span>    <span class="n">lifetime</span><span class="o">=</span><span class="p">[</span><span class="p">]</span><span class="p">,</span>  <span class="c1"># turn off ticks</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="n">semicircle_color</span><span class="p">,</span><span class="w">
+</span>    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span><span class="w">
+</span>    <span class="n">capstyle</span><span class="o">=</span><span class="s1">'</span><span class="s1">round</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># draw cursor around phasor coordinates of mixture</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.cursor" title="phasorpy.plot.PhasorPlot.cursor"><span class="n">plot</span><span class="o">.</span><span class="n">cursor</span></a><span class="p">(</span><span class="o">*</span><span class="n">phasor</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cursor_color</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># draw time-domain signal in inset</span><span class="w">
+</span><span class="n">cax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span></a><span class="p">(</span><span class="p">(</span><span class="mf">0.015</span><span class="p">,</span> <span class="mf">0.325</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="w">
+</span>    <span class="n">times</span><span class="p">,</span><span class="w">
+</span>    <span class="n">signal</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">-</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="n">signal_color</span><span class="p">,</span><span class="w">
+</span>    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span><span class="w">
+</span>    <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">'</span><span class="s1">round</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># draw harmonic in second inset</span><span class="w">
+</span><span class="n">cax</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.ax" title="phasorpy.plot.PhasorPlot.ax"><span class="n">plot</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">inset_axes</span></a><span class="p">(</span><span class="p">(</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.113</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.11</span><span class="p">,</span> <span class="mf">1.14</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="n">cax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="w">
+</span>    <span class="n">times</span><span class="p">,</span><span class="w">
+</span>    <span class="n">harmonic</span><span class="p">,</span><span class="w">
+</span>    <span class="s1">'</span><span class="s1">-</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">color</span><span class="o">=</span><span class="n">harmonic_color</span><span class="p">,</span><span class="w">
+</span>    <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span><span class="w">
+</span>    <span class="n">solid_capstyle</span><span class="o">=</span><span class="s1">'</span><span class="s1">round</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># draw arrow indicating phasor transformation</span><span class="w">
+</span><span class="k">if</span> <span class="n">arrow_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span><span class="w">
+</span>    <span class="n">point</span> <span class="o">=</span> <span class="mf">0.28</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span><span class="w">
+</span>    <span class="n">length</span> <span class="o">=</span> <span class="mf">0.46</span><span class="p">,</span> <span class="mf">0.74</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.arrow" title="phasorpy.plot.PhasorPlot.arrow"><span class="n">plot</span><span class="o">.</span><span class="n">arrow</span></a><span class="p">(</span><span class="w">
+</span>        <span class="p">[</span><span class="w">
+</span>            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>        <span class="p">]</span><span class="p">,</span><span class="w">
+</span>        <span class="p">[</span><span class="w">
+</span>            <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>            <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">length</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">phasor</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>        <span class="p">]</span><span class="p">,</span><span class="w">
+</span>        <span class="n">color</span><span class="o">=</span><span class="n">arrow_color</span><span class="p">,</span><span class="w">
+</span>        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># draw circle outline</span><span class="w">
+</span><span class="k">if</span> <span class="n">background_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span><span class="w">
+</span>    <a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.circle" title="phasorpy.plot.PhasorPlot.circle"><span class="n">plot</span><span class="o">.</span><span class="n">circle</span></a><span class="p">(</span><span class="w">
+</span>        <span class="mf">0.5</span><span class="p">,</span><span class="w">
+</span>        <span class="mf">0.0</span><span class="p">,</span><span class="w">
+</span>        <span class="mf">0.5</span><span class="p">,</span><span class="w">
+</span>        <span class="n">color</span><span class="o">=</span><span class="n">background_color</span><span class="p">,</span><span class="w">
+</span>        <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span><span class="w">
+</span>        <span class="n">linestyle</span><span class="o">=</span><span class="s1">'</span><span class="s1">-</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>        <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="w">
+</span>        <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-property reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.fig" title="phasorpy.plot.PhasorPlot.fig"><span class="n">plot</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span></a><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="c1"># save the figure to an SVG file:</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.save" title="phasorpy.plot.PhasorPlot.save"><span class="n">plot</span><span class="o">.</span><span class="n">save</span></a><span class="p">(</span><span class="s1">'</span><span class="s1">phasorpy_logo.svg</span><span class="s1">'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">'</span><span class="s1">tight</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show"><span class="n">plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<img src="../../../_images/sphx_glr_phasorpy_logo_001.png" srcset="../../../_images/sphx_glr_phasorpy_logo_001.png" alt="phasorpy logo" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.062 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-logo-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/51e1acba23be3887d1c2302d00fea961/phasorpy_logo.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_logo.ipynb</span></code></a></p>

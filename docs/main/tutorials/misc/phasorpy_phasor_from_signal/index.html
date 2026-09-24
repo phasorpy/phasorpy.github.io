@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css?v=c83e6b79" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -597,157 +597,153 @@ or <code class="docutils literal notranslate"><span class="pre">mkl_fft.interfac
 </ul>
 <p>This tutorial compares the performance of the two modes.</p>
 <p>Import required modules and functions:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeit</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa: F401</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa: F401</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy.utils</span><span class="w"> </span><span class="kn">import</span> <a href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">scipy_fft</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">mkl_fft.interfaces.numpy_fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># initialize random number generator</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeit</span><span class="w">
+</span><span class="w">
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="nn">.</span><span class="nn">fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">numpy_fft</span>  <span class="c1"># noqa: F401</span><span class="w">
+</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">phasor</span><span class="w"> </span><span class="kn">import</span> <span class="n">phasor_from_signal</span>  <span class="c1"># noqa: F401</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">phasorpy</span><span class="nn">.</span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function reference internal" href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads"><span class="n">number_threads</span></a><span class="w">
+</span><span class="w">
+</span><span class="k">try</span><span class="p">:</span><span class="w">
+</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="nn">.</span><span class="nn">fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">scipy_fft</span><span class="w">
+</span><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span><span class="w">
+</span>    <span class="n">scipy_fft</span> <span class="o">=</span> <span class="kc">None</span><span class="w">
+</span><span class="w">
+</span><span class="k">try</span><span class="p">:</span><span class="w">
+</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">mkl_fft</span><span class="nn">.</span><span class="nn">interfaces</span><span class="nn">.</span><span class="nn">numpy_fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span> <span class="k">as</span> <span class="n">mkl_fft</span><span class="w">
+</span><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span><span class="w">
+</span>    <span class="n">mkl_fft</span> <span class="o">=</span> <span class="kc">None</span><span class="w">
+</span><span class="w">
+</span><span class="n">rng</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># initialize random number generator</span><span class="w">
+</span></pre></div></div>
 <section id="run-benchmark">
 <h2>Run benchmark<a class="headerlink" href="#run-benchmark" title="Link to this heading">#</a></h2>
 <p>Create a random signal with a size and dtype similar to real-world data:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">signal</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">))</span>
-<span class="n">signal</span> <span class="o">+=</span> <span class="mf">1.1</span>
-<span class="n">signal</span> <span class="o">*=</span> <span class="mi">3723</span>  <span class="c1"># ~12 bit</span>
-<span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>  <span class="c1"># 108 MB</span>
-<span class="n">signal</span><span class="p">[</span><span class="n">signal</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 5% no signal</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">signal</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="p">(</span><span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">,</span> <span class="mi">384</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span><span class="n">signal</span> <span class="o">+</span><span class="o">=</span> <span class="mf">1.1</span><span class="w">
+</span><span class="n">signal</span> <span class="o">*</span><span class="o">=</span> <span class="mi">3723</span>  <span class="c1"># ~12 bit</span><span class="w">
+</span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>  <span class="c1"># 108 MB</span><span class="w">
+</span><span class="n">signal</span><span class="p">[</span><span class="n">signal</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 5% no signal</span><span class="w">
+</span></pre></div></div>
 <p>Print execution times depending on FFT function, axis, number of harmonics,
 and number of threads:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">statement</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">phasor_from_signal(signal, axis=axis, harmonic=harmonic, **kwargs)</span>
-<span class="s2">"""</span>
-<span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># how many times to execute statement</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># reference duration</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">print_</span><span class="p">(</span><span class="n">descr</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">descr</span><span class="si">:</span><span class="s1">20s</span><span class="si">}{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">number</span><span class="si">:</span><span class="s1">&gt;6.3f</span><span class="si">}</span><span class="s1">s </span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ref</span><span class="si">:</span><span class="s1">&gt;6.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-
-
-<span class="k">for</span> <span class="n">harmonic</span> <span class="ow">in</span> <span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'harmonics </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'use_fft'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'num_threads'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ref</span> <span class="o">=</span> <span class="n">t</span>
-        <span class="n">print_</span><span class="p">(</span><span class="s1">'not_fft'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-
-        <span class="n">num_threads</span> <span class="o">=</span> <a href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads" class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function"><span class="n">number_threads</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'use_fft'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'num_threads'</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">}</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">'not_fft (</span><span class="si">{</span><span class="n">num_threads</span><span class="si">}</span><span class="s1"> threads)'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">fft_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'numpy_fft'</span><span class="p">,</span> <span class="s1">'scipy_fft'</span><span class="p">,</span> <span class="s1">'mkl_fft'</span><span class="p">):</span>
-            <span class="n">fft_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">fft_name</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">fft_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'use_fft'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'rfft'</span><span class="p">:</span> <span class="n">fft_func</span><span class="p">}</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
-            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fft_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">statement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="s2">
+</span><span class="s2">phasor_from_signal(signal, axis=axis, harmonic=harmonic, **kwargs)</span><span class="s2">
+</span><span class="s2">&quot;&quot;&quot;</span><span class="w">
+</span><span class="n">number</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># how many times to execute statement</span><span class="w">
+</span><span class="n">ref</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># reference duration</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="k">def</span><span class="w"> </span><span class="nf">print_</span><span class="p">(</span><span class="n">descr</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="s1">    </span><span class="si">{</span><span class="n">descr</span><span class="si">:</span><span class="s1">20s</span><span class="si">}</span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">number</span><span class="si">:</span><span class="s1">&gt;6.3f</span><span class="si">}</span><span class="s1">s </span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">ref</span><span class="si">:</span><span class="s1">&gt;6.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><span class="k">for</span> <span class="n">harmonic</span> <span class="ow">in</span> <span class="p">(</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="s1">harmonics </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">harmonic</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span>    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="s1">  axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span><span class="w">
+</span>        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'</span><span class="s1">use_fft</span><span class="s1">'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'</span><span class="s1">num_threads</span><span class="s1">'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span><span class="w">
+</span>        <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span>        <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span><span class="w">
+</span>            <span class="n">ref</span> <span class="o">=</span> <span class="n">t</span><span class="w">
+</span>        <span class="n">print_</span><span class="p">(</span><span class="s1">'</span><span class="s1">not_fft</span><span class="s1">'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span>        <span class="n">num_threads</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-utils sphx-glr-backref-type-py-function reference internal" href="../../../api/utils/#phasorpy.utils.number_threads" title="phasorpy.utils.number_threads"><span class="n">number_threads</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="w">
+</span>        <span class="k">if</span> <span class="n">num_threads</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span><span class="w">
+</span>            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'</span><span class="s1">use_fft</span><span class="s1">'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">'</span><span class="s1">num_threads</span><span class="s1">'</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">}</span><span class="w">
+</span>            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span>            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="s1">not_fft (</span><span class="si">{</span><span class="n">num_threads</span><span class="si">}</span><span class="s1"> threads)</span><span class="s1">'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span>        <span class="k">for</span> <span class="n">fft_name</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">'</span><span class="s1">numpy_fft</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'</span><span class="s1">scipy_fft</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'</span><span class="s1">mkl_fft</span><span class="s1">'</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>            <span class="n">fft_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">(</span><span class="p">)</span><span class="p">[</span><span class="n">fft_name</span><span class="p">]</span><span class="w">
+</span>            <span class="k">if</span> <span class="n">fft_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span><span class="w">
+</span>                <span class="k">continue</span><span class="w">
+</span>            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'</span><span class="s1">use_fft</span><span class="s1">'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">'</span><span class="s1">rfft</span><span class="s1">'</span><span class="p">:</span> <span class="n">fft_func</span><span class="p">}</span><span class="w">
+</span>            <span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span>            <span class="n">print_</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fft_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
   axis -1
-    not_fft              0.051s   1.00
-    not_fft (2 threads)  0.026s   0.51
-    numpy_fft            0.254s   4.95
-    scipy_fft            0.240s   4.68
-    mkl_fft              0.154s   2.99
+    not_fft              0.058s   1.00
+    not_fft (2 threads)  0.029s   0.49
+    numpy_fft            0.194s   3.31
+    scipy_fft            0.201s   3.44
+    mkl_fft              0.137s   2.34
   axis 0
-    not_fft              0.335s   6.52
-    not_fft (2 threads)  0.187s   3.63
-    numpy_fft            0.853s  16.58
-    scipy_fft            0.777s  15.10
-    mkl_fft              0.377s   7.32
+    not_fft              0.171s   2.93
+    not_fft (2 threads)  0.085s   1.46
+    numpy_fft            0.437s   7.47
+    scipy_fft            0.316s   5.41
+    mkl_fft              0.236s   4.04
   axis 2
-    not_fft              0.055s   1.06
-    not_fft (2 threads)  0.028s   0.53
-    numpy_fft            0.255s   4.97
-    scipy_fft            0.240s   4.67
-    mkl_fft              0.147s   2.87
+    not_fft              0.057s   0.98
+    not_fft (2 threads)  0.029s   0.49
+    numpy_fft            0.195s   3.34
+    scipy_fft            0.206s   3.53
+    mkl_fft              0.134s   2.28
 harmonics 8
   axis -1
-    not_fft              0.445s   8.66
-    not_fft (2 threads)  0.158s   3.07
-    numpy_fft            0.263s   5.12
-    scipy_fft            0.250s   4.87
-    mkl_fft              0.160s   3.11
+    not_fft              0.455s   7.78
+    not_fft (2 threads)  0.229s   3.92
+    numpy_fft            0.204s   3.49
+    scipy_fft            0.212s   3.63
+    mkl_fft              0.143s   2.44
   axis 0
-    not_fft              2.640s  51.34
-    not_fft (2 threads)  1.498s  29.14
-    numpy_fft            0.856s  16.65
-    scipy_fft            0.765s  14.88
-    mkl_fft              0.375s   7.29
+    not_fft              1.364s  23.33
+    not_fft (2 threads)  0.695s  11.88
+    numpy_fft            0.441s   7.55
+    scipy_fft            0.318s   5.44
+    mkl_fft              0.247s   4.22
   axis 2
-    not_fft              0.423s   8.23
-    not_fft (2 threads)  0.146s   2.84
-    numpy_fft            0.264s   5.13
-    scipy_fft            0.250s   4.86
-    mkl_fft              0.160s   3.10
+    not_fft              0.466s   7.98
+    not_fft (2 threads)  0.229s   3.92
+    numpy_fft            0.204s   3.49
+    scipy_fft            0.213s   3.64
+    mkl_fft              0.144s   2.47
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU, Windows 11,
 Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl_fft 2.1.1:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">harmonics</span> <span class="mi">1</span>
-  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">not_fft</span>              <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.274</span><span class="n">s</span>   <span class="mf">8.03</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.141</span><span class="n">s</span>   <span class="mf">4.14</span>
-  <span class="n">axis</span> <span class="mi">0</span>
-    <span class="n">not_fft</span>              <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.75</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.697</span><span class="n">s</span>  <span class="mf">20.44</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.496</span><span class="n">s</span>  <span class="mf">14.54</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.167</span><span class="n">s</span>   <span class="mf">4.90</span>
-  <span class="n">axis</span> <span class="mi">2</span>
-    <span class="n">not_fft</span>              <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.12</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.16</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.272</span><span class="n">s</span>   <span class="mf">7.99</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.130</span><span class="n">s</span>   <span class="mf">3.83</span>
-<span class="n">harmonics</span> <span class="mi">8</span>
-  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">not_fft</span>              <span class="mf">0.287</span><span class="n">s</span>   <span class="mf">8.43</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.040</span><span class="n">s</span>   <span class="mf">1.17</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.45</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.253</span><span class="n">s</span>   <span class="mf">7.43</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.161</span><span class="n">s</span>   <span class="mf">4.74</span>
-  <span class="n">axis</span> <span class="mi">0</span>
-    <span class="n">not_fft</span>              <span class="mf">1.161</span><span class="n">s</span>  <span class="mf">34.04</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.425</span><span class="n">s</span>  <span class="mf">12.47</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.715</span><span class="n">s</span>  <span class="mf">20.97</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.541</span><span class="n">s</span>  <span class="mf">15.88</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.183</span><span class="n">s</span>   <span class="mf">5.38</span>
-  <span class="n">axis</span> <span class="mi">2</span>
-    <span class="n">not_fft</span>              <span class="mf">0.282</span><span class="n">s</span>   <span class="mf">8.27</span>
-    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span>
-    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.46</span>
-    <span class="n">scipy_fft</span>            <span class="mf">0.255</span><span class="n">s</span>   <span class="mf">7.49</span>
-    <span class="n">mkl_fft</span>              <span class="mf">0.155</span><span class="n">s</span>   <span class="mf">4.56</span>
-</pre></div>
-</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">harmonics</span> <span class="mi">1</span><span class="w">
+</span>  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.274</span><span class="n">s</span>   <span class="mf">8.03</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.141</span><span class="n">s</span>   <span class="mf">4.14</span><span class="w">
+</span>  <span class="n">axis</span> <span class="mi">0</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.75</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.697</span><span class="n">s</span>  <span class="mf">20.44</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.496</span><span class="n">s</span>  <span class="mf">14.54</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.167</span><span class="n">s</span>   <span class="mf">4.90</span><span class="w">
+</span>  <span class="n">axis</span> <span class="mi">2</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.12</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.16</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.272</span><span class="n">s</span>   <span class="mf">7.99</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.130</span><span class="n">s</span>   <span class="mf">3.83</span><span class="w">
+</span><span class="n">harmonics</span> <span class="mi">8</span><span class="w">
+</span>  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.287</span><span class="n">s</span>   <span class="mf">8.43</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.040</span><span class="n">s</span>   <span class="mf">1.17</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.45</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.253</span><span class="n">s</span>   <span class="mf">7.43</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.161</span><span class="n">s</span>   <span class="mf">4.74</span><span class="w">
+</span>  <span class="n">axis</span> <span class="mi">0</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">1.161</span><span class="n">s</span>  <span class="mf">34.04</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.425</span><span class="n">s</span>  <span class="mf">12.47</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.715</span><span class="n">s</span>  <span class="mf">20.97</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.541</span><span class="n">s</span>  <span class="mf">15.88</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.183</span><span class="n">s</span>   <span class="mf">5.38</span><span class="w">
+</span>  <span class="n">axis</span> <span class="mi">2</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.282</span><span class="n">s</span>   <span class="mf">8.27</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.46</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.255</span><span class="n">s</span>   <span class="mf">7.49</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.155</span><span class="n">s</span>   <span class="mf">4.56</span><span class="w">
+</span></pre></div></div>
 </section>
 <section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
@@ -770,7 +766,7 @@ memory.</p></li>
 <p>Using the Cython implementation is a reasonable default when calculating
 a few harmonics. Using FFT is a better choice when computing a large number
 of harmonics, especially with an optimized FFT function.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.923 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.330 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/08c44fd02fe5378fc05e9aecf2e433ce/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>
