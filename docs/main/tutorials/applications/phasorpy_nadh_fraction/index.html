@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Bound NADH fraction &#8212; PhasorPy 0.13.dev0 documentation</title>
+    <title>Bound NADH intensity fraction &#8212; PhasorPy 0.13.dev0 documentation</title>
   
   
   
@@ -494,7 +494,7 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../">Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_component_fit/">Spectral unmixing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_fret_efficiency/">FRET efficiency image</a></li>
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Bound NADH fraction</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Bound NADH intensity fraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_nadh_concentration/">Absolute NADH concentration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../phasorpy_multidimensional/">Multidimensional phasor approach</a></li>
 </ul>
@@ -565,7 +565,7 @@
     
     <li class="breadcrumb-item"><a href="../" class="nav-link">Applications</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Bound NADH fraction</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Bound NADH intensity fraction</span></li>
   </ul>
 </nav>
 </div>
@@ -582,16 +582,17 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="sphx-glr-example-title" id="bound-nadh-fraction">
-<span id="sphx-glr-tutorials-applications-phasorpy-nadh-fraction-py"></span><h1>Bound NADH fraction<a class="headerlink" href="#bound-nadh-fraction" title="Link to this heading">#</a></h1>
-<p>Determine the bound NADH fraction using phasor component analysis.</p>
+  <section class="sphx-glr-example-title" id="bound-nadh-intensity-fraction">
+<span id="sphx-glr-tutorials-applications-phasorpy-nadh-fraction-py"></span><h1>Bound NADH intensity fraction<a class="headerlink" href="#bound-nadh-intensity-fraction" title="Link to this heading">#</a></h1>
+<p>Determine the bound NADH intensity fraction using phasor component analysis.</p>
 <p>NADH (nicotinamide adenine dinucleotide) is an endogenous fluorophore
 present in cells in two forms, distinguishable by fluorescence lifetime:
 a short-lived free form (cytoplasmic NADH, lifetime ~0.4 ns) and a long-lived
 enzyme-bound form whose lifetime is determined from the data.</p>
 <p>Two approaches are demonstrated: a single-harmonic phasor component analysis
 using prior knowledge of the free NADH lifetime, and a two-harmonic lifetime
-search without much prior assumption on component lifetimes.</p>
+search that constrains the faster component to a specified lifetime range
+while estimating the longer-lived component from the data.</p>
 <p>The data are from the companion dataset of:</p>
 <blockquote id="georgakoudi-2025">
 <div><p>Georgakoudi I, et al.
@@ -705,33 +706,36 @@ line connecting the free and bound NADH phasor coordinates:</p>
 </span>    <span class="p">)</span><span class="w">
 </span><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-method reference internal" href="../../../api/plot/#phasorpy.plot.PhasorPlot.show" title="phasorpy.plot.PhasorPlot.show"><span class="n">phasor_plot</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" alt="NADH phasor distribution" class = "sphx-glr-single-img"/><p>Compute the fraction of enzyme-bound NADH per pixel.
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_003.png" alt="NADH phasor distribution" class = "sphx-glr-single-img"/><p>Compute the bound NADH intensity fraction per pixel, that is, the fraction
+of fluorescence intensity contributed by enzyme-bound NADH.
 <a class="reference internal" href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_component_fraction()</span></code></a> returns the fraction
 of the first component; passing bound NADH first yields the bound fraction
-directly:</p>
+directly.
+Because bound NADH is brighter than free NADH, the intensity fraction
+overestimates the molecular fraction of bound NADH:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">bound_fraction</span> <span class="o">=</span> <a class="sphx-glr-backref-module-phasorpy-component sphx-glr-backref-type-py-function reference internal" href="../../../api/component/#phasorpy.component.phasor_component_fraction" title="phasorpy.component.phasor_component_fraction"><span class="n">phasor_component_fraction</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">cell_real</span><span class="p">,</span> <span class="n">cell_imag</span><span class="p">,</span> <span class="p">[</span><span class="n">bound_real</span><span class="p">,</span> <span class="n">free_real</span><span class="p">]</span><span class="p">,</span> <span class="p">[</span><span class="n">bound_imag</span><span class="p">,</span> <span class="n">free_imag</span><span class="p">]</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<p>Display the bound NADH fraction image.
-Pixel values represent the fraction of enzyme-bound NADH.
+<p>Display the bound NADH intensity fraction image.
 Background pixels with zero signal appear as NaN:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">bound_fraction</span><span class="p">,</span><span class="w">
 </span>    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="w">
 </span>    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="w">
 </span>    <span class="n">cmap</span><span class="o">=</span><span class="s1">'</span><span class="s1">turbo</span><span class="s1">'</span><span class="p">,</span><span class="w">
-</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH fraction (single harmonic analysis)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH intensity fraction (single harmonic analysis)</span><span class="s1">'</span><span class="p">,</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" alt="Bound NADH fraction (single harmonic analysis)" class = "sphx-glr-single-img"/><p>Compare to Figure 6c of <a class="reference internal" href="#georgakoudi-2025"><span class="std std-ref">Georgakoudi et al</span></a>,
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_004.png" alt="Bound NADH intensity fraction (single harmonic analysis)" class = "sphx-glr-single-img"/><p>Compare to Figure 6c of <a class="reference internal" href="#georgakoudi-2025"><span class="std std-ref">Georgakoudi et al</span></a>,
 which shows significantly lower bound NADH fractions.</p>
 </section>
 <section id="two-harmonic-lifetime-search">
 <h2>Two-harmonic lifetime search<a class="headerlink" href="#two-harmonic-lifetime-search" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="../../../api/lifetime/#phasorpy.lifetime.phasor_to_lifetime_search" title="phasorpy.lifetime.phasor_to_lifetime_search"><code class="xref py py-func docutils literal notranslate"><span class="pre">phasor_to_lifetime_search()</span></code></a> function
 resolves two lifetime components per pixel from multi-harmonic phasor
-coordinates without any prior assumption on component lifetimes.
+coordinates. It searches the specified lifetime range for the first
+(shorter-lived) component and estimates the second component from the data.
 Recompute and calibrate phasor coordinates at the first two harmonics:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">harmonic</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="w">
 </span><span class="w">
@@ -766,16 +770,17 @@ the longer-lifetime (index 1) corresponds to enzyme-bound NADH:</p>
 </span>    <span class="n">num_threads</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<p>Display the bound NADH fraction image from the two-harmonic decomposition.</p>
+<p>Display the bound NADH intensity fraction image from the two-harmonic
+decomposition.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">fractions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span><span class="w">
 </span>    <span class="n">vmin</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="w">
 </span>    <span class="n">vmax</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="w">
 </span>    <span class="n">cmap</span><span class="o">=</span><span class="s1">'</span><span class="s1">turbo</span><span class="s1">'</span><span class="p">,</span><span class="w">
-</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH fraction (two-harmonic search)</span><span class="s1">'</span><span class="p">,</span><span class="w">
+</span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Bound NADH intensity fraction (two-harmonic search)</span><span class="s1">'</span><span class="p">,</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" alt="Bound NADH fraction (two-harmonic search)" class = "sphx-glr-single-img"/><p>Display the two resolved lifetime component images:</p>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_005.png" alt="Bound NADH intensity fraction (two-harmonic search)" class = "sphx-glr-single-img"/><p>Display the two resolved lifetime component images:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-phasorpy-plot sphx-glr-backref-type-py-function reference internal" href="../../../api/plot/#phasorpy.plot.plot_image" title="phasorpy.plot.plot_image"><span class="n">plot_image</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">,</span><span class="w">
 </span>    <span class="n">lifetimes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span><span class="w">
@@ -786,7 +791,7 @@ the longer-lifetime (index 1) corresponds to enzyme-bound NADH:</p>
 </span>    <span class="n">title</span><span class="o">=</span><span class="s1">'</span><span class="s1">Resolved lifetime components (two-harmonic search)</span><span class="s1">'</span><span class="p">,</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" alt="Resolved lifetime components (two-harmonic search), Free NADH lifetime (ns), Bound NADH lifetime (ns)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.321 seconds)</p>
+<img src="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" srcset="../../../_images/sphx_glr_phasorpy_nadh_fraction_006.png" alt="Resolved lifetime components (two-harmonic search), Free NADH lifetime (ns), Bound NADH lifetime (ns)" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.164 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-applications-phasorpy-nadh-fraction-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/dc9f3a731b26a7229fd020fb4f2d8857/phasorpy_nadh_fraction.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_nadh_fraction.ipynb</span></code></a></p>

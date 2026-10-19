@@ -18,10 +18,10 @@
 .. _sphx_glr_tutorials_applications_phasorpy_nadh_fraction.py:
 
 
-Bound NADH fraction
-===================
+Bound NADH intensity fraction
+=============================
 
-Determine the bound NADH fraction using phasor component analysis.
+Determine the bound NADH intensity fraction using phasor component analysis.
 
 NADH (nicotinamide adenine dinucleotide) is an endogenous fluorophore
 present in cells in two forms, distinguishable by fluorescence lifetime:
@@ -30,7 +30,8 @@ enzyme-bound form whose lifetime is determined from the data.
 
 Two approaches are demonstrated: a single-harmonic phasor component analysis
 using prior knowledge of the free NADH lifetime, and a two-harmonic lifetime
-search without much prior assumption on component lifetimes.
+search that constrains the faster component to a specified lifetime range
+while estimating the longer-lived component from the data.
 
 The data are from the companion dataset of:
 
@@ -42,11 +43,11 @@ The data are from the companion dataset of:
   <https://doi.org/10.1117/1.jbo.30.s2.s23901>`_.
   *J Biomed Opt*, 30(Suppl 2): S23901 (2025)
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Import required modules, functions, and classes:
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-49
+.. GENERATED FROM PYTHON SOURCE LINES 35-50
 
 .. code-block:: Python
 
@@ -72,7 +73,7 @@ Import required modules, functions, and classes:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-57
+.. GENERATED FROM PYTHON SOURCE LINES 51-58
 
 Read dataset
 ------------
@@ -82,7 +83,7 @@ known lifetime (Fluorescein in EtOH, 3.05 ns) acquired at 80 MHz.
 The data are in generic TIFF format containing TCSPC histogram images
 (97 time bins, 512 x 512 pixels) without metadata:
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-64
+.. GENERATED FROM PYTHON SOURCE LINES 58-65
 
 .. code-block:: Python
 
@@ -100,11 +101,11 @@ The data are in generic TIFF format containing TCSPC histogram images
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Preview the TCSPC histogram images of the cell and reference:
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-70
 
 .. code-block:: Python
 
@@ -123,7 +124,7 @@ Preview the TCSPC histogram images of the cell and reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 .. code-block:: Python
 
@@ -142,20 +143,20 @@ Preview the TCSPC histogram images of the cell and reference:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-77
+.. GENERATED FROM PYTHON SOURCE LINES 75-78
 
 The cell signal is apparently pre-filtered to exclude background pixels
 and improve signal quality, while the reference signal has sufficient signal.
 Hence, no further thresholding or filtering is applied.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-83
+.. GENERATED FROM PYTHON SOURCE LINES 80-84
 
 Single-harmonic phasor analysis
 --------------------------------
 
 Compute phasor coordinates from the TCSPC histograms along axis 0:
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-90
+.. GENERATED FROM PYTHON SOURCE LINES 84-91
 
 .. code-block:: Python
 
@@ -173,12 +174,12 @@ Compute phasor coordinates from the TCSPC histograms along axis 0:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 92-94
 
 Calibrate the cell phasor coordinates using the Fluorescein reference
 distribution:
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-104
+.. GENERATED FROM PYTHON SOURCE LINES 94-105
 
 .. code-block:: Python
 
@@ -200,7 +201,7 @@ distribution:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-111
+.. GENERATED FROM PYTHON SOURCE LINES 106-112
 
 Calculate the phasor coordinates of free NADH from its known lifetime
 (0.4 ns). The bound NADH phasor is determined from the center of the cell
@@ -209,7 +210,7 @@ phasor through the data center with the universal semicircle.
 Calculate the corresponding single-exponential lifetime of bound NADH from
 that intersection:
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-126
+.. GENERATED FROM PYTHON SOURCE LINES 112-127
 
 .. code-block:: Python
 
@@ -235,12 +236,12 @@ that intersection:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-129
+.. GENERATED FROM PYTHON SOURCE LINES 128-130
 
 Plot the phasor distribution of the cell. Pixel phasors cluster along the
 line connecting the free and bound NADH phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-157
+.. GENERATED FROM PYTHON SOURCE LINES 130-158
 
 .. code-block:: Python
 
@@ -284,14 +285,17 @@ line connecting the free and bound NADH phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-162
+.. GENERATED FROM PYTHON SOURCE LINES 159-166
 
-Compute the fraction of enzyme-bound NADH per pixel.
+Compute the bound NADH intensity fraction per pixel, that is, the fraction
+of fluorescence intensity contributed by enzyme-bound NADH.
 :py:func:`~phasorpy.component.phasor_component_fraction` returns the fraction
 of the first component; passing bound NADH first yields the bound fraction
-directly:
+directly.
+Because bound NADH is brighter than free NADH, the intensity fraction
+overestimates the molecular fraction of bound NADH:
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-167
+.. GENERATED FROM PYTHON SOURCE LINES 166-171
 
 .. code-block:: Python
 
@@ -307,13 +311,12 @@ directly:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 168-171
+.. GENERATED FROM PYTHON SOURCE LINES 172-174
 
-Display the bound NADH fraction image.
-Pixel values represent the fraction of enzyme-bound NADH.
+Display the bound NADH intensity fraction image.
 Background pixels with zero signal appear as NaN:
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-180
+.. GENERATED FROM PYTHON SOURCE LINES 174-183
 
 .. code-block:: Python
 
@@ -323,14 +326,14 @@ Background pixels with zero signal appear as NaN:
         vmin=0.4,
         vmax=0.8,
         cmap='turbo',
-        title='Bound NADH fraction (single harmonic analysis)',
+        title='Bound NADH intensity fraction (single harmonic analysis)',
     )
 
 
 
 
 .. image-sg:: /tutorials/applications/images/sphx_glr_phasorpy_nadh_fraction_004.png
-   :alt: Bound NADH fraction (single harmonic analysis)
+   :alt: Bound NADH intensity fraction (single harmonic analysis)
    :srcset: /tutorials/applications/images/sphx_glr_phasorpy_nadh_fraction_004.png
    :class: sphx-glr-single-img
 
@@ -338,22 +341,23 @@ Background pixels with zero signal appear as NaN:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-183
+.. GENERATED FROM PYTHON SOURCE LINES 184-186
 
 Compare to Figure 6c of :ref:`Georgakoudi et al <georgakoudi-2025>`,
 which shows significantly lower bound NADH fractions.
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-192
+.. GENERATED FROM PYTHON SOURCE LINES 188-196
 
 Two-harmonic lifetime search
 ----------------------------
 
 The :py:func:`~phasorpy.lifetime.phasor_to_lifetime_search` function
 resolves two lifetime components per pixel from multi-harmonic phasor
-coordinates without any prior assumption on component lifetimes.
+coordinates. It searches the specified lifetime range for the first
+(shorter-lived) component and estimates the second component from the data.
 Recompute and calibrate phasor coordinates at the first two harmonics:
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-214
+.. GENERATED FROM PYTHON SOURCE LINES 196-218
 
 .. code-block:: Python
 
@@ -386,14 +390,14 @@ Recompute and calibrate phasor coordinates at the first two harmonics:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-219
+.. GENERATED FROM PYTHON SOURCE LINES 219-223
 
 Decompose each pixel into two lifetime components using a graphical search
 over the universal semicircle. The search for the faster lifetime is limited
 to the range from 0.2 to 0.8 ns. Components are returned sorted by lifetime;
 the longer-lifetime (index 1) corresponds to enzyme-bound NADH:
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-228
+.. GENERATED FROM PYTHON SOURCE LINES 223-232
 
 .. code-block:: Python
 
@@ -413,11 +417,12 @@ the longer-lifetime (index 1) corresponds to enzyme-bound NADH:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-230
+.. GENERATED FROM PYTHON SOURCE LINES 233-235
 
-Display the bound NADH fraction image from the two-harmonic decomposition.
+Display the bound NADH intensity fraction image from the two-harmonic
+decomposition.
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-239
+.. GENERATED FROM PYTHON SOURCE LINES 235-244
 
 .. code-block:: Python
 
@@ -427,14 +432,14 @@ Display the bound NADH fraction image from the two-harmonic decomposition.
         vmin=0.4,
         vmax=0.8,
         cmap='turbo',
-        title='Bound NADH fraction (two-harmonic search)',
+        title='Bound NADH intensity fraction (two-harmonic search)',
     )
 
 
 
 
 .. image-sg:: /tutorials/applications/images/sphx_glr_phasorpy_nadh_fraction_005.png
-   :alt: Bound NADH fraction (two-harmonic search)
+   :alt: Bound NADH intensity fraction (two-harmonic search)
    :srcset: /tutorials/applications/images/sphx_glr_phasorpy_nadh_fraction_005.png
    :class: sphx-glr-single-img
 
@@ -442,11 +447,11 @@ Display the bound NADH fraction image from the two-harmonic decomposition.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 240-241
+.. GENERATED FROM PYTHON SOURCE LINES 245-246
 
 Display the two resolved lifetime component images:
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-252
+.. GENERATED FROM PYTHON SOURCE LINES 246-257
 
 .. code-block:: Python
 
@@ -476,7 +481,7 @@ Display the two resolved lifetime component images:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.321 seconds)
+   **Total running time of the script:** (0 minutes 3.164 seconds)
 
 
 .. _sphx_glr_download_tutorials_applications_phasorpy_nadh_fraction.py:

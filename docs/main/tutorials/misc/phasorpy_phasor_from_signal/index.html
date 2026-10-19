@@ -494,7 +494,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../applications/">Applications</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_component_fit/">Spectral unmixing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_fret_efficiency/">FRET efficiency image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_nadh_fraction/">Bound NADH fraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_nadh_fraction/">Bound NADH intensity fraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_nadh_concentration/">Absolute NADH concentration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../applications/phasorpy_multidimensional/">Multidimensional phasor approach</a></li>
 </ul>
@@ -624,7 +624,7 @@ or <code class="docutils literal notranslate"><span class="pre">mkl_fft.interfac
 </span><span class="n">signal</span> <span class="o">+</span><span class="o">=</span> <span class="mf">1.1</span><span class="w">
 </span><span class="n">signal</span> <span class="o">*</span><span class="o">=</span> <span class="mi">3723</span>  <span class="c1"># ~12 bit</span><span class="w">
 </span><span class="n">signal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>  <span class="c1"># 108 MB</span><span class="w">
-</span><span class="n">signal</span><span class="p">[</span><span class="n">signal</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 5% no signal</span><span class="w">
+</span><span class="n">signal</span><span class="p">[</span><span class="n">signal</span> <span class="o">&lt;</span> <span class="mi">4282</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># ~5% no signal</span><span class="w">
 </span></pre></div></div>
 <p>Print execution times depending on FFT function, axis, number of harmonics,
 and number of threads:</p>
@@ -665,84 +665,84 @@ and number of threads:</p>
 </span></pre></div></div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>harmonics 1
   axis -1
-    not_fft              0.050s   1.00
-    not_fft (2 threads)  0.032s   0.65
-    numpy_fft            0.159s   3.22
-    scipy_fft            0.179s   3.61
-    mkl_fft              0.110s   2.21
+    not_fft              0.057s   1.00
+    not_fft (2 threads)  0.029s   0.50
+    numpy_fft            0.206s   3.60
+    scipy_fft            0.214s   3.74
+    mkl_fft              0.146s   2.55
   axis 0
-    not_fft              0.160s   3.23
-    not_fft (2 threads)  0.079s   1.60
-    numpy_fft            0.387s   7.80
-    scipy_fft            0.255s   5.14
-    mkl_fft              0.198s   4.00
+    not_fft              0.176s   3.06
+    not_fft (2 threads)  0.088s   1.53
+    numpy_fft            0.451s   7.87
+    scipy_fft            0.329s   5.75
+    mkl_fft              0.252s   4.40
   axis 2
-    not_fft              0.049s   1.00
-    not_fft (2 threads)  0.026s   0.53
-    numpy_fft            0.159s   3.21
-    scipy_fft            0.177s   3.57
-    mkl_fft              0.104s   2.10
+    not_fft              0.057s   1.00
+    not_fft (2 threads)  0.029s   0.50
+    numpy_fft            0.204s   3.56
+    scipy_fft            0.211s   3.68
+    mkl_fft              0.141s   2.47
 harmonics 8
   axis -1
-    not_fft              0.395s   7.98
-    not_fft (2 threads)  0.207s   4.17
-    numpy_fft            0.171s   3.44
-    scipy_fft            0.188s   3.80
-    mkl_fft              0.115s   2.32
+    not_fft              0.455s   7.94
+    not_fft (2 threads)  0.229s   4.00
+    numpy_fft            0.216s   3.78
+    scipy_fft            0.225s   3.92
+    mkl_fft              0.159s   2.77
   axis 0
-    not_fft              1.275s  25.73
-    not_fft (2 threads)  0.638s  12.86
-    numpy_fft            0.389s   7.85
-    scipy_fft            0.257s   5.18
-    mkl_fft              0.199s   4.02
+    not_fft              1.385s  24.17
+    not_fft (2 threads)  0.708s  12.35
+    numpy_fft            0.455s   7.95
+    scipy_fft            0.331s   5.77
+    mkl_fft              0.249s   4.34
   axis 2
-    not_fft              0.395s   7.97
-    not_fft (2 threads)  0.208s   4.21
-    numpy_fft            0.171s   3.44
-    scipy_fft            0.187s   3.77
-    mkl_fft              0.115s   2.32
+    not_fft              0.455s   7.95
+    not_fft (2 threads)  0.230s   4.01
+    numpy_fft            0.211s   3.69
+    scipy_fft            0.218s   3.80
+    mkl_fft              0.157s   2.74
 </pre></div>
 </div>
 <p>For reference, the results on a Core i7-14700K CPU, Windows 11,
-Python 3.14.0, numpy 2.3.5, scipy 1.16.3, mkl_fft 2.1.1:</p>
+Python 3.15.0, numpy 2.5.4 scipy 1.18.1, mkl_fft 2.3.2:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span class="n">harmonics</span> <span class="mi">1</span><span class="w">
 </span>  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">0.034</span><span class="n">s</span>   <span class="mf">1.00</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.17</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.274</span><span class="n">s</span>   <span class="mf">8.03</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.141</span><span class="n">s</span>   <span class="mf">4.14</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.047</span><span class="n">s</span>   <span class="mf">1.00</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.18</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.266</span><span class="n">s</span>   <span class="mf">5.62</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.199</span><span class="n">s</span>   <span class="mf">4.21</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.123</span><span class="n">s</span>   <span class="mf">2.61</span><span class="w">
 </span>  <span class="n">axis</span> <span class="mi">0</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">0.162</span><span class="n">s</span>   <span class="mf">4.75</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.697</span><span class="n">s</span>  <span class="mf">20.44</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.496</span><span class="n">s</span>  <span class="mf">14.54</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.167</span><span class="n">s</span>   <span class="mf">4.90</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.232</span><span class="n">s</span>   <span class="mf">4.91</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.042</span><span class="n">s</span>   <span class="mf">0.88</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.684</span><span class="n">s</span>  <span class="mf">14.47</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.470</span><span class="n">s</span>   <span class="mf">9.95</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.174</span><span class="n">s</span>   <span class="mf">3.67</span><span class="w">
 </span>  <span class="n">axis</span> <span class="mi">2</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.12</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.006</span><span class="n">s</span>   <span class="mf">0.16</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.272</span><span class="n">s</span>   <span class="mf">7.99</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.240</span><span class="n">s</span>   <span class="mf">7.04</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.130</span><span class="n">s</span>   <span class="mf">3.83</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.058</span><span class="n">s</span>   <span class="mf">1.23</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.008</span><span class="n">s</span>   <span class="mf">0.17</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.268</span><span class="n">s</span>   <span class="mf">5.67</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.195</span><span class="n">s</span>   <span class="mf">4.14</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.124</span><span class="n">s</span>   <span class="mf">2.63</span><span class="w">
 </span><span class="n">harmonics</span> <span class="mi">8</span><span class="w">
 </span>  <span class="n">axis</span> <span class="o">-</span><span class="mi">1</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">0.287</span><span class="n">s</span>   <span class="mf">8.43</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.040</span><span class="n">s</span>   <span class="mf">1.17</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.45</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.253</span><span class="n">s</span>   <span class="mf">7.43</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.161</span><span class="n">s</span>   <span class="mf">4.74</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.385</span><span class="n">s</span>   <span class="mf">8.15</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.060</span><span class="n">s</span>   <span class="mf">1.27</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.276</span><span class="n">s</span>   <span class="mf">5.84</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.212</span><span class="n">s</span>   <span class="mf">4.48</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.148</span><span class="n">s</span>   <span class="mf">3.14</span><span class="w">
 </span>  <span class="n">axis</span> <span class="mi">0</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">1.161</span><span class="n">s</span>  <span class="mf">34.04</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.425</span><span class="n">s</span>  <span class="mf">12.47</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.715</span><span class="n">s</span>  <span class="mf">20.97</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.541</span><span class="n">s</span>  <span class="mf">15.88</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.183</span><span class="n">s</span>   <span class="mf">5.38</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">1.540</span><span class="n">s</span>  <span class="mf">32.59</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.363</span><span class="n">s</span>   <span class="mf">7.68</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.699</span><span class="n">s</span>  <span class="mf">14.80</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.474</span><span class="n">s</span>  <span class="mf">10.03</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.181</span><span class="n">s</span>   <span class="mf">3.82</span><span class="w">
 </span>  <span class="n">axis</span> <span class="mi">2</span><span class="w">
-</span>    <span class="n">not_fft</span>              <span class="mf">0.282</span><span class="n">s</span>   <span class="mf">8.27</span><span class="w">
-</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.038</span><span class="n">s</span>   <span class="mf">1.13</span><span class="w">
-</span>    <span class="n">numpy_fft</span>            <span class="mf">0.288</span><span class="n">s</span>   <span class="mf">8.46</span><span class="w">
-</span>    <span class="n">scipy_fft</span>            <span class="mf">0.255</span><span class="n">s</span>   <span class="mf">7.49</span><span class="w">
-</span>    <span class="n">mkl_fft</span>              <span class="mf">0.155</span><span class="n">s</span>   <span class="mf">4.56</span><span class="w">
+</span>    <span class="n">not_fft</span>              <span class="mf">0.384</span><span class="n">s</span>   <span class="mf">8.12</span><span class="w">
+</span>    <span class="n">not_fft</span> <span class="p">(</span><span class="mi">6</span> <span class="n">threads</span><span class="p">)</span>  <span class="mf">0.062</span><span class="n">s</span>   <span class="mf">1.30</span><span class="w">
+</span>    <span class="n">numpy_fft</span>            <span class="mf">0.276</span><span class="n">s</span>   <span class="mf">5.84</span><span class="w">
+</span>    <span class="n">scipy_fft</span>            <span class="mf">0.210</span><span class="n">s</span>   <span class="mf">4.44</span><span class="w">
+</span>    <span class="n">mkl_fft</span>              <span class="mf">0.147</span><span class="n">s</span>   <span class="mf">3.12</span><span class="w">
 </span></pre></div></div>
 </section>
 <section id="results">
@@ -759,14 +759,17 @@ harmonics.</p></li>
 axis. That is because the samples in the last dimension are contiguous in
 memory.</p></li>
 </ul>
-<p>Note that these results were obtained on a single dataset of random numbers.</p>
+<p>These timings are illustrative, not a controlled benchmark:
+each configuration was measured once on a single randomly generated dataset
+during a CI or documentation build.
+Results may vary with system load, hardware, and software environment.</p>
 </section>
 <section id="conclusions">
 <h2>Conclusions<a class="headerlink" href="#conclusions" title="Link to this heading">#</a></h2>
 <p>Using the Cython implementation is a reasonable default when calculating
 a few harmonics. Using FFT is a better choice when computing a large number
 of harmonics, especially with an optimized FFT function.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.267 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.617 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-misc-phasorpy-phasor-from-signal-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/08c44fd02fe5378fc05e9aecf2e433ce/phasorpy_phasor_from_signal.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">phasorpy_phasor_from_signal.ipynb</span></code></a></p>

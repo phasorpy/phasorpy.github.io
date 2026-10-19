@@ -95,7 +95,7 @@ frequency:
 Plot the phasor coordinates and lifetimes, and annotate the plot
 with text and arrows:
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-292
+.. GENERATED FROM PYTHON SOURCE LINES 57-264
 
 .. code-block:: Python
 
@@ -162,32 +162,28 @@ with text and arrows:
         linewidth=linewidth,
     )
 
-    # phase line
+    # line to phase lifetime
     plot.arrow(
         [0, 0],
-        [real, imag],
+        [tau_phi_re, tau_phi_im],
         color=color_phase,
         linewidth=linewidth,
-        arrowstyle='-',
-        # zorder=1,
     )
 
-    # modulation arc
+    # arc to modulation lifetime
     plot.arrow(
         [modulation, 0.0],
-        [real, imag],
-        angle=phase,
+        [tau_mod_re, tau_mod_im],
+        angle=phasor_to_polar(tau_mod_re, tau_mod_im)[0],
         color=color_modulation,
-        arrowstyle='-',
         linewidth=linewidth,
     )
 
-    # normal lifetime line
+    # line to normal lifetime
     plot.arrow(
         [0.5, 0.0],
-        [real, imag],
+        [tau_norm_re, tau_norm_im],
         color=color_normal,
-        arrowstyle='-',
         linewidth=linewidth,
     )
 
@@ -200,30 +196,6 @@ with text and arrows:
             linewidth=linewidth,
         )
 
-    # arrow to phase lifetime
-    plot.arrow(
-        [real, imag],
-        [tau_phi_re, tau_phi_im],
-        color=color_phase,
-        linewidth=linewidth,
-    )
-
-    # arced arrow to modulation lifetime
-    plot.arrow(
-        [real, imag],
-        [tau_mod_re, tau_mod_im],
-        angle=phase,
-        color=color_modulation,
-        linewidth=linewidth,
-    )
-
-    # arrow to normal lifetime
-    plot.arrow(
-        [real, imag],
-        [tau_norm_re, tau_norm_im],
-        color=color_normal,
-        linewidth=linewidth,
-    )
 
     # mark phasor coordinate
     plot.plot(
@@ -346,7 +318,7 @@ with text and arrows:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 293-321
+.. GENERATED FROM PYTHON SOURCE LINES 265-294
 
 The figure demonstrates:
 
@@ -365,22 +337,23 @@ The figure demonstrates:
   :math:`S` is the distance from the origin to the phasor coordinates.
 - the **apparent single lifetime from phase** :math:`\tau_{\varphi}`
   of the component mixture is the single-exponential lifetime at the
-  intersection of the universal circle with a line through the origin and
-  the phasor coordinates :math:`G` and :math:`S`.
+  intersection of the universal semicircle with a line through the origin
+  and the phasor coordinates :math:`G` and :math:`S`.
 - the **apparent single lifetime from modulation** :math:`\tau_{M}`
   of the component mixture is the single-exponential lifetime at the
-  intersection of the universal circle with a circle around the origin of
-  radius equal to the modulation :math:`M`.
+  intersection of the universal semicircle with a circle around the origin
+  of radius equal to the modulation :math:`M`.
 - the **normal lifetime** :math:`\tau_{N}` of the component mixture
   is the single-exponential lifetime at the nearest point on the universal
-  circle to the phasor coordinates :math:`G` and :math:`S`, which is the
-  intersection of the universal circle with the line through the center of
-  the universal circle and the phasor coordinates :math:`G` and :math:`S`.
+  semicircle to the phasor coordinates :math:`G` and :math:`S`, which is the
+  intersection of the universal semicircle with the line through the center
+  of the universal semicircle and the phasor coordinates :math:`G` and
+  :math:`S`.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.105 seconds)
+   **Total running time of the script:** (0 minutes 0.140 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_lifetime_geometry.py:

@@ -137,8 +137,8 @@ Image stacks, which may have any number of dimensions, are referred to as
 The :py:mod:`phasorpy.datasets` module provides access to various sample
 files. For example, an ImSpector TIFF file from the
 `FLUTE <https://zenodo.org/records/8046636>`_ project containing a
-time-correlated single photon counting (TCSPC) histogram
-of a zebrafish embryo at day 3, acquired at 80.11 MHz:
+time-correlated single photon counting (TCSPC) histogram of autofluorescence
+from a zebrafish embryo at 80.11 MHz:
 
 .. GENERATED FROM PYTHON SOURCE LINES 95-104
 
@@ -660,19 +660,20 @@ are commonly visualized as two-dimensional histograms:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 338-343
+.. GENERATED FROM PYTHON SOURCE LINES 338-344
 
 The calibrated phasor coordinates of all pixels lie inside the universal
 semicircle (on which theoretically the phasor coordinates of all single
 exponential lifetimes are located).
-That means that all pixels contain mixtures of signals from multiple
-lifetime components.
+This is consistent with mixtures of signals from multiple lifetime
+components, although continuous lifetime distributions, background, noise,
+or calibration errors can also place phasors inside the semicircle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-346
+.. GENERATED FROM PYTHON SOURCE LINES 346-347
 
 For comparison, the uncalibrated, unfiltered phasor coordinates:
 
-.. GENERATED FROM PYTHON SOURCE LINES 346-354
+.. GENERATED FROM PYTHON SOURCE LINES 347-355
 
 .. code-block:: Python
 
@@ -696,7 +697,7 @@ For comparison, the uncalibrated, unfiltered phasor coordinates:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 355-362
+.. GENERATED FROM PYTHON SOURCE LINES 356-363
 
 Select phasor coordinates
 -------------------------
@@ -706,7 +707,7 @@ coordinates to define and mask regions of interest within the phasor space.
 
 Mask regions of interest in the phasor space using circular cursors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 362-373
+.. GENERATED FROM PYTHON SOURCE LINES 363-374
 
 .. code-block:: Python
 
@@ -728,12 +729,12 @@ Mask regions of interest in the phasor space using circular cursors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 374-376
+.. GENERATED FROM PYTHON SOURCE LINES 375-377
 
 Plot the cursors in distinct colors using the higher-level
 :py:class:`PhasorPlot` interface:
 
-.. GENERATED FROM PYTHON SOURCE LINES 376-384
+.. GENERATED FROM PYTHON SOURCE LINES 377-385
 
 .. code-block:: Python
 
@@ -757,12 +758,12 @@ Plot the cursors in distinct colors using the higher-level
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 385-387
+.. GENERATED FROM PYTHON SOURCE LINES 386-388
 
 Blend the cursor masks with the mean intensity image to produce a
 pseudo-colored image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 387-397
+.. GENERATED FROM PYTHON SOURCE LINES 388-398
 
 .. code-block:: Python
 
@@ -788,16 +789,18 @@ pseudo-colored image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 398-404
+.. GENERATED FROM PYTHON SOURCE LINES 399-407
 
 Component analysis
 ------------------
 
 Component analysis in the phasor space (for example, estimating fractional
-contributions of multiple lifetime components) will be covered in a
-dedicated tutorial.
+contributions of multiple lifetime components) are covered in
+dedicated tutorials:
+:ref:`sphx_glr_tutorials_applications_phasorpy_nadh_fraction.py` and
+:ref:`sphx_glr_tutorials_applications_phasorpy_nadh_concentration.py`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 406-416
+.. GENERATED FROM PYTHON SOURCE LINES 409-419
 
 Spectral phasors
 ----------------
@@ -810,7 +813,7 @@ is absolute.
 Load a hyperspectral dataset acquired with a laser scanning microscope
 at 30 emission wavelengths:
 
-.. GENERATED FROM PYTHON SOURCE LINES 416-429
+.. GENERATED FROM PYTHON SOURCE LINES 419-432
 
 .. code-block:: Python
 
@@ -839,12 +842,12 @@ at 30 emission wavelengths:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 430-432
+.. GENERATED FROM PYTHON SOURCE LINES 433-435
 
 Calculate phasor coordinates at the first harmonic and filter out
 pixels with low intensities:
 
-.. GENERATED FROM PYTHON SOURCE LINES 432-436
+.. GENERATED FROM PYTHON SOURCE LINES 435-439
 
 .. code-block:: Python
 
@@ -859,11 +862,11 @@ pixels with low intensities:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 437-438
+.. GENERATED FROM PYTHON SOURCE LINES 440-441
 
 Plot the phasor coordinates as a two-dimensional histogram:
 
-.. GENERATED FROM PYTHON SOURCE LINES 438-448
+.. GENERATED FROM PYTHON SOURCE LINES 441-451
 
 .. code-block:: Python
 
@@ -889,7 +892,7 @@ Plot the phasor coordinates as a two-dimensional histogram:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 449-457
+.. GENERATED FROM PYTHON SOURCE LINES 452-460
 
 Find clusters
 -------------
@@ -900,7 +903,7 @@ to phasor coordinates.
 Automatically find the two elliptical clusters in the phasor space using
 a Gaussian mixture model and plot them in distinct colors:
 
-.. GENERATED FROM PYTHON SOURCE LINES 457-476
+.. GENERATED FROM PYTHON SOURCE LINES 460-479
 
 .. code-block:: Python
 
@@ -935,11 +938,11 @@ a Gaussian mixture model and plot them in distinct colors:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 477-478
+.. GENERATED FROM PYTHON SOURCE LINES 480-481
 
 Use the elliptical clusters to mask regions of interest in the phasor space:
 
-.. GENERATED FROM PYTHON SOURCE LINES 478-491
+.. GENERATED FROM PYTHON SOURCE LINES 481-494
 
 .. code-block:: Python
 
@@ -963,12 +966,12 @@ Use the elliptical clusters to mask regions of interest in the phasor space:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 492-494
+.. GENERATED FROM PYTHON SOURCE LINES 495-497
 
 Plot a pseudo-color image, composited from the elliptical cursor masks and
 the mean intensity image:
 
-.. GENERATED FROM PYTHON SOURCE LINES 494-501
+.. GENERATED FROM PYTHON SOURCE LINES 497-504
 
 .. code-block:: Python
 
@@ -991,20 +994,20 @@ the mean intensity image:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 502-505
+.. GENERATED FROM PYTHON SOURCE LINES 505-508
 
 Alternatively, use k-means clustering to assign every phasor coordinate to
 one of the clusters. The :ref:`sphx_glr_tutorials_api_phasorpy_cluster.py`
 tutorial compares both methods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 507-511
+.. GENERATED FROM PYTHON SOURCE LINES 510-514
 
 Appendix
 --------
 
 Print information about Python interpreter and installed packages:
 
-.. GENERATED FROM PYTHON SOURCE LINES 511-516
+.. GENERATED FROM PYTHON SOURCE LINES 514-519
 
 .. code-block:: Python
 
@@ -1051,7 +1054,7 @@ Print information about Python interpreter and installed packages:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.597 seconds)
+   **Total running time of the script:** (0 minutes 8.543 seconds)
 
 
 .. _sphx_glr_download_tutorials_phasorpy_introduction.py:
